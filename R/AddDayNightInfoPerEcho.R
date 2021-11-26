@@ -1,0 +1,52 @@
+#### addDayNightInfoPerEcho ------------------------------------------------------ 
+#' @title addDayNightInfoPerEcho 
+#' @author Fabian Hertner (SBRS) 
+#' @description The function ‘addDayNightInfoPerEcho’ adds the two columns ‘dayOrNight’ and ‘dateSunset’ to the echo data. 
+#' This information is not used any further by the script, but allows the user to filter echodata easily by “day” and “night”. 
+#' @param echoData dataframe with the echo data from the data list created by the function ‘extractDBData’ 
+#' @param sunriseSunset dataframe with sunrise/sunset and civil twilight times created by the function ‘twilight’ 
+#' @param sunOrCivil optional character string, “sun” (sunrise/sunset times) or “civil” (civil twilight times) to group by day and night. Default if not set is civil twilight. 
+#'
+#' @return data frame with two columns added for dayOrNight and dateSunset.
+#' @export
+#'
+#' @examples
+#' addDayNightInfoPerEcho( echoData = echoData, sunriseSunset = sunriseSunset, sunOrCivil = "civil" )
+addDayNightInfoPerEcho = function( echoData, sunriseSunset, sunOrCivil = "civil" )
+{
+  if( length( echoData[ , 1 ] ) == 0 )
+  {
+    warning( "No echoData, can't add day/night information (function: addDayNightInfoPerEcho)")
+    return()
+  }
+  
+  # add columns 'dayOrNight' and 'dateSunset' to echoData
+  echoData <- data.frame( echoData, dayOrNight = NA, dateSunset = as.POSIXct( NA ) )
+  
+  # get day and night periods
+  if( sunOrCivil == "sun" )
+  {
+    days <- data.frame( start = sunriseSunset$sunStart[ sunriseSunset$is_night == 0 ], stop = sunriseSunset$sunStop[ sunriseSunset$is_night == 0 ] )
+    nights <- data.frame( start = sunriseSunset$sunStart[ sunriseSunset$is_night == 1 ], stop = sunriseSunset$sunStop[ sunriseSunset$is_night == 1 ] )
+  } else
+  {
+    days <- data.frame( start = sunriseSunset$civilStart[ sunriseSunset$is_night == 0 ], stop = sunriseSunset$civilStop[ sunriseSunset$is_night == 0 ] )
+    nights <- data.frame( start = sunriseSunset$civilStart[ sunriseSunset$is_night == 1 ], stop = sunriseSunset$civilStop[ sunriseSunset$is_night == 1 ] )
+  }
+  
+  # set echoes during day
+  for( i in 1 : length( days[ , 1 ] ) )
+  {
+    echoData$dayOrNight[ echoData$time_stamp_targetTZ >= days$start[ i ] & echoData$time_stamp_targetTZ < days$stop[ i ] ] <- "day"
+    echoData$dateSunset[ echoData$time_stamp_targetTZ >= days$start[ i ] & echoData$time_stamp_targetTZ < days$stop[ i ] ] <- days$stop[ i ]
+  }
+  # set echoes during night
+  for( i in 1 : length( nights[ , 1 ] ) )
+  {
+    echoData$dayOrNight[ echoData$time_stamp_targetTZ >= nights$start[ i ] & echoData$time_stamp_targetTZ < nights$stop[ i ] ] <- "night"
+    echoData$dateSunset[ echoData$time_stamp_targetTZ >= nights$start[ i ] & echoData$time_stamp_targetTZ < nights$stop[ i ] ] <- nights$start[ i ]
+  }
+  
+  return( echoData )
+  
+}
