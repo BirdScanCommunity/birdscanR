@@ -5,6 +5,8 @@
 #' @param dbDriver="{SQL Server Native Client 11.0}" the name of the driver. If different from 'PostgreSQL' it connects to cloud.birdradar.com
 #' @param dbServer="" the name of the Server
 #' @param dbName=""   the name of the Database
+#' @param dbUser="" the USER name of the Server
+#' @param dbPwd=""   the password for the user name
 #' @param radarTimeZone=NULL NULL or a string specifying the radar time zone
 #' @param targetTimeZone=NULL  NULL or a string specifying the target time zone
 #' @param forceToExtractDataFromDatabase=FALSE if TRUE, it opens a connection to the Database requiring username and password, default FALSE
@@ -12,7 +14,7 @@
 #'
 #' @return a list of R objects with data extracted from the Database echoData,  protocolData, siteData, visibilityData, timeBinData, rfFeatures, availableClasses, classProbabilitiesAndMtrFactors
 #' 
-extractDbData = function( dbDriver = "{SQL Server Native Client 11.0}", dbServer = "", dbName = "", radarTimeZone = NULL, targetTimeZone = NULL, forceToExtractDataFromDatabase = FALSE, listOfRfFeaturesToExtract = NULL )
+extractDbData = function( dbDriver = "{SQL Server Native Client 11.0}", dbServer = "", dbName = "",  dbUser = "", dbPwd = "", radarTimeZone = NULL, targetTimeZone = NULL, forceToExtractDataFromDatabase = FALSE, listOfRfFeaturesToExtract = NULL )
 {
    dbDataName <- paste( "DB_Data", dbName, sep= "_" )
    dbDataName <- paste( dbDataName, "Rdata", sep= "." )
@@ -25,18 +27,36 @@ extractDbData = function( dbDriver = "{SQL Server Native Client 11.0}", dbServer
       
       # Open the database connection
       if(dbDriver != 'PostgreSQL') {
-         dsn = paste0("driver={SQL Server Native Client 11.0};server=", dbServer,
-                      ";database=", dbName,
-                      ";uid=", rstudioapi::askForPassword("Database user"),
-                      ";pwd=", rstudioapi::askForPassword("Database password")
-         )
+         if(nchar(dbUser) != 0 | nchar(dbPwd) != 0 ){
+            dsn = paste0("driver={SQL Server Native Client 11.0};server=", dbServer,
+                         ";database=", dbName,
+                         ";uid=", dbUser,
+                         ";pwd=", dbPwd
+            )
+         } else { # request the username and pwd via the rstudioAPI
+            dsn = paste0("driver={SQL Server Native Client 11.0};server=", dbServer,
+                         ";database=", dbName,
+                         ";uid=", rstudioapi::askForPassword("Database user"),
+                         ";pwd=", rstudioapi::askForPassword("Database password")
+            )
+         }
          dbConnection <- odbcDriverConnect( dsn )
       } else {
-         dbConnection <- DBI::dbConnect('PostgreSQL',
-                                        host='cloud.birdradar.com',
-                                        dbname = dbName,
-                                        user = rstudioapi::askForPassword("Database user"),
-                                        password = rstudioapi::askForPassword("Database password"))
+         if(nchar(dbUser) != 0 | nchar(dbPwd) != 0 ){
+            dbConnection = DBI::dbConnect('PostgreSQL',
+                                           host='cloud.birdradar.com',
+                                           dbname = dbName,
+                                           user = dbUser,
+                                           password = dbPwd
+            )
+         } else { # request the username and pwd via the rstudioAPI
+            dbConnection = DBI::dbConnect('PostgreSQL',
+                                           host='cloud.birdradar.com',
+                                           dbname = dbName,
+                                           user = rstudioapi::askForPassword("Database user"),
+                                           password = rstudioapi::askForPassword("Database password")
+            )
+         }
       }
       
       
