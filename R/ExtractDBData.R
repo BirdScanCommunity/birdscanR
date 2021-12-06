@@ -22,7 +22,7 @@ extractDbData = function( dbDriver = "{SQL Server Native Client 11.0}", dbServer
    # Extract data from Database if required or forced
    if( ( forceToExtractDataFromDatabase == TRUE || !file.exists( file.path( dbDataDir, dbDataName ) ) )
        && dbServer != "" && dbName != ""
-       && !is.null( radarTimeZone ) && !is.null( targetTimeZone ) )
+       && !is.null( targetTimeZone ) )
    {
       
       # Open the database connection
