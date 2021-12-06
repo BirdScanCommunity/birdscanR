@@ -179,7 +179,8 @@ extractDbData = function( dbDriver = "{SQL Server Native Client 11.0}", dbServer
                message( paste0( "Radar timezone extracted from dbo.site is :", radarTimeZone) )
             }
          }
-         
+         TimeZone <- data.frame("radarTimeZone" = radarTimeZone,
+                                "targetTimeZone" = targetTimeZone)
          # timezone conversion
          visibilityData <- convertTimeZone( data = visibilityData, colNames = c( "blind_from", "blind_to" ), originTZ = radarTimeZone, targetTZ = targetTimeZone )
          protocolData <- convertTimeZone( data = protocolData, colNames = c( "startTime", "stopTime" ), originTZ = radarTimeZone, targetTZ = targetTimeZone )
@@ -198,6 +199,7 @@ extractDbData = function( dbDriver = "{SQL Server Native Client 11.0}", dbServer
                timeBinData,
                availableClasses,
                rfFeatures,
+               TimeZone,
                classProbabilitiesAndMtrFactors,
                file = file.path( dbDataDir, dbDataName ) )
          
