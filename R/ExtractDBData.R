@@ -171,7 +171,9 @@ extractDbData = function( dbDriver = "{SQL Server Native Client 11.0}", dbServer
          rm( asl )
          
          # get radarTZ from siteData (or siteTable)
-         siteData$timeshift
+         tz_shift <- as.numeric(siteData$timeShift) # Get time zone saved in the database table 'dbo.site'
+         radarTimeZone <- paste0("Etc/GMT", ifelse(tz_shift >=0 , "-", "+"), abs(tz_shift)) # note that "UTC+1" is denoted as "Etc/GMT-1"
+         
          
          # timezone conversion
          visibilityData <- convertTimeZone( data = visibilityData, colNames = c( "blind_from", "blind_to" ), originTZ = radarTimeZone, targetTZ = targetTimeZone )
