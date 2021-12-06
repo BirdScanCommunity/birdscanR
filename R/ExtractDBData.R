@@ -170,6 +170,9 @@ extractDbData = function( dbDriver = "{SQL Server Native Client 11.0}", dbServer
          echoData <- data.frame( echoData[ , 1:match( "feature1.altitude_AGL", names( echoData ) ) ], asl, echoData[ , ( match( "feature1.altitude_AGL", names( echoData ) ) + 1 ) : length( echoData ) ] )
          rm( asl )
          
+         # get radarTZ from siteData (or siteTable)
+         siteData$timeshift
+         
          # timezone conversion
          visibilityData <- convertTimeZone( data = visibilityData, colNames = c( "blind_from", "blind_to" ), originTZ = radarTimeZone, targetTZ = targetTimeZone )
          protocolData <- convertTimeZone( data = protocolData, colNames = c( "startTime", "stopTime" ), originTZ = radarTimeZone, targetTZ = targetTimeZone )
