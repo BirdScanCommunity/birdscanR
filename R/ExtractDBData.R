@@ -2,39 +2,39 @@
 #' @title  Extract DB Data
 #' @description  Load the data from the database or file and save it to file
 #' @author Fabian Hertner (SBRS) \email{fabian.hertner@@swiss-birdradar.com}
-#' @param dbDriver="{SQL Server Native Client 11.0}" the name of the driver. If different from 'PostgreSQL' it connects to cloud.birdradar.com
-#' @param dbServer="" the name of the Server
-#' @param dbName=""   the name of the Database
-#' @param dbUser="" the USER name of the Server
-#' @param dbPwd=""   the password for the user name
-#' @param radarTimeZone=NULL NULL or a string specifying the radar time zone
-#' @param targetTimeZone=NULL  NULL or a string specifying the target time zone
-#' @param forceToExtractDataFromDatabase=FALSE if TRUE, it opens a connection to the Database requiring username and password, default FALSE
-#' @param listOfRfFeaturesToExtract=NULL  NULL or a list of feature to extract
+#' @param dbDriverChar NULL the name of the driver. If different from 'PostgreSQL' it connects to cloud.birdradar.com
+#' @param dbServer NULL the name of the Server
+#' @param dbName NULL the name of the Database
+#' @param dbUser NULL the USER name of the Server
+#' @param dbPwd NULL the password for the user name
+#' @param radarTimeZone  NULL or a string specifying the radar time zone
+#' @param targetTimeZone  NULL or a string specifying the target time zone
+#' @param forceToExtractDataFromDatabase  if TRUE, it opens a connection to the Database requiring username and password, default FALSE
+#' @param listOfRfFeaturesToExtract NULL or a list of feature to extract
 #'
 #' @return a list of R objects with data extracted from the Database echoData,  protocolData, siteData, visibilityData, timeBinData, rfFeatures, availableClasses, classProbabilitiesAndMtrFactors
 #' 
-extractDbData = function( dbDriver = "{SQL Server Native Client 11.0}", dbServer = "", dbName = "",  dbUser = "", dbPwd = "", radarTimeZone = NULL, targetTimeZone = NULL, forceToExtractDataFromDatabase = FALSE, listOfRfFeaturesToExtract = NULL )
+extractDbData = function( dbDriverChar = NULL, dbServer = NULL, dbName = NULL,  dbUser = NULL, dbPwd = NULL, radarTimeZone = NULL, targetTimeZone = NULL, forceToExtractDataFromDatabase = FALSE, listOfRfFeaturesToExtract = NULL )
 {
    dbDataName <- paste( "DB_Data", dbName, sep= "_" )
    dbDataName <- paste( dbDataName, "Rdata", sep= "." )
    
    # Extract data from Database if required or forced
    if( ( forceToExtractDataFromDatabase == TRUE || !file.exists( file.path( dbDataDir, dbDataName ) ) )
-       && dbServer != "" && dbName != ""
+       && !is.null(dbServer) && !is.null(dbName)
        && !is.null( targetTimeZone ) )
    {
       
       # Open the database connection
-      if(dbDriver != 'PostgreSQL') {
-         if(nchar(dbUser) != 0 | nchar(dbPwd) != 0 ){
-            dsn = paste0("driver={SQL Server Native Client 11.0};server=", dbServer,
+      if(dbDriverChar != 'PostgreSQL') {
+         if( !is.null(dbUser) | !is.null(dbPwd) ){
+            dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
                          ";database=", dbName,
                          ";uid=", dbUser,
                          ";pwd=", dbPwd
             )
          } else { # request the username and pwd via the rstudioAPI
-            dsn = paste0("driver={SQL Server Native Client 11.0};server=", dbServer,
+            dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
                          ";database=", dbName,
                          ";uid=", rstudioapi::askForPassword("Database user"),
                          ";pwd=", rstudioapi::askForPassword("Database password")
@@ -42,7 +42,7 @@ extractDbData = function( dbDriver = "{SQL Server Native Client 11.0}", dbServer
          }
          dbConnection <- odbcDriverConnect( dsn )
       } else {
-         if(nchar(dbUser) != 0 | nchar(dbPwd) != 0 ){
+         if( !is.null(dbUser) | !is.null(dbPwd) ){
             dbConnection = DBI::dbConnect('PostgreSQL',
                                            host='cloud.birdradar.com',
                                            dbname = dbName,
@@ -63,7 +63,7 @@ extractDbData = function( dbDriver = "{SQL Server Native Client 11.0}", dbServer
       
       
       if( 
-         if(dbDriver == 'PostgreSQL') 
+         if(dbDriverChar == 'PostgreSQL') 
          {
             isPostgresqlIdCurrent(dbConnection)
          } else {
@@ -74,46 +74,59 @@ extractDbData = function( dbDriver = "{SQL Server Native Client 11.0}", dbServer
          # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
          # load collection table
          message( "Extracting collection table from DB..." )
-         collectionTable <- getCollectionTable( dbConnection )
+         collectionTable <- getCollectionTable( dbConnection, dbDriverChar )
          
          # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
          # load protocol from local MS-SQL DB
          message( "Extracting protocol table from DB..." )
-         protocolTable = getProtocolTable( dbConnection )
+         protocolTable = getProtocolTable( dbConnection, dbDriverChar )
          
          # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
          # load radar from local MS-SQL DB
          message( "Extracting radar table from DB..." )
-         radarTable = getRadarTable( dbConnection )
+         radarTable = getRadarTable( dbConnection, dbDriverChar )
          
          # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
          # load site from local MS-SQL DB
          message( "Extracting site table from DB..." )
-         siteTable = getSiteTable( dbConnection )
+         siteTable = getSiteTable( dbConnection, dbDriverChar )
          
          # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
          # load visibility from local MS-SQL DB
          message( "Extracting visibility table from DB..." )
-         visibilityTable = getVisibilityTable( dbConnection )
+         visibilityTable = getVisibilityTable( dbConnection, dbDriverChar )
          visibilityData <- visibilityTable
          rm( visibilityTable )
          
          # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
+         # load manual visibility from local MS-SQL DB
+
+         message( "Extracting MANUAL visibility table from DB..." )
+         manualVisibilityTable = try( getManualVisibilityTable( dbConnection, dbDriverChar ), silent = TRUE )
+         if( is.data.frame( manualVisibilityTable ) ){  
+            message( "MANUAL visibility table extracted" )
+         } else {
+            message( "MANUAL visibility table not in DB" )
+            rm(manualVisibilityTable)
+         }
+
+         
+         # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
          # load time bins from local MS-SQL DB
          message( "Extracting time_bins table from DB..." )
-         timeBinsTable = getTimeBinsTable( dbConnection )
+         timeBinsTable = getTimeBinsTable( dbConnection, dbDriverChar )
          
          # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
          # load weather from local MS-SQL DB
          message( "Extracting weather table from DB..." )
-         weatherTable = QUERY(dbConnection, 
+         weatherTable = QUERY(dbConnection, dbDriverChar, 
                               "Select * From weather"
          )
          
          # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
          # load weather properties from local MS-SQL DB
          message( "Extracting weather_property table from DB..." )
-         weatherPropertyTable = QUERY(dbConnection, 
+         weatherPropertyTable = QUERY(dbConnection, dbDriverChar,  
                                       "Select * From weather_property"
          )
          
@@ -125,17 +138,17 @@ extractDbData = function( dbDriver = "{SQL Server Native Client 11.0}", dbServer
          # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
          # get all listed rf features
          message( "Extracting rffeatures table from DB..." )
-         echoRfFeatureMap <- getEchoFeatures( dbConnection, listOfRfFeaturesToExtract = listOfRfFeaturesToExtract )   
+         echoRfFeatureMap <- getEchoFeatures( dbConnection, dbDriverChar, listOfRfFeaturesToExtract = listOfRfFeaturesToExtract )   
          
          # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
          # load rf classification
          message( "Extracting RF classification..." )
-         rfclassificationTable <- getRfClassification( dbConnection )
+         rfclassificationTable <- getRfClassification( dbConnection, dbDriverChar )
          
          # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
          # load echo validation from local MS-SQL DB
          message( "Extracting echo_validation table from DB..." )
-         echovalidationTable <- getEchoValidationTable( dbConnection )
+         echovalidationTable <- getEchoValidationTable( dbConnection, dbDriverChar )
          
          # Merge echo Data
          echoData <- collectionTable
@@ -192,19 +205,34 @@ extractDbData = function( dbDriver = "{SQL Server Native Client 11.0}", dbServer
          ifelse( !dir.exists( dbDataDir ), dir.create( dbDataDir ), FALSE )
          
          # save DB Data
-         save( echoData, 
-               protocolData,
-               siteData, 
-               visibilityData,
-               timeBinData,
-               availableClasses,
-               rfFeatures,
-               TimeZone,
-               classProbabilitiesAndMtrFactors,
-               file = file.path( dbDataDir, dbDataName ) )
+         if( any( ls() %in% manualVisibilityTable ) ){  
+            save( echoData, 
+                  protocolData,
+                  siteData, 
+                  visibilityData,
+                  manualVisibilityTable,
+                  timeBinData,
+                  availableClasses,
+                  rfFeatures,
+                  TimeZone,
+                  classProbabilitiesAndMtrFactors,
+                  file = file.path( dbDataDir, dbDataName ) )
+         } else {
+            save( echoData, 
+                  protocolData,
+                  siteData, 
+                  visibilityData,
+                  timeBinData,
+                  availableClasses,
+                  rfFeatures,
+                  TimeZone,
+                  classProbabilitiesAndMtrFactors,
+                  file = file.path( dbDataDir, dbDataName ) )
+         }
+         
          
          # close database connections
-         if(dbDriver != 'PostgreSQL') {
+         if(dbDriverChar != 'PostgreSQL') {
             odbcCloseAll() 
          } else {
             dbDisconnect(dbConnection)
@@ -233,15 +261,28 @@ extractDbData = function( dbDriver = "{SQL Server Native Client 11.0}", dbServer
       }
    }
    
-   return( list( echoData = echoData, 
-                 protocolData = protocolData,
-                 siteData = siteData, 
-                 visibilityData = visibilityData,
-                 timeBinData = timeBinData,
-                 availableClasses = availableClasses,
-                 rfFeatures = rfFeatures,
-                 TimeZone = TimeZone,
-                 classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors ) )
+   if( any( ls() %in% manualVisibilityTable ) ){  
+      return( list( echoData = echoData, 
+                    protocolData = protocolData,
+                    siteData = siteData, 
+                    visibilityData = visibilityData,
+                    manualVisibilityTable = manualVisibilityTable,
+                    timeBinData = timeBinData,
+                    availableClasses = availableClasses,
+                    rfFeatures = rfFeatures,
+                    TimeZone = TimeZone,
+                    classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors ) )
+   } else {
+      return( list( echoData = echoData, 
+                    protocolData = protocolData,
+                    siteData = siteData, 
+                    visibilityData = visibilityData,
+                    timeBinData = timeBinData,
+                    availableClasses = availableClasses,
+                    rfFeatures = rfFeatures,
+                    TimeZone = TimeZone,
+                    classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors ) )
+   }
    
 }
 
@@ -251,16 +292,17 @@ extractDbData = function( dbDriver = "{SQL Server Native Client 11.0}", dbServer
 #' @description  Run an SQL query on an already connected DB
 #' @author Fabian Hertner (SBRS) \email{fabian.hertner@@swiss-birdradar.com}
 #' @param dbConnection a valid  database connection
+#' @param dbDriverChar the name of the driver. 
 #' @param query an SQL string with your query
 #' @param as.is=FALSE If TRUE, leaves data as it is.
 #'
 #' @return the result of the query
 #' 
-QUERY <- function(dbConnection, query, as.is=FALSE){
-   if(dbDriver == 'PostgreSQL'){
+QUERY <- function(dbConnection, dbDriverChar, query, as.is=FALSE){
+   if(dbDriverChar == 'PostgreSQL'){
       t  <- dbGetQuery(dbConnection, query, as.is=as.is)
    } else {
-      t  <- sqlQuery(dbConnection, query,as.is=as.is)
+      t  <- sqlQuery(dbConnection, query, as.is=as.is)
    }
    return(t)
 }
@@ -270,13 +312,14 @@ QUERY <- function(dbConnection, query, as.is=FALSE){
 #' @description  get the Radar table from  an already connected DB and rename the columns appropiately
 #' @author Fabian Hertner (SBRS) \email{fabian.hertner@@swiss-birdradar.com}
 #' @param dbConnection a valid  database connection
+#' @param dbDriverChar the name of the driver. 
 #'
 #' @return the radar table  as a data frame
 #' 
-getRadarTable = function( dbConnection )
+getRadarTable = function( dbConnection, dbDriverChar )
 {
    
-   radarTable = QUERY(dbConnection, "Select * From radar")
+   radarTable = QUERY(dbConnection, dbDriverChar, "Select * From radar")
    
    
    colnames(radarTable)[colnames(radarTable) == "radarid"] <- "radarID"
@@ -310,13 +353,13 @@ getRadarTable = function( dbConnection )
 #'
 #' @return A dataframe called echovalidationTable
 #'
-getEchoValidationTable = function( dbConnection )
+getEchoValidationTable = function( dbConnection, dbDriverChar )
 {
-   echovalidationTypesTable = QUERY(dbConnection, 
+   echovalidationTypesTable = QUERY(dbConnection, dbDriverChar, 
                                     "Select * From echo_validation_type"
    )
    
-   echovalidationTable = QUERY(dbConnection, 
+   echovalidationTable = QUERY(dbConnection, dbDriverChar, 
                                "Select * From echo_validation order by echo_id asc"
    )
    
@@ -337,11 +380,11 @@ getEchoValidationTable = function( dbConnection )
 #'
 #' @return A dataframe called rfclasses
 #'
-getRfClassification = function( dbConnection )
+getRfClassification = function( dbConnection, dbDriverChar )
 {
    # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
    # load rfclasses from local MS-SQL DB
-   rfClasses = QUERY(dbConnection, 
+   rfClasses = QUERY(dbConnection, dbDriverChar, 
                      "Select * From rfclasses"
    )
    
@@ -355,7 +398,7 @@ getRfClassification = function( dbConnection )
    
    # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
    # load rfclassification from local MS-SQL DB
-   rfclassificationTable = QUERY(dbConnection, 
+   rfclassificationTable = QUERY(dbConnection, dbDriverChar, 
                                  "select * from rf_classification where rf_classification.class is not null and rf_classification.mtr_factor is not null order by echo asc"
    )
    
@@ -364,7 +407,7 @@ getRfClassification = function( dbConnection )
    
    # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
    # load rfclassification probabilities from local MS-SQL DB
-   rfclassProbabilityTable = QUERY(dbConnection, 
+   rfclassProbabilityTable = QUERY(dbConnection, dbDriverChar, 
                                    "Select * From rf_class_probability where rf_class_probability.class is not null order by echo asc, class asc"
    )
    
@@ -392,15 +435,16 @@ getRfClassification = function( dbConnection )
 #' @description load echo rffeature map from local MS-SQL DB
 #' @author Fabian Hertner (SBRS) \email{fabian.hertner@@swiss-birdradar.com}
 #' @param dbConnection a valid  database connection
+#' @param dbDriverChar the name of the driver. If different from 'PostgreSQL' it connects to cloud.birdradar.com
 #' @param listOfRfFeaturesToExtract a list of feature to extract
 #'
 #' @return A list of the features extracted
 #'
-getEchoFeatures = function( dbConnection, listOfRfFeaturesToExtract )
+getEchoFeatures = function( dbConnection, dbDriverChar, listOfRfFeaturesToExtract )
 {
    # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
    # load echo rffeatures from local MS-SQL DB
-   rffeaturesTable = QUERY(dbConnection, 
+   rffeaturesTable = QUERY(dbConnection, dbDriverChar, 
                            "Select * From rffeatures"
    )
    
@@ -408,7 +452,7 @@ getEchoFeatures = function( dbConnection, listOfRfFeaturesToExtract )
    # load echo rffeature map from local MS-SQL DB
    if( !is.null( listOfRfFeaturesToExtract ) )
    {
-      echorffeaturesMapTable = QUERY(dbConnection, 
+      echorffeaturesMapTable = QUERY(dbConnection, dbDriverChar, 
                                      paste( "Select * From echo_rffeature_map where feature in ( ", paste( listOfRfFeaturesToExtract, collapse = ", " ), " )" )
       )   
       
@@ -427,19 +471,20 @@ getEchoFeatures = function( dbConnection, listOfRfFeaturesToExtract )
 #' @description load collection from local MS-SQL DB
 #' @author Fabian Hertner (SBRS) \email{fabian.hertner@@swiss-birdradar.com}
 #' @param dbConnection a valid  database connection
+#' @param dbDriverChar the name of the driver. If different from 'PostgreSQL' it connects to cloud.birdradar.com
 #'
 #' @return A dataframe with the collection table
 #'
-getCollectionTable = function( dbConnection )
+getCollectionTable = function( dbConnection , dbDriverChar)
 {
    # ::::::::::::::::::::::::::::::::::::::::::::::::::::::: 
    # load collection from local MS-SQL DB
-   if(dbDriver != 'PostgreSQL') {
-      collectionTable = QUERY( dbConnection,paste0("Select * From collection Where time_stamp < '", timing ,"' order by row asc"))
-      collectionTable_time_stamp = QUERY( dbConnection, paste0("Select time_stamp From collection Where time_stamp < '", timing ,"' order by row asc"), as.is = TRUE)
+   if(dbDriverChar != 'PostgreSQL') {
+      collectionTable = QUERY( dbConnection, dbDriverChar, paste0("Select * From collection Where time_stamp < '", timing ,"' order by row asc"))
+      collectionTable_time_stamp = QUERY( dbConnection, dbDriverChar, paste0("Select time_stamp From collection Where time_stamp < '", timing ,"' order by row asc"), as.is = TRUE)
       collectionTable$time_stamp <- collectionTable_time_stamp$time_stamp
    } else {
-      collectionTable = QUERY( dbConnection,paste0("Select *, time_stamp::character varying ts From collection Where time_stamp < '", timing ,"' order by row asc"))
+      collectionTable = QUERY( dbConnection, dbDriverChar, paste0("Select *, time_stamp::character varying ts From collection Where time_stamp < '", timing ,"' order by row asc"))
       collectionTable$time_stamp <- collectionTable$ts
       collectionTable$ts <-  NULL
       #colnames(collectionTable)[colnames(collectionTable) == "ts"] <- "time_stamp"
@@ -465,26 +510,27 @@ getCollectionTable = function( dbConnection )
 #' @description load protocol table from an already connect local MS-SQL DB
 #' @author Fabian Hertner (SBRS) \email{fabian.hertner@@swiss-birdradar.com}
 #' @param dbConnection a valid  database connection
+#' @param dbDriverChar the name of the driver. If different from 'PostgreSQL' it connects to cloud.birdradar.com
 #'
 #' @return A dataframe with the protocal table
 #'
-getProtocolTable = function( dbConnection )
+getProtocolTable = function( dbConnection, dbDriverChar)
 {
    # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
    # load protocol table from local MS-SQL DB
-   if(dbDriver != 'PostgreSQL') {
-      protocolTable = QUERY(dbConnection, "Select * From protocol order by protocolID asc")
+   if(dbDriverChar != 'PostgreSQL') {
+      protocolTable = QUERY(dbConnection, dbDriverChar, "Select * From protocol order by protocolID asc")
       colnames(protocolTable)[colnames(protocolTable) == "starttime"] <- "startTime"
       colnames(protocolTable)[colnames(protocolTable) == "stoptime"] <- "stopTime"
       
-      protocolTable_times = QUERY(dbConnection, "Select startTime, stopTime From protocol order by protocolID asc", as.is = TRUE)
+      protocolTable_times = QUERY(dbConnection, dbDriverChar, "Select startTime, stopTime From protocol order by protocolID asc", as.is = TRUE)
       colnames(protocolTable_times)[colnames(protocolTable_times) == "starttime"] <- "startTime"
       colnames(protocolTable_times)[colnames(protocolTable_times) == "stoptime"] <- "stopTime"
       protocolTable$startTime <- protocolTable_times$startTime
       protocolTable$stopTime <- protocolTable_times$stopTime
       
    } else {
-      protocolTable = QUERY(dbConnection, "Select *,starttime::character varying as start,stoptime::character varying as stop From protocol order by protocolid asc")
+      protocolTable = QUERY(dbConnection, dbDriverChar, "Select *,starttime::character varying as start,stoptime::character varying as stop From protocol order by protocolid asc")
       protocolTable$starttime <- protocolTable$start
       protocolTable$stoptime <- protocolTable$stop
       colnames(protocolTable)[colnames(protocolTable) == "starttime"] <- "startTime"
@@ -515,20 +561,21 @@ getProtocolTable = function( dbConnection )
 #' @description load visibility table from an already connect local MS-SQL DB
 #' @author Fabian Hertner (SBRS) \email{fabian.hertner@@swiss-birdradar.com}
 #' @param dbConnection a valid  database connection
+#' @param dbDriverChar the name of the driver. If different from 'PostgreSQL' it connects to cloud.birdradar.com
 #'
 #' @return A dataframe with the visibility table
 #'
-getVisibilityTable = function( dbConnection )
+getVisibilityTable = function( dbConnection, dbDriverChar )
 {
    # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
    # load protocol table from local MS-SQL DB
-   if(dbDriver != 'PostgreSQL') {
-      visibilityTable = QUERY(dbConnection, "Select * From visibility order by visibilityLogID asc")
-      visibilityTable_times = QUERY(dbConnection, "Select blind_from, blind_to From visibility order by visibilityLogID asc", as.is = TRUE)
+   if(dbDriverChar != 'PostgreSQL') {
+      visibilityTable = QUERY(dbConnection, dbDriverChar, "Select * From visibility order by visibilityLogID asc")
+      visibilityTable_times = QUERY(dbConnection, dbDriverChar, "Select blind_from, blind_to From visibility order by visibilityLogID asc", as.is = TRUE)
       visibilityTable$blind_from <- visibilityTable_times$blind_from
       visibilityTable$blind_to <- visibilityTable_times$blind_to
    } else {
-      visibilityTable = QUERY(dbConnection, "Select *,blind_from::character varying as blindfrom,blind_to::character varying as blindto From visibility order by visibilitylogid asc")
+      visibilityTable = QUERY(dbConnection, dbDriverChar, "Select *,blind_from::character varying as blindfrom,blind_to::character varying as blindto From visibility order by visibilitylogid asc")
       visibilityTable$blind_from <- visibilityTable$blindfrom 
       visibilityTable$blind_to <-  visibilityTable$blindto 
       visibilityTable$blindfrom <- NULL
@@ -543,19 +590,43 @@ getVisibilityTable = function( dbConnection )
    return( visibilityTable )
 }
 
+#### getManualVisibilityTable ------------------------------------------------------------
+#' @title  Get manual visibility table
+#' @description load visibility table from an already connect local MS-SQL DB
+#' @author Baptiste Schmid (Swiss Ornithological Institute) \email{baptiste.schmid@@vogelwarte.ch}
+#' @param dbConnection a valid  database connection
+#' @param dbDriverChar the name of the driver. If different from 'PostgreSQL' it connects to cloud.birdradar.com
+#'
+#' @return A dataframe with the manual visibility table
+#'
+getManualVisibilityTable = function( dbConnection, dbDriverChar )
+{
+   # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
+   # load protocol table from local MS-SQL DB
+   if(dbDriverChar != 'PostgreSQL') {
+      manualVisibilityTable = QUERY(dbConnection, dbDriverChar, "Select * From visibility_manual order by blind_from asc")
+   } else {
+      message("fetching manual visibility table from PostgrSQL not yet implemented")
+   }
+   
+   return( manualVisibilityTable )
+}
+
+
 #### getSiteTable ------------------------------------------------------------
 #' @title  Get BirdScan site table
 #' @description load site table from an already connect local MS-SQL DB
 #' @author Fabian Hertner (SBRS) \email{fabian.hertner@@swiss-birdradar.com}
 #' @param dbConnection a valid database connection
+#' @param dbDriverChar the name of the driver. If different from 'PostgreSQL' it connects to cloud.birdradar.com
 #'
 #' @return A dataframe with the site table
 #'
-getSiteTable = function( dbConnection )
+getSiteTable = function( dbConnection, dbDriverChar )
 {
    # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
    # load protocol table from local MS-SQL DB
-   siteTable = QUERY(dbConnection, 
+   siteTable = QUERY(dbConnection, dbDriverChar, 
                      "Select * From site order by row asc"
    )
    
@@ -571,7 +642,7 @@ getSiteTable = function( dbConnection )
    colnames(siteTable)[colnames(siteTable) == "ftpupload"] <- "ftpUpload"
    colnames(siteTable)[colnames(siteTable) == "automode"] <- "autoMode"
    
-   siteTable_times = QUERY(dbConnection, 
+   siteTable_times = QUERY(dbConnection, dbDriverChar, 
                            "Select projectStart, projectEnd From site order by row asc", as.is = TRUE
    )
    
@@ -589,20 +660,21 @@ getSiteTable = function( dbConnection )
 #' @description load timebins table from an already connect local MS-SQL DB
 #' @author Fabian Hertner (SBRS) \email{fabian.hertner@@swiss-birdradar.com}
 #' @param dbConnection a valid database connection
+#' @param dbDriverChar the name of the driver. If different from 'PostgreSQL' it connects to cloud.birdradar.com
 #'
 #' @return A dataframe with the timebins table
 #'
-getTimeBinsTable = function( dbConnection )
+getTimeBinsTable = function( dbConnection, dbDriverChar )
 {
    # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
    # load protocol table from local MS-SQL DB
-   if(dbDriver != 'PostgreSQL') {
-      timeBinsTable = QUERY(dbConnection, "Select * From time_bins order by id asc")
-      timeBinsTable_times = QUERY(dbConnection,"Select time_start, time_stop From time_bins order by id asc", as.is = TRUE)
+   if(dbDriverChar != 'PostgreSQL') {
+      timeBinsTable = QUERY(dbConnection, dbDriverChar, "Select * From time_bins order by id asc")
+      timeBinsTable_times = QUERY(dbConnection, dbDriverChar,"Select time_start, time_stop From time_bins order by id asc", as.is = TRUE)
       timeBinsTable$time_start <- timeBinsTable_times$time_start
       timeBinsTable$time_stop <- timeBinsTable_times$time_stop
    } else {
-      timeBinsTable = QUERY(dbConnection, "Select *,time_start::character varying as start,time_stop::character varying as stop FROM time_bins order by id asc")
+      timeBinsTable = QUERY(dbConnection, dbDriverChar, "Select *,time_start::character varying as start,time_stop::character varying as stop FROM time_bins order by id asc")
       timeBinsTable$time_start <- timeBinsTable$start
       timeBinsTable$time_stop <- timeBinsTable$stop
       timeBinsTable$start <- NULL
