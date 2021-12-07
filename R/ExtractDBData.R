@@ -173,8 +173,8 @@ extractDbData = function( dbDriver = "{SQL Server Native Client 11.0}", dbServer
          # get radarTZ from siteData (or siteTable)
          if( is.null( radarTimeZone ) ) {
             tz_shift <- as.numeric(siteData$timeShift) # Get time zone saved in the database table 'dbo.site'
-            if(is.na(tz_shit) | is.null(tz_shit) ) stop("set a radarTimeZone, or update the timeshift column in the dbo-site table")
-            if(tz_shit >= 0 | tz_shit < 0){
+            if(is.na(tz_shift) | is.null(tz_shift) ) stop("set a radarTimeZone, or update the timeshift column in the dbo-site table")
+            if(tz_shift >= 0 | tz_shift < 0){
                radarTimeZone <- paste0("Etc/GMT", ifelse(tz_shift >=0 , "-", "+"), abs(tz_shift)) # note that "UTC+1" is denoted as "Etc/GMT-1"
                message( paste0( "Radar timezone extracted from dbo.site is :", radarTimeZone) )
             }
