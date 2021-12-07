@@ -240,6 +240,7 @@ extractDbData = function( dbDriver = "{SQL Server Native Client 11.0}", dbServer
                  timeBinData = timeBinData,
                  availableClasses = availableClasses,
                  rfFeatures = rfFeatures,
+                 TimeZone = TimeZone,
                  classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors ) )
    
 }
