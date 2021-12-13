@@ -21,7 +21,7 @@ filterProtocolData = function( protocolData = NULL, pulseTypeSelection = NULL, r
     # subset protocolData by pulseLength
     if( !is.null( pulseTypeSelection ) )
     {
-      protocolData <- protocolData[ protocolData$pulseType %in% pulseLengthSelection, ]
+      protocolData <- protocolData[ protocolData$pulseType %in% pulseTypeSelection, ]
     }
     
     # subset protocolData by rotation mode
@@ -107,5 +107,5 @@ filterEchoData = function( echoData = NULL, timeRangeTargetTZ = NULL, protocolDa
   return( echoData )
 }
 
-#filterProtocolData( data$protocolData, pulseLengthSelection, rotationSelection )
+#filterProtocolData( data$protocolData, pulseTypeSelection, rotationSelection )
 #filterEchoData( echoData = data$echoData, timeRangeTargetTZ = timeRangeEchoData, protocolData = protocolDataSubset, classSelection = classSelection, classProbCutOff = classProbCutoff, altitudeRange_AGL = altitudeRange_AGL_25_5000, manualBlindTimes = manualBlindTimes, echoValidator = TRUE )
