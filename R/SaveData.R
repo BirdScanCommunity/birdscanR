@@ -22,7 +22,7 @@ saveMTR = function( mtr = NULL, fileName = NULL, filepath = NULL, dbName = NULL,
     if( dir.exists( filepath ) == TRUE )
     {
       # create fileName
-      if(fileName == NULL){
+      if( is.null(fileName) ){
         fileName <- "mtr"
       } else {
         fileName <- fileName
