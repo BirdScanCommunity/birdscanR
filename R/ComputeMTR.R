@@ -12,6 +12,7 @@
 #' @param timeBins dataframe with the time bins created by the function ‘computeObservationTime’. MTR is computed for each time bin.
 #' @param propObsTimeCutoff numeric between 0 and 1. If the MTR is computed per day and night, time bins with a proportional observation time smaller than propObsTimeCutoff are ignored when combining the time bins. If the MTR is computed for each time bin, the parameter is ignored.
 #' @param computePerDayNight logical, TRUE: MTR is computed per day and night FALSE: MTR is computed for each time bin
+#' @param computeAltitudeDistribution logical, TRUE: compute the mean eight and altitude distribution of MTR for the pre-defined quantiles 0.05, 0.25, 0.5, 0.75, 0.95
 #'
 #' @return mtr
 #' @export
@@ -22,7 +23,7 @@
 #' computeMTR( echoes = echoDataSubset, classSelection = classSelection, altitudeBins = altitudeBins_25_1025_binSize50, timeBins = timeBins_1h_DayNight, propObsTimeCutoff = propObsTimeCutoff, computePerDayNight = TRUE )
 #' computeMTR( echoes = echoDataSubset, classSelection = classSelection, altitudeBins = altitudeBins_25_1000_oneBin, timeBins = timeBins_1h_DayNight, propObsTimeCutoff = propObsTimeCutoff, computePerDayNight = TRUE )
 
-computeMTR = function( echoes, classSelection, altitudeBins, timeBins, propObsTimeCutoff = 0, computePerDayNight = FALSE )
+computeMTR = function( echoes, classSelection, altitudeBins, timeBins, propObsTimeCutoff = 0, computePerDayNight = FALSE, computeAltitudeDistribution = TRUE )
 {
   
   # remove echoes with NA in 'mtr_factor'
@@ -392,70 +393,72 @@ computeMTR = function( echoes, classSelection, altitudeBins, timeBins, propObsTi
   progressStep <- ( progressTotal - progressCnt ) / ( ( length( classSelection ) + 1 ) * nrow( mtr ) )
   
   # compute altitude distribution
-  for( i in 0 : length( classSelection ) )
-  {
-    if( i == 0 )
-    {
-      classLabel <- "allClasses"
-    } else
-    {
-      classLabel <- classSelection[ i ]
-    }
-    
-    mtr[ , paste( "meanAltitude", classLabel, sep = "." ) ] = NA
-    mtr[ , paste( "altitudeQuantile_0.05", classLabel, sep = "." ) ] = 0
-    mtr[ , paste( "altitudeQuantile_0.25", classLabel, sep = "." ) ] = 0
-    mtr[ , paste( "altitudeQuantile_0.5", classLabel, sep = "." ) ] = 0
-    mtr[ , paste( "altitudeQuantile_0.75", classLabel, sep = "." ) ] = 0
-    mtr[ , paste( "altitudeQuantile_0.95", classLabel, sep = "." ) ] = 0
-    
-    for( k in 1 : nrow( mtr ) )
+  if(computeAltitudeDistribution){
+    for( i in 0 : length( classSelection ) )
     {
       if( i == 0 )
       {
-        echoesInTimeAndAltitudeBin <- echoes[ echoes$feature1.altitude_AGL >= mtr$altitudeChunkBegin[ k ]
-                                              & echoes$feature1.altitude_AGL < mtr$altitudeChunkEnd[ k ] 
-                                              & echoes$time_stamp_targetTZ >= mtr$timeChunkBegin[ k ] 
-                                              & echoes$time_stamp_targetTZ < mtr$timeChunkEnd[ k ]
-                                              , names( echoes ) %in% c( "feature1.altitude_AGL", "mtr_factor_rf" ) ]
+        classLabel <- "allClasses"
       } else
       {
-        echoesInTimeAndAltitudeBin <- echoes[ echoes$class == classSelection[ i ]
-                                              & echoes$feature1.altitude_AGL >= mtr$altitudeChunkBegin[ k ]
-                                              & echoes$feature1.altitude_AGL < mtr$altitudeChunkEnd[ k ] 
-                                              & echoes$time_stamp_targetTZ >= mtr$timeChunkBegin[ k ] 
-                                              & echoes$time_stamp_targetTZ < mtr$timeChunkEnd[ k ]
-                                              , names( echoes ) %in% c( "feature1.altitude_AGL", "mtr_factor_rf" ) ]
+        classLabel <- classSelection[ i ]
       }
       
-      if( mtr$observationTime_h[ k ] <= 0 )
+      mtr[ , paste( "meanAltitude", classLabel, sep = "." ) ] = NA
+      mtr[ , paste( "altitudeQuantile_0.05", classLabel, sep = "." ) ] = 0
+      mtr[ , paste( "altitudeQuantile_0.25", classLabel, sep = "." ) ] = 0
+      mtr[ , paste( "altitudeQuantile_0.5", classLabel, sep = "." ) ] = 0
+      mtr[ , paste( "altitudeQuantile_0.75", classLabel, sep = "." ) ] = 0
+      mtr[ , paste( "altitudeQuantile_0.95", classLabel, sep = "." ) ] = 0
+      
+      for( k in 1 : nrow( mtr ) )
       {
-        mtr[ k, paste( "meanAltitude", classLabel, sep = "." ) ] <- NA
-      } else if( mtr[ k, paste( "sumOfMTRFactors", classLabel, sep = "." ) ] <= 0.000001 )
-      {
-        mtr[ k, paste( "meanAltitude", classLabel, sep = "." ) ] <- 0
-      } else
-      {
-        mtr[ k, paste( "meanAltitude", classLabel, sep = "." ) ] <- weighted.mean( x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, w = echoesInTimeAndAltitudeBin$mtr_factor_rf, na.rm = TRUE )
-        if( nrow( echoesInTimeAndAltitudeBin ) > 1 )
+        if( i == 0 )
         {
-          mtr[ k, paste( "altitudeQuantile_0.05", classLabel, sep = "." ) ] <- suppressWarnings( weighted.quantile( x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, w = echoesInTimeAndAltitudeBin$mtr_factor_rf, prob = 0.05 ) )
-          mtr[ k, paste( "altitudeQuantile_0.25", classLabel, sep = "." ) ] <- suppressWarnings( weighted.quantile( x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, w = echoesInTimeAndAltitudeBin$mtr_factor_rf, prob = 0.25 ) )
-          mtr[ k, paste( "altitudeQuantile_0.5", classLabel, sep = "." ) ] <- suppressWarnings( weighted.quantile( x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, w = echoesInTimeAndAltitudeBin$mtr_factor_rf, prob = 0.5 ) )
-          mtr[ k, paste( "altitudeQuantile_0.75", classLabel, sep = "." ) ] <- suppressWarnings( weighted.quantile( x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, w = echoesInTimeAndAltitudeBin$mtr_factor_rf, prob = 0.75 ) )
-          mtr[ k, paste( "altitudeQuantile_0.95", classLabel, sep = "." ) ] <- suppressWarnings( weighted.quantile( x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, w = echoesInTimeAndAltitudeBin$mtr_factor_rf, prob = 0.95 ) )  
+          echoesInTimeAndAltitudeBin <- echoes[ echoes$feature1.altitude_AGL >= mtr$altitudeChunkBegin[ k ]
+                                                & echoes$feature1.altitude_AGL < mtr$altitudeChunkEnd[ k ] 
+                                                & echoes$time_stamp_targetTZ >= mtr$timeChunkBegin[ k ] 
+                                                & echoes$time_stamp_targetTZ < mtr$timeChunkEnd[ k ]
+                                                , names( echoes ) %in% c( "feature1.altitude_AGL", "mtr_factor_rf" ) ]
+        } else
+        {
+          echoesInTimeAndAltitudeBin <- echoes[ echoes$class == classSelection[ i ]
+                                                & echoes$feature1.altitude_AGL >= mtr$altitudeChunkBegin[ k ]
+                                                & echoes$feature1.altitude_AGL < mtr$altitudeChunkEnd[ k ] 
+                                                & echoes$time_stamp_targetTZ >= mtr$timeChunkBegin[ k ] 
+                                                & echoes$time_stamp_targetTZ < mtr$timeChunkEnd[ k ]
+                                                , names( echoes ) %in% c( "feature1.altitude_AGL", "mtr_factor_rf" ) ]
+        }
+        
+        if( mtr$observationTime_h[ k ] <= 0 )
+        {
+          mtr[ k, paste( "meanAltitude", classLabel, sep = "." ) ] <- NA
+        } else if( mtr[ k, paste( "sumOfMTRFactors", classLabel, sep = "." ) ] <= 0.000001 )
+        {
+          mtr[ k, paste( "meanAltitude", classLabel, sep = "." ) ] <- 0
+        } else
+        {
+          mtr[ k, paste( "meanAltitude", classLabel, sep = "." ) ] <- weighted.mean( x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, w = echoesInTimeAndAltitudeBin$mtr_factor_rf, na.rm = TRUE )
+          if( nrow( echoesInTimeAndAltitudeBin ) > 1 )
+          {
+            mtr[ k, paste( "altitudeQuantile_0.05", classLabel, sep = "." ) ] <- suppressWarnings( weighted.quantile( x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, w = echoesInTimeAndAltitudeBin$mtr_factor_rf, prob = 0.05 ) )
+            mtr[ k, paste( "altitudeQuantile_0.25", classLabel, sep = "." ) ] <- suppressWarnings( weighted.quantile( x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, w = echoesInTimeAndAltitudeBin$mtr_factor_rf, prob = 0.25 ) )
+            mtr[ k, paste( "altitudeQuantile_0.5", classLabel, sep = "." ) ] <- suppressWarnings( weighted.quantile( x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, w = echoesInTimeAndAltitudeBin$mtr_factor_rf, prob = 0.5 ) )
+            mtr[ k, paste( "altitudeQuantile_0.75", classLabel, sep = "." ) ] <- suppressWarnings( weighted.quantile( x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, w = echoesInTimeAndAltitudeBin$mtr_factor_rf, prob = 0.75 ) )
+            mtr[ k, paste( "altitudeQuantile_0.95", classLabel, sep = "." ) ] <- suppressWarnings( weighted.quantile( x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, w = echoesInTimeAndAltitudeBin$mtr_factor_rf, prob = 0.95 ) )  
+          }
+        }
+        
+        progressCnt <- progressCnt + progressStep
+        if( floor( progressCnt / progressTotal * 100 ) > progressPercent )
+        {
+          progressPercent <- floor( progressCnt / progressTotal * 100 )
+          message( '\r', paste0( "MTR computation progress: ", progressPercent, "%" ), appendLF = FALSE )
         }
       }
-      
-      progressCnt <- progressCnt + progressStep
-      if( floor( progressCnt / progressTotal * 100 ) > progressPercent )
-      {
-        progressPercent <- floor( progressCnt / progressTotal * 100 )
-        message( '\r', paste0( "MTR computation progress: ", progressPercent, "%" ), appendLF = FALSE )
-      }
     }
+    
   }
-  
   message( '\r', paste0( "MTR computation progress: ", 100, "%" ), appendLF = FALSE )
   message( " " )
   
