@@ -205,7 +205,7 @@ extractDbData = function( dbDriverChar = NULL, dbServer = NULL, dbName = NULL,  
          ifelse( !dir.exists( dbDataDir ), dir.create( dbDataDir ), FALSE )
          
          # save DB Data
-         if( any( ls() %in% manualVisibilityTable ) ){  
+         if( exists( "manualVisibilityTable" ) ){  
             save( echoData, 
                   protocolData,
                   siteData, 
@@ -261,7 +261,7 @@ extractDbData = function( dbDriverChar = NULL, dbServer = NULL, dbName = NULL,  
       }
    }
    
-   if( any( ls() %in% manualVisibilityTable ) ){  
+   if( exists( "manualVisibilityTable" ) ){  
       return( list( echoData = echoData, 
                     protocolData = protocolData,
                     siteData = siteData, 
