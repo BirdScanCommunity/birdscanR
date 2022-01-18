@@ -76,7 +76,7 @@ filterEchoData = function( echoData = NULL, timeRangeTargetTZ = NULL, protocolDa
     # filter by classprobability
     if( !is.null( classProbCutOff ) && is.numeric( classProbCutOff ) )
     {
-      echoData <- echoData[ echoData$class_probability > classProbCutoff, ]
+      echoData <- echoData[ echoData$class_probability > classProbCutOff, ]
     }
     
     # filter by altitudeRange
