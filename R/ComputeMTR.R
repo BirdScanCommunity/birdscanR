@@ -1,11 +1,12 @@
 #### computeMTR ------------------------------------------------------
 
 #' @title computeMTR
-#' @author Fabian Hertner (SBRS)
-#' @description Computing MTR is time consuming. There are two options to compute MTR values. 
+#' @author Fabian Hertner (SBRS) & baptiste.schmid@@vogelwarte.ch
+#' @description Make the original function 'computeMTR' faster. 
+#' There are two options to compute MTR values. 
 #' The options are selected with the parameter ‘computePerDayNight’. 
-#' compute MTR for each time bin: This option computes the MTR for each time bin defined in the time bin dataframe. The time bins that were split due to sunrise/sunset during the time bin will be combined to one bin.
-#' compute MTR per day/night: The time bins of each day and night will be combined and the mean MTR is computed for each day and night. Aside this, the spread (first and third Quartile) for each day and night is computed. The spread is dependent on the chosen time bin duration/amount of time bins. 
+#' - compute MTR for each time bin: This option computes the MTR for each time bin defined in the time bin dataframe. The time bins that were split due to sunrise/sunset during the time bin will be combined to one bin.
+#' - compute MTR per day/night: The time bins of each day and night will be combined and the mean MTR is computed for each day and night. Aside this, the spread (first and third Quartile) for each day and night is computed. The spread is dependent on the chosen time bin duration/amount of time bins. 
 #' @param echoes dataframe with the echo data from the data list created by the function ‘extractDBData’ or a subset of it created by the function ‘filterEchoData’. 
 #' @param classSelection character string vector with all classes which should be used to calculate the MTR. The MTR and number of Echoes will be calculated for each class as well as for all classes together. 
 #' @param altitudeBins dataframe with the altitude bins created by the function ‘createAltitudeBins’. MTR is computed for each altitude bin.
@@ -23,11 +24,36 @@
 #' computeMTR( echoes = echoDataSubset, classSelection = classSelection, altitudeBins = altitudeBins_25_1025_binSize50, timeBins = timeBins_1h_DayNight, propObsTimeCutoff = propObsTimeCutoff, computePerDayNight = TRUE )
 #' computeMTR( echoes = echoDataSubset, classSelection = classSelection, altitudeBins = altitudeBins_25_1000_oneBin, timeBins = timeBins_1h_DayNight, propObsTimeCutoff = propObsTimeCutoff, computePerDayNight = TRUE )
 
+# ---------------------upgrade compute MTR -----------------------------
+# ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+# Aim is to remove the for-loop that calculate the MTR for each timeXheight cell.
+
+# initially a copy-paste from the version script computeMTR.
 computeMTR = function( echoes, classSelection, altitudeBins, timeBins, propObsTimeCutoff = 0, computePerDayNight = FALSE, computeAltitudeDistribution = TRUE )
 {
+  # echoes = echoDataSubset
+  # classSelection = classSelection
+  # altitudeBins = altitudeBins_oneBin
+  # timeBins = timeBins_1h
+  # propObsTimeCutoff = propObsTimeCutoff
+  # computePerDayNight = TRUE
+  # computeAltitudeDistribution = FALSE
   
   # remove echoes with NA in 'mtr_factor'
-  echoes <- echoes[ !is.na( echoes$mtr_factor_rf ), ]
+  if( any( is.na( echoes$mtr_factor_rf ) ) ){
+    n <- length(is.na( echoes$mtr_factor_rf ))
+    echoes <- echoes[ !is.na( echoes$mtr_factor_rf ), ]
+    message( paste0( "Missing MTR-factors for ",  n, " echoes, thus excldued from the MTR calculation." ) )
+  }
+  
+  # remove echoes outside the heigth range
+  if( any( echoes$feature1.altitude_AGL > max(altitudeBins$end) ) ){
+    index <- which( echoes$feature1.altitude_AGL > max(altitudeBins$end) )
+    n <- length( index )
+    echoes <- echoes[ -index , ]
+    message( paste0( n, " echoes above the defined altitude range, thus excldued from the MTR calculation." ) )
+  }
   
   # abort if no echoes present
   if( length( echoes[ , ] ) == 0 )
@@ -71,15 +97,12 @@ computeMTR = function( echoes, classSelection, altitudeBins, timeBins, propObsTi
   
   
   # create dataframe for mtr data 
-  mtr <- data.frame( timeChunkId = as.numeric( NA ) )
-  
-  mtr <- data.frame( mtr, matrix( nrow = length( timeBins[ ,1 ] ) * length( altitudeBins[ ,1 ] ), ncol = 0 ) )
   
   # set timeChunk and altitudeChunk
-  timeAndAltitudeCombinations <- expand.grid( altitudeBinId = altitudeBins$id, timeBinId = timeBins$id )
-  mtr$timeChunkId <- timeAndAltitudeCombinations$timeBinId
+  timeAndAltitudeCombinations <- expand.grid( timeChunkId = timeBins$id , altitudeChunkId = altitudeBins$id, KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE)
   
-  mtr <- merge( mtr, 
+  # add features to time and altitude chunk IDs
+  mtr <- merge( timeAndAltitudeCombinations, 
                 data.frame( timeChunkId = timeBins$id, 
                             timeChunkDate = timeBins$date, 
                             timeChunkBegin = timeBins$start, 
@@ -96,7 +119,6 @@ computeMTR = function( echoes, classSelection, altitudeBins, timeBins, propObsTi
   
   levels( mtr$dayOrNight ) <- names( table( timeBins$dayOrNight ) )
   
-  mtr$altitudeChunkId <- timeAndAltitudeCombinations$altitudeBinId
   mtr <- merge( mtr, 
                 data.frame( altitudeChunkId = altitudeBins$id, 
                             altitudeChunkBegin = altitudeBins$begin,
@@ -106,87 +128,65 @@ computeMTR = function( echoes, classSelection, altitudeBins, timeBins, propObsTi
                 by = "altitudeChunkId" )
   
   mtr <- mtr[ order( mtr$timeChunkId, mtr$altitudeChunkId ), ]
+  # reorder columns as originally
+  mtr <- mtr[, c( "timeChunkId" , "timeChunkDate" , "timeChunkBegin" , "timeChunkEnd" , "timeChunkDateSunset" , "timeChunkDuration_sec" ,           
+                  "observationTime_sec" , "observationTime_h" , "operationTime_sec" , "blindTime_sec" , "proportionalTimeObserved" , "dayOrNight" ,      
+                  "altitudeChunkId" , "altitudeChunkBegin" , "altitudeChunkEnd" , "altitudeChunkSize" , "altitudeChunkAvgAltitude" ) ]
   
-  # columns nEchoes
-  mtr <- data.frame( mtr, nEchoes.allClasses = as.numeric( NA ) )
-  for( i in 1 : length( classSelection ) )
-  {
-    mtr[ , paste( "nEchoes", classSelection[ i ], sep = "." ) ] <- as.numeric( NA )
-  }
+  # # show progress
+  # progressTotal <- ( length( classSelection ) + 1 ) * nrow( mtr ) * 2
+  # progressCnt <- 1
+  # progressPercent <- 0
+  # altitudeBinsStep <- nrow( mtr ) / length( unique( mtr$altitudeChunkId ) )
+  # message( '\r', paste0( "MTR computation progress: ", progressPercent, "%" ), appendLF = FALSE )
   
-  # columns sumOfMTRFactors
-  mtr <- data.frame( mtr, sumOfMTRFactors.allClasses = as.numeric( NA ) )
-  for( i in 1 : length( classSelection ) )
-  {
-    mtr[ , paste( "sumOfMTRFactors", classSelection[ i ], sep = "." ) ] <- as.numeric( NA )
-  }
+  #----------------------- MTR ---------------------------#
+  echoes$altitudeChunkId <- as.integer(as.character(cut(echoes[,"feature1.altitude_AGL"], breaks = c(altitudeBins$begin, altitudeBins$end[nrow(altitudeBins)]), label = altitudeBins$id, right = FALSE)))
+  echoes$timeChunkId <- as.integer(as.character(cut(echoes[,"time_stamp_targetTZ"], breaks = c(timeBins$start, timeBins$stop[nrow(timeBins)]), label = timeBins$id, right = FALSE)))
   
-  # columns mtr
-  mtr <- data.frame( mtr, mtr.allClasses = as.numeric( NA ) )
-  for( i in 1 : length( classSelection ) )
-  {
-    mtr[ , paste( "mtr", classSelection[ i ], sep = "." ) ] <- as.numeric( NA )
-  }
+  all_mtr <- echoes %>% 
+    left_join(x = ., 
+              y = mtr %>% distinct(timeChunkId, observationTime_h), 
+              by = "timeChunkId") %>% # add information on effective observation time
+    mutate("mtr_echo" = mtr_factor_rf / observationTime_h) %>% # calcualte the MTR for each echo - will be summed up in a later step
+    group_by(timeChunkId, altitudeChunkId) %>% # group the data with time and height intervals
+    summarise(
+      "nEchoes" = length(mtr_factor_rf), # count the number of echoes per timeXheight interval
+      "sumOfMTRFactors" = sum(mtr_factor_rf, na.rm=TRUE), # sum the mtr-factors of all echoes per timeXheight interval
+      "mtr" = sum(mtr_echo, na.rm = TRUE)# sum the mtr of all echoes per timeXheight interval - equivalent as "sumOfMTRFactors / observationTime_h"
+    ) %>% 
+    add_column(class = "allClasses") %>% # add the class denomination to merge with the per-class MTR dataset
+    select(timeChunkId, altitudeChunkId, class, nEchoes, sumOfMTRFactors, mtr) %>% # select and reorder the columns of interest 
+    pivot_wider(names_from =  class, values_from = c(nEchoes, sumOfMTRFactors, mtr), names_sep = ".", values_fill = 0) # use wide-format to match @fabian's original format
   
-  # show progress
-  progressTotal <- ( length( classSelection ) + 1 ) * nrow( mtr ) * 2
-  progressCnt <- 1
-  progressPercent <- 0
-  altitudeBinsStep <- nrow( mtr ) / length( unique( mtr$altitudeChunkId ) )
-  message( '\r', paste0( "MTR computation progress: ", progressPercent, "%" ), appendLF = FALSE )
+  each_mtr <- echoes %>% 
+    left_join(x = ., 
+              y = mtr %>% distinct(timeChunkId, observationTime_h), 
+              by = "timeChunkId") %>% # add information on effective observation time
+    mutate("mtr_echo" = mtr_factor_rf / observationTime_h) %>%
+    group_by(timeChunkId, altitudeChunkId, class) %>% 
+    summarise(
+      "nEchoes" = length(mtr_factor_rf),
+      "sumOfMTRFactors" = sum(mtr_factor_rf, na.rm=TRUE),
+      "mtr" = sum(mtr_echo, na.rm = TRUE)
+    ) %>% 
+    select(timeChunkId, altitudeChunkId, class, nEchoes, sumOfMTRFactors, mtr) %>% 
+    pivot_wider(names_from =  class, values_from = c(nEchoes, sumOfMTRFactors, mtr), names_sep = ".", values_fill = 0)
   
-  #----------------------- MTR for all classes ---------------------------#
-  for( i in 1 : nrow( mtr ) )
-  {
-    mtrFactors <- echoes$mtr_factor_rf[ echoes$feature1.altitude_AGL >= mtr$altitudeChunkBegin[ i ]
-                                        & echoes$feature1.altitude_AGL < mtr$altitudeChunkEnd[ i ] 
-                                        & echoes$time_stamp_targetTZ >= mtr$timeChunkBegin[ i ] 
-                                        & echoes$time_stamp_targetTZ < mtr$timeChunkEnd[ i ] ]
+  mtr <- left_join(mtr, all_mtr, by = c("timeChunkId", "altitudeChunkId")) %>% 
+    left_join(each_mtr, by = c("timeChunkId", "altitudeChunkId"))
+  
+  # replace NA as ZERO for nEchoes, sumMTRfacotrs, mtr, if "proportionalTimeObserved"] != 0
+  for( i in 0 : length( classSelection ) ){ # i <- 0
+    i_class <- ifelse(i == 0, "allClasses", classSelection[ i ])
+    # if...
+    i_index <- which(mtr[ , paste( "nEchoes", i_class, sep = "." ) ] %in% NA &
+                       mtr[ , "proportionalTimeObserved"] != 0 )
+    mtr[ i_index , paste( "nEchoes", i_class, sep = "." ) ] <- 0
+    mtr[ i_index , paste( "sumOfMTRFactors", i_class, sep = "." ) ] <- 0
+    mtr[ i_index , paste( "mtr", i_class, sep = "." ) ] <- 0
     
-    # count echoes
-    mtr$nEchoes.allClasses[ i ] <- length( mtrFactors )
     
-    # sum of MTR factors
-    mtr$sumOfMTRFactors.allClasses[ i ] <- sum( mtrFactors )
-    
-    progressCnt <- progressCnt + 1
-    if( floor( progressCnt / progressTotal * 100 ) > progressPercent )
-    {
-      progressPercent <- floor( progressCnt / progressTotal * 100 )
-      message( '\r', paste0( "MTR computation progress: ", progressPercent, "%" ), appendLF = FALSE )
-    }
-  }
-  
-  # MTR
-  mtr$mtr.allClasses[ mtr$observationTime_h > 0 ] <- mtr$sumOfMTRFactors.allClasses[ mtr$observationTime_h > 0 ] / mtr$observationTime_h[ mtr$observationTime_h > 0 ]
-  
-  # #----------------------- MTR per classes ---------------------------#
-  for( i in 1 : length( classSelection ) )
-  {
-    for( k in 1 : nrow( mtr ) )
-    {
-      mtrFactors <- echoes$mtr_factor_rf[ echoes$class == classSelection[ i ]
-                                          & echoes$feature1.altitude_AGL >= mtr$altitudeChunkBegin[ k ]
-                                          & echoes$feature1.altitude_AGL < mtr$altitudeChunkEnd[ k ] 
-                                          & echoes$time_stamp_targetTZ >= mtr$timeChunkBegin[ k ] 
-                                          & echoes$time_stamp_targetTZ < mtr$timeChunkEnd[ k ] ]
-      
-      # count echoes
-      mtr[ k, paste( "nEchoes", classSelection[ i ], sep = "." ) ] <- length( mtrFactors )
-      
-      # sum of MTR factors
-      mtr[ k, paste( "sumOfMTRFactors", classSelection[ i ], sep = "." ) ] <- sum( mtrFactors )
-      
-      progressCnt <- progressCnt + 1
-      if( floor( progressCnt / progressTotal * 100 ) > progressPercent )
-      {
-        progressPercent <- floor( progressCnt / progressTotal * 100 )
-        message( '\r', paste0( "MTR computation progress: ", progressPercent, "%" ), appendLF = FALSE )
-      }
-    }
-    
-    # MTR
-    mtr[ mtr$observationTime_h > 0, paste( "mtr", classSelection[ i ], sep = "." ) ] <- mtr[ mtr$observationTime_h > 0, paste( "sumOfMTRFactors", classSelection[ i ], sep = "." ) ] / mtr$observationTime_h[ mtr$observationTime_h > 0 ]
   }
   
   if( computePerDayNight == TRUE )
@@ -257,7 +257,9 @@ computeMTR = function( echoes, classSelection, altitudeBins, timeBins, propObsTi
         }
         
         # first quartiles
-        mtrFirstQuartile <- suppressWarnings( aggregate( list( mtrFirstQuartile.allClasses = mtrTmp$mtr.allClasses[ mtrTmp$proportionalTimeObserved > propObsTimeCutoff ] ), list( timeChunkDateSunset = mtrTmp$timeChunkDateSunset[ mtrTmp$proportionalTimeObserved > propObsTimeCutoff ] ), weighted.quantile, w = mtrTmp$timeChunkDuration_sec[ mtrTmp$proportionalTimeObserved > propObsTimeCutoff ], prob = 0.25 ) )
+        mtrFirstQuartile <- suppressWarnings( aggregate( list( mtrFirstQuartile.allClasses = mtrTmp$mtr.allClasses[ mtrTmp$proportionalTimeObserved > propObsTimeCutoff ] ), 
+                                                         list( timeChunkDateSunset = mtrTmp$timeChunkDateSunset[ mtrTmp$proportionalTimeObserved > propObsTimeCutoff ] ), 
+                                                         weighted.quantile, w = mtrTmp$timeChunkDuration_sec[ mtrTmp$proportionalTimeObserved > propObsTimeCutoff ], prob = 0.25 ) )
         mtrDay <- merge( mtrDay, mtrFirstQuartile, by = "timeChunkDateSunset", all = TRUE )
         for( i in 1 : length( classSelection ) )
         {
@@ -390,7 +392,13 @@ computeMTR = function( echoes, classSelection, altitudeBins, timeBins, propObsTi
     }
   } 
   
-  progressStep <- ( progressTotal - progressCnt ) / ( ( length( classSelection ) + 1 ) * nrow( mtr ) )
+  # MTR set back to NA if...
+  if(propObsTimeCutoff > 0){
+    i_index <- which( mtr[ , "proportionalTimeObserved"] < propObsTimeCutoff )
+    mtr[ i_index , paste( "mtr", i_class, sep = "." ) ] <- NA
+  }
+  
+  # progressStep <- ( progressTotal - progressCnt ) / ( ( length( classSelection ) + 1 ) * nrow( mtr ) )
   
   # compute altitude distribution
   if(computeAltitudeDistribution){
@@ -459,10 +467,9 @@ computeMTR = function( echoes, classSelection, altitudeBins, timeBins, propObsTi
     }
     
   }
-  message( '\r', paste0( "MTR computation progress: ", 100, "%" ), appendLF = FALSE )
-  message( " " )
+  # message( '\r', paste0( "MTR computation progress: ", 100, "%" ), appendLF = FALSE )
+  # message( " " )
   
   return( mtr )
   
 }
-
