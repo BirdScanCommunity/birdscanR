@@ -1,6 +1,6 @@
-#### computeMTR ------------------------------------------------------
+#### computeMTR_slow ------------------------------------------------------
 
-#' @title computeMTR
+#' @title computeMTR_slow
 #' @author Fabian Hertner (SBRS)
 #' @description Computing MTR is time consuming. There are two options to compute MTR values. 
 #' The options are selected with the parameter ‘computePerDayNight’. 
@@ -23,7 +23,7 @@
 #' computeMTR( echoes = echoDataSubset, classSelection = classSelection, altitudeBins = altitudeBins_25_1025_binSize50, timeBins = timeBins_1h_DayNight, propObsTimeCutoff = propObsTimeCutoff, computePerDayNight = TRUE )
 #' computeMTR( echoes = echoDataSubset, classSelection = classSelection, altitudeBins = altitudeBins_25_1000_oneBin, timeBins = timeBins_1h_DayNight, propObsTimeCutoff = propObsTimeCutoff, computePerDayNight = TRUE )
 
-computeMTR = function( echoes, classSelection, altitudeBins, timeBins, propObsTimeCutoff = 0, computePerDayNight = FALSE, computeAltitudeDistribution = TRUE )
+computeMTR_slow = function( echoes, classSelection, altitudeBins, timeBins, propObsTimeCutoff = 0, computePerDayNight = FALSE, computeAltitudeDistribution = TRUE )
 {
   
   # remove echoes with NA in 'mtr_factor'
