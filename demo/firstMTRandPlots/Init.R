@@ -18,7 +18,9 @@ packages = c( "RODBC",
               "modi",
               "dplyr",
               "grid",
-              "gridExtra")
+              "gridExtra",
+              "tidyr",
+              "tidyverse")
 
 ## Now load or install&load all
 package.check <- lapply(
