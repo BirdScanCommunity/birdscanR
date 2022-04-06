@@ -2,3 +2,4 @@ Package: birdscanR
 Type: Package
 Title: Migration Traffic Rate Calculation Package for birdscan MR1 radars
 Version: 0.0.1.0
+RoxygenNote: 7.1.2
