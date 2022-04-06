@@ -39,7 +39,7 @@ function ‘filterProtocolData’. If not set, periods without a protocol are no
 pngs stored in the directory specified in filePath
 }
 \description{
-plotExploration
+TBC
 }
 \examples{
 # plot Exploration
