@@ -43,7 +43,7 @@ computeMTR_wrap(
 
 \item{timeZone}{character string, timezone of the time bins -> adived to be target timezone}
 
-\item{sunriseSunset}{dataframe with the sunrise/sunset times and the civil twilight times created by the function ‘twilight’ \link{scripts\MR1Analysis\Code\Functions\Twilight.R}}
+\item{sunriseSunset}{dataframe with the sunrise/sunset times and the civil twilight times created by the function ‘twilight’ \link{scripts/MR1Analysis/Code/Functions/Twilight.R}}
 
 \item{sunOrCivil}{character string, “sun” (sunrise/sunset times) or “civil” (civil twilight times) to group by day and night. Default if not set is civil twilight.}
 
