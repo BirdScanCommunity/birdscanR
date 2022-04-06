@@ -138,7 +138,7 @@ plotLongitudinalMTR = function( mtr, maxMTR, timeRange = NULL, plotClass = "allC
 #' @title plotExploration
 #'
 #' @author Fabian Hertner (SBRS)
-#' @description 
+#' @description TBC
 #' @param echoData dataframe with the echo data from the data list created by the function ‘extractDBData’ or a subset of it created by the function ‘filterEchoData’
 #' @param timeRange optional list of POSIXct vectors length 2, start and end time of the timeranges that should be plotted. 
 #' The date/time format is “yyyy-MM-dd hh:mm”. Target timezone has to be added to the times (Figure 14 as example). If not set, all echo data is plotted in one plot.  

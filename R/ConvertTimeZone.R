@@ -1,7 +1,7 @@
 #### convertTimeZone ----------------------------------------------------------------
 #' @title Converts timestamps from radar timezone to an user-defined timezone
 #' @author Fabian Hertner (SBRS) \email{fabian.hertner@@swiss-birdradar.com}
-#' @description 
+#' @description Converts timestamps from radar timezone to an user-defined timezone
 #' @param data=NULL a data frame containing BirdScan data
 #' @param colNames="" a character vector containing valid column names, as present in `data`
 #' @param originTZ="Etc/GMT0" character, the time zone name of data to be converted (default is "etc/GMT0")
