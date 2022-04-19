@@ -12,9 +12,9 @@
 #' 
 QUERY <- function(dbConnection, dbDriverChar, query, as.is=FALSE){
    if(dbDriverChar == 'PostgreSQL'){
-      t  <- dbGetQuery(dbConnection, query, as.is=as.is)
+      t  <- DBI::dbGetQuery(dbConnection, query, as.is=as.is)
    } else {
-      t  <- sqlQuery(dbConnection, query, as.is=as.is)
+      t  <- RODBC::sqlQuery(dbConnection, query, as.is=as.is)
    }
    return(t)
 }
