@@ -10,6 +10,7 @@ extractDbData(
   dbName = NULL,
   dbUser = NULL,
   dbPwd = NULL,
+  dbDataDir = NULL,
   radarTimeZone = NULL,
   targetTimeZone = NULL,
   forceToExtractDataFromDatabase = FALSE,
@@ -26,6 +27,8 @@ extractDbData(
 \item{dbUser}{NULL the USER name of the Server}
 
 \item{dbPwd}{NULL the password for the user name}
+
+\item{dbDataDir}{NULL The path to the directory where previously extracted datasets are stored. If _forceToExtractDataFromDatabase_ is FALSE and a dataset already exists in _dbDataDir_ for the respective database, data will be extracted from this .rds file instead of the SQL database.}
 
 \item{radarTimeZone}{NULL or a string specifying the radar time zone}
 
