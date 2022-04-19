@@ -51,7 +51,7 @@ extractDbData = function(dbDriverChar                   = NULL,
                          ";pwd=", rstudioapi::askForPassword("Database password")
             )
          }
-         dbConnection <- odbcDriverConnect( dsn )
+         dbConnection <- RODBC::odbcDriverConnect( dsn )
       } else {
          if( !is.null(dbUser) | !is.null(dbPwd) ){
             dbConnection = DBI::dbConnect('PostgreSQL',
@@ -244,9 +244,9 @@ extractDbData = function(dbDriverChar                   = NULL,
          
          # close database connections
          if(dbDriverChar != 'PostgreSQL') {
-            odbcCloseAll() 
+            RODBC::odbcCloseAll() 
          } else {
-            dbDisconnect(dbConnection)
+            DBI::dbDisconnect(dbConnection)
          }      
       } else
       {
