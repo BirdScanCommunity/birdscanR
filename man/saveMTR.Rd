@@ -18,7 +18,7 @@ saveMTR(
 
 \item{fileName=NULL}{prefix of the filename (string). If not set, "mtr" is used. Different information about the MTR data will be appended to the filename.}
 
-\item{filepath=NULL}{character string, path of the directory, e.g. "[your-project-directory]/Data/MTR". If the directory does not exist it will be created if possible.}
+\item{filepath=NULL}{character string, path of the directory, e.g. "\link{your-project-directory}/Data/MTR". If the directory does not exist it will be created if possible.}
 
 \item{dbName=NULL}{character string, name of the database. Used to create the filename. If not set, the database name will not be appended to the filename}
 

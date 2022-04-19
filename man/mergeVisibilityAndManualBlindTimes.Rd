@@ -21,13 +21,13 @@ mergeVisibilityAndManualBlindTimes(
 dataframe with overall blind times
 }
 \description{
-Function to merge manual blindtimes with blindtimes from visibility table. 
-For further processing the radar (visibility) and manual blind times have to be merged 
-with the function ‘mergeVisibilityAndManualBlindTimes’. This function will add a blind 
-time type to the radar/visibility blind times. Blind times during the blocktime (usually 60s) 
-at the beginning of each protocol are given the type “protocolChange”, the rest of the radar 
-blind times are given the type “visibility”. After that the visibility and manual blind times 
-will be merged. In case manual blind times and radar blind times are overlapping, radar blind 
+Function to merge manual blindtimes with blindtimes from visibility table.
+For further processing the radar (visibility) and manual blind times have to be merged
+with the function ‘mergeVisibilityAndManualBlindTimes’. This function will add a blind
+time type to the radar/visibility blind times. Blind times during the blocktime (usually 60s)
+at the beginning of each protocol are given the type “protocolChange”, the rest of the radar
+blind times are given the type “visibility”. After that the visibility and manual blind times
+will be merged. In case manual blind times and radar blind times are overlapping, radar blind
 times with type “visibility” will be overwritten, but not radar blind times with type “protocolChange”.
 }
 \examples{

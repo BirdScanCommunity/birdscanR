@@ -28,7 +28,7 @@ extractDbData(
 
 \item{dbPwd}{NULL the password for the user name}
 
-\item{dbDataDir}{NULL The path to the directory where previously extracted datasets are stored. If _forceToExtractDataFromDatabase_ is FALSE and a dataset already exists in _dbDataDir_ for the respective database, data will be extracted from this .rds file instead of the SQL database.}
+\item{dbDataDir}{NULL The path to the directory where previously extracted datasets are stored. If \emph{forceToExtractDataFromDatabase} is FALSE and a dataset already exists in \emph{dbDataDir} for the respective database, data will be extracted from this .rds file instead of the SQL database.}
 
 \item{radarTimeZone}{NULL String specifying the radar time zone. Default is NULL: extract the timezone from the site table of the sql database.}
 
@@ -45,5 +45,5 @@ a list of R objects with data extracted from the Database echoData,  protocolDat
 Load the data from the database or file and save it to file
 }
 \author{
-Fabian Hertner (SBRS) \email{fabian.hertner@swiss-birdradar.com}
+Fabian Hertner (SBRS) \email{fabian.hertner@swiss-birdradar.com}, \email{birgen.haest@vogelwarte.ch}
 }

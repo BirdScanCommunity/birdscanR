@@ -15,13 +15,13 @@ plotLongitudinalMTR(
 )
 }
 \arguments{
-\item{mtr}{data frame with MTR values created by the function ‘computeMTR’. 
-The MTR data should be computed with one altitude bin, if MTR data with multiple altitude bins are passed to the function, the only the lowest altitude bin is plotted.  
+\item{mtr}{data frame with MTR values created by the function ‘computeMTR’.
+The MTR data should be computed with one altitude bin, if MTR data with multiple altitude bins are passed to the function, the only the lowest altitude bin is plotted.
 The MTR data should be computed per day and night (setting the parameter ‘computePerDayNight’ of the function ‘computeMTR’ to TRUE, otherwise the plot will fail.}
 
 \item{maxMTR}{optional numeric variable, fixes the maximum value of the y-Scale of the plot to the given value. If negative or not set, the y-Scale is auto-scaled.}
 
-\item{timeRange}{optional list of POSIXct vectors length 2, start and end time of the timeranges that should be plotted. The date/time format is “yyyy-MM-dd hh:mm”. 
+\item{timeRange}{optional list of POSIXct vectors length 2, start and end time of the timeranges that should be plotted. The date/time format is “yyyy-MM-dd hh:mm”.
 Target timezone has to be added to the times (Figure 14 as example). If not set, all MTR data is plotted in one plot.}
 
 \item{plotClass}{character string with the class of which the MTR data should be plotted. If not set or set to “allClasses”, MTR of all classes will be plotted.}

@@ -18,15 +18,15 @@ plotExploration(
 \arguments{
 \item{echoData}{dataframe with the echo data from the data list created by the function ‘extractDBData’ or a subset of it created by the function ‘filterEchoData’}
 
-\item{timeRange}{optional list of POSIXct vectors length 2, start and end time of the timeranges that should be plotted. 
-The date/time format is “yyyy-MM-dd hh:mm”. Target timezone has to be added to the times (Figure 14 as example). If not set, all echo data is plotted in one plot.  
+\item{timeRange}{optional list of POSIXct vectors length 2, start and end time of the timeranges that should be plotted.
+The date/time format is “yyyy-MM-dd hh:mm”. Target timezone has to be added to the times (Figure 14 as example). If not set, all echo data is plotted in one plot.
 Note: Too long time-ranges may produce an error if the created image is too large and the function can’t allocate the file.}
 
 \item{manualBlindTimes}{optional dataframe with the manual blind times created by the function ‘loadManualBlindTimes’. If not set, manual blind times are not shown in the plot.}
 
 \item{visibilityData}{optional dataframe with the visibility data created by the function ‘extractDBData’. If not set, visibility data are not shown in the plot.}
 
-\item{protocolData}{optional dataframe with the protocol data used to filter the echoes, created by the function ‘extractDBData’ or a subset of it created by the 
+\item{protocolData}{optional dataframe with the protocol data used to filter the echoes, created by the function ‘extractDBData’ or a subset of it created by the
 function ‘filterProtocolData’. If not set, periods without a protocol are not shown in the plot.}
 
 \item{sunriseSunset}{optional dataframe with sunrise/sunset and civil twilight times created by the function ‘twilight’. If not set, day/night times are not shown in the plot.}
