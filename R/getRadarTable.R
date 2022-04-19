@@ -6,6 +6,7 @@
 #' @param dbDriverChar the name of the driver. 
 #'
 #' @return the radar table  as a data frame
+#' @export
 #' 
 getRadarTable = function( dbConnection, dbDriverChar )
 {

@@ -5,6 +5,7 @@
 #' @param dbConnection a valid  database connection
 #'
 #' @return A dataframe called echovalidationTable
+#' @export
 #'
 getEchoValidationTable = function( dbConnection, dbDriverChar )
 {

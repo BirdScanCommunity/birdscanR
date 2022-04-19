@@ -8,6 +8,7 @@
 #' @param as.is=FALSE If TRUE, leaves data as it is.
 #'
 #' @return the result of the query
+#' @export
 #' 
 QUERY <- function(dbConnection, dbDriverChar, query, as.is=FALSE){
    if(dbDriverChar == 'PostgreSQL'){

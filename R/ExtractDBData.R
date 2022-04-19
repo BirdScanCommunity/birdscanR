@@ -13,6 +13,7 @@
 #' @param listOfRfFeaturesToExtract NULL or a list of feature to extract
 #'
 #' @return a list of R objects with data extracted from the Database echoData,  protocolData, siteData, visibilityData, timeBinData, rfFeatures, availableClasses, classProbabilitiesAndMtrFactors
+#' @export
 #' 
 extractDbData = function( dbDriverChar = NULL, dbServer = NULL, dbName = NULL,  dbUser = NULL, dbPwd = NULL, radarTimeZone = NULL, targetTimeZone = NULL, forceToExtractDataFromDatabase = FALSE, listOfRfFeaturesToExtract = NULL )
 {

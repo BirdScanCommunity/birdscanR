@@ -6,6 +6,7 @@
 #' @param dbDriverChar the name of the driver. If different from 'PostgreSQL' it connects to cloud.birdradar.com
 #'
 #' @return A dataframe with the manual visibility table
+#' @export
 #'
 getManualVisibilityTable = function( dbConnection, dbDriverChar )
 {

@@ -5,6 +5,7 @@
 #' @param dbConnection a valid  database connection
 #'
 #' @return A dataframe called rfclasses
+#' @export
 #'
 getRfClassification = function( dbConnection, dbDriverChar )
 {

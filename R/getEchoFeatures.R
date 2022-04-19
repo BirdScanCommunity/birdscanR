@@ -7,6 +7,7 @@
 #' @param listOfRfFeaturesToExtract a list of feature to extract
 #'
 #' @return A list of the features extracted
+#' @export
 #'
 getEchoFeatures = function( dbConnection, dbDriverChar, listOfRfFeaturesToExtract )
 {
