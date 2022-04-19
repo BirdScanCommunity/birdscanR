@@ -7,6 +7,7 @@
 #' @param dbName NULL the name of the Database
 #' @param dbUser NULL the USER name of the Server
 #' @param dbPwd NULL the password for the user name
+#' @param dbDataDir NULL The path to the directory where previously extracted datasets are stored. If _forceToExtractDataFromDatabase_ is FALSE and a dataset already exists in _dbDataDir_ for the respective database, data will be extracted from this .rds file instead of the SQL database.
 #' @param radarTimeZone  NULL or a string specifying the radar time zone
 #' @param targetTimeZone  NULL or a string specifying the target time zone
 #' @param forceToExtractDataFromDatabase  if TRUE, it opens a connection to the Database requiring username and password, default FALSE
@@ -15,7 +16,16 @@
 #' @return a list of R objects with data extracted from the Database echoData,  protocolData, siteData, visibilityData, timeBinData, rfFeatures, availableClasses, classProbabilitiesAndMtrFactors
 #' @export
 #' 
-extractDbData = function( dbDriverChar = NULL, dbServer = NULL, dbName = NULL,  dbUser = NULL, dbPwd = NULL, radarTimeZone = NULL, targetTimeZone = NULL, forceToExtractDataFromDatabase = FALSE, listOfRfFeaturesToExtract = NULL )
+extractDbData = function(dbDriverChar                   = NULL, 
+                         dbServer                       = NULL, 
+                         dbName                         = NULL,  
+                         dbUser                         = NULL, 
+                         dbPwd                          = NULL, 
+                         dbDataDir                      = NULL,
+                         radarTimeZone                  = NULL, 
+                         targetTimeZone                 = NULL, 
+                         forceToExtractDataFromDatabase = FALSE, 
+                         listOfRfFeaturesToExtract      = NULL)
 {
    dbDataName <- paste( "DB_Data", dbName, sep= "_" )
    dbDataName <- paste( dbDataName, "Rdata", sep= "." )
