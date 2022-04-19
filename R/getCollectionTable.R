@@ -13,11 +13,11 @@ getCollectionTable = function( dbConnection , dbDriverChar)
    # ::::::::::::::::::::::::::::::::::::::::::::::::::::::: 
    # load collection from local MS-SQL DB
    if(dbDriverChar != 'PostgreSQL') {
-      collectionTable = QUERY( dbConnection, dbDriverChar, paste0("Select * From collection Where time_stamp < '", timing ,"' order by row asc"))
-      collectionTable_time_stamp = QUERY( dbConnection, dbDriverChar, paste0("Select time_stamp From collection Where time_stamp < '", timing ,"' order by row asc"), as.is = TRUE)
+      collectionTable = QUERY( dbConnection, dbDriverChar, paste0("Select * From collection order by row asc"))
+      collectionTable_time_stamp = QUERY( dbConnection, dbDriverChar, paste0("Select time_stamp From collection order by row asc"), as.is = TRUE)
       collectionTable$time_stamp <- collectionTable_time_stamp$time_stamp
    } else {
-      collectionTable = QUERY( dbConnection, dbDriverChar, paste0("Select *, time_stamp::character varying ts From collection Where time_stamp < '", timing ,"' order by row asc"))
+      collectionTable = QUERY( dbConnection, dbDriverChar, paste0("Select *, time_stamp::character varying ts From collection order by row asc"))
       collectionTable$time_stamp <- collectionTable$ts
       collectionTable$ts <-  NULL
       #colnames(collectionTable)[colnames(collectionTable) == "ts"] <- "time_stamp"
