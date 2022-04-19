@@ -12,7 +12,7 @@ extractDbData(
   dbPwd = NULL,
   dbDataDir = NULL,
   radarTimeZone = NULL,
-  targetTimeZone = NULL,
+  targetTimeZone = "Etc/GMT0",
   forceToExtractDataFromDatabase = FALSE,
   listOfRfFeaturesToExtract = NULL
 )
@@ -30,9 +30,9 @@ extractDbData(
 
 \item{dbDataDir}{NULL The path to the directory where previously extracted datasets are stored. If _forceToExtractDataFromDatabase_ is FALSE and a dataset already exists in _dbDataDir_ for the respective database, data will be extracted from this .rds file instead of the SQL database.}
 
-\item{radarTimeZone}{NULL or a string specifying the radar time zone}
+\item{radarTimeZone}{NULL String specifying the radar time zone. Default is NULL: extract the timezone from the site table of the sql database.}
 
-\item{targetTimeZone}{NULL or a string specifying the target time zone}
+\item{targetTimeZone}{"Etc/GMT0" String specifying the target time zone. Default is "Etc/GMT0".}
 
 \item{forceToExtractDataFromDatabase}{if TRUE, it opens a connection to the Database requiring username and password, default FALSE}
 
