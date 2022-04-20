@@ -10,3 +10,4 @@ Imports:
   RODBC, 
   DBI, 
   rstudioapi
+  reshape2
