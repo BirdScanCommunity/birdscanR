@@ -143,7 +143,7 @@ extractDbData = function(dbDriverChar                   = NULL,
          
          weatherPropertyList <- weatherTable$weather_property
          weatherTable$weather_property <- weatherPropertyTable$property_name[ match( weatherPropertyList, weatherPropertyTable$id ) ]
-         weather = dcast( weatherTable, time_bin ~ weather_property, value.var = "value", fun.aggregate = mean )
+         weather = reshape2::dcast( weatherTable, time_bin ~ weather_property, value.var = "value", fun.aggregate = mean )
          rm( list = "weatherTable", "weatherPropertyTable", "weatherPropertyList" )
          
          # :::::::::::::::::::::::::::::::::::::::::::::::::::::::

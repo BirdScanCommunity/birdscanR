@@ -27,7 +27,7 @@ getEchoFeatures = function( dbConnection, dbDriverChar, listOfRfFeaturesToExtrac
       
       featurelist <- echorffeaturesMapTable$feature
       echorffeaturesMapTable$feature <- rffeaturesTable$name[ match( featurelist, rffeaturesTable$id ) ]
-      echoRfFeatureMap = dcast( echorffeaturesMapTable, echo ~ feature, value.var = "value", fun.aggregate = mean )
+      echoRfFeatureMap = reshape2::dcast( echorffeaturesMapTable, echo ~ feature, value.var = "value", fun.aggregate = mean )
       
       return( list( echoRfFeatureMap = echoRfFeatureMap, rfFeatures = rffeaturesTable ) )
    }

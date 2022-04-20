@@ -42,8 +42,8 @@ getRfClassification = function( dbConnection, dbDriverChar )
    rfclassProbabilityTable$class <- availableClasses$name[ match( rfClassList, availableClasses$id ) ]
    if( nrow( rfclassProbabilityTable ) > 0 )
    {
-      classProbabilites <- dcast( rfclassProbabilityTable[ !is.na(rfclassProbabilityTable$class) & !is.na(rfclassProbabilityTable$echo), ], echo ~ class, value.var="value", fun.aggregate = mean )
-      MTRFactorPerClass <- dcast( rfclassProbabilityTable[ !is.na(rfclassProbabilityTable$class) & !is.na(rfclassProbabilityTable$echo), ], echo ~ class, value.var="mtr_factor", fun.aggregate = mean )
+      classProbabilites <- reshape2::dcast( rfclassProbabilityTable[ !is.na(rfclassProbabilityTable$class) & !is.na(rfclassProbabilityTable$echo), ], echo ~ class, value.var="value", fun.aggregate = mean )
+      MTRFactorPerClass <- reshape2::dcast( rfclassProbabilityTable[ !is.na(rfclassProbabilityTable$class) & !is.na(rfclassProbabilityTable$echo), ], echo ~ class, value.var="mtr_factor", fun.aggregate = mean )
       names( classProbabilites )[ !names( classProbabilites ) == "echo" ] <- paste( "classProb.", names( classProbabilites )[ !names( classProbabilites ) == "echo" ], sep = "" )
       names( MTRFactorPerClass )[ !names( MTRFactorPerClass ) == "echo" ] <- paste( "MTRFact.", names( MTRFactorPerClass )[ !names( MTRFactorPerClass ) == "echo" ], sep = "" )
       classProbabilitiesAndMtrFactors <- merge( classProbabilites, MTRFactorPerClass, by = "echo", all.x =TRUE, all.y = FALSE )
