@@ -38,10 +38,6 @@ pngs stored in the directory specified in filePath
 \description{
 Plots the daily MTR values per day and night as a bar plot (Figure 15). For each bar the spread (first and third Quartile) is shown as error bars as well as the numbers of echoes. Periods with no observation are indicated with grey, negative bars.
 }
-\examples{
-# plot longitudinal MTR per day and night
-plotLongitudinalMTR( mtr = mtr_DayNight_25mto1000m, maxMTR = -1, timeRange = timeRangePlot, plotClass = "allClasses", plotSpread = TRUE, filePath = plotDir ) 
-}
 \author{
 Fabian Hertner (SBRS)
 }
