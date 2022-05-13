@@ -18,5 +18,5 @@ A dataframe with the collection table
 load collection from local MS-SQL DB
 }
 \author{
-Fabian Hertner (SBRS) \email{fabian.hertner@swiss-birdradar.com}
+Fabian Hertner (SBRS) \email{fabian.hertner@swiss-birdradar.com}, Birgen Haest (SOI) \email{birgen.haest@vogelwarte.ch}
 }
