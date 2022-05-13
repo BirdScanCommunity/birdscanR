@@ -1,4 +1,6 @@
 Package: birdscanR
+Author: Birgen Haest (birgen.haest@vogelwarte.ch)
+Maintainer: Birgen Haest <birgen.haest@vogelwarte.ch>
 Type: Package
 Title: Migration Traffic Rate Calculation Package for birdscan MR1 radars
 Version: 0.0.1.0
@@ -6,6 +8,7 @@ License: `use_gpl3_license()`
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
+Description: This package can be used to extract data from Birdscan MR1 sql databases as well as process those data to Migration Traffic Rates. 
 Imports: 
   DBI, 
   reshape2,
