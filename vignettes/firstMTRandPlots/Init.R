@@ -10,10 +10,7 @@
 ## are not, the missing package(s) will be installed 
 ## from CRAN and then loaded.
 ## First specify the packages of interest
-packages = c( "RODBC", 
-              "RPostgreSQL",
-              "reshape2",
-              "maptools",
+packages = c( "maptools",
               "ggplot2",
               "modi",
               "dplyr",
