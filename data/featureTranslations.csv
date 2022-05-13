@@ -22,8 +22,8 @@ feature20,durationOfEchoInSTC,Duration of echo in STC
 feature21,NA,
 feature22,NA,
 feature23,NA,
-feature24,alpha,Alpha: |AlphaEnd – AlphaStart|
-feature25,theta,Theta: 2·EpsilonCalc
+feature24,alpha,Alpha: |AlphaEnd - AlphaStart|
+feature25,theta,Theta: 2*EpsilonCalc
 feature26,NA,
 feature27,NA,
 feature28,NA,
