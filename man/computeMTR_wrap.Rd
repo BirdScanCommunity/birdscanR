@@ -77,9 +77,6 @@ MTR table
 \description{
 Wrapped function of compute MTR to incl. data formating.
 }
-\examples{
-# none for the moment.
-}
 \seealso{
 \link{list.dirs} This is optional if you want to point to another function description.
 }

@@ -16,8 +16,8 @@
 #' @return dataframe with overall blind times
 #' @export
 #'
-#' @examples
-#' mergeVisibilityAndManualBlindTimes( visibilityData = data$visibilityData, manualBlindTimes = manualBlindTimes, protocolData = protocolDataSubset )
+# #' @examples
+# #' mergeVisibilityAndManualBlindTimes( visibilityData = data$visibilityData, manualBlindTimes = manualBlindTimes, protocolData = protocolDataSubset )
 mergeVisibilityAndManualBlindTimes <- function( visibilityData = NULL, manualBlindTimes = NULL, protocolData = NULL )
 {
   if( !is.null( visibilityData ) && !is.null( protocolData ) )

@@ -21,6 +21,3 @@ a data frame with the results
 \description{
 Calculate the  duration of night in hours and seconds. It calculate also the time of both solar and civil start of the day and end of the day.
 }
-\examples{
-
-}

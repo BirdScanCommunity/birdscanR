@@ -20,9 +20,6 @@ data frame with two columns added for dayOrNight and dateSunset.
 The function ‘addDayNightInfoPerEcho’ adds the two columns ‘dayOrNight’ and ‘dateSunset’ to the echo data.
 This information is not used any further by the script, but allows the user to filter echodata easily by “day” and “night”.
 }
-\examples{
-addDayNightInfoPerEcho( echoData = echoData, sunriseSunset = sunriseSunset, sunOrCivil = "civil" )
-}
 \author{
 Fabian Hertner (SBRS)
 }

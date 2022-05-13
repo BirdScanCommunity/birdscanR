@@ -40,9 +40,6 @@ if some of the defined manual blind time types should be treated as observed tim
 as blind time (e.g. rain). If no file is present or the file is empty, no manual blind times will
 be computed.
 }
-\examples{
-loadManualBlindTimes( filePath = ManualBlindTimesFile, blindTimesTZ = radarTimeZone, blindTimesTZ = targetTimeZone )
-}
 \author{
 Fabian Hertner (SBRS)
 }

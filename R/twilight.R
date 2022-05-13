@@ -10,8 +10,6 @@
 #'
 #' @return a data frame with the results
 #' @export
-#'
-#' @examples
 #' 
 twilight <- function( timeRange, latLon, crs_datum = "WGS84", timeZone )
 {

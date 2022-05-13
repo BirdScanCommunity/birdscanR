@@ -41,10 +41,6 @@ pngs stored in the directory specified in filePath
 \description{
 TBC
 }
-\examples{
-# plot Exploration
-plotExploration( echoData = echoDataSubset_all_25_5000, timeRange = timeRangePlot, manualBlindTimes = manualBlindTimes, visibilityData = data$visibilityData, protocolData = protocolDataSubset, sunriseSunset = sunriseSunset, maxAltitude = -1, filePath = plotDir )
-}
 \author{
 Fabian Hertner (SBRS)
 }

@@ -10,8 +10,8 @@
 #' @return data frame with two columns added for dayOrNight and dateSunset.
 #' @export
 #'
-#' @examples
-#' addDayNightInfoPerEcho( echoData = echoData, sunriseSunset = sunriseSunset, sunOrCivil = "civil" )
+# #' @examples
+# #' addDayNightInfoPerEcho( echoData = echoData, sunriseSunset = sunriseSunset, sunOrCivil = "civil" )
 addDayNightInfoPerEcho = function( echoData, sunriseSunset, sunOrCivil = "civil" )
 {
   if( length( echoData[ , 1 ] ) == 0 )

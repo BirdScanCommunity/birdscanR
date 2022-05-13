@@ -29,8 +29,6 @@
 #' @return MTR table
 #' @export
 #'
-#' @examples # none for the moment.
-
 computeMTR_wrap <- function(
   echoData,
   classSelection,

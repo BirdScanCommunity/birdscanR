@@ -154,9 +154,9 @@ plotLongitudinalMTR = function( mtr, maxMTR, timeRange = NULL, plotClass = "allC
 #' @return pngs stored in the directory specified in filePath
 #' @export
 #'
-#' @examples
-#' # plot Exploration
-#' plotExploration( echoData = echoDataSubset_all_25_5000, timeRange = timeRangePlot, manualBlindTimes = manualBlindTimes, visibilityData = data$visibilityData, protocolData = protocolDataSubset, sunriseSunset = sunriseSunset, maxAltitude = -1, filePath = plotDir )
+# #' @examples
+# #' # plot Exploration
+# #' plotExploration( echoData = echoDataSubset_all_25_5000, timeRange = timeRangePlot, manualBlindTimes = manualBlindTimes, visibilityData = data$visibilityData, protocolData = protocolDataSubset, sunriseSunset = sunriseSunset, maxAltitude = -1, filePath = plotDir )
 plotExploration = function( echoData = NULL, timeRange = NULL, manualBlindTimes = NULL, visibilityData = NULL, protocolData = NULL, sunriseSunset = NULL, maxAltitude = NULL, filePath = NULL )
 {
   if( !is.null( echoData ) )

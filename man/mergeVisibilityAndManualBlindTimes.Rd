@@ -30,9 +30,6 @@ blind times are given the type “visibility”. After that the visibility and m
 will be merged. In case manual blind times and radar blind times are overlapping, radar blind
 times with type “visibility” will be overwritten, but not radar blind times with type “protocolChange”.
 }
-\examples{
-mergeVisibilityAndManualBlindTimes( visibilityData = data$visibilityData, manualBlindTimes = manualBlindTimes, protocolData = protocolDataSubset )
-}
 \author{
 Fabian Hertner (SBRS)
 }
