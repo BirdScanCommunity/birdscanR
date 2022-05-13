@@ -5,31 +5,6 @@
 #' @return featureNames A dataframe with two columns, feature and featurenames, as well as classAbbreviation : a dataframe with two columns, class and abbrev, for example passerine-type vs pa.
 #' @export
 #'
-
-## If a package is installed, it will be loaded. If any 
-## are not, the missing package(s) will be installed 
-## from CRAN and then loaded.
-## First specify the packages of interest
-packages = c( "maptools",
-              "ggplot2",
-              "modi",
-              "dplyr",
-              "grid",
-              "gridExtra",
-              "tidyr",
-              "tidyverse")
-
-## Now load or install&load all
-package.check <- lapply(
-  packages,
-  FUN = function(x) {
-    if (!require(x, character.only = TRUE)) {
-      install.packages(x, dependencies = TRUE)
-      library(x, character.only = TRUE)
-    }
-  }
-)
-
 # Root directory
 root <- getwd()
 
