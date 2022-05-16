@@ -84,9 +84,17 @@ extractDbData = function(dbDriverChar              = "SQL Server",
        }
     }
  
-# Start extracting data from sql database
+# Check whether there is a connection
 # =============================================================================
   if (if (dbDriverChar == "PostgreSQL"){isPostgresqlIdCurrent(dbConnection)} else {dbConnection != -1}){
+    # Do nothing
+  } else {
+    stop("Could not open database. Make sure to set dbServer, dbName, and credentials right.")
+  }  
+  
+# Start extracting data from sql database
+# =============================================================================
+  
     # load collection table
     # =========================================================================
       message("Extracting collection table from DB...")
@@ -287,35 +295,31 @@ extractDbData = function(dbDriverChar              = "SQL Server",
        } else {
           DBI::dbDisconnect(dbConnection)
        }      
-      
-  } else {
-    warning("Could not open database. Make sure to set dbServer, dbName and credentials right.")
-  }
 
 # Return output
 # =============================================================================
-if (exists("manualVisibilityTable")){  
-  return(list(echoData                        = echoData, 
-              protocolData                    = protocolData,
-              siteData                        = siteData, 
-              visibilityData                  = visibilityData,
-              manualVisibilityTable           = manualVisibilityTable,
-              timeBinData                     = timeBinData,
-              availableClasses                = availableClasses,
-              rfFeatures                      = rfFeatures,
-              TimeZone                        = TimeZone,
-              classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors))
-} else {
-  return(list(echoData                        = echoData, 
-              protocolData                    = protocolData,
-              siteData                        = siteData, 
-              visibilityData                  = visibilityData,
-              timeBinData                     = timeBinData,
-              availableClasses                = availableClasses,
-              rfFeatures                      = rfFeatures,
-              TimeZone                        = TimeZone,
-              classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors))
-}
+  if (exists("manualVisibilityTable")){  
+    return(list(echoData                        = echoData, 
+                protocolData                    = protocolData,
+                siteData                        = siteData, 
+                visibilityData                  = visibilityData,
+                manualVisibilityTable           = manualVisibilityTable,
+                timeBinData                     = timeBinData,
+                availableClasses                = availableClasses,
+                rfFeatures                      = rfFeatures,
+                TimeZone                        = TimeZone,
+                classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors))
+  } else {
+    return(list(echoData                        = echoData, 
+                protocolData                    = protocolData,
+                siteData                        = siteData, 
+                visibilityData                  = visibilityData,
+                timeBinData                     = timeBinData,
+                availableClasses                = availableClasses,
+                rfFeatures                      = rfFeatures,
+                TimeZone                        = TimeZone,
+                classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors))
+  }
 
 # =============================================================================
 # =============================================================================
