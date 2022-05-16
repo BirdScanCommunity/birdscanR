@@ -2,11 +2,11 @@
 #' @title Extract DB Data
 #' @description Load the data from the database or file and save it to file
 #' @author Fabian Hertner (SBRS) \email{fabian.hertner@@swiss-birdradar.com}, \email{birgen.haest@@vogelwarte.ch}
-#' @param dbDriverChar NULL the name of the driver. If different from 'PostgreSQL' it connects to cloud.birdradar.com
-#' @param dbServer NULL the name of the Server
-#' @param dbName NULL the name of the Database
-#' @param dbUser NULL the USER name of the Server
-#' @param dbPwd NULL the password for the user name
+#' @param dbDriverChar 'SQL Server' The name of the driver. Should be either 'SQL Server' or 'PostgreSQL'. If 'PostgreSQL', it connects to cloud.birdradar.com
+#' @param dbServer NULL The name of the Server
+#' @param dbName NULL The name of the Database
+#' @param dbUser NULL The USER name of the Server
+#' @param dbPwd NULL The password for the user name
 #' @param dbDataDir NULL The path to the output directory where to store the extracted dataset. 
 #' @param radarTimeZone NULL String specifying the radar time zone. Default is NULL: extract the timezone from the site table of the sql database.
 #' @param targetTimeZone "Etc/GMT0" String specifying the target time zone. Default is "Etc/GMT0".
@@ -15,15 +15,15 @@
 #' @return a list of R objects with data extracted from the Database echoData,  protocolData, siteData, visibilityData, timeBinData, rfFeatures, availableClasses, classProbabilitiesAndMtrFactors
 #' @export
 #' 
-extractDbData = function(dbDriverChar                   = NULL, 
-                         dbServer                       = NULL, 
-                         dbName                         = NULL,  
-                         dbUser                         = NULL, 
-                         dbPwd                          = NULL, 
-                         dbDataDir                      = NULL,
-                         radarTimeZone                  = NULL, 
-                         targetTimeZone                 = "Etc/GMT0", 
-                         listOfRfFeaturesToExtract      = NULL){
+extractDbData = function(dbDriverChar              = "SQL Server", 
+                         dbServer                  = NULL, 
+                         dbName                    = NULL,  
+                         dbUser                    = NULL, 
+                         dbPwd                     = NULL, 
+                         dbDataDir                 = NULL,
+                         radarTimeZone             = NULL, 
+                         targetTimeZone            = "Etc/GMT0", 
+                         listOfRfFeaturesToExtract = NULL){
 # Set variables
 # =============================================================================
   dbDataName <- paste( "DB_Data", dbName, sep= "_" )
@@ -37,38 +37,38 @@ extractDbData = function(dbDriverChar                   = NULL,
   
 # Open the database connection
 # =============================================================================
-      if(dbDriverChar != 'PostgreSQL') {
-         if( !is.null(dbUser) | !is.null(dbPwd) ){
-            dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
-                         ";database=", dbName,
-                         ";uid=", dbUser,
-                         ";pwd=", dbPwd
-            )
-         } else { # request the username and pwd via the rstudioAPI
-            dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
-                         ";database=", dbName,
-                         ";uid=", rstudioapi::askForPassword("Database user"),
-                         ";pwd=", rstudioapi::askForPassword("Database password")
-            )
-         }
-         dbConnection <- RODBC::odbcDriverConnect( dsn )
-      } else {
-         if( !is.null(dbUser) | !is.null(dbPwd) ){
-            dbConnection = DBI::dbConnect('PostgreSQL',
-                                           host='cloud.birdradar.com',
-                                           dbname = dbName,
-                                           user = dbUser,
-                                           password = dbPwd
-            )
-         } else { # request the username and pwd via the rstudioAPI
-            dbConnection = DBI::dbConnect('PostgreSQL',
-                                           host='cloud.birdradar.com',
-                                           dbname = dbName,
-                                           user = rstudioapi::askForPassword("Database user"),
-                                           password = rstudioapi::askForPassword("Database password")
-            )
-         }
-      }
+if(dbDriverChar != 'PostgreSQL') {
+   if( !is.null(dbUser) | !is.null(dbPwd) ){
+      dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
+                   ";database=", dbName,
+                   ";uid=", dbUser,
+                   ";pwd=", dbPwd
+      )
+   } else { # request the username and pwd via the rstudioAPI
+      dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
+                   ";database=", dbName,
+                   ";uid=", rstudioapi::askForPassword("Database user"),
+                   ";pwd=", rstudioapi::askForPassword("Database password")
+      )
+   }
+   dbConnection <- RODBC::odbcDriverConnect( dsn )
+} else {
+   if( !is.null(dbUser) | !is.null(dbPwd) ){
+      dbConnection = DBI::dbConnect('PostgreSQL',
+                                     host='cloud.birdradar.com',
+                                     dbname = dbName,
+                                     user = dbUser,
+                                     password = dbPwd
+      )
+   } else { # request the username and pwd via the rstudioAPI
+      dbConnection = DBI::dbConnect('PostgreSQL',
+                                     host='cloud.birdradar.com',
+                                     dbname = dbName,
+                                     user = rstudioapi::askForPassword("Database user"),
+                                     password = rstudioapi::askForPassword("Database password")
+      )
+   }
+}
       
       
       
