@@ -7,7 +7,7 @@ Version: 0.0.1.0
 License: `use_gpl3_license()`
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 Description: This package can be used to extract data from Birdscan MR1 sql databases as well as process those data to Migration Traffic Rates. 
 Imports: 
   DBI,
