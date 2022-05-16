@@ -7,7 +7,7 @@
 #' @param dbName NULL The name of the Database
 #' @param dbUser NULL The USER name of the Server
 #' @param dbPwd NULL The password for the user name
-#' @param saveDbToFile FALSE Set to TRUE if you want to save the extracted database data to an rds file.
+#' @param saveDbToFile FALSE Set to TRUE if you want to save the extracted database data to an rds file. The output filename is automatically set to dbName_DataExtract.rds 
 #' @param dbDataDir NULL The path to the output directory where to store the extracted dataset. If the directory does not exist, it will be created.
 #' @param radarTimeZone NULL String specifying the radar time zone. Default is NULL: extract the timezone from the site table of the sql database.
 #' @param targetTimeZone "Etc/GMT0" String specifying the target time zone. Default is "Etc/GMT0".
