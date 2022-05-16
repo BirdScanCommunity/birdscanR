@@ -26,8 +26,8 @@ extractDbData = function(dbDriverChar              = "SQL Server",
                          listOfRfFeaturesToExtract = NULL){
 # Set variables
 # =============================================================================
-  dbDataName <- paste( "DB_Data", dbName, sep= "_" )
-  dbDataName <- paste( dbDataName, "Rdata", sep= "." )
+  dbDataName = paste( "DB_Data", dbName, sep= "_" )
+  dbDataName = paste( dbDataName, "Rdata", sep= "." )
 
 # Check whether the necessary input is present
 # =============================================================================
@@ -37,55 +37,66 @@ extractDbData = function(dbDriverChar              = "SQL Server",
   
 # Open the database connection
 # =============================================================================
-if(dbDriverChar != 'PostgreSQL') {
-   if( !is.null(dbUser) | !is.null(dbPwd) ){
-      dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
-                   ";database=", dbName,
-                   ";uid=", dbUser,
-                   ";pwd=", dbPwd
-      )
-   } else { # request the username and pwd via the rstudioAPI
-      dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
-                   ";database=", dbName,
-                   ";uid=", rstudioapi::askForPassword("Database user"),
-                   ";pwd=", rstudioapi::askForPassword("Database password")
-      )
-   }
-   dbConnection <- RODBC::odbcDriverConnect( dsn )
-} else {
-   if( !is.null(dbUser) | !is.null(dbPwd) ){
-      dbConnection = DBI::dbConnect('PostgreSQL',
-                                     host='cloud.birdradar.com',
-                                     dbname = dbName,
-                                     user = dbUser,
-                                     password = dbPwd
-      )
-   } else { # request the username and pwd via the rstudioAPI
-      dbConnection = DBI::dbConnect('PostgreSQL',
-                                     host='cloud.birdradar.com',
-                                     dbname = dbName,
-                                     user = rstudioapi::askForPassword("Database user"),
-                                     password = rstudioapi::askForPassword("Database password")
-      )
-   }
-}
+  # CASE: "SQL Server"
+  # ===========================================================================
+    if(dbDriverChar == "SQL Server"){
+      # CASE: Username and Password are provided
+      # =======================================================================
+        if(!is.null(dbUser) | !is.null(dbPwd)){
+          dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
+                       ";database=", dbName,
+                       ";uid=", dbUser,
+                       ";pwd=", dbPwd)
+          
+      # CASE: Username and Password are NOT provided
+      #       Request the username and pwd via the rstudioAPI
+      # =======================================================================
+        } else {
+          dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
+                       ";database=", dbName,
+                       ";uid=", rstudioapi::askForPassword("Database user"),
+                       ";pwd=", rstudioapi::askForPassword("Database password"))
+        }
+      
+       dbConnection = RODBC::odbcDriverConnect(dsn)
+       
+  # CASE: "PostgreSQL"
+  # ===========================================================================   
+    } else if (dbDriverChar == "PostgreSQL"){
+      # CASE: Username and Password are provided
+      # =======================================================================
+        if( !is.null(dbUser) | !is.null(dbPwd)){
+          dbConnection = DBI::dbConnect("PostgreSQL",
+                                        host     = "cloud.birdradar.com",
+                                        dbname   = dbName,
+                                        user     = dbUser,
+                                        password = dbPwd)
+          
+      # CASE: Username and Password are NOT provided
+      #       Request the username and pwd via the rstudioAPI
+      # =======================================================================
+       } else { 
+          dbConnection = DBI::dbConnect("PostgreSQL",
+                                         host     = "cloud.birdradar.com",
+                                         dbname   = dbName,
+                                         user     = rstudioapi::askForPassword("Database user"),
+                                         password = rstudioapi::askForPassword("Database password"))
+       }
+    }
       
       
       
       
-      if( 
-         if(dbDriverChar == 'PostgreSQL') 
-         {
-            isPostgresqlIdCurrent(dbConnection)
-         } else {
-            dbConnection != -1
-         } 
-      )
+  if(if(dbDriverChar == "PostgreSQL"){
+    isPostgresqlIdCurrent(dbConnection)
+    } else {
+      dbConnection != -1
+    })
       {
          # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
          # load collection table
          message( "Extracting collection table from DB..." )
-         collectionTable <- getCollectionTable( dbConnection, dbDriverChar )
+         collectionTable = getCollectionTable( dbConnection, dbDriverChar )
          
          # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
          # load protocol from local MS-SQL DB
@@ -106,7 +117,7 @@ if(dbDriverChar != 'PostgreSQL') {
          # load visibility from local MS-SQL DB
          message( "Extracting visibility table from DB..." )
          visibilityTable = getVisibilityTable( dbConnection, dbDriverChar )
-         visibilityData <- visibilityTable
+         visibilityData = visibilityTable
          rm( visibilityTable )
          
          # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -141,76 +152,76 @@ if(dbDriverChar != 'PostgreSQL') {
                                       "Select * From weather_property"
          )
          
-         weatherPropertyList <- weatherTable$weather_property
-         weatherTable$weather_property <- weatherPropertyTable$property_name[ match( weatherPropertyList, weatherPropertyTable$id ) ]
+         weatherPropertyList = weatherTable$weather_property
+         weatherTable$weather_property = weatherPropertyTable$property_name[ match( weatherPropertyList, weatherPropertyTable$id ) ]
          weather = reshape2::dcast( weatherTable, time_bin ~ weather_property, value.var = "value", fun.aggregate = mean )
          rm( list = "weatherTable", "weatherPropertyTable", "weatherPropertyList" )
          
          # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
          # get all listed rf features
          message( "Extracting rffeatures table from DB..." )
-         echoRfFeatureMap <- getEchoFeatures( dbConnection, dbDriverChar, listOfRfFeaturesToExtract = listOfRfFeaturesToExtract )   
+         echoRfFeatureMap = getEchoFeatures( dbConnection, dbDriverChar, listOfRfFeaturesToExtract = listOfRfFeaturesToExtract )   
          
          # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
          # load rf classification
          message( "Extracting RF classification..." )
-         rfclassificationTable <- getRfClassification( dbConnection, dbDriverChar )
+         rfclassificationTable = getRfClassification( dbConnection, dbDriverChar )
          
          # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
          # load echo validation from local MS-SQL DB
          message( "Extracting echo_validation table from DB..." )
-         echovalidationTable <- getEchoValidationTable( dbConnection, dbDriverChar )
+         echovalidationTable = getEchoValidationTable( dbConnection, dbDriverChar )
          
          # Merge echo Data
-         echoData <- collectionTable
-         names( echoData )[ names( echoData ) == "row"] <- "echo"
+         echoData = collectionTable
+         names( echoData )[ names( echoData ) == "row"] = "echo"
          if( !is.null( echoRfFeatureMap$echoRfFeatureMap ) )
          {
-            echoData <- merge( echoData, echoRfFeatureMap$echoRfFeatureMap, by = "echo", all.x = TRUE, all.y = FALSE )      
+            echoData = merge( echoData, echoRfFeatureMap$echoRfFeatureMap, by = "echo", all.x = TRUE, all.y = FALSE )      
          }
-         echoData <- merge( echoData, echovalidationTable, by = "echo", all.x = TRUE, all.y = FALSE )
-         echoData <- merge( echoData, rfclassificationTable$rfclassificationTable, by = "echo", all.x = TRUE, all.y = FALSE )
-         availableClasses <- rfclassificationTable$availableClasses
-         classProbabilitiesAndMtrFactors <- rfclassificationTable$classProbabilitiesAndMtrFactors
-         rfFeatures <- echoRfFeatureMap$rfFeatures
+         echoData = merge( echoData, echovalidationTable, by = "echo", all.x = TRUE, all.y = FALSE )
+         echoData = merge( echoData, rfclassificationTable$rfclassificationTable, by = "echo", all.x = TRUE, all.y = FALSE )
+         availableClasses = rfclassificationTable$availableClasses
+         classProbabilitiesAndMtrFactors = rfclassificationTable$classProbabilitiesAndMtrFactors
+         rfFeatures = echoRfFeatureMap$rfFeatures
          rm( collectionTable, echoRfFeatureMap, echovalidationTable, rfclassificationTable )
          
          # rename protocolTable
-         protocolData <- protocolTable
+         protocolData = protocolTable
          rm( protocolTable )
          
          # Merge site Data
-         siteData <- merge( siteTable, radarTable, by = "radarID", all = TRUE )
+         siteData = merge( siteTable, radarTable, by = "radarID", all = TRUE )
          rm( siteTable, radarTable )
          
          # Merge timebin Data
-         timeBinData <- timeBinsTable
-         names( timeBinData )[ names( timeBinData ) == "id"] <- "time_bin"
-         timeBinData <- merge( timeBinData, weather, by = "time_bin", all.x =TRUE, all.y = FALSE )
+         timeBinData = timeBinsTable
+         names( timeBinData )[ names( timeBinData ) == "id"] = "time_bin"
+         timeBinData = merge( timeBinData, weather, by = "time_bin", all.x =TRUE, all.y = FALSE )
          rm( timeBinsTable, weather )
          
          # insert a.s.l. altitude column to echoData
-         asl <- data.frame( "feature1.altitude_ASL" = echoData$feature1.altitude_AGL ) + siteData$altitude
-         echoData <- data.frame( echoData[ , 1:match( "feature1.altitude_AGL", names( echoData ) ) ], asl, echoData[ , ( match( "feature1.altitude_AGL", names( echoData ) ) + 1 ) : length( echoData ) ] )
+         asl = data.frame( "feature1.altitude_ASL" = echoData$feature1.altitude_AGL ) + siteData$altitude
+         echoData = data.frame( echoData[ , 1:match( "feature1.altitude_AGL", names( echoData ) ) ], asl, echoData[ , ( match( "feature1.altitude_AGL", names( echoData ) ) + 1 ) : length( echoData ) ] )
          rm( asl )
          
          # get radarTZ from siteData (or siteTable)
          if( is.null( radarTimeZone ) ) {
-            tz_shift <- as.numeric(siteData$timeShift) # Get time zone saved in the database table 'dbo.site'
+            tz_shift = as.numeric(siteData$timeShift) # Get time zone saved in the database table 'dbo.site'
             if(is.na(tz_shift) | is.null(tz_shift) ) stop("set a radarTimeZone, or update the timeshift column in the dbo-site table")
             if(tz_shift >= 0 | tz_shift < 0){
-               radarTimeZone <- paste0("Etc/GMT", ifelse(tz_shift >=0 , "-", "+"), abs(tz_shift)) # note that "UTC+1" is denoted as "Etc/GMT-1"
+               radarTimeZone = paste0("Etc/GMT", ifelse(tz_shift >=0 , "-", "+"), abs(tz_shift)) # note that "UTC+1" is denoted as "Etc/GMT-1"
                message( paste0( "Radar timezone extracted from dbo.site is :", radarTimeZone) )
             }
          }
-         TimeZone <- data.frame("radarTimeZone" = radarTimeZone,
+         TimeZone = data.frame("radarTimeZone" = radarTimeZone,
                                 "targetTimeZone" = targetTimeZone)
          # timezone conversion
-         visibilityData <- convertTimeZone( data = visibilityData, colNames = c( "blind_from", "blind_to" ), originTZ = radarTimeZone, targetTZ = targetTimeZone )
-         protocolData <- convertTimeZone( data = protocolData, colNames = c( "startTime", "stopTime" ), originTZ = radarTimeZone, targetTZ = targetTimeZone )
-         siteData <- convertTimeZone( data = siteData, colNames = c( "projectStart", "projectEnd" ), originTZ = radarTimeZone, targetTZ = targetTimeZone )
-         timeBinData <- convertTimeZone( data = timeBinData, colNames = c( "time_start", "time_stop" ), originTZ = radarTimeZone, targetTZ = targetTimeZone )
-         echoData <- convertTimeZone( data = echoData, colNames = c( "time_stamp" ), originTZ = radarTimeZone, targetTZ = targetTimeZone )
+         visibilityData = convertTimeZone( data = visibilityData, colNames = c( "blind_from", "blind_to" ), originTZ = radarTimeZone, targetTZ = targetTimeZone )
+         protocolData = convertTimeZone( data = protocolData, colNames = c( "startTime", "stopTime" ), originTZ = radarTimeZone, targetTZ = targetTimeZone )
+         siteData = convertTimeZone( data = siteData, colNames = c( "projectStart", "projectEnd" ), originTZ = radarTimeZone, targetTZ = targetTimeZone )
+         timeBinData = convertTimeZone( data = timeBinData, colNames = c( "time_start", "time_stop" ), originTZ = radarTimeZone, targetTZ = targetTimeZone )
+         echoData = convertTimeZone( data = echoData, colNames = c( "time_stamp" ), originTZ = radarTimeZone, targetTZ = targetTimeZone )
          
          # Create directory if not existing
          ifelse( !dir.exists( dbDataDir ), dir.create( dbDataDir ), FALSE )
@@ -243,7 +254,7 @@ if(dbDriverChar != 'PostgreSQL') {
          
          
          # close database connections
-         if(dbDriverChar != 'PostgreSQL') {
+         if(dbDriverChar != "PostgreSQL") {
             RODBC::odbcCloseAll() 
          } else {
             DBI::dbDisconnect(dbConnection)
