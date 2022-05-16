@@ -255,47 +255,49 @@ extractDbData = function(dbDriverChar              = "SQL Server",
                                    colNames = c("time_stamp"), 
                                    originTZ = radarTimeZone, 
                                    targetTZ = targetTimeZone)
-          
-# Create directory if not existing
+     
+# Define output list with all output data
 # =========================================================================
+  # CASE: manual VisibilityTable
+  # =====================================================================
+    if (exists("manualVisibilityTable")){ 
+      outputList = list(echoData                        = echoData, 
+                        protocolData                    = protocolData,
+                        siteData                        = siteData, 
+                        visibilityData                  = visibilityData,
+                        manualVisibilityTable           = manualVisibilityTable,
+                        timeBinData                     = timeBinData,
+                        availableClasses                = availableClasses,
+                        rfFeatures                      = rfFeatures,
+                        TimeZone                        = TimeZone,
+                        classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors)
+      
+  # CASE: automatic VisibilityTable
+  # =====================================================================
+    } else {
+      outputList = list(echoData                        = echoData, 
+                        protocolData                    = protocolData,
+                        siteData                        = siteData, 
+                        visibilityData                  = visibilityData,
+                        timeBinData                     = timeBinData,
+                        availableClasses                = availableClasses,
+                        rfFeatures                      = rfFeatures,
+                        TimeZone                        = TimeZone,
+                        classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors)
+    }
+  
+# Create directory if not existing
+# =============================================================================
   dir.create(dbDataDir, showWarnings = F, recursive = T)
      
 # save DB Data to a file, if requested
-# =========================================================================
+# =============================================================================
   if (saveDbToFile){
-    # CASE: manual VisibilityTable
-    # =====================================================================
-      if (exists("manualVisibilityTable")){  
-        save(echoData, 
-             protocolData,
-             siteData, 
-             visibilityData,
-             manualVisibilityTable,
-             timeBinData,
-             availableClasses,
-             rfFeatures,
-             TimeZone,
-             classProbabilitiesAndMtrFactors,
-             file = file.path(dbDataDir, dbDataName))
-        
-    # CASE: automatic VisibilityTable
-    # =====================================================================
-      } else {
-        save(echoData, 
-             protocolData,
-             siteData, 
-             visibilityData,
-             timeBinData,
-             availableClasses,
-             rfFeatures,
-             TimeZone,
-             classProbabilitiesAndMtrFactors,
-             file = file.path(dbDataDir, dbDataName))
-      }
+    saveRDS(outputList, file = file.path(dbDataDir, paste0(dbDataName, ".rds")))
   }
 
 # close database connections
-# =========================================================================
+# =============================================================================
   if (dbDriverChar != "PostgreSQL") {
     RODBC::odbcCloseAll() 
   } else {
@@ -304,28 +306,7 @@ extractDbData = function(dbDriverChar              = "SQL Server",
 
 # Return output
 # =============================================================================
-  if (exists("manualVisibilityTable")){  
-    return(list(echoData                        = echoData, 
-                protocolData                    = protocolData,
-                siteData                        = siteData, 
-                visibilityData                  = visibilityData,
-                manualVisibilityTable           = manualVisibilityTable,
-                timeBinData                     = timeBinData,
-                availableClasses                = availableClasses,
-                rfFeatures                      = rfFeatures,
-                TimeZone                        = TimeZone,
-                classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors))
-  } else {
-    return(list(echoData                        = echoData, 
-                protocolData                    = protocolData,
-                siteData                        = siteData, 
-                visibilityData                  = visibilityData,
-                timeBinData                     = timeBinData,
-                availableClasses                = availableClasses,
-                rfFeatures                      = rfFeatures,
-                TimeZone                        = TimeZone,
-                classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors))
-  }
+  return(outputList)
 
 # =============================================================================
 # =============================================================================
