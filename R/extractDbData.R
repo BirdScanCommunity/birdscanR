@@ -96,34 +96,34 @@ extractDbData = function(dbDriverChar              = "SQL Server",
   }  
   
 # load collection table
-# =========================================================================
+# =============================================================================
   message("Extracting collection table from DB...")
   collectionTable = getCollectionTable(dbConnection, dbDriverChar)
  
 # load protocol from local MS-SQL DB
-# =========================================================================
+# =============================================================================
   message("Extracting protocol table from DB...")
   protocolTable = getProtocolTable(dbConnection, dbDriverChar)
 
 # load radar from local MS-SQL DB
-# =========================================================================
+# =============================================================================
   message("Extracting radar table from DB...")
   radarTable = getRadarTable(dbConnection, dbDriverChar)
 
 # load site from local MS-SQL DB
-# =========================================================================
+# =============================================================================
   message("Extracting site table from DB...")
   siteTable = getSiteTable(dbConnection, dbDriverChar)
 
 # load visibility from local MS-SQL DB
-# =========================================================================
+# =============================================================================
   message("Extracting visibility table from DB...")
   visibilityTable = getVisibilityTable(dbConnection, dbDriverChar)
   visibilityData  = visibilityTable
   rm(visibilityTable)
 
 # load manual visibility from local MS-SQL DB
-# =========================================================================
+# =============================================================================
   message("Extracting MANUAL visibility table from DB...")
   manualVisibilityTable = try(getManualVisibilityTable(dbConnection, dbDriverChar), 
                               silent = TRUE)
@@ -135,17 +135,17 @@ extractDbData = function(dbDriverChar              = "SQL Server",
   }
 
 # load time bins from local MS-SQL DB
-# =========================================================================
+# =============================================================================
   message("Extracting time_bins table from DB...")
   timeBinsTable = getTimeBinsTable(dbConnection, dbDriverChar)
 
 # load weather from local MS-SQL DB
-# =========================================================================
+# =============================================================================
   message("Extracting weather table from DB...")
   weatherTable = QUERY(dbConnection, dbDriverChar, "Select * From weather")
 
 # load weather properties from local MS-SQL DB
-# =========================================================================
+# =============================================================================
   message("Extracting weather_property table from DB...")
   weatherPropertyTable = QUERY(dbConnection, dbDriverChar, 
                                "Select * From weather_property")
@@ -159,23 +159,23 @@ extractDbData = function(dbDriverChar              = "SQL Server",
   rm(list = "weatherTable", "weatherPropertyTable", "weatherPropertyList")
 
 # get all listed rf features
-# =========================================================================
+# =============================================================================
   message("Extracting rffeatures table from DB...")
   echoRfFeatureMap = getEchoFeatures(dbConnection, dbDriverChar, 
                                      listOfRfFeaturesToExtract = listOfRfFeaturesToExtract)   
 
 # load rf classification
-# =========================================================================
+# =============================================================================
   message("Extracting RF classification...")
   rfclassificationTable = getRfClassification(dbConnection, dbDriverChar)
 
 # load echo validation from local MS-SQL DB
-# =========================================================================
+# =============================================================================
   message("Extracting echo_validation table from DB...")
   echovalidationTable = getEchoValidationTable(dbConnection, dbDriverChar)
 
 # Merge echo Data
-# =========================================================================
+# =============================================================================
   echoData = collectionTable
   names(echoData)[names(echoData) == "row"] = "echo"
   if (!is.null(echoRfFeatureMap$echoRfFeatureMap)){
@@ -193,17 +193,17 @@ extractDbData = function(dbDriverChar              = "SQL Server",
      echovalidationTable, rfclassificationTable)
 
 # rename protocolTable
-# =========================================================================
+# =============================================================================
   protocolData = protocolTable
   rm(protocolTable)
 
 # Merge site Data
-# =========================================================================
+# =============================================================================
   siteData = merge(siteTable, radarTable, by = "radarID", all = TRUE)
   rm(siteTable, radarTable)
 
 # Merge timebin Data
-# =========================================================================
+# =============================================================================
   timeBinData = timeBinsTable
   names(timeBinData)[names(timeBinData) == "id"] = "time_bin"
   timeBinData = merge(timeBinData, weather, 
@@ -211,7 +211,7 @@ extractDbData = function(dbDriverChar              = "SQL Server",
   rm(timeBinsTable, weather)
  
 # insert a.s.l. altitude column to echoData
-# =========================================================================
+# =============================================================================
   asl      = data.frame("feature1.altitude_ASL" = echoData$feature1.altitude_AGL) + 
               siteData$altitude
   echoData = data.frame(echoData[, 1:match("feature1.altitude_AGL", names(echoData))], 
@@ -220,7 +220,7 @@ extractDbData = function(dbDriverChar              = "SQL Server",
   rm(asl)
  
 # get radarTZ from siteData (or siteTable)
-# =========================================================================
+# =============================================================================
   if (is.null(radarTimeZone)){
     tz_shift = as.numeric(siteData$timeShift) # Get time zone saved in the database table 'dbo.site'
       
@@ -234,7 +234,7 @@ extractDbData = function(dbDriverChar              = "SQL Server",
                         "targetTimeZone" = targetTimeZone)
    
 # timezone conversion
-# =========================================================================
+# =============================================================================
   visibilityData = convertTimeZone(data     = visibilityData, 
                                    colNames = c("blind_from", "blind_to"), 
                                    originTZ = radarTimeZone, 
@@ -257,9 +257,9 @@ extractDbData = function(dbDriverChar              = "SQL Server",
                                    targetTZ = targetTimeZone)
      
 # Define output list with all output data
-# =========================================================================
+# =============================================================================
   # CASE: manual VisibilityTable
-  # =====================================================================
+  # ===========================================================================
     if (exists("manualVisibilityTable")){ 
       outputList = list(echoData                        = echoData, 
                         protocolData                    = protocolData,
@@ -273,7 +273,7 @@ extractDbData = function(dbDriverChar              = "SQL Server",
                         classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors)
       
   # CASE: automatic VisibilityTable
-  # =====================================================================
+  # ===========================================================================
     } else {
       outputList = list(echoData                        = echoData, 
                         protocolData                    = protocolData,
