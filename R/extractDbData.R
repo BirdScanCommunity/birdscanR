@@ -26,11 +26,6 @@ extractDbData = function(dbDriverChar              = "SQL Server",
                          radarTimeZone             = NULL, 
                          targetTimeZone            = "Etc/GMT0", 
                          listOfRfFeaturesToExtract = NULL){
-# Set variables
-# =============================================================================
-  dbDataName = paste("DB_Data", dbName, sep= "_")
-  dbDataName = paste(dbDataName, "Rdata", sep= ".")
-
 # Check whether the necessary input is present
 # =============================================================================
   if(is.null(dbServer)){stop("dbserver is not defined. Please check your input!")}
@@ -293,7 +288,9 @@ extractDbData = function(dbDriverChar              = "SQL Server",
 # save DB Data to a file, if requested
 # =============================================================================
   if (saveDbToFile){
-    saveRDS(outputList, file = file.path(dbDataDir, paste0(dbDataName, ".rds")))
+    outputFileName = file.path(dbDataDir, 
+                               paste0(dbName, "_DataExtract.rds"))
+    saveRDS(outputList, file = outputFileName)
   }
 
 # close database connections
