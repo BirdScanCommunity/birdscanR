@@ -66,10 +66,10 @@ twilight = function(timeRange, latLon, crs_datum = "WGS84", timeZone){
       format(as.POSIXct(dawn[i + 1]), format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
   } # end of for-loop >>> for(i in 1:length(dateSeq)){...
   
-  twilightData$sunStart   = as.POSIXct(twilightData$sunStart, format = "%Y-%m-%d %H:%M:%S", tz = targetTimeZone)
-  twilightData$sunStop    = as.POSIXct(twilightData$sunStop, format = "%Y-%m-%d %H:%M:%S", tz = targetTimeZone)
-  twilightData$civilStart = as.POSIXct(twilightData$civilStart, format = "%Y-%m-%d %H:%M:%S", tz = targetTimeZone)
-  twilightData$civilStop  = as.POSIXct(twilightData$civilStop, format = "%Y-%m-%d %H:%M:%S", tz = targetTimeZone)
+  twilightData$sunStart   = as.POSIXct(twilightData$sunStart, format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
+  twilightData$sunStop    = as.POSIXct(twilightData$sunStop, format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
+  twilightData$civilStart = as.POSIXct(twilightData$civilStart, format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
+  twilightData$civilStop  = as.POSIXct(twilightData$civilStop, format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
 
   # omit rows with NA's
   twilightData = twilightData[!is.na(twilightData$sunStart) & !is.na(twilightData$sunStop) & !is.na(twilightData$civilStart) & !is.na(twilightData$civilStop),]
