@@ -19,15 +19,21 @@ twilight = function(timeRange, latLon, crs_datum = "WGS84", timeZone){
   crds    = sp::CRS(paste0("+proj=longlat +datum=", crs_datum)) # here i used GoogleEarth coodrinates that use the "WGS84" coodrinate system
   lon_lat = sp::SpatialPoints(lon_lat, proj4string = crds) # here i used GoogleEarth coodrinates that use the "WGS84" coodrinate system
   
-  # make sure that date is in
-  dateSeq = format(as.POSIXct(strptime(x = dateSeq, "%Y-%m-%d", tz = "UTC")), format = "%Y-%m-%d %H:%M:%S", tz = "UTC", usetz = TRUE)
-  dateSeq = as.POSIXct(strptime(x = dateSeq, "%Y-%m-%d %H:%M:%S", tz = timeZone))
+  # make sure that date is in UTC
+  # ===========================================================================
+    dateSeq = format(as.POSIXct(strptime(x = dateSeq, "%Y-%m-%d", tz = "UTC")), 
+                     format = "%Y-%m-%d %H:%M:%S", tz = "UTC", usetz = TRUE)
+    dateSeq = as.POSIXct(strptime(x = dateSeq, "%Y-%m-%d %H:%M:%S", tz = timeZone))
   
-  dawn = crepuscule(lon_lat, dateSeq, solarDep = 6, direction = "dawn", POSIXct.out = TRUE)$time # civil (see argument: "solarDep = 6") twilight at dawn for the day of observation
-  dusk = crepuscule(lon_lat, dateSeq, solarDep = 6, direction = "dusk", POSIXct.out = TRUE)$time # civil twilight at dusk
+  dawn = maptools::crepuscule(lon_lat, dateSeq, solarDep = 6, direction = "dawn", 
+                              POSIXct.out = TRUE)$time # civil (see argument: "solarDep = 6") twilight at dawn for the day of observation
+  dusk = maptools::crepuscule(lon_lat, dateSeq, solarDep = 6, direction = "dusk", 
+                              POSIXct.out = TRUE)$time # civil twilight at dusk
 
-  sunrise = sunriset(lon_lat, dateSeq, direction="sunrise", POSIXct.out = TRUE)$time
-  sunset = sunriset(lon_lat, dateSeq, direction="sunset", POSIXct.out = TRUE)$time
+  sunrise = maptools::sunriset(lon_lat, dateSeq, direction="sunrise", 
+                               POSIXct.out = TRUE)$time
+  sunset  = maptools::sunriset(lon_lat, dateSeq, direction="sunset", 
+                               POSIXct.out = TRUE)$time
   
   twilight = expand.grid("is_night" = 0:1, "date" = dateSeq, KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE)
   

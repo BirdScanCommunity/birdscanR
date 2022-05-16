@@ -12,6 +12,7 @@ Description: This package can be used to extract data from Birdscan MR1 sql data
 Imports: 
   DBI,
   dplyr,
+  maptools,
   reshape2,
   RODBC,
   RPostgreSQL,
