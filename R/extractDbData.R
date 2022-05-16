@@ -7,10 +7,9 @@
 #' @param dbName NULL the name of the Database
 #' @param dbUser NULL the USER name of the Server
 #' @param dbPwd NULL the password for the user name
-#' @param dbDataDir NULL The path to the directory where previously extracted datasets are stored. If _forceToExtractDataFromDatabase_ is FALSE and a dataset already exists in _dbDataDir_ for the respective database, data will be extracted from this .rds file instead of the SQL database.
+#' @param dbDataDir NULL The path to the output directory where to store the extracted dataset. 
 #' @param radarTimeZone NULL String specifying the radar time zone. Default is NULL: extract the timezone from the site table of the sql database.
 #' @param targetTimeZone "Etc/GMT0" String specifying the target time zone. Default is "Etc/GMT0".
-#' @param forceToExtractDataFromDatabase if TRUE, it opens a connection to the Database requiring username and password, default FALSE
 #' @param listOfRfFeaturesToExtract NULL or a list of feature to extract
 #'
 #' @return a list of R objects with data extracted from the Database echoData,  protocolData, siteData, visibilityData, timeBinData, rfFeatures, availableClasses, classProbabilitiesAndMtrFactors
@@ -24,19 +23,20 @@ extractDbData = function(dbDriverChar                   = NULL,
                          dbDataDir                      = NULL,
                          radarTimeZone                  = NULL, 
                          targetTimeZone                 = "Etc/GMT0", 
-                         forceToExtractDataFromDatabase = FALSE, 
-                         listOfRfFeaturesToExtract      = NULL)
-{
-   dbDataName <- paste( "DB_Data", dbName, sep= "_" )
-   dbDataName <- paste( dbDataName, "Rdata", sep= "." )
-   
-   # Extract data from Database if required or forced
-   if( ( forceToExtractDataFromDatabase == TRUE || !file.exists( file.path( dbDataDir, dbDataName ) ) )
-       && !is.null(dbServer) && !is.null(dbName)
-       && !is.null( targetTimeZone ) )
-   {
-      
-      # Open the database connection
+                         listOfRfFeaturesToExtract      = NULL){
+# Set variables
+# =============================================================================
+  dbDataName <- paste( "DB_Data", dbName, sep= "_" )
+  dbDataName <- paste( dbDataName, "Rdata", sep= "." )
+
+# Check whether the necessary input is present
+# =============================================================================
+  if(is.null(dbServer)){stop("dbserver is not defined. Please check your input!")}
+  if(is.null(dbName)){stop("dbName is not defined. Please check your input!")}
+  if(is.null(targetTimeZone)){stop("targetTimeZone is not defined. Please check your input!")}
+  
+# Open the database connection
+# =============================================================================
       if(dbDriverChar != 'PostgreSQL') {
          if( !is.null(dbUser) | !is.null(dbPwd) ){
             dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
@@ -252,47 +252,36 @@ extractDbData = function(dbDriverChar                   = NULL,
       {
          warning( "Could not open database. Make sure to set dbServer, dbName and credentials right.")
       }
-   } else
-   {
-      load( file.path( dbDataDir, dbDataName ) )
-      
-      extractedDataLoaded <- exists( echoDataName ) && 
-         exists( protocolDataName ) &&
-         exists( siteDataName ) &&
-         exists( visibilityDataName ) &&
-         exists( timeBinDataName ) &&
-         exists( availableClassesName ) &&
-         exists( rfFeaturesName ) &&
-         exists( classProbabilitiesAndMtrFactorsName )
-      
-      if( extractedDataLoaded == FALSE )
-      {
-         stop( "Could not load data extracted from database. Extract data from database first.")
-         return()
-      }
-   }
+    
    
-   if( exists( "manualVisibilityTable" ) ){  
-      return( list( echoData = echoData, 
-                    protocolData = protocolData,
-                    siteData = siteData, 
-                    visibilityData = visibilityData,
-                    manualVisibilityTable = manualVisibilityTable,
-                    timeBinData = timeBinData,
-                    availableClasses = availableClasses,
-                    rfFeatures = rfFeatures,
-                    TimeZone = TimeZone,
-                    classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors ) )
-   } else {
-      return( list( echoData = echoData, 
-                    protocolData = protocolData,
-                    siteData = siteData, 
-                    visibilityData = visibilityData,
-                    timeBinData = timeBinData,
-                    availableClasses = availableClasses,
-                    rfFeatures = rfFeatures,
-                    TimeZone = TimeZone,
-                    classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors ) )
-   }
-   
+# Return output
+# =============================================================================
+if(exists("manualVisibilityTable")){  
+  return(list(echoData                        = echoData, 
+              protocolData                    = protocolData,
+              siteData                        = siteData, 
+              visibilityData                  = visibilityData,
+              manualVisibilityTable           = manualVisibilityTable,
+              timeBinData                     = timeBinData,
+              availableClasses                = availableClasses,
+              rfFeatures                      = rfFeatures,
+              TimeZone                        = TimeZone,
+              classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors ) )
+} else {
+  return(list(echoData                        = echoData, 
+              protocolData                    = protocolData,
+              siteData                        = siteData, 
+              visibilityData                  = visibilityData,
+              timeBinData                     = timeBinData,
+              availableClasses                = availableClasses,
+              rfFeatures                      = rfFeatures,
+              TimeZone                        = TimeZone,
+              classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors))
+}
+
+# =============================================================================
+# =============================================================================
+# End of Function
+# =============================================================================
+# =============================================================================
 }
