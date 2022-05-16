@@ -35,35 +35,46 @@ twilight = function(timeRange, latLon, crs_datum = "WGS84", timeZone){
   sunset  = maptools::sunriset(lon_lat, dateSeq, direction="sunset", 
                                POSIXct.out = TRUE)$time
   
-  twilight = expand.grid("is_night" = 0:1, "date" = dateSeq, KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE)
+  twilight = expand.grid("is_night" = 0:1, "date" = dateSeq, 
+                         KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE)
   
   # add 'sunStart', 'sunStop', civilStart' and 'civilStop' column to twilight
-  twilight = data.frame(twilight, sunStart = NA, sunStop = NA, civilStart = NA, civilStop = NA)
+  # ===========================================================================
+    twilight = data.frame(twilight, sunStart = NA, sunStop = NA, 
+                          civilStart = NA, civilStop = NA)
   
   twilight$sunStart = twilight$sunStop = twilight$civilStart = twilight$civilStop = NA
   for(i in 1:length(dateSeq)){
     i.date = unique(dateSeq)[i]
     # sunrise/sunset
-    twilight$sunStart[twilight$date == i.date & twilight$is_night == 0] = format(as.POSIXct(sunrise[i]), format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
-    twilight$sunStop[twilight$date == i.date & twilight$is_night == 0] = format(as.POSIXct(sunset[i]), format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
-    twilight$sunStart[twilight$date == i.date & twilight$is_night == 1] = format(as.POSIXct(sunset[i]), format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
-    twilight$sunStop[twilight$date == i.date & twilight$is_night == 1] = format(as.POSIXct(sunrise[i + 1]), format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
+    twilight$sunStart[twilight$date == i.date & twilight$is_night == 0] = 
+      format(as.POSIXct(sunrise[i]), format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
+    twilight$sunStop[twilight$date == i.date & twilight$is_night == 0]  = 
+      format(as.POSIXct(sunset[i]), format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
+    twilight$sunStart[twilight$date == i.date & twilight$is_night == 1] = 
+      format(as.POSIXct(sunset[i]), format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
+    twilight$sunStop[twilight$date == i.date & twilight$is_night == 1]  = 
+      format(as.POSIXct(sunrise[i + 1]), format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
     # Civil twilight
-    twilight$civilStart[twilight$date == i.date & twilight$is_night == 0] = format(as.POSIXct(dawn[i]), format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
-    twilight$civilStop[twilight$date == i.date & twilight$is_night == 0] = format(as.POSIXct(dusk[i]), format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
-    twilight$civilStart[twilight$date == i.date & twilight$is_night == 1] = format(as.POSIXct(dusk[i]), format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
-    twilight$civilStop[twilight$date == i.date & twilight$is_night == 1] = format(as.POSIXct(dawn[i + 1]), format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
+    twilight$civilStart[twilight$date == i.date & twilight$is_night == 0] = 
+      format(as.POSIXct(dawn[i]), format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
+    twilight$civilStop[twilight$date == i.date & twilight$is_night == 0]  = 
+      format(as.POSIXct(dusk[i]), format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
+    twilight$civilStart[twilight$date == i.date & twilight$is_night == 1] = 
+      format(as.POSIXct(dusk[i]), format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
+    twilight$civilStop[twilight$date == i.date & twilight$is_night == 1]  = 
+      format(as.POSIXct(dawn[i + 1]), format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
   } # end of for-loop >>> for(i in 1:length(dateSeq)){...
   
-  twilight$sunStart = as.POSIXct(twilight$sunStart, format = "%Y-%m-%d %H:%M:%S", tz = targetTimeZone)
-  twilight$sunStop = as.POSIXct(twilight$sunStop, format = "%Y-%m-%d %H:%M:%S", tz = targetTimeZone)
+  twilight$sunStart   = as.POSIXct(twilight$sunStart, format = "%Y-%m-%d %H:%M:%S", tz = targetTimeZone)
+  twilight$sunStop    = as.POSIXct(twilight$sunStop, format = "%Y-%m-%d %H:%M:%S", tz = targetTimeZone)
   twilight$civilStart = as.POSIXct(twilight$civilStart, format = "%Y-%m-%d %H:%M:%S", tz = targetTimeZone)
-  twilight$civilStop = as.POSIXct(twilight$civilStop, format = "%Y-%m-%d %H:%M:%S", tz = targetTimeZone)
+  twilight$civilStop  = as.POSIXct(twilight$civilStop, format = "%Y-%m-%d %H:%M:%S", tz = targetTimeZone)
 
   # omit rows with NA's
   twilight = twilight[!is.na(twilight$sunStart) & !is.na(twilight$sunStop) & !is.na(twilight$civilStart) & !is.na(twilight$civilStop),]
   
-  twilight$durationDayNight_h = as.numeric(difftime(twilight$sunStop, twilight$sunStart, tz = timeZone, units = "hours"))
+  twilight$durationDayNight_h   = as.numeric(difftime(twilight$sunStop, twilight$sunStart, tz = timeZone, units = "hours"))
   twilight$durationDayNight_sec = as.numeric(difftime(twilight$sunStop, twilight$sunStart, tz = timeZone, units = "secs"))
   
   out = twilight
