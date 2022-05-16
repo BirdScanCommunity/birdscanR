@@ -12,10 +12,12 @@
 #' @export
 #' 
 twilight = function(timeRange, latLon, crs_datum = "WGS84", timeZone){
-  dateSeq = seq(as.Date(timeRange[1], tz = timeZone) - 1, as.Date(timeRange[2], tz = timeZone) + 2, "day")
+  dateSeq = seq(as.Date(timeRange[1], tz = timeZone) - 1, 
+                as.Date(timeRange[2], tz = timeZone) + 2, 
+                "day")
   lon_lat = data.frame(X = latLon[2], Y = latLon[1])
-  crds = CRS(paste0("+proj=longlat +datum=", crs_datum)) # here i used GoogleEarth coodrinates that use the "WGS84" coodrinate system
-  lon_lat = SpatialPoints(lon_lat, proj4string = crds) # here i used GoogleEarth coodrinates that use the "WGS84" coodrinate system
+  crds    = sp::CRS(paste0("+proj=longlat +datum=", crs_datum)) # here i used GoogleEarth coodrinates that use the "WGS84" coodrinate system
+  lon_lat = sp::SpatialPoints(lon_lat, proj4string = crds) # here i used GoogleEarth coodrinates that use the "WGS84" coodrinate system
   
   # make sure that date is in
   dateSeq = format(as.POSIXct(strptime(x = dateSeq, "%Y-%m-%d", tz = "UTC")), format = "%Y-%m-%d %H:%M:%S", tz = "UTC", usetz = TRUE)

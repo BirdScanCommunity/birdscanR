@@ -15,4 +15,5 @@ Imports:
   reshape2,
   RODBC,
   RPostgreSQL,
-  rstudioapi
+  rstudioapi,
+  sp
