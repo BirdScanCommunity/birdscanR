@@ -32,13 +32,17 @@
 # #' @examples
 # #' loadManualBlindTimes( filePath = ManualBlindTimesFile, blindTimesTZ = radarTimeZone, blindTimesTZ = targetTimeZone )
 loadManualBlindTimes = function(filePath, blindTimesTZ, targetTZ){
-  if (!file.exists(filePath) || file.info(filePath)$size == 0){
-    manualBlindTimes = NULL
-  } else {
-    # read csv with blindtimes
+  # Check whether file exists
+  # ===========================================================================
+    if (!file.exists(filePath)){
+      stop(paste0("Cannot read the manual blind times file: '", filePath, 
+                  "' because it does not exist.. ", "Check your input!"))
+    }  
+  
+  # read csv with blindtimes
+  # ===========================================================================
     manualBlindTimes        = read.csv(file = filePath, header = FALSE) 
     names(manualBlindTimes) = c("start", "stop", "type")
-  }
 
   # convert blindtimes to target timezone
   # ===========================================================================
