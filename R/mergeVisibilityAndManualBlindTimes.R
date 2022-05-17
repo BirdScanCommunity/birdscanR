@@ -54,22 +54,24 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
   visibilityDataSorted = data.frame(visibilityDataSorted, type = "visibility")
   levels(visibilityDataSorted$type) = c("visibility", "protocolChange")
 
-if (!is.null(manualBlindTimes)){
-  # sort manual blind times chronological
-  # ===========================================================================
-    manualBlindTimesSorted = manualBlindTimes[order(manualBlindTimes$start_targetTZ),]
-  
-  # remove rows where start >= stop in manual blindtimes
-  # ===========================================================================
-    manualBlindTimesSorted = manualBlindTimesSorted[manualBlindTimesSorted$start_targetTZ < manualBlindTimesSorted$stop_targetTZ,]
-  
-  # make sure manual blindtimes are not overlapping
-  # ===========================================================================
-    overlaps = manualBlindTimesSorted$start_targetTZ[2 : length(manualBlindTimesSorted[, 1])] < manualBlindTimesSorted$stop_targetTZ[1 : length(manualBlindTimesSorted[, 1]) - 1]
-    manualBlindTimesSorted$stop_targetTZ[c(overlaps, FALSE)] = manualBlindTimesSorted$start_targetTZ[c(FALSE, overlaps)]
-}
+# If provided, check and prepare manual blind times for merging
+# =============================================================================
+  if (!is.null(manualBlindTimes)){
+    # Sort manual blind times chronological
+    # =========================================================================
+      manualBlindTimesSorted = manualBlindTimes[order(manualBlindTimes$start_targetTZ),]
+    
+    # Remove rows where start >= stop in manual blindtimes
+    # =========================================================================
+      manualBlindTimesSorted = manualBlindTimesSorted[manualBlindTimesSorted$start_targetTZ < manualBlindTimesSorted$stop_targetTZ,]
+    
+    # Make sure manual blindtimes are not overlapping
+    # =========================================================================
+      overlaps = manualBlindTimesSorted$start_targetTZ[2:(length(manualBlindTimesSorted[, 1]))] < manualBlindTimesSorted$stop_targetTZ[1:(length(manualBlindTimesSorted[, 1])-1)]
+      manualBlindTimesSorted$stop_targetTZ[c(overlaps, FALSE)] = manualBlindTimesSorted$start_targetTZ[c(FALSE, overlaps)]
+  }
 
-# separate protocol change blindtimes (60s at begin of each protocol) in visibilitydata
+# Separate protocol change blindtimes (60s at begin of each protocol) in visibilitydata
 # =============================================================================
   protocolId = -1
   nVis = length(visibilityDataSorted[, 1])
