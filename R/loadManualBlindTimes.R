@@ -31,23 +31,23 @@
 #'
 # #' @examples
 # #' loadManualBlindTimes( filePath = ManualBlindTimesFile, blindTimesTZ = radarTimeZone, blindTimesTZ = targetTimeZone )
-loadManualBlindTimes = function( filePath, blindTimesTZ, targetTZ )
-{
-  if( !file.exists( filePath ) || file.info( filePath )$size == 0 )
-  {
-    manualBlindTimes <- NULL
-  } else
-  {
+loadManualBlindTimes = function(filePath, blindTimesTZ, targetTZ){
+  if (!file.exists(filePath) || file.info(filePath)$size == 0){
+    manualBlindTimes = NULL
+  } else {
     # read csv with blindtimes
-    manualBlindTimes <- read.csv( file = filePath, header = FALSE ) 
-    names( manualBlindTimes ) <- c( "start", "stop", "type" )
+    manualBlindTimes        = read.csv(file = filePath, header = FALSE) 
+    names(manualBlindTimes) = c("start", "stop", "type")
   }
 
   # convert blindtimes to target timezone
-  manualBlindTimes <- convertTimeZone( data = manualBlindTimes, 
-                                       colNames= c( "start", "stop" ), 
+  # ===========================================================================
+    manualBlindTimes = convertTimeZone(data     = manualBlindTimes, 
+                                       colNames = c("start", "stop"), 
                                        originTZ = blindTimesTZ, 
                                        targetTZ = targetTZ )
   
-  return( manualBlindTimes )
+  # Return manual blind times
+  # ===========================================================================
+    return(manualBlindTimes)
 }
