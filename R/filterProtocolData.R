@@ -1,6 +1,6 @@
 #### filterProtocolData ------------------------------------------------------
 #' @title filterProtocolData
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}
+#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@@vogelwarte.ch} 
 #' @description With the function \code{filterProtocolData} the protocol data can be filtered by the operation mode (pulse-type and antennarotation). The function returns the filtered subset of the protocoldata which can later be used to filter the echoes based on the operation mode/protocol
 #' 
 #' @param protocolData=NULL dataframe with the protocol data from the data list created by the function \code{extractDBData}
