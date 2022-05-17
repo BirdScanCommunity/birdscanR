@@ -1,6 +1,6 @@
 #### loadManualBlindTimes ------------------------------------------------------
 #' @title loadManualBlindTimes
-#' @author Fabian Hertner (SBRS)
+#' @author Fabian Hertner (SBRS), \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest (SOI), \email{birgen.haest@@vogelwarte.ch}
 #' @description Load manual blindtimes from csv file.
 #' For the MTR computation the times when the radar was blind have to be known. The radar itself can 
 #' be blind in case of a protocol change (blocktime at the beginning of each protocol, usually 60s) or 
