@@ -10,33 +10,46 @@
 #' @return returns the filtered protocol data in the same format as provided in the parameter \code{protocolData}.
 #' @export
 
-filterProtocolData = function(protocolData = NULL, 
+filterProtocolData = function(protocolData       = NULL, 
                               pulseTypeSelection = NULL, 
-                              rotationSelection = NULL){
-  # Set variables
+                              rotationSelection  = NULL){
+  # Check whether protocoldata is not empty
+  # ===========================================================================
+    if ((is.null(protocolData)) || (nrow(protocolData) == 0)){
+      warning("protocolData does not contain any data, so it cannot be filtered..")
+      return(protocolData)
+    }
+    
+  # Check whether the necessary protocol columns are present in the protocolData
   # ===========================================================================
     requiredProtocolDataCols = c("pulseType", "rotate", 
-                                  "startTime_targetTZ", "stopTime_targetTZ")
+                                 "startTime_targetTZ", "stopTime_targetTZ")
+    if (!(all(requiredProtocolDataCols %in% names(protocolData)))){
+      warning(paste0("protocolData does not contain all of the necessary columns, ", 
+                     "so it cannot be filtered. Please check the protocol ", 
+                     "table in your database for the following columns: ", 
+                     paste(requiredProtocolDataCols, collapse = ", "), "."))
+      return(protocolData)
+    }
   
-  if (!is.null(protocolData) && length(protocolData[, 1]) > 0 && sum(requiredProtocolDataCols %in% names(protocolData)) == length(requiredProtocolDataCols)){
-    # exclude invalid times
-    # =========================================================================
-      validTimesInd = (protocolData$startTime_targetTZ > "1950-01-01") & 
-                       (protocolData$stopTime_targetTZ > "1950-01-01")
-      protocolData = protocolData[validTimesInd,]
-    
-    # subset protocolData by pulseLength
-    # =========================================================================
-      if (!is.null(pulseTypeSelection)){
-        protocolData = protocolData[protocolData$pulseType %in% pulseTypeSelection,]
-      }
-    
-    # subset protocolData by rotation mode
-    # =========================================================================
-      if (!is.null(rotationSelection)){
-        protocolData = protocolData[protocolData$rotate %in% rotationSelection,]
-      }
-  }
+  # Exclude invalid times
+  # =========================================================================
+    validTimesInd = (protocolData$startTime_targetTZ > "1950-01-01") & 
+                     (protocolData$stopTime_targetTZ > "1950-01-01")
+    protocolData = protocolData[validTimesInd,]
+  
+  # subset protocolData by pulseLength
+  # =========================================================================
+    if (!is.null(pulseTypeSelection)){
+      protocolData = protocolData[protocolData$pulseType %in% pulseTypeSelection,]
+    }
+  
+  # subset protocolData by rotation mode
+  # =========================================================================
+    if (!is.null(rotationSelection)){
+      protocolData = protocolData[protocolData$rotate %in% rotationSelection,]
+    }
+  
   
   # Return output
   # ===========================================================================
