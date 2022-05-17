@@ -15,7 +15,7 @@
 addDayNightInfoPerEcho = function(echoData, sunriseSunset, sunOrCivil = "civil"){
   # Check whether echoData contains any data
   # ===========================================================================
-    if(nrow(echoData) == 0){
+    if (nrow(echoData) == 0){
       stop("No echoData, can't add day/night information (function: addDayNightInfoPerEcho)")
     }
   
@@ -24,29 +24,31 @@ addDayNightInfoPerEcho = function(echoData, sunriseSunset, sunOrCivil = "civil")
     echoData <- data.frame(echoData, dayOrNight = NA, dateSunset = as.POSIXct(NA))
   
   # get day and night periods
-  if(sunOrCivil == "sun")
-  {
-    days <- data.frame(start = sunriseSunset$sunStart[sunriseSunset$is_night == 0], stop = sunriseSunset$sunStop[sunriseSunset$is_night == 0])
-    nights <- data.frame(start = sunriseSunset$sunStart[sunriseSunset$is_night == 1], stop = sunriseSunset$sunStop[sunriseSunset$is_night == 1])
-  } else
-  {
-    days <- data.frame(start = sunriseSunset$civilStart[sunriseSunset$is_night == 0], stop = sunriseSunset$civilStop[sunriseSunset$is_night == 0])
-    nights <- data.frame(start = sunriseSunset$civilStart[sunriseSunset$is_night == 1], stop = sunriseSunset$civilStop[sunriseSunset$is_night == 1])
-  }
+  # ===========================================================================
+    if (sunOrCivil == "sun"){
+      days <- data.frame(start = sunriseSunset$sunStart[sunriseSunset$is_night == 0], stop = sunriseSunset$sunStop[sunriseSunset$is_night == 0])
+      nights <- data.frame(start = sunriseSunset$sunStart[sunriseSunset$is_night == 1], stop = sunriseSunset$sunStop[sunriseSunset$is_night == 1])
+    } else {
+      days <- data.frame(start = sunriseSunset$civilStart[sunriseSunset$is_night == 0], stop = sunriseSunset$civilStop[sunriseSunset$is_night == 0])
+      nights <- data.frame(start = sunriseSunset$civilStart[sunriseSunset$is_night == 1], stop = sunriseSunset$civilStop[sunriseSunset$is_night == 1])
+    }
   
   # set echoes during day
-  for(i in 1 : length(days[, 1]))
-  {
-    echoData$dayOrNight[echoData$time_stamp_targetTZ >= days$start[i] & echoData$time_stamp_targetTZ < days$stop[i]] <- "day"
-    echoData$dateSunset[echoData$time_stamp_targetTZ >= days$start[i] & echoData$time_stamp_targetTZ < days$stop[i]] <- days$stop[i]
-  }
+  # ===========================================================================
+    for (i in 1 : length(days[, 1])){
+      echoData$dayOrNight[echoData$time_stamp_targetTZ >= days$start[i] & echoData$time_stamp_targetTZ < days$stop[i]] <- "day"
+      echoData$dateSunset[echoData$time_stamp_targetTZ >= days$start[i] & echoData$time_stamp_targetTZ < days$stop[i]] <- days$stop[i]
+    }
+    
   # set echoes during night
-  for(i in 1 : length(nights[, 1]))
-  {
-    echoData$dayOrNight[echoData$time_stamp_targetTZ >= nights$start[i] & echoData$time_stamp_targetTZ < nights$stop[i]] <- "night"
-    echoData$dateSunset[echoData$time_stamp_targetTZ >= nights$start[i] & echoData$time_stamp_targetTZ < nights$stop[i]] <- nights$start[i]
-  }
+  # ===========================================================================
+    for (i in 1 : length(nights[, 1])){
+      echoData$dayOrNight[echoData$time_stamp_targetTZ >= nights$start[i] & echoData$time_stamp_targetTZ < nights$stop[i]] <- "night"
+      echoData$dateSunset[echoData$time_stamp_targetTZ >= nights$start[i] & echoData$time_stamp_targetTZ < nights$stop[i]] <- nights$start[i]
+    }
   
-  return(echoData)
+  # return the output
+  # ===========================================================================
+    return(echoData)
   
 }
