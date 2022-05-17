@@ -11,7 +11,7 @@ addDayNightInfoPerEcho(echoData, sunriseSunset, sunOrCivil = "civil")
 
 \item{sunriseSunset}{dataframe with sunrise/sunset and civil twilight times created by the function ‘twilight’}
 
-\item{sunOrCivil}{optional character string, “sun” (sunrise/sunset times) or “civil” (civil twilight times) to group by day and night. Default if not set is civil twilight.}
+\item{sunOrCivil}{optional character string, “sun” (sunrise/sunset times) or “civil” (civil twilight times) to group by day and night. Default is "civil".}
 }
 \value{
 data frame with two columns added for dayOrNight and dateSunset.

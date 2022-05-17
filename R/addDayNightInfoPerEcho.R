@@ -5,7 +5,7 @@
 #' This information is not used any further by the script, but allows the user to filter echodata easily by “day” and “night”. 
 #' @param echoData dataframe with the echo data from the data list created by the function ‘extractDBData’ 
 #' @param sunriseSunset dataframe with sunrise/sunset and civil twilight times created by the function ‘twilight’ 
-#' @param sunOrCivil optional character string, “sun” (sunrise/sunset times) or “civil” (civil twilight times) to group by day and night. Default if not set is civil twilight. 
+#' @param sunOrCivil optional character string, “sun” (sunrise/sunset times) or “civil” (civil twilight times) to group by day and night. Default is "civil". 
 #'
 #' @return data frame with two columns added for dayOrNight and dateSunset.
 #' @export
