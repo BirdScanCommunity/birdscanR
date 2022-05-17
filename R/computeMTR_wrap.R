@@ -1,4 +1,4 @@
-#### <computeMTR_wrap.R> ------------------------------------------------------
+#### computeMTR_wrap.R ------------------------------------------------------
 #' @title Wrapper for computing MTR.
 #' @author Baptiste Schmid, \email{baptiste.schmid@@vogelwarte.ch}
 #' @description Wrapped function of compute MTR to incl. data formating.
@@ -29,108 +29,93 @@
 #' @return MTR table
 #' @export
 #'
-computeMTR_wrap <- function(
-  echoData,
-  classSelection,
-  echoValidator = FALSE, # not yet implemented 
-  timeRangeTargetTZ,
-  timeBinDuration_sec, 
-  propObsTimeCutoff,
-  timeZone, 
-  sunriseSunset, 
-  sunOrCivil, # default
-  computePerDayNight,
-  altitudeRange_AGL,
-  altitudeBinSize,
-  protocolData,
-  pulseTypeSelection, 
-  rotationSelection,
-  visibilityData,
-  manualBlindTimes, # defined in settings
-  blindTimeAsMtrZero,
-  saveRDS_MTR = TRUE,
-  filepath, 
-  dbName 
-){
+computeMTR_wrap = function(echoData,
+                           classSelection,
+                           echoValidator = FALSE, # not yet implemented 
+                           timeRangeTargetTZ,
+                           timeBinDuration_sec, 
+                           propObsTimeCutoff,
+                           timeZone, 
+                           sunriseSunset, 
+                           sunOrCivil, # default
+                           computePerDayNight,
+                           altitudeRange_AGL,
+                           altitudeBinSize,
+                           protocolData,
+                           pulseTypeSelection, 
+                           rotationSelection,
+                           visibilityData,
+                           manualBlindTimes, # defined in settings
+                           blindTimeAsMtrZero,
+                           saveRDS_MTR = TRUE,
+                           filepath, 
+                           dbName){
+# Filter protocol data
+# =============================================================================
+  protocolDataSubset = filterProtocolData(protocolData       = protocolData, 
+                                          pulseTypeSelection = pulseLengthSelection, 
+                                          rotationSelection  = rotationSelection)
+# add stop if(nrow == 0, pulseType not existing, ...)
+
+# Compute BlindTimes 
+# =============================================================================
+  blindTimes = mergeVisibilityAndManualBlindTimes(visibilityData   = visibilityData, 
+                                                  manualBlindTimes = manualBlindTimes, 
+                                                  protocolData     = protocolDataSubset) # internal output >> filterProtocolData()
+
+# filter echo data
+# =============================================================================
+echoDataSubset = filterEchoData(echoData          = echoData,
+                                timeRangeTargetTZ = timeRangeTargetTZ, 
+                                protocolData      = protocolDataSubset, # internal output >> filterProtocolData()
+                                classSelection    = classSelection,
+                                #   classProbCutOff = NULL, # Ignore
+                                altitudeRange_AGL = altitudeRange_AGL,
+                                manualBlindTimes  = manualBlindTimes,
+                                echoValidator     = echoValidator)
+
+# Create Time Bins & Compute Observation Time for each Time Bin
+# =============================================================================
+  # TimeBin size in seconds
+  # ===========================================================================
+    timeBins = createTimeBins(timeRange           = timeRangeTargetTZ, 
+                              timeBinDuration_sec = timeBinduration_sec, 
+                              timeZone            = targetTimeZone, 
+                              sunriseSunset       = sunriseSunset, 
+                              sunOrCivil          = sunOrCivil)
   
-  # -----------------
-  #- filter ptotocol data
-  protocolDataSubset <- filterProtocolData( 
-    protocolData = protocolData, 
-    pulseTypeSelection = pulseLengthSelection, 
-    rotationSelection = rotationSelection 
-  )
-  # add stop if(nrow == 0, pulseType not existing, ...)
-  
-  # -----------------
-  #- Compute BlindTimes 
-  blindTimes <- mergeVisibilityAndManualBlindTimes(
-    visibilityData = visibilityData, 
-    manualBlindTimes = manualBlindTimes, 
-    protocolData = protocolDataSubset # internal output >> filterProtocolData()
-  )
-  
-  # -----------------
-  #- filter echo data
-  echoDataSubset <- filterEchoData( 
-    echoData = echoData,
-    timeRangeTargetTZ = timeRangeTargetTZ, 
-    protocolData = protocolDataSubset, # internal output >> filterProtocolData()
-    classSelection = classSelection,
-    #   classProbCutOff = NULL, # Ignore
-    altitudeRange_AGL = altitudeRange_AGL,
-    manualBlindTimes = manualBlindTimes,
-    echoValidator = echoValidator 
-  )
-  
-  # -----------------
-  #- Create Time Bins & Compute Observation Time for each Time Bin
-  
-  # timeBin size in seconds
-  timeBins <- createTimeBins( 
-    timeRange = timeRangeTargetTZ, 
-    timeBinDuration_sec = timeBinduration_sec, 
-    timeZone = targetTimeZone, 
-    sunriseSunset = sunriseSunset, 
-    sunOrCivil = sunOrCivil
-  )
-  
-  # compute observation times
-  timeBins <- computeObservationTime( 
-    timeBins = timeBins, # internal output >> createTimeBins()
-    protocolData = protocolDataSubset, # internal output >> filterProtocolData()
-    blindTimes = blindTimes, # internal output >> mergeVisibilityAndManualBlindTimes
-    blindTimeAsMtrZero = blindTimeAsMtrZero 
-  )
-  
-  # -----------------
-  #- create altitudeBins
-  altitudeBins <- createAltitudeBins( 
-    altitudeRange = altitudeRange_AGL, 
-    altitudeBinSize = altitudeBinSize
-  )
-  
-  # -----------------
-  #- compute MTR
-  MTR <- computeMTR( 
-    echoes = echoDataSubset, # internal output >> filterEchoData()
-    classSelection = classSelection, 
-    altitudeBins = altitudeBins, 
-    timeBins = timeBins, 
-    propObsTimeCutoff = propObsTimeCutoff, 
-    computePerDayNight = computePerDayNight 
-  )
-  
+  # Compute observation times
+  # =============================================================================
+    timeBins = computeObservationTime(timeBins           = timeBins, # internal output >> createTimeBins()
+                                      protocolData       = protocolDataSubset, # internal output >> filterProtocolData()
+                                      blindTimes         = blindTimes, # internal output >> mergeVisibilityAndManualBlindTimes
+                                      blindTimeAsMtrZero = blindTimeAsMtrZero)
+
+# Create altitudeBins
+# =============================================================================
+  altitudeBins = createAltitudeBins(altitudeRange   = altitudeRange_AGL, 
+                                    altitudeBinSize = altitudeBinSize)
+
+# compute MTR
+# =============================================================================
+  MTR = computeMTR(echoes             = echoDataSubset, # internal output >> filterEchoData()
+                   classSelection     = classSelection, 
+                   altitudeBins       = altitudeBins, 
+                   timeBins           = timeBins, 
+                   propObsTimeCutoff  = propObsTimeCutoff, 
+                   computePerDayNight = computePerDayNight)
+
+# Save MTR, if requested
+# =============================================================================
   if(saveRDS_MTR){
-    saveMTR(
-      mtr = MTR, # internal output >> computeMTR()
-      filepath = filepath, 
-      dbName = dbName, 
-      rotSelection = rotationSelection, 
-      pulseTypeSelection = pulseLengthSelection
-    )
+    saveMTR(mtr                = MTR, # internal output >> computeMTR()
+            filepath           = filepath, 
+            dbName             = dbName, 
+            rotSelection       = rotationSelection, 
+            pulseTypeSelection = pulseLengthSelection)
   }
   
-  out <- MTR
-  
+# Return output
+# =============================================================================
+  return(MTR)
 } 
