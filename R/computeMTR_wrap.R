@@ -65,14 +65,14 @@ computeMTR_wrap = function(echoData,
 
 # filter echo data
 # =============================================================================
-echoDataSubset = filterEchoData(echoData          = echoData,
-                                timeRangeTargetTZ = timeRangeTargetTZ, 
-                                protocolData      = protocolDataSubset, # internal output >> filterProtocolData()
-                                classSelection    = classSelection,
-                                #   classProbCutOff = NULL, # Ignore
-                                altitudeRange_AGL = altitudeRange_AGL,
-                                manualBlindTimes  = manualBlindTimes,
-                                echoValidator     = echoValidator)
+  echoDataSubset = filterEchoData(echoData          = echoData,
+                                  timeRangeTargetTZ = timeRangeTargetTZ, 
+                                  protocolData      = protocolDataSubset, # internal output >> filterProtocolData()
+                                  classSelection    = classSelection,
+                                  #   classProbCutOff = NULL, # Ignore
+                                  altitudeRange_AGL = altitudeRange_AGL,
+                                  manualBlindTimes  = manualBlindTimes,
+                                  echoValidator     = echoValidator)
 
 # Create Time Bins & Compute Observation Time for each Time Bin
 # =============================================================================
