@@ -13,13 +13,15 @@
 # #' @examples
 # #' addDayNightInfoPerEcho(echoData = echoData, sunriseSunset = sunriseSunset, sunOrCivil = "civil")
 addDayNightInfoPerEcho = function(echoData, sunriseSunset, sunOrCivil = "civil"){
-  if(length(echoData[, 1]) == 0){
-    warning("No echoData, can't add day/night information (function: addDayNightInfoPerEcho)")
-    return()
-  }
+  # Check whether echoData contains any data
+  # ===========================================================================
+    if(nrow(echoData) == 0){
+      stop("No echoData, can't add day/night information (function: addDayNightInfoPerEcho)")
+    }
   
   # add columns 'dayOrNight' and 'dateSunset' to echoData
-  echoData <- data.frame(echoData, dayOrNight = NA, dateSunset = as.POSIXct(NA))
+  # ===========================================================================
+    echoData <- data.frame(echoData, dayOrNight = NA, dateSunset = as.POSIXct(NA))
   
   # get day and night periods
   if(sunOrCivil == "sun")
