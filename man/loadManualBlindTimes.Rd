@@ -41,5 +41,5 @@ as blind time (e.g. rain). If no file is present or the file is empty, no manual
 be computed.
 }
 \author{
-Fabian Hertner (SBRS)
+Fabian Hertner (SBRS), \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest (SOI), \email{birgen.haest@vogelwarte.ch}
 }

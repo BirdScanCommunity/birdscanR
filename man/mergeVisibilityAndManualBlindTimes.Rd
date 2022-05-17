@@ -5,9 +5,9 @@
 \title{mergeVisibilityAndManualBlindTimes}
 \usage{
 mergeVisibilityAndManualBlindTimes(
-  visibilityData = NULL,
+  visibilityData,
   manualBlindTimes = NULL,
-  protocolData = NULL
+  protocolData
 )
 }
 \arguments{
@@ -31,5 +31,5 @@ will be merged. In case manual blind times and radar blind times are overlapping
 times with type “visibility” will be overwritten, but not radar blind times with type “protocolChange”.
 }
 \author{
-Fabian Hertner (SBRS)
+Fabian Hertner (SBRS), \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest (SOI), \email{birgen.haest@vogelwarte.ch}
 }
