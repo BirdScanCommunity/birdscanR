@@ -16,21 +16,28 @@ addDayNightInfoPerEcho = function(echoData, sunriseSunset, sunOrCivil = "civil")
   # Check whether echoData contains any data
   # ===========================================================================
     if (nrow(echoData) == 0){
-      stop("No echoData, can't add day/night information (function: addDayNightInfoPerEcho)")
+      stop(paste0("No echoData, can't add day/night information ", 
+                  "(function: addDayNightInfoPerEcho)"))
     }
   
   # add columns 'dayOrNight' and 'dateSunset' to echoData
   # ===========================================================================
-    echoData = data.frame(echoData, dayOrNight = NA, dateSunset = as.POSIXct(NA))
+    echoData = data.frame(echoData, 
+                          dayOrNight = NA, 
+                          dateSunset = as.POSIXct(NA))
   
   # get day and night periods
   # ===========================================================================
     if (sunOrCivil == "sun"){
-      days = data.frame(start = sunriseSunset$sunStart[sunriseSunset$is_night == 0], stop = sunriseSunset$sunStop[sunriseSunset$is_night == 0])
-      nights = data.frame(start = sunriseSunset$sunStart[sunriseSunset$is_night == 1], stop = sunriseSunset$sunStop[sunriseSunset$is_night == 1])
+      days   = data.frame(start = sunriseSunset$sunStart[sunriseSunset$is_night == 0], 
+                          stop = sunriseSunset$sunStop[sunriseSunset$is_night == 0])
+      nights = data.frame(start = sunriseSunset$sunStart[sunriseSunset$is_night == 1], 
+                          stop = sunriseSunset$sunStop[sunriseSunset$is_night == 1])
     } else {
-      days = data.frame(start = sunriseSunset$civilStart[sunriseSunset$is_night == 0], stop = sunriseSunset$civilStop[sunriseSunset$is_night == 0])
-      nights = data.frame(start = sunriseSunset$civilStart[sunriseSunset$is_night == 1], stop = sunriseSunset$civilStop[sunriseSunset$is_night == 1])
+      days   = data.frame(start = sunriseSunset$civilStart[sunriseSunset$is_night == 0], 
+                          stop = sunriseSunset$civilStop[sunriseSunset$is_night == 0])
+      nights = data.frame(start = sunriseSunset$civilStart[sunriseSunset$is_night == 1], 
+                          stop = sunriseSunset$civilStop[sunriseSunset$is_night == 1])
     }
   
   # set echoes during day
