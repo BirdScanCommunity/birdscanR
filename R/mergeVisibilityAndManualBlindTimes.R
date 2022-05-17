@@ -18,9 +18,9 @@
 #'
 # #' @examples
 # #' mergeVisibilityAndManualBlindTimes(visibilityData = data$visibilityData, manualBlindTimes = manualBlindTimes, protocolData = protocolDataSubset)
-mergeVisibilityAndManualBlindTimes = function(visibilityData   = NULL, 
+mergeVisibilityAndManualBlindTimes = function(visibilityData, 
                                               manualBlindTimes = NULL, 
-                                              protocolData     = NULL){
+                                              protocolData){
 # Check whether the necessary input data was provided 
 # =============================================================================
   if (is.null(visibilityData)){
@@ -36,20 +36,20 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData   = NULL,
                      "blind_from_targetTZ", "blind_to_targetTZ")
   visibilityData = visibilityData[, names(visibilityData) %in% colsOfInterest]
 
-# sort visibilityData chronological
+# Sort visibilityData chronological
 # =============================================================================
   visibilityDataSorted = visibilityData[order(visibilityData$blind_from_targetTZ),]
 
-# remove rows where start >= stop in visibility blindtimes
+# Remove rows where start >= stop in visibility blindtimes
 # =============================================================================
   visibilityDataSorted = visibilityDataSorted[visibilityDataSorted$blind_from_targetTZ < visibilityDataSorted$blind_to_targetTZ,]
 
-# make sure visibility blindtimes are not overlapping
+# Make sure visibility blindtimes are not overlapping
 # =============================================================================
-  overlaps = visibilityDataSorted$blind_from_targetTZ[2 : length(visibilityDataSorted[, 1])] < visibilityDataSorted$blind_to_targetTZ[1 : length(visibilityDataSorted[, 1]) - 1]
+  overlaps = visibilityDataSorted$blind_from_targetTZ[2:(length(visibilityDataSorted[, 1]))] < visibilityDataSorted$blind_to_targetTZ[1:(length(visibilityDataSorted[, 1])-1)]
   visibilityDataSorted$blind_to_targetTZ[c(overlaps, FALSE)] = visibilityDataSorted$blind_from_targetTZ[c(FALSE, overlaps)]
 
-# add column 'type' to visibilityData
+# Add column 'type' to visibilityData
 # =============================================================================
   visibilityDataSorted = data.frame(visibilityDataSorted, type = "visibility")
   levels(visibilityDataSorted$type) = c("visibility", "protocolChange")
