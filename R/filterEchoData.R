@@ -1,6 +1,6 @@
 #### filterEchoData ------------------------------------------------------
 #' @title filterEchoData
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}
+#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@@vogelwarte.ch} 
 #' @description With the function \code{filterEchoData} the echo data can be filtered by several parameters. The function returns the filtered echo data.
 #'
 #' @param echoData=NULL dataframe with the echo data from the data list created by the function \code{extractDBData}.
@@ -14,60 +14,75 @@
 #' 
 #' @return returns the filtered echo data in the same format as provided in the parameter \code{echoData}.
 #' @export
-filterEchoData = function(echoData = NULL, timeRangeTargetTZ = NULL, protocolData = NULL, classSelection = NULL, classProbCutOff = NULL, altitudeRange_AGL = NULL, manualBlindTimes = NULL, echoValidator = FALSE)
-{
-  requiredEchoDataCols = c("time_stamp_targetTZ", "protocolID", "class", "class_probability", "feature1.altitude_AGL")
-  if (!is.null(echoData) && length(echoData[, 1]) > 0 && sum(requiredEchoDataCols %in% names(echoData)) == length(requiredEchoDataCols)) 
-  {
-    # filter by timerange
-    if (!is.null(timeRangeTargetTZ) && length(timeRangeTargetTZ) == 2 && is(timeRangeTargetTZ, "POSIXct"))
-    {
-      echoData = echoData[echoData$time_stamp_targetTZ > timeRangeTargetTZ[1] & echoData$time_stamp_targetTZ < timeRangeTargetTZ[2],]
-    }
-    
-    # filter by protocols
-    if (!is.null(protocolData) && length(protocolData) > 0 && sum(c ("protocolID") %in% names(protocolData)) == 1)
-    {
-      echoData = echoData[echoData$protocolID %in% protocolData$protocolID,]
-    }
-    
-    # filter by classes
-    if (!is.null(classSelection) && is.character(classSelection))
-    {
-      echoData = echoData[echoData$class %in% classSelection,]
-    }
-    
-    # filter by classprobability
-    if (!is.null(classProbCutOff) && is.numeric(classProbCutOff))
-    {
-      echoData = echoData[echoData$class_probability > classProbCutOff,]
-    }
-    
-    # filter by altitudeRange
-    if (!is.null(altitudeRange_AGL) && length(altitudeRange_AGL) == 2 && is.numeric(altitudeRange_AGL))
-    {
-      echoData = echoData[echoData$feature1.altitude_AGL > altitudeRange_AGL[1] & echoData$feature1.altitude_AGL < altitudeRange_AGL[2],]
-    }
-    
-    # filter by manualBlindTimes
-    if (!is.null(manualBlindTimes) && sum(c ("start_targetTZ", "stop_targetTZ") %in% names(manualBlindTimes)) == 2 && is(manualBlindTimes$start_targetTZ, "POSIXct") && is(manualBlindTimes$stop_targetTZ, "POSIXct"))
-    {
-      echoDataInBlindTime = rep(FALSE, length(echoData[, 1]))
-      for (i in 1 : length(manualBlindTimes[, 1]))
-      {
-        echoDataInBlindTime = echoDataInBlindTime | (echoData$time_stamp_targetTZ >= manualBlindTimes$start_targetTZ[i] & echoData$time_stamp_targetTZ <= manualBlindTimes$stop_targetTZ[i])
-      }
-      echoData = echoData[!echoDataInBlindTime,]
-    }
-    
-    # filter by echovalidator
-    if (echoValidator == TRUE)
-    {
-      echoData = echoData[echoData$echoValidationType == "bio scatterer" | is.na(echoData$echoValidationType),]
-    }
-    
+filterEchoData = function(echoData          = NULL, 
+                          timeRangeTargetTZ = NULL, 
+                          protocolData      = NULL, 
+                          classSelection    = NULL, 
+                          classProbCutOff   = NULL, 
+                          altitudeRange_AGL = NULL, 
+                          manualBlindTimes  = NULL, 
+                          echoValidator     = FALSE){
+  
+# Check whether any input data is provided
+# =============================================================================
+  if (is.null(echoData) || nrow(echoData) == 0){
+    stop("There is no echoData provided.. Please check your input!")
   }
   
+# Check whether all necessary columns are present in echoData
+# =============================================================================
+  requiredEchoDataCols = c("time_stamp_targetTZ", "protocolID", 
+                           "class", "class_probability", "feature1.altitude_AGL")
+  if (!all(requiredEchoDataCols %in% names(echoData))){
+    stop(paste0("Not all necessary columns are present in echoData. Please ", 
+                "check your input for the following columns: ", 
+                paste(requiredEchoDataCols, collapse = ", ")))
+  }
+  
+# Filter by timerange
+# =========================================================================
+  if (!is.null(timeRangeTargetTZ) && length(timeRangeTargetTZ) == 2 && is(timeRangeTargetTZ, "POSIXct")){
+    echoData = echoData[echoData$time_stamp_targetTZ > timeRangeTargetTZ[1] & echoData$time_stamp_targetTZ < timeRangeTargetTZ[2],]
+  }
+
+# filter by protocols
+if (!is.null(protocolData) && length(protocolData) > 0 && sum(c ("protocolID") %in% names(protocolData)) == 1){
+  echoData = echoData[echoData$protocolID %in% protocolData$protocolID,]
+}
+
+# filter by classes
+if (!is.null(classSelection) && is.character(classSelection)){
+  echoData = echoData[echoData$class %in% classSelection,]
+}
+
+# filter by classprobability
+if (!is.null(classProbCutOff) && is.numeric(classProbCutOff)){
+  echoData = echoData[echoData$class_probability > classProbCutOff,]
+}
+
+# filter by altitudeRange
+if (!is.null(altitudeRange_AGL) && length(altitudeRange_AGL) == 2 && is.numeric(altitudeRange_AGL)){
+  echoData = echoData[echoData$feature1.altitude_AGL > altitudeRange_AGL[1] & echoData$feature1.altitude_AGL < altitudeRange_AGL[2],]
+}
+
+# filter by manualBlindTimes
+if (!is.null(manualBlindTimes) && sum(c ("start_targetTZ", "stop_targetTZ") %in% names(manualBlindTimes)) == 2 && is(manualBlindTimes$start_targetTZ, "POSIXct") && is(manualBlindTimes$stop_targetTZ, "POSIXct")){
+  echoDataInBlindTime = rep(FALSE, length(echoData[, 1]))
+  for (i in 1 : length(manualBlindTimes[, 1]))
+  {
+    echoDataInBlindTime = echoDataInBlindTime | (echoData$time_stamp_targetTZ >= manualBlindTimes$start_targetTZ[i] & echoData$time_stamp_targetTZ <= manualBlindTimes$stop_targetTZ[i])
+  }
+  echoData = echoData[!echoDataInBlindTime,]
+}
+
+# filter by echovalidator
+if (echoValidator == TRUE){
+  echoData = echoData[echoData$echoValidationType == "bio scatterer" | is.na(echoData$echoValidationType),]
+}
+  
+  
+# Return echo data
+# =============================================================================
   return(echoData)
 }
 
