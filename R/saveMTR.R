@@ -12,87 +12,86 @@
 #'
 #' @export
 #' 
-saveMTR = function(mtr                = NULL, 
+saveMTR = function(mtr, 
                    fileName           = NULL, 
-                   filepath           = NULL, 
+                   filepath, 
                    dbName             = NULL, 
                    rotSelection       = NULL, 
                    pulseTypeSelection = NULL){
-# sanity check filePath and mtr data
+# Check whether output file path can be created, or exists already
 # =============================================================================
-  if (!is.null(filepath) || is.null(mtr)){
-    ifelse(!dir.exists(filepath), dir.create(filepath), FALSE)
-    if (dir.exists(filepath) == TRUE){
-      # create fileName
-      # =======================================================================
-        if (is.null(fileName)){
-          fileName = "mtr"
-        } else {
-          fileName = fileName
-        }
-      
-      # add dbname to fileName if available
-      # =======================================================================
-        if (!is.null(dbName)){
-          fileName = paste(fileName, dbName, sep = "_")
-        }
-      
-      # get begin and end of timerange
-      # =======================================================================
-        timeStart = format(min(mtr$timeChunkBegin), "%Y%m%d")
-        timeStop = format(max(mtr$timeChunkEnd), "%Y%m%d")
-        
-      # get size of timeBins and/or day-night
-      # =======================================================================
-        if (max(table(mtr$timeChunkDateSunset)) > 2 * length(unique(mtr$altitudeChunkId))){
-          timeChunkSize = paste0(difftime(mtr$timeChunkEnd[1], mtr$timeChunkBegin[1], units = "secs"), "s")
-        } else {
-          timeChunkSize = "dayNight"
-        }
-        
-      # altitude chunk start and stop
-      # =======================================================================
-        altitudeStart = paste0(min(mtr$altitudeChunkBegin), "m")
-        altitudeStop = paste0(max(mtr$altitudeChunkEnd), "m")
-        
-      # number of altitude chunks
-      # =======================================================================
-        nAltitudeBins = paste0(length(unique(mtr$altitudeChunkId)), "bin")
-        altitude = paste(altitudeStart, altitudeStop, nAltitudeBins, sep = "-")
-        
-      # classes
-      # =======================================================================
-        classSelection = names(mtr)[grepl("mtr.", names(mtr), fixed = TRUE) & !grepl("allClasses", names(mtr), fixed = TRUE)]
-        classSelection = gsub("mtr.", "", classSelection)
-        classes = paste(classAbbreviations$abbr[match(classSelection, classAbbreviations$class)], collapse = "")
-        
-      # combine fileName
-      # =======================================================================
-        fileName = paste(fileName, timeStart, timeStop, timeChunkSize, altitude, classes, sep = "_")
-        
-      # rotation
-      # =======================================================================
-        if (!is.null(rotSelection)){
-          rotation = paste("rot", paste(rotSelection, collapse = "-"), sep = "-")
-          fileName = paste(fileName, rotation, sep = "_")
-        }
-        
-      # pulseType
-      # =======================================================================
-        if (!is.null(pulseTypeSelection)){
-          pulseType = paste("pulse", paste(pulseTypeSelection, collapse = "-"), sep = "-")
-          fileName = paste(fileName, pulseType, sep = "_")
-        }
-      
-      # add ending
-      # =======================================================================
-        fileName = paste(fileName, "rds", sep = ".")
-        
-      # Save to file
-      # =======================================================================
-        saveRDS(mtr, file = file.path(filepath, fileName))
-    } else {
-      warning(paste0("Could not create directory: ", filepath, ". MTR data not saved."))
-    }
+  dir.create(filepath, showWarnings = F, recursive = T)
+  if (!dir.exists(filepath)){
+    stop(paste0("Output file path does not exist, but can also not be created. ", 
+                "Check your input!"))
+  } 
+  
+# create fileName
+# =======================================================================
+  if (is.null(fileName)){
+    fileName = "mtr"
+  } else {
+    fileName = fileName
   }
+
+# add dbname to fileName if available
+# =======================================================================
+  if (!is.null(dbName)){
+    fileName = paste(fileName, dbName, sep = "_")
+  }
+
+# get begin and end of timerange
+# =======================================================================
+  timeStart = format(min(mtr$timeChunkBegin), "%Y%m%d")
+  timeStop = format(max(mtr$timeChunkEnd), "%Y%m%d")
+  
+# get size of timeBins and/or day-night
+# =======================================================================
+  if (max(table(mtr$timeChunkDateSunset)) > 2 * length(unique(mtr$altitudeChunkId))){
+    timeChunkSize = paste0(difftime(mtr$timeChunkEnd[1], mtr$timeChunkBegin[1], units = "secs"), "s")
+  } else {
+    timeChunkSize = "dayNight"
+  }
+  
+# altitude chunk start and stop
+# =======================================================================
+  altitudeStart = paste0(min(mtr$altitudeChunkBegin), "m")
+  altitudeStop = paste0(max(mtr$altitudeChunkEnd), "m")
+  
+# number of altitude chunks
+# =======================================================================
+  nAltitudeBins = paste0(length(unique(mtr$altitudeChunkId)), "bin")
+  altitude = paste(altitudeStart, altitudeStop, nAltitudeBins, sep = "-")
+  
+# classes
+# =======================================================================
+  classSelection = names(mtr)[grepl("mtr.", names(mtr), fixed = TRUE) & !grepl("allClasses", names(mtr), fixed = TRUE)]
+  classSelection = gsub("mtr.", "", classSelection)
+  classes = paste(classAbbreviations$abbr[match(classSelection, classAbbreviations$class)], collapse = "")
+  
+# combine fileName
+# =======================================================================
+  fileName = paste(fileName, timeStart, timeStop, timeChunkSize, altitude, classes, sep = "_")
+  
+# rotation
+# =======================================================================
+  if (!is.null(rotSelection)){
+    rotation = paste("rot", paste(rotSelection, collapse = "-"), sep = "-")
+    fileName = paste(fileName, rotation, sep = "_")
+  }
+  
+# pulseType
+# =======================================================================
+  if (!is.null(pulseTypeSelection)){
+    pulseType = paste("pulse", paste(pulseTypeSelection, collapse = "-"), sep = "-")
+    fileName = paste(fileName, pulseType, sep = "_")
+  }
+
+# add ending
+# =======================================================================
+  fileName = paste(fileName, "rds", sep = ".")
+  
+# Save to file
+# =======================================================================
+  saveRDS(mtr, file = file.path(filepath, fileName))
 }
