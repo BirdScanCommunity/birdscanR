@@ -74,15 +74,6 @@ computeMTR_wrap = function(echoData,
                                   manualBlindTimes  = manualBlindTimes,
                                   echoValidator     = echoValidator)
 
-# Create Time Bins & Compute Observation Time for each Time Bin
-# =============================================================================
-  # Compute observation times
-  # =============================================================================
-    timeBins = computeObservationTime(timeBins           = timeBins, # internal output >> createTimeBins()
-                                      protocolData       = protocolDataSubset, # internal output >> filterProtocolData()
-                                      blindTimes         = blindTimes, # internal output >> mergeVisibilityAndManualBlindTimes
-                                      blindTimeAsMtrZero = blindTimeAsMtrZero)
-
 # compute MTR
 # =============================================================================
   MTR = computeMTR(echoes             = echoDataSubset, # internal output >> filterEchoData()
@@ -94,6 +85,9 @@ computeMTR_wrap = function(echoData,
                    timeZone            = targetTimeZone, 
                    sunriseSunset       = sunriseSunset, 
                    sunOrCivil          = sunOrCivil,
+                   protocolData       = protocolDataSubset, # internal output >> filterProtocolData()
+                   blindTimes         = blindTimes, # internal output >> mergeVisibilityAndManualBlindTimes
+                   blindTimeAsMtrZero = blindTimeAsMtrZero,
                    propObsTimeCutoff  = propObsTimeCutoff, 
                    computePerDayNight = computePerDayNight)
 
