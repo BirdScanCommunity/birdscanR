@@ -21,11 +21,11 @@ computeObservationTime(
 \item{blindTimeAsMtrZero=NULL}{character string vector with the blind time types which should be treated as observation time with MTR zero.}
 }
 \value{
-returns a dataframe with the timebins comleted with the observation times of each timebin.
+returns a dataframe with the timebins completed with the observation times of each timebin.
 }
 \description{
 Compute blind times and observation times during timebins based on protocol data and blind times
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

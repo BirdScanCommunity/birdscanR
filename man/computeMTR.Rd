@@ -9,7 +9,14 @@ computeMTR(
   classSelection,
   altitudeRange,
   altitudeBinSize,
-  timeBins,
+  timeRange,
+  timeBinDuration_sec,
+  timeZone,
+  sunriseSunset,
+  sunOrCivil = "civil",
+  protocolData = protocolData,
+  blindTimes = blindTimes,
+  blindTimeAsMtrZero = blindTimeAsMtrZero,
   propObsTimeCutoff = 0,
   computePerDayNight = FALSE,
   computeAltitudeDistribution = TRUE
@@ -24,13 +31,27 @@ computeMTR(
 
 \item{altitudeBinSize}{numeric, size of the altitude bins in meter.}
 
-\item{timeBins}{dataframe with the time bins created by the function ‘computeObservationTime’. MTR is computed for each time bin.}
+\item{timeRange}{vector of length 2, with start and end of timerange as POSIXct}
+
+\item{timeBinDuration_sec}{duration of timeBins in seconds (numeric). for values <= 0 a duration of 1 hour will be set}
+
+\item{timeZone}{timezone in which the timebins should be created as string. e.g. "Etc/GMT0"}
+
+\item{sunriseSunset}{dataframe with sunrise/sunset, civil dawn/dusk. computed with function 'twilight'}
+
+\item{protocolData}{dataframe with the protocol data from the data list created by the function \code{extractDBData} or a subset of it created by the function \code{filterProtocolData}.}
+
+\item{blindTimes}{dataframe containing the blind times created by the function \code{mergeVisibilityAndManualBlindTimes}.}
 
 \item{propObsTimeCutoff}{numeric between 0 and 1. If the MTR is computed per day and night, time bins with a proportional observation time smaller than propObsTimeCutoff are ignored when combining the time bins. If the MTR is computed for each time bin, the parameter is ignored.}
 
 \item{computePerDayNight}{logical, TRUE: MTR is computed per day and night FALSE: MTR is computed for each time bin}
 
 \item{computeAltitudeDistribution}{logical, TRUE: compute the mean height and altitude distribution of MTR for the pre-defined quantiles 0.05, 0.25, 0.5, 0.75, 0.95}
+
+\item{sunOrCivil="civil"}{sunrise/sunset or civil dawn/dusk used to split day and night. Supported values: "sun" or "civil", default: "civil"}
+
+\item{blindTimeAsMtrZero=NULL}{character string vector with the blind time types which should be treated as observation time with MTR zero.}
 }
 \value{
 mtr
