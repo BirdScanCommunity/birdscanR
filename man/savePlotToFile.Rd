@@ -12,7 +12,8 @@ savePlotToFile(
   plotHeight_mm = NULL,
   timeRange = NULL,
   classSelection = NULL,
-  altitudeRange = NULL
+  altitudeRange = NULL,
+  classAbbreviations = NULL
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ savePlotToFile(
 \item{classSelection=NULL}{character string vector, classes that were used to create the plot, used to create the filename. If not set, the pulse type selection will not be appended to the filename}
 
 \item{altitudeRange=NULL}{numeric vector of size 2, altitude range used to create the plot, used to create the filename. If not set, the pulse type selection will not be appended to the filename}
+
+\item{classAbbreviations=NULL}{Two-column dataframe with character first column named 'class' and character second 'abbr', containing the full names of the classes and their abbreviations to use in the output filename. Default = NULL, meaning the abbreviations will be used that are stored in the package; See data(classAbbreviations)}
 }
 \description{
 saves created plots as .png.
