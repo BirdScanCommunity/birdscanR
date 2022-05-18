@@ -11,8 +11,7 @@ RoxygenNote: 7.2.0
 Description: This package can be used to extract data from Birdscan MR1 sql databases as well as process those data to Migration Traffic Rates. 
 LazyData: true
 Depends:
-  dplyr,
-  tidyr
+  tidyverse
 Imports: 
   DBI,
   maptools,
