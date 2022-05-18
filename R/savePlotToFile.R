@@ -11,18 +11,20 @@
 #' @param timeRange=NULL POSIXct vector of size 2, timeRange of the plot, used to create the filename. If not set, the pulse type selection will not be appended to the filename
 #' @param classSelection=NULL character string vector, classes that were used to create the plot, used to create the filename. If not set, the pulse type selection will not be appended to the filename
 #' @param altitudeRange=NULL numeric vector of size 2, altitude range used to create the plot, used to create the filename. If not set, the pulse type selection will not be appended to the filename
+#' @param classAbbreviations=NULL Two-column dataframe with character first column named 'class' and character second 'abbr', containing the full names of the classes and their abbreviations to use in the output filename. Default = NULL, meaning the abbreviations will be used that are stored in the package; See data(classAbbreviations) 
 #'
 #' @export
 #' 
 
-savePlotToFile = function( plot = NULL, 
-                           filePath = NULL, 
-                           plotType = NULL, 
-                           plotWidth_mm = NULL, 
-                           plotHeight_mm = NULL, 
-                           timeRange = NULL, 
-                           classSelection = NULL, 
-                           altitudeRange = NULL )
+savePlotToFile = function(plot = NULL, 
+                          filePath = NULL, 
+                          plotType = NULL, 
+                          plotWidth_mm = NULL, 
+                          plotHeight_mm = NULL, 
+                          timeRange = NULL, 
+                          classSelection = NULL, 
+                          altitudeRange = NULL, 
+                          classAbbreviations = NULL)
 {
   # sanity check plot data
   if( !is.null( plot ) )
