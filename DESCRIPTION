@@ -17,4 +17,5 @@ Imports:
   RODBC,
   RPostgreSQL,
   rstudioapi,
-  sp
+  sp,
+  tidyR
