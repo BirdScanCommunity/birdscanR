@@ -76,14 +76,6 @@ computeMTR_wrap = function(echoData,
 
 # Create Time Bins & Compute Observation Time for each Time Bin
 # =============================================================================
-  # TimeBin size in seconds
-  # ===========================================================================
-    timeBins = createTimeBins(timeRange           = timeRangeTargetTZ, 
-                              timeBinDuration_sec = timeBinduration_sec, 
-                              timeZone            = targetTimeZone, 
-                              sunriseSunset       = sunriseSunset, 
-                              sunOrCivil          = sunOrCivil)
-  
   # Compute observation times
   # =============================================================================
     timeBins = computeObservationTime(timeBins           = timeBins, # internal output >> createTimeBins()
@@ -97,7 +89,11 @@ computeMTR_wrap = function(echoData,
                    classSelection     = classSelection, 
                    altitudeRange      = altitudeRange_AGL, 
                    altitudeBinSize    = altitudeBinSize,
-                   timeBins           = timeBins, 
+                   timeRange           = timeRangeTargetTZ, 
+                   timeBinDuration_sec = timeBinduration_sec, 
+                   timeZone            = targetTimeZone, 
+                   sunriseSunset       = sunriseSunset, 
+                   sunOrCivil          = sunOrCivil,
                    propObsTimeCutoff  = propObsTimeCutoff, 
                    computePerDayNight = computePerDayNight)
 

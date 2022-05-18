@@ -10,7 +10,11 @@
 #' @param classSelection character string vector with all classes which should be used to calculate the MTR. The MTR and number of Echoes will be calculated for each class as well as for all classes together. 
 #' @param altitudeRange numeric vector of length 2 with the start and end of the altitude range in meter a.g.l. 
 #' @param altitudeBinSize numeric, size of the altitude bins in meter. 
-#' @param timeBins dataframe with the time bins created by the function ‘computeObservationTime’. MTR is computed for each time bin.
+#' @param timeRange vector of length 2, with start and end of timerange as POSIXct
+#' @param timeBinDuration_sec duration of timeBins in seconds (numeric). for values <= 0 a duration of 1 hour will be set
+#' @param timeZone timezone in which the timebins should be created as string. e.g. "Etc/GMT0"
+#' @param sunriseSunset dataframe with sunrise/sunset, civil dawn/dusk. computed with function 'twilight'
+#' @param sunOrCivil="civil" sunrise/sunset or civil dawn/dusk used to split day and night. Supported values: "sun" or "civil", default: "civil"
 #' @param propObsTimeCutoff numeric between 0 and 1. If the MTR is computed per day and night, time bins with a proportional observation time smaller than propObsTimeCutoff are ignored when combining the time bins. If the MTR is computed for each time bin, the parameter is ignored.
 #' @param computePerDayNight logical, TRUE: MTR is computed per day and night FALSE: MTR is computed for each time bin
 #' @param computeAltitudeDistribution logical, TRUE: compute the mean eight and altitude distribution of MTR for the pre-defined quantiles 0.05, 0.25, 0.5, 0.75, 0.95
@@ -28,9 +32,13 @@ computeMTR_slow = function( echoes,
                             classSelection, 
                             altitudeRange,
                             altitudeBinSize, 
-                            timeBins, 
-                            propObsTimeCutoff = 0, 
-                            computePerDayNight = FALSE, 
+                            timeRange, 
+                            timeBinDuration_sec,
+                            timeZone,
+                            sunriseSunset,
+                            sunOrCivil                  = "civil",
+                            propObsTimeCutoff           = 0, 
+                            computePerDayNight          = FALSE, 
                             computeAltitudeDistribution = TRUE )
 {
   # Create altitudeBins
