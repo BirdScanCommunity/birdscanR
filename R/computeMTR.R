@@ -72,9 +72,9 @@ computeMTR = function(echoes,
         timeBins$blindTime_sec[i-1]       = timeBins$blindTime_sec[i-1] + timeBins$blindTime_sec[i]
         timeBins$observationTime_h[i-1]   = timeBins$observationTime_h[i-1] + timeBins$observationTime_h[i]
         timeBins$observationTime_sec[i-1] = timeBins$observationTime_sec[i-1] + timeBins$observationTime_sec[i]
-        ifelse(timeBins$duration_sec[i-1] > 0, 
-               timeBins$proportionalTimeObserved[i-1] = timeBins$observationTime_sec[i-1] / timeBins$duration_sec[i-1], 
-               timeBins$proportionalTimeObserved[i-1] = 0)
+        timeBins$proportionalTimeObserved[i-1] = ifelse(timeBins$duration_sec[i-1] > 0, 
+                                                        (timeBins$observationTime_sec[i-1] / timeBins$duration_sec[i-1]), 
+                                                        0)
       } else if ((timeBins$id[i-1] != -1) && 
                  difftime(timeBins$stop[i], timeBins$start[i]) != difftime(timeBins$stop[i - 1], timeBins$start[i - 1]) && 
                  (i != length(timeBins[, 1]))){
