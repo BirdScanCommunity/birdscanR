@@ -13,14 +13,13 @@
 #' @export
 #' 
 createTimeBins <- function(timeRange, timeBinDuration_sec, timeZone, sunriseSunset, sunOrCivil = "civil"){
-  if (timeRange[1] > timeRange[2])
-  {
+# Check whether input are ok
+# ===========================================================================
+  if (timeRange[1] > timeRange[2]){
     warning("End of timerange is before begin of timerange. Set a valid timerange to create timebins.")  
     return()
   } 
-  
-  if (timeBinDuration_sec <= 0)
-  {
+  if (timeBinDuration_sec <= 0){
     timeBinDuration_sec <- 60 * 60
   }
   
