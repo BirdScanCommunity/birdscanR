@@ -1,6 +1,6 @@
 #### computeMTR ------------------------------------------------------
 #' @title computeMTR
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; with edits by Baptiste Schmid, \email{birgen.haest@@vogelwarte.ch}, and Birgen Haest, \email{birgen.haest@@vogelwarte.ch}  
+#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; with edits by Baptiste Schmid, \email{baptiste.schmid@@vogelwarte.ch}, and Birgen Haest, \email{birgen.haest@@vogelwarte.ch}  
 #' @description Make the original function 'computeMTR' faster. 
 #' There are two options to compute MTR values. 
 #' The options are selected with the parameter ‘computePerDayNight’. 
@@ -12,7 +12,7 @@
 #' @param timeBins dataframe with the time bins created by the function ‘computeObservationTime’. MTR is computed for each time bin.
 #' @param propObsTimeCutoff numeric between 0 and 1. If the MTR is computed per day and night, time bins with a proportional observation time smaller than propObsTimeCutoff are ignored when combining the time bins. If the MTR is computed for each time bin, the parameter is ignored.
 #' @param computePerDayNight logical, TRUE: MTR is computed per day and night FALSE: MTR is computed for each time bin
-#' @param computeAltitudeDistribution logical, TRUE: compute the mean eight and altitude distribution of MTR for the pre-defined quantiles 0.05, 0.25, 0.5, 0.75, 0.95
+#' @param computeAltitudeDistribution logical, TRUE: compute the mean height and altitude distribution of MTR for the pre-defined quantiles 0.05, 0.25, 0.5, 0.75, 0.95
 #'
 #' @return mtr
 #' @export
