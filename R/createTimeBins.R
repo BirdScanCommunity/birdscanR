@@ -10,7 +10,6 @@
 #' @param timeRange vector of length 2, with start and end of timerange as POSIXct
 #'
 #' @return returns a dataframe with the timebins information
-#' @export
 #' 
 createTimeBins = function(timeRange, 
                           timeBinDuration_sec, 
