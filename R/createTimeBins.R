@@ -1,6 +1,6 @@
 #### createTimeBins ------------------------------------------------------
 #' @title createTimeBins
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}
+#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@@vogelwarte.ch}  
 #' @description Create timebins with a given duration. timebins expanding over a day/night change will be split in two timebins.
 #'
 #' @param timeBinDuration_sec duration of timeBins in seconds (numeric). for values <= 0 a duration of 1 hour will be set
