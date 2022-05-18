@@ -91,16 +91,12 @@ computeMTR_wrap = function(echoData,
                                       blindTimes         = blindTimes, # internal output >> mergeVisibilityAndManualBlindTimes
                                       blindTimeAsMtrZero = blindTimeAsMtrZero)
 
-# Create altitudeBins
-# =============================================================================
-  altitudeBins = createAltitudeBins(altitudeRange   = altitudeRange_AGL, 
-                                    altitudeBinSize = altitudeBinSize)
-
 # compute MTR
 # =============================================================================
   MTR = computeMTR(echoes             = echoDataSubset, # internal output >> filterEchoData()
                    classSelection     = classSelection, 
-                   altitudeBins       = altitudeBins, 
+                   altitudeRange      = altitudeRange_AGL, 
+                   altitudeBinSize    = altitudeBinSize,
                    timeBins           = timeBins, 
                    propObsTimeCutoff  = propObsTimeCutoff, 
                    computePerDayNight = computePerDayNight)

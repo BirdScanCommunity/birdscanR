@@ -8,7 +8,8 @@
 #' compute MTR per day/night: The time bins of each day and night will be combined and the mean MTR is computed for each day and night. Aside this, the spread (first and third Quartile) for each day and night is computed. The spread is dependent on the chosen time bin duration/amount of time bins. 
 #' @param echoes dataframe with the echo data from the data list created by the function ‘extractDBData’ or a subset of it created by the function ‘filterEchoData’. 
 #' @param classSelection character string vector with all classes which should be used to calculate the MTR. The MTR and number of Echoes will be calculated for each class as well as for all classes together. 
-#' @param altitudeBins dataframe with the altitude bins created by the function ‘createAltitudeBins’. MTR is computed for each altitude bin.
+#' @param altitudeRange numeric vector of length 2 with the start and end of the altitude range in meter a.g.l. 
+#' @param altitudeBinSize numeric, size of the altitude bins in meter. 
 #' @param timeBins dataframe with the time bins created by the function ‘computeObservationTime’. MTR is computed for each time bin.
 #' @param propObsTimeCutoff numeric between 0 and 1. If the MTR is computed per day and night, time bins with a proportional observation time smaller than propObsTimeCutoff are ignored when combining the time bins. If the MTR is computed for each time bin, the parameter is ignored.
 #' @param computePerDayNight logical, TRUE: MTR is computed per day and night FALSE: MTR is computed for each time bin
@@ -23,8 +24,26 @@
 # #' computeMTR( echoes = echoDataSubset, classSelection = classSelection, altitudeBins = altitudeBins_25_1025_binSize50, timeBins = timeBins_1h_DayNight, propObsTimeCutoff = propObsTimeCutoff, computePerDayNight = TRUE )
 # #' computeMTR( echoes = echoDataSubset, classSelection = classSelection, altitudeBins = altitudeBins_25_1000_oneBin, timeBins = timeBins_1h_DayNight, propObsTimeCutoff = propObsTimeCutoff, computePerDayNight = TRUE )
 
-computeMTR_slow = function( echoes, classSelection, altitudeBins, timeBins, propObsTimeCutoff = 0, computePerDayNight = FALSE, computeAltitudeDistribution = TRUE )
+computeMTR_slow = function( echoes, 
+                            classSelection, 
+                            altitudeRange,
+                            altitudeBinSize, 
+                            timeBins, 
+                            propObsTimeCutoff = 0, 
+                            computePerDayNight = FALSE, 
+                            computeAltitudeDistribution = TRUE )
 {
+  # Create altitudeBins
+  # =============================================================================
+    message("Creating altitude bins..")
+    sequence     = seq(altitudeRange[1], altitudeRange[2], altitudeBinSize)
+    altitudeBins = data.frame(id          = seq(1, (length(sequence)-1), by = 1), 
+                              begin       = sequence[1:(length(sequence)-1)], 
+                              end         = sequence[2:length(sequence)], 
+                              size        = NA_real_, 
+                              avgAltitude = NA_real_)
+    altitudeBins$size        = altitudeBins$end - altitudeBins$begin
+    altitudeBins$avgAltitude = ((altitudeBins$begin + altitudeBins$end)) / 2
   
   # remove echoes with NA in 'mtr_factor'
   echoes <- echoes[ !is.na( echoes$mtr_factor_rf ), ]
