@@ -39,5 +39,5 @@ returns the filtered echo data in the same format as provided in the parameter \
 With the function \code{filterEchoData} the echo data can be filtered by several parameters. The function returns the filtered echo data.
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

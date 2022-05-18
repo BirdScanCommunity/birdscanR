@@ -30,5 +30,5 @@ returns a dataframe with the timebins information
 Create timebins with a given duration. timebins expanding over a day/night change will be split in two timebins.
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

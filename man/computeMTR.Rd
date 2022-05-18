@@ -27,7 +27,7 @@ computeMTR(
 
 \item{computePerDayNight}{logical, TRUE: MTR is computed per day and night FALSE: MTR is computed for each time bin}
 
-\item{computeAltitudeDistribution}{logical, TRUE: compute the mean eight and altitude distribution of MTR for the pre-defined quantiles 0.05, 0.25, 0.5, 0.75, 0.95}
+\item{computeAltitudeDistribution}{logical, TRUE: compute the mean height and altitude distribution of MTR for the pre-defined quantiles 0.05, 0.25, 0.5, 0.75, 0.95}
 }
 \value{
 mtr
@@ -42,5 +42,5 @@ The options are selected with the parameter ‘computePerDayNight’.
 }
 }
 \author{
-Fabian Hertner (SBRS) & baptiste.schmid@vogelwarte.ch
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}; with edits by Baptiste Schmid, \email{baptiste.schmid@vogelwarte.ch}, and Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

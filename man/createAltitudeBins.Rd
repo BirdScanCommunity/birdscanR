@@ -18,11 +18,11 @@ dataframe with altitude bins
 create AltitudeBins used for MTR computation
 }
 \examples{
-altitudeRange_AGL_25_1025 <- c( 25, 1025 )
+altitudeRange_AGL_25_1025 = c( 25, 1025 )
 message( "creating altitude bins" )
-altitudeBins_25_1025_oneBin <- createAltitudeBins( altitudeRange = altitudeRange_AGL_25_1025, altitudeBinSize = 1000 )
-altitudeBins_25_1025_binSize50 <- createAltitudeBins( altitudeRange = altitudeRange_AGL_25_1025, altitudeBinSize = 50 )
+altitudeBins_25_1025_oneBin = createAltitudeBins( altitudeRange = altitudeRange_AGL_25_1025, altitudeBinSize = 1000 )
+altitudeBins_25_1025_binSize50 = createAltitudeBins( altitudeRange = altitudeRange_AGL_25_1025, altitudeBinSize = 50 )
 }
 \author{
-Fabian Hertner (SBRS)
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }
