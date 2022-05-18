@@ -178,12 +178,13 @@ computeMTR = function(echoes,
                 "altitudeChunkId" , "altitudeChunkBegin" , "altitudeChunkEnd" , 
                 "altitudeChunkSize" , "altitudeChunkAvgAltitude")]
   
-  # # show progress
-  # progressTotal = (length(classSelection) + 1) * nrow(mtr) * 2
-  # progressCnt = 1
-  # progressPercent = 0
+# Start showing progress, if requested
+  # progressTotal    = (length(classSelection) + 1) * nrow(mtr) * 2
+  # progressCnt      = 1
+  # progressPercent  = 0
   # altitudeBinsStep = nrow(mtr) / length(unique(mtr$altitudeChunkId))
-  # message('\r', paste0("MTR computation progress: ", progressPercent, "%"), appendLF = FALSE)
+  # message('\r', paste0("MTR computation progress: ", progressPercent, "%"), 
+  #         appendLF = FALSE)
   
 # ----------------------- MTR ---------------------------#
 # =============================================================================
@@ -661,11 +662,11 @@ computeMTR = function(echoes,
           }
         }
         
-        progressCnt = progressCnt + progressStep
-        if (floor(progressCnt / progressTotal * 100) > progressPercent){
-          progressPercent = floor(progressCnt / progressTotal * 100)
-          message('\r', paste0("MTR computation progress: ", progressPercent, "%"), appendLF = FALSE)
-        }
+        # progressCnt = progressCnt + progressStep
+        # if (floor(progressCnt / progressTotal * 100) > progressPercent){
+        #   progressPercent = floor(progressCnt / progressTotal * 100)
+        #   message('\r', paste0("MTR computation progress: ", progressPercent, "%"), appendLF = FALSE)
+        # }
       }
     }
     
