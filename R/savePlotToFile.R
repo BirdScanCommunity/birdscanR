@@ -10,10 +10,17 @@
 #' @param dbName=NULL character string, name of the database. Used to create the filename. If not set, the database name will not be appended to the filename
 #' @param rotSelection=NULL numeric vector, rotation selection which was used to filter protocols. Used to create the filename. If not set, the rotation selection will not be appended to the filename
 #' @param pulseTypeSelection=NULL character vector, pulse type selection which was used to filter protocols. Used to create the filename. If not set, the pulse type selection will not be appended to the filename
+#' @param classAbbreviations=NULL Two-column dataframe with character first column named 'class' and character second 'abbr', containing the full names of the classes and their abbreviations to use in the output filename. Default = NULL, meaning the abbreviations will be used that are stored in the package; See data(classAbbreviations) 
 #'
 #' @export
 #' 
-saveMTR = function( mtr = NULL, fileName = NULL, filepath = NULL, dbName = NULL, rotSelection = NULL, pulseTypeSelection = NULL ){
+saveMTR = function( mtr = NULL, 
+                    fileName = NULL, 
+                    filepath = NULL, 
+                    dbName = NULL, 
+                    rotSelection = NULL, 
+                    pulseTypeSelection = NULL,
+                    classAbbreviations = NULL){
   # sanity check filePath and mtr data
   if( !is.null( filepath ) || is.null( mtr ) ){
     ifelse( !dir.exists( filepath ), dir.create( filepath ), FALSE )
