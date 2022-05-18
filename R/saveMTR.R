@@ -26,6 +26,17 @@ saveMTR = function(mtr,
                 "Check your input!"))
   } 
   
+# Declare variables
+# =============================================================================
+  classAbbreviations = data.frame(class = c("passerine_type", "wader_type",     
+                                             "swift_type", "large_bird",
+                                             "unid_bird", "bird_flock",
+                                             "insect", "nonbio", "precipitation"),
+                                   abbr  = c("pa", "wa",
+                                             "sw", "la",
+                                             "bi", "fl",
+                                             "in", "nb", "pr"))
+  
 # create fileName
 # =======================================================================
   if (is.null(fileName)){
@@ -43,7 +54,7 @@ saveMTR = function(mtr,
 # get begin and end of timerange
 # =======================================================================
   timeStart = format(min(mtr$timeChunkBegin), "%Y%m%d")
-  timeStop = format(max(mtr$timeChunkEnd), "%Y%m%d")
+  timeStop  = format(max(mtr$timeChunkEnd), "%Y%m%d")
   
 # get size of timeBins and/or day-night
 # =======================================================================
@@ -56,18 +67,18 @@ saveMTR = function(mtr,
 # altitude chunk start and stop
 # =======================================================================
   altitudeStart = paste0(min(mtr$altitudeChunkBegin), "m")
-  altitudeStop = paste0(max(mtr$altitudeChunkEnd), "m")
+  altitudeStop  = paste0(max(mtr$altitudeChunkEnd), "m")
   
 # number of altitude chunks
 # =======================================================================
   nAltitudeBins = paste0(length(unique(mtr$altitudeChunkId)), "bin")
-  altitude = paste(altitudeStart, altitudeStop, nAltitudeBins, sep = "-")
+  altitude      = paste(altitudeStart, altitudeStop, nAltitudeBins, sep = "-")
   
 # classes
 # =======================================================================
   classSelection = names(mtr)[grepl("mtr.", names(mtr), fixed = TRUE) & !grepl("allClasses", names(mtr), fixed = TRUE)]
   classSelection = gsub("mtr.", "", classSelection)
-  classes = paste(classAbbreviations$abbr[match(classSelection, classAbbreviations$class)], collapse = "")
+  classes        = paste(classAbbreviations$abbr[match(classSelection, classAbbreviations$class)], collapse = "")
   
 # combine fileName
 # =======================================================================
