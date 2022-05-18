@@ -7,7 +7,8 @@
 computeMTR(
   echoes,
   classSelection,
-  altitudeBins,
+  altitudeRange,
+  altitudeBinSize,
   timeBins,
   propObsTimeCutoff = 0,
   computePerDayNight = FALSE,
@@ -19,7 +20,9 @@ computeMTR(
 
 \item{classSelection}{character string vector with all classes which should be used to calculate the MTR. The MTR and number of Echoes will be calculated for each class as well as for all classes together.}
 
-\item{altitudeBins}{dataframe with the altitude bins created by the function ‘createAltitudeBins’. MTR is computed for each altitude bin.}
+\item{altitudeRange}{numeric vector of length 2 with the start and end of the altitude range in meter a.g.l.}
+
+\item{altitudeBinSize}{numeric, size of the altitude bins in meter.}
 
 \item{timeBins}{dataframe with the time bins created by the function ‘computeObservationTime’. MTR is computed for each time bin.}
 
