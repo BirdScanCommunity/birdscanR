@@ -18,4 +18,4 @@ Imports:
   RPostgreSQL,
   rstudioapi,
   sp,
-  tidyR
+  tidyr
