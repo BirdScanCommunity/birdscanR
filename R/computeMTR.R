@@ -359,7 +359,7 @@ computeMTR = function(echoes,
             mtrFirstQuartile = suppressWarnings(
                                 aggregate(list(mtrFirstQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
                                           list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                          weighted.quantile, 
+                                          modi::weighted.quantile, 
                                           w = mtrTmp$timeChunkDuration_sec[mtrTmp$proportionalTimeObserved > propObsTimeCutoff], 
                                           prob = 0.25))
             mtrDay = merge(mtrDay, mtrFirstQuartile, 
@@ -369,7 +369,7 @@ computeMTR = function(echoes,
                                   aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, 
                                                    paste("mtr", classSelection[i], sep = ".")], 
                                             list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                            weighted.quantile, 
+                                            modi::weighted.quantile, 
                                             w = mtrTmp$timeChunkDuration_sec[mtrTmp$proportionalTimeObserved > propObsTimeCutoff], 
                                             prob = 0.25))
               names(mtrFirstQuartile)[2] = paste("mtrFirstQuartile", classSelection[i], sep = ".")
@@ -392,7 +392,7 @@ computeMTR = function(echoes,
                                   aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, 
                                                    paste("mtr", classSelection[i], sep = ".")], 
                                             list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                            weighted.quantile, 
+                                            modi::weighted.quantile, 
                                             w = mtrTmp$timeChunkDuration_sec[mtrTmp$proportionalTimeObserved > propObsTimeCutoff], 
                                             prob = 0.75))
               names(mtrThirdQuartile)[2] = paste("mtrThirdQuartile", classSelection[i], sep = ".")
@@ -505,7 +505,7 @@ computeMTR = function(echoes,
               mtrFirstQuartile = suppressWarnings(
                                    aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")], 
                                              list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                             weighted.quantile, 
+                                             modi::weighted.quantile, 
                                              w = mtrTmp$timeChunkDuration_sec[mtrTmp$proportionalTimeObserved > propObsTimeCutoff], 
                                              prob = 0.25))
               names(mtrFirstQuartile)[2] = paste("mtrFirstQuartile", 
@@ -520,7 +520,7 @@ computeMTR = function(echoes,
             mtrThirdQuartile = suppressWarnings(
                                  aggregate(list(mtrThirdQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
                                            list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                           weighted.quantile, 
+                                           modi::weighted.quantile, 
                                            w = mtrTmp$timeChunkDuration_sec[mtrTmp$proportionalTimeObserved > propObsTimeCutoff], 
                                            prob = 0.75))
             mtrNight = merge(mtrNight, mtrThirdQuartile, 
@@ -529,7 +529,7 @@ computeMTR = function(echoes,
               mtrThirdQuartile = suppressWarnings(
                                    aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")], 
                                              list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                             weighted.quantile, 
+                                             modi::weighted.quantile, 
                                              w = mtrTmp$timeChunkDuration_sec[mtrTmp$proportionalTimeObserved > propObsTimeCutoff], 
                                              prob = 0.75))
               names(mtrThirdQuartile)[2] = paste("mtrThirdQuartile", 
@@ -640,25 +640,25 @@ computeMTR = function(echoes,
                                                                                na.rm = TRUE)
           if (nrow(echoesInTimeAndAltitudeBin) > 1){
             mtr[k, paste("altitudeQuantile_0.05", classLabel, sep = ".")] = suppressWarnings(
-                                                                              weighted.quantile(x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, 
-                                                                                                w = echoesInTimeAndAltitudeBin$mtr_factor_rf, 
-                                                                                                prob = 0.05))
+                                                                              modi::weighted.quantile(x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, 
+                                                                                                      w = echoesInTimeAndAltitudeBin$mtr_factor_rf, 
+                                                                                                      prob = 0.05))
             mtr[k, paste("altitudeQuantile_0.25", classLabel, sep = ".")] = suppressWarnings(
-                                                                              weighted.quantile(x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, 
-                                                                                                w = echoesInTimeAndAltitudeBin$mtr_factor_rf, 
-                                                                                                prob = 0.25))
+                                                                              modi::weighted.quantile(x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, 
+                                                                                                      w = echoesInTimeAndAltitudeBin$mtr_factor_rf, 
+                                                                                                      prob = 0.25))
             mtr[k, paste("altitudeQuantile_0.5", classLabel, sep = ".")] = suppressWarnings(
-                                                                              weighted.quantile(x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, 
-                                                                                                w = echoesInTimeAndAltitudeBin$mtr_factor_rf, 
-                                                                                                prob = 0.5))
+                                                                              modi::weighted.quantile(x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, 
+                                                                                                      w = echoesInTimeAndAltitudeBin$mtr_factor_rf, 
+                                                                                                      prob = 0.5))
             mtr[k, paste("altitudeQuantile_0.75", classLabel, sep = ".")] = suppressWarnings(
-                                                                              weighted.quantile(x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, 
-                                                                                                w = echoesInTimeAndAltitudeBin$mtr_factor_rf, 
-                                                                                                prob = 0.75))
+                                                                              modi::weighted.quantile(x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, 
+                                                                                                      w = echoesInTimeAndAltitudeBin$mtr_factor_rf, 
+                                                                                                      prob = 0.75))
             mtr[k, paste("altitudeQuantile_0.95", classLabel, sep = ".")] = suppressWarnings(
-                                                                              weighted.quantile(x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, 
-                                                                                                w = echoesInTimeAndAltitudeBin$mtr_factor_rf, 
-                                                                                                prob = 0.95))  
+                                                                              modi::weighted.quantile(x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, 
+                                                                                                      w = echoesInTimeAndAltitudeBin$mtr_factor_rf, 
+                                                                                                      prob = 0.95))  
           }
         }
         

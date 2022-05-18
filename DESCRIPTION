@@ -15,6 +15,7 @@ Depends:
 Imports: 
   DBI,
   maptools,
+  modi,
   reshape2,
   RODBC,
   RPostgreSQL,
