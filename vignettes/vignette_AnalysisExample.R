@@ -18,7 +18,7 @@
   filterProtocols        = TRUE # Set to TRUE to filter the protocol data 
   computeBlindTimes      = TRUE # Set to TRUE to compute the times in which the radar was blind
   filterEchoes           = TRUE # Set to TRUE to filter the echoes
-  calculateMTR           = TRUE # Set to TRUE to create the altitude bins for the MTR calculation
+  calculateMTR           = TRUE # Set to TRUE to calculate MTRs
   plotMTRs               = TRUE # Set to TRUE to create some explorative plots of the MTRs 
   
 # =============================================================================
