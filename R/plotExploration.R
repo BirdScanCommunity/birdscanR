@@ -1,7 +1,7 @@
 #### plotExploration ------------------------------------------------------
 #' @title plotExploration
 #'
-#' @author Fabian Hertner (SBRS)
+#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@@vogelwarte.ch}  
 #' @description TBC
 #' @param echoData dataframe with the echo data from the data list created by the function ‘extractDBData’ or a subset of it created by the function ‘filterEchoData’
 #' @param timeRange optional list of POSIXct vectors length 2, start and end time of the timeranges that should be plotted. 
@@ -20,180 +20,256 @@
 #'
 # #' @examples
 # #' # plot Exploration
-# #' plotExploration( echoData = echoDataSubset_all_25_5000, timeRange = timeRangePlot, manualBlindTimes = manualBlindTimes, visibilityData = data$visibilityData, protocolData = protocolDataSubset, sunriseSunset = sunriseSunset, maxAltitude = -1, filePath = plotDir )
-plotExploration = function( echoData = NULL, timeRange = NULL, manualBlindTimes = NULL, visibilityData = NULL, protocolData = NULL, sunriseSunset = NULL, maxAltitude = NULL, filePath = NULL )
-{
-  if( !is.null( echoData ) )
-  {
-    
+# #' plotExploration(echoData = echoDataSubset_all_25_5000, timeRange = timeRangePlot, manualBlindTimes = manualBlindTimes, visibilityData = data$visibilityData, protocolData = protocolDataSubset, sunriseSunset = sunriseSunset, maxAltitude = -1, filePath = plotDir)
+plotExploration = function(echoData         = NULL, 
+                           timeRange        = NULL, 
+                           manualBlindTimes = NULL, 
+                           visibilityData   = NULL, 
+                           protocolData     = NULL, 
+                           sunriseSunset    = NULL, 
+                           maxAltitude      = NULL, 
+                           filePath         = NULL){
+# If there is echodata, proceed
+# =============================================================================
+  if (!is.null(echoData)){
     # colors for classes
-    classColors <- c( "nonbio" = "grey40",
-                      "precipitation" = "grey60",
-                      "insect" = "orange",
-                      "unid_bird" = "darkblue",
+    # =========================================================================
+      classColors = c("nonbio"         = "grey40",
+                      "precipitation"  = "grey60",
+                      "insect"         = "orange",
+                      "unid_bird"      = "darkblue",
                       "passerine_type" = "turquoise3",
-                      "wader_type" = "chartreuse3",
-                      "swift_type" = "deeppink",
-                      "large_bird" = "purple",
-                      "bird_flock" = "forestgreen" )
+                      "wader_type"     = "chartreuse3",
+                      "swift_type"     = "deeppink",
+                      "large_bird"     = "purple",
+                      "bird_flock"     = "forestgreen")
     
     # shapes for classes
-    classShapes <- c( "nonbio" = 0,
-                      "insect" = 4,
-                      "unid_bird" = 1,
+    # =========================================================================
+      classShapes = c("nonbio"         = 0,
+                      "insect"         = 4,
+                      "unid_bird"      = 1,
                       "passerine_type" = 1,
-                      "wader_type" = 1,
-                      "swift_type" = 1,
-                      "large_bird" = 1,
-                      "bird_flock" = 1,
-                      "precipitation" = 5 )
+                      "wader_type"     = 1,
+                      "swift_type"     = 1,
+                      "large_bird"     = 1,
+                      "bird_flock"     = 1,
+                      "precipitation"  = 5)
     
     # size for shapes
-    shapeSizes <- c( "nonbio" = 0.4,
-                     "insect" = 2,
-                     "unid_bird" = 0.4,
+    # =========================================================================
+      shapeSizes = c("nonbio"         = 0.4,
+                     "insect"         = 2,
+                     "unid_bird"      = 0.4,
                      "passerine_type" = 0.4,
-                     "wader_type" = 0.4,
-                     "swift_type" = 0.4,
-                     "large_bird" = 0.4,
-                     "bird_flock" = 0.4,
-                     "precipitation" = 0.4 )
+                     "wader_type"     = 0.4,
+                     "swift_type"     = 0.4,
+                     "large_bird"     = 0.4,
+                     "bird_flock"     = 0.4,
+                     "precipitation"  = 0.4)
     
     # backgroundDataColor
-    backgroundColors <- c( "day" = "goldenrod1",
-                           "night" = "navy",
-                           "manual blindtime" = "dodgerblue",
+    # =========================================================================
+      backgroundColors = c("day"                  = "goldenrod1",
+                           "night"                = "navy",
+                           "manual blindtime"     = "dodgerblue",
                            "visibility blindtime" = "firebrick1",
-                           "no protocol" = "turquoise4" )
+                           "no protocol"          = "turquoise4")
     
     # day/night colors
-    dayNightColors <- c( )
+    # =========================================================================
+      dayNightColors = c()
     
     # class levels
-    classLevels <- c( "passerine_type", "wader_type", "swift_type", "large_bird", "unid_bird", "bird_flock", "insect", "nonbio", "precipitation" )
-    echoData$class <- factor( echoData$class, levels = classLevels )
+    # =========================================================================
+      classLevels = c("passerine_type", "wader_type", "swift_type", 
+                      "large_bird", "unid_bird", "bird_flock", 
+                      "insect", "nonbio", "precipitation")
+      echoData$class = factor(echoData$class, levels = classLevels)
     
     # background levels
-    backgroundLevels <- c( "day", "night", "manual blindtime", "visibility blindtime", "no protocol" )
+    # =========================================================================
+      backgroundLevels = c("day", "night", "manual blindtime", 
+                           "visibility blindtime", "no protocol")
     
-    if( !is.null( sunriseSunset ) )
-    {
+    if (!is.null(sunriseSunset)){
       # change sunrise/sunset data from 0/1 to day/night
-      sunriseSunset$is_night[ sunriseSunset$is_night != 1 ] <- "day"
-      sunriseSunset$is_night[ sunriseSunset$is_night == 1 ] <- "night"
+      # =======================================================================
+        sunriseSunset$is_night[sunriseSunset$is_night != 1] = "day"
+        sunriseSunset$is_night[sunriseSunset$is_night == 1] = "night"
     }
     
     # timeRanges to plot
-    if( is.null( timeRange ) )
-    {
-      nPlots <- 1
-    } else
-    {
-      nPlots = length( timeRange )
-    }
+    # =========================================================================
+      if (is.null(timeRange)){
+        nPlots = 1
+      } else {
+        nPlots = length(timeRange)
+      }
     
-    for( i in 1 : nPlots )
-    {
-      if( is.null( timeRange ) )
-      {
-        echoDataPlot <- echoData
-      } else
-      {
-        echoDataPlot <- echoData[ echoData$time_stamp_targetTZ >= timeRange[[ i ]][ 1 ] & echoData$time_stamp_targetTZ <= timeRange[[ i ]][ 2 ], ]  
+    # Do for each time range
+    # =========================================================================  
+      for (i in 1:nPlots){
+        if (is.null(timeRange)){
+          echoDataPlot = echoData
+        } else {
+          echoDataPlot = echoData[(echoData$time_stamp_targetTZ >= timeRange[[i]][1]) & 
+                                  (echoData$time_stamp_targetTZ <= timeRange[[i]][2]),]  
+        }
+        
+        if (nrow(echoDataPlot) >= 0){
+          # set y scale
+          # ===================================================================
+            if (maxAltitude > 0){
+              yScale = c(-0.03 * maxAltitude, maxAltitude)
+            } else {
+              yScale = c(-0.03 * max(echoDataPlot$feature1.altitude_AGL), 1.1 * max(echoDataPlot$feature1.altitude_AGL))
+            }
+          
+          # Plot
+          # ===================================================================
+            subtitle = paste0(format(timeRange[[i]][1], "%d-%b-%Y"), 
+                                " to ", 
+                                format(timeRange[[i]][2], "%d-%b-%Y"))
+            
+            explorationPlot = ggplot()
+          
+          # create background data
+          # ===================================================================
+            background = data.frame(xStart = as.POSIXct(NA), 
+                                    xStop  = as.POSIXct(NA), 
+                                    yStart = as.numeric(NA), 
+                                    yStop  = as.numeric(NA), 
+                                    type   = factor(NA, levels = backgroundLevels))
+          
+          if (!is.null(manualBlindTimes)){
+            manualBlindTimes$type = "manual blindtime"
+            background = rbind(background, 
+                               data.frame(xStart = manualBlindTimes$start_targetTZ, 
+                                          xStop  = manualBlindTimes$stop_targetTZ, 
+                                          yStart = -0.06 * yScale[2], 
+                                          yStop  = -0.04 * yScale[2], 
+                                          type   = manualBlindTimes$type))
+          }
+          
+          if (!is.null(sunriseSunset)){
+            background = rbind(background, 
+                               data.frame(xStart = sunriseSunset$civilStart, 
+                                          xStop  = sunriseSunset$civilStop, 
+                                          yStart = 0.93 * yScale[2], 
+                                          yStop  = yScale[2], 
+                                          type   = sunriseSunset$is_night))
+          }
+          
+          if (!is.null(visibilityData)){
+            background = rbind(background, 
+                               data.frame(xStart = visibilityData$blind_from_targetTZ, 
+                                          xStop  = visibilityData$blind_to_targetTZ, 
+                                          yStart = -0.02 * yScale[2], 
+                                          yStop  = -0.00 * yScale[2], 
+                                          type   = "visibility blindtime"))  
+          }
+          
+          if (!is.null(protocolData)){
+            background = rbind(background, 
+                               data.frame(xStart = protocolData$stopTime_targetTZ[1:(length(protocolData[, 1])-1)], 
+                                          xStop  = protocolData$startTime_targetTZ[2:length(protocolData[, 1])], 
+                                          yStart = -0.04 * yScale[2], 
+                                          yStop  = -0.02 * yScale[2], 
+                                          type   = "no protocol"))  
+          }
+          
+          # limit background to echoData
+          # ===================================================================
+            background = background[!is.na(background$xStart),]
+            background = background[background$xStop >= min(echoDataPlot$time_stamp_targetTZ) & 
+                                    background$xStart <= max(echoDataPlot$time_stamp_targetTZ),]
+          
+          # add background to plot
+          # ===================================================================
+            if (length(background) > 1){
+              explorationPlot = explorationPlot + 
+                                  geom_rect(background, 
+                                            mapping = aes(ymin = yStart , 
+                                                          ymax = yStop, 
+                                                          xmin = xStart, 
+                                                          xmax = xStop, 
+                                                          fill = type), 
+                                            alpha = 0.5)  
+            }
+          
+          # plot echoes
+          # ===================================================================
+            explorationPlot = explorationPlot + 
+                                geom_point(echoDataPlot, 
+                                           mapping = aes(x      = time_stamp_targetTZ, 
+                                                         y      = feature1.altitude_AGL, 
+                                                         colour = class, 
+                                                         shape = class), 
+                                           na.rm = TRUE)
+          
+          # overprint insect classes
+          # ===================================================================
+            insects = echoDataPlot[echoDataPlot$class %in% c("insect"), 
+                                   names(echoDataPlot) %in% c("time_stamp_targetTZ", "feature1.altitude_AGL", "class")]
+            if (length(insects[, 1])){
+              insects$class   = factor(insects$class, levels = classLevels)
+              explorationPlot = explorationPlot + 
+                                  geom_point(insects, 
+                                             mapping = aes(x      = time_stamp_targetTZ, 
+                                                           y      = feature1.altitude_AGL, 
+                                                           colour = class, 
+                                                           shape  = class), 
+                                             na.rm   = TRUE)
+            }
+          
+          # overprint bird classes
+          # ===================================================================
+            birds = echoDataPlot[!(echoDataPlot$class %in% c("insect", "nonbio", "precipitation")), 
+                                 names(echoDataPlot) %in% c("time_stamp_targetTZ", "feature1.altitude_AGL", "class")]
+            if (length(birds[, 1])){
+              birds$class = factor(birds$class, levels = classLevels)
+              explorationPlot = explorationPlot + 
+                                  geom_point(birds, 
+                                             mapping = aes(x      = time_stamp_targetTZ, 
+                                                           y      = feature1.altitude_AGL, 
+                                                           colour = class, 
+                                                           shape  = class), 
+                                             na.rm = TRUE)
+            }
+            
+            explorationPlot = explorationPlot + 
+                                scale_color_manual(values = classColors) +
+                                scale_shape_manual(values = classShapes) + 
+                                scale_fill_manual(values = backgroundColors) +
+                                coord_cartesian(ylim = yScale)
+            
+            explorationPlot = explorationPlot + 
+                                scale_x_datetime(date_breaks = "1 days", 
+                                                 labels = function(x) format(x, "%d-%b-%Y")) + 
+                                labs(fill = "", shape = "", colour = "") +
+                                ggtitle(label = "Exploration", 
+                                        subtitle = subtitle) + 
+                                xlab("Date") + 
+                                ylab("Altitude a.g.l [m]") +
+                                theme(plot.title = element_text(size  = 12, 
+                                                                face  = "bold", 
+                                                                hjust = 0.5),
+                                       plot.subtitle = element_text(size  = 10, 
+                                                                    color = "grey40", 
+                                                                    hjust = 0.5),
+                                       axis.text.x = element_text(angle = 90))
+          
+          # save plot
+          # ===================================================================
+          savePlotToFile(plot           = explorationPlot, 
+                          filePath      = filePath, 
+                          plotType      = "exploration", 
+                          plotWidth_mm  = difftime(timeRange[[i]][2], timeRange[[i]][1], "days") * 100 + 50, 
+                          plotHeight_mm = 150, 
+                          timeRange     = c(timeRange[[i]][1], timeRange[[i]][2]))  
+        }
       }
-      
-      if( nrow( echoDataPlot ) >= 0 )
-      {
-        # set y scale
-        if( maxAltitude > 0 )
-        {
-          yScale <- c( -0.03 * maxAltitude, maxAltitude )
-        } else
-        {
-          yScale <- c( -0.03 * max( echoDataPlot$feature1.altitude_AGL ), 1.1 * max( echoDataPlot$feature1.altitude_AGL ) )
-        }
-        
-        # Plot
-        subtitle <- paste0( format( timeRange[[ i ]][ 1 ], "%d-%b-%Y" ), 
-                            " to ", 
-                            format( timeRange[[ i ]][ 2 ], "%d-%b-%Y" ) )
-        
-        explorationPlot <- ggplot(  )
-        
-        # create background data
-        background <- data.frame( xStart = as.POSIXct( NA ), xStop = as.POSIXct( NA ), yStart = as.numeric( NA ), yStop = as.numeric( NA ), type = factor( NA, levels = backgroundLevels ) )
-        
-        if( !is.null( manualBlindTimes ) )
-        {
-          manualBlindTimes$type <- "manual blindtime"
-          background <- rbind( background, data.frame( xStart = manualBlindTimes$start_targetTZ, xStop = manualBlindTimes$stop_targetTZ, yStart = -0.06 * yScale[ 2 ], yStop = -0.04 * yScale[ 2 ], type = manualBlindTimes$type ) )
-        }
-        
-        if( !is.null( sunriseSunset ) )
-        {
-          background <- rbind( background, data.frame( xStart = sunriseSunset$civilStart, xStop = sunriseSunset$civilStop, yStart = 0.93 * yScale[ 2 ], yStop = yScale[ 2 ], type = sunriseSunset$is_night ) )
-        }
-        
-        if( !is.null( visibilityData ) )
-        {
-          background <- rbind( background, data.frame( xStart = visibilityData$blind_from_targetTZ, xStop = visibilityData$blind_to_targetTZ, yStart = -0.02 * yScale[ 2 ], yStop = -0.00 * yScale[ 2 ], type = "visibility blindtime" ) )  
-        }
-        
-        if( !is.null( protocolData ) )
-        {
-          background <- rbind( background, data.frame( xStart = protocolData$stopTime_targetTZ[ 1 : length( protocolData[ , 1 ] ) - 1 ], xStop = protocolData$startTime_targetTZ[ 2 : length( protocolData[ , 1 ] ) ], yStart = -0.04 * yScale[ 2 ], yStop = -0.02 * yScale[ 2 ], type = "no protocol" ) )  
-        }
-        
-        # limit background to echoData
-        background <- background[ !is.na( background$xStart ), ]
-        background <- background[ background$xStop >= min( echoDataPlot$time_stamp_targetTZ ) & background$xStart <= max( echoDataPlot$time_stamp_targetTZ ), ]
-        
-        # add background to plot
-        if( length( background ) > 1 )
-        {
-          explorationPlot <- explorationPlot + geom_rect( background, mapping = aes( ymin = yStart , ymax = yStop, xmin = xStart, xmax = xStop, fill = type ), alpha = 0.5 )  
-        }
-        
-        # plot echoes
-        explorationPlot <- explorationPlot + geom_point( echoDataPlot, mapping = aes( x = time_stamp_targetTZ, y = feature1.altitude_AGL, colour = class, shape = class ), na.rm = TRUE )
-        
-        # overprint insect classes
-        insects <- echoDataPlot[ echoDataPlot$class %in% c( "insect" ) , names( echoDataPlot ) %in% c( "time_stamp_targetTZ", "feature1.altitude_AGL", "class" ) ]
-        if( length( insects[ , 1 ] ) )
-        {
-          insects$class <- factor( insects$class, levels = classLevels )
-          explorationPlot <- explorationPlot + geom_point( insects, mapping = aes( x = time_stamp_targetTZ, y = feature1.altitude_AGL, colour = class, shape = class ), na.rm = TRUE )
-        }
-        
-        # overprint bird classes
-        birds <- echoDataPlot[ !( echoDataPlot$class %in% c( "insect", "nonbio", "precipitation" ) ) , names( echoDataPlot ) %in% c( "time_stamp_targetTZ", "feature1.altitude_AGL", "class" ) ]
-        if( length( birds[ , 1 ] ) )
-        {
-          birds$class <- factor( birds$class, levels = classLevels )
-          explorationPlot <- explorationPlot + geom_point( birds, mapping = aes( x = time_stamp_targetTZ, y = feature1.altitude_AGL, colour = class, shape = class ), na.rm = TRUE )
-        }
-        
-        explorationPlot <- explorationPlot + scale_color_manual( values = classColors ) +
-          scale_shape_manual( values = classShapes ) + 
-          scale_fill_manual( values = backgroundColors ) +
-          coord_cartesian( ylim = yScale )
-        
-        explorationPlot <- explorationPlot + scale_x_datetime( date_breaks = "1 days", labels = function( x ) format( x, "%d-%b-%Y" ) ) + 
-          labs( fill = "", shape = "", colour = "" ) +
-          ggtitle( label = "Exploration", subtitle = subtitle ) + xlab( "Date" ) + ylab( "Altitude a.g.l [m]" ) +
-          theme( plot.title = element_text( size = 12, face = "bold", hjust = 0.5 ),
-                 plot.subtitle = element_text( size = 10, color = "grey40", hjust = 0.5 ),
-                 axis.text.x = element_text( angle = 90 ) )
-        
-        # save plot
-        savePlotToFile( plot = explorationPlot, 
-                        filePath = filePath, 
-                        plotType = "exploration", 
-                        plotWidth_mm = difftime( timeRange[[ i ]][ 2 ], timeRange[[ i ]][ 1 ], "days" ) * 100 + 50, 
-                        plotHeight_mm = 150, 
-                        timeRange = c( timeRange[[ i ]][ 1 ], timeRange[[ i ]][ 2 ] ) )  
-      }
-    }
   }
 }
 
