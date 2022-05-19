@@ -1,6 +1,8 @@
 Package: birdscanR
-Author: Birgen Haest (birgen.haest@vogelwarte.ch)
-Maintainer: Birgen Haest <birgen.haest@vogelwarte.ch>
+Authors@R: c(person("Fabian", "Hertner", email = "fabian.hertner@swiss-birdradar.com", role = c("aut")),
+             person("Birgen", "Haest", email = "birgen.haest@vogelwarte.ch", role = c("aut", "cre")),
+             person("Baptiste", "Schmid", email = "baptiste.schmid@vogelwarte.ch", role = c("ctb")),
+             person("Damiano", "Preatoni", email = "damiano.preatoni@uninsubria.it", role = c("ctb")))
 Type: Package
 Title: Migration Traffic Rate Calculation Package for birdscan MR1 radars
 Version: 0.0.1.0
