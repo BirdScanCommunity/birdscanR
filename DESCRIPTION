@@ -4,7 +4,7 @@ Maintainer: Birgen Haest <birgen.haest@vogelwarte.ch>
 Type: Package
 Title: Migration Traffic Rate Calculation Package for birdscan MR1 radars
 Version: 0.0.1.0
-License: `use_gpl3_license()`
+License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0

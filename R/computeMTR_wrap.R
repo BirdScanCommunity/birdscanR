@@ -11,7 +11,7 @@
 #' @param timeBinDuration_sec numeric, time bin duration in seconds.
 #' @param propObsTimeCutoff numeric between 0 and 1. If the MTR is computed per day and night, time bins with a proportional observation time smaller than propObsTimeCutoff are ignored when combining the time bins. If the MTR is computed for each time bin, the parameter is ignored.
 #' @param timeZone character string, timezone of the time bins -> adived to be target timezone
-#' @param sunriseSunset dataframe with the sunrise/sunset times and the civil twilight times created by the function ‘twilight’ \link{scripts/MR1Analysis/Code/Functions/Twilight.R}
+#' @param sunriseSunset dataframe with the sunrise/sunset times and the civil twilight times created by the function ‘twilight’ \link{R/twilight.R}
 #' @param sunOrCivil character string, “sun” (sunrise/sunset times) or “civil” (civil twilight times) to group by day and night. Default if not set is civil twilight.
 #' @param computePerDayNight logical, TRUE: MTR is computed per day and night FALSE: MTR is computed for each time bin.
 #' @param altitudeRange_AGL numeric vector of length 2 with the start and end of the altitude range in meter a.g.l.
