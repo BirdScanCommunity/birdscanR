@@ -26,7 +26,7 @@ Target timezone has to be added to the times (Figure 14 as example). If not set,
 
 \item{plotClass}{character string with the class of which the MTR data should be plotted. If not set or set to “allClasses”, MTR of all classes will be plotted.}
 
-\item{propObsTimeCutoff}{}
+\item{propObsTimeCutoff}{numeric between 0 and 1. If the MTR is computed per day and night, time bins with a proportional observation time smaller than propObsTimeCutoff are ignored when combining the time bins. If the MTR is computed for each time bin, the parameter is ignored.}
 
 \item{plotSpread}{logical, choose if the spread (first and third quartile) should be plotted.}
 
