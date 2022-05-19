@@ -19,7 +19,7 @@ savePlotToFile(
 \arguments{
 \item{plot=NULL}{plot to be saved (ggplot)}
 
-\item{filePath=NULL}{character string, path of the directory, e.g. "\link{your-project-directory}/Data/MTR". If the directory does not exist it will be created if possible.}
+\item{filePath=NULL}{character string, path of the directory, e.g. "your-project-directory/Data/MTR". If the directory does not exist it will be created if possible.}
 
 \item{plotType=NULL}{character string, name/description of the plot, used to create the filename. If not set, the pulse type selection will not be appended to the filename}
 
@@ -39,5 +39,5 @@ savePlotToFile(
 saves created plots as .png.
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }
