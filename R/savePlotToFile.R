@@ -39,7 +39,7 @@ savePlotToFile = function(plot               = NULL,
     
     # create filename to save plot
     # =========================================================================
-      ifelse(is.null(plotType), fileName = "", fileName = plotType)
+      filename = ifelse(is.null(plotType), "", plotType)
       
     # time range for fileName
     # =========================================================================
