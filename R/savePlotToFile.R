@@ -32,52 +32,52 @@ savePlotToFile = function(plot               = NULL,
     # =========================================================================
       if (!is.null(filePath)){
         if (!is.null(plotType)){
-          filePath <- paste(filePath, plotType, sep = "/") 
+          filePath = paste(filePath, plotType, sep = "/") 
         }
-        ifelse(!dir.exists(filePath), dir.create(filePath), FALSE)
+        dir.create(filePath, showWarnings = F, recursive = T)
       } 
     
     # create filename to save plot
     # =========================================================================
-      ifelse(is.null(plotType), fileName <- "", fileName <- plotType)
+      ifelse(is.null(plotType), fileName = "", fileName = plotType)
       
     # time range for fileName
     # =========================================================================
       if (!is.null(timeRange) && length(timeRange) == 2){
-        startTime <- format(timeRange[1], "%Y%m%d")
-        stopTime <- format(timeRange[2], "%Y%m%d")
-        time <- paste(startTime, stopTime, sep = "-")
-        fileName <- paste(fileName, time, sep = "_")
+        startTime = format(timeRange[1], "%Y%m%d")
+        stopTime = format(timeRange[2], "%Y%m%d")
+        time = paste(startTime, stopTime, sep = "-")
+        fileName = paste(fileName, time, sep = "_")
       } 
       
     # altitude range for fileName
     # =========================================================================
       if (!is.null(altitudeRange) && length(altitudeRange) == 2){
-        altitudeRangeStart <- paste0(altitudeRange[1], "m")
-        altitudeRangeStop <- paste0(altitudeRange[2], "m")
-        altitude <- paste(altitudeRangeStart, altitudeRangeStop, sep = "-")
-        fileName <- paste(fileName, altitude, sep = "_")
+        altitudeRangeStart = paste0(altitudeRange[1], "m")
+        altitudeRangeStop = paste0(altitudeRange[2], "m")
+        altitude = paste(altitudeRangeStart, altitudeRangeStop, sep = "-")
+        fileName = paste(fileName, altitude, sep = "_")
       }
     
     # classes for fileName
     # =========================================================================
       if (!is.null(classSelection)){
-        classes <- paste(classAbbreviations$abbr[match(classSelection, 
+        classes = paste(classAbbreviations$abbr[match(classSelection, 
                                                        classAbbreviations$class)], 
                          collapse = "")
-        fileName <- paste(fileName, classes, sep = "_")
+        fileName = paste(fileName, classes, sep = "_")
       }
       
     # check for existing files
     # =========================================================================
-      idx <- 0
+      idx = 0
       while (file.exists(paste(filePath, paste0(fileName, "_", idx, ".png"), sep = "/"))){
         idx = idx + 1
       }
     
     # add index and png ending
     # =========================================================================
-      fileName <- paste0(fileName, "_", idx, ".png")
+      fileName = paste0(fileName, "_", idx, ".png")
     
     # save plot
     # =========================================================================
