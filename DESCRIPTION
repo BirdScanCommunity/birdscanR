@@ -15,6 +15,7 @@ Depends:
   tidyverse
 Imports: 
   DBI,
+  dplyr,
   maptools,
   modi,
   reshape2,
