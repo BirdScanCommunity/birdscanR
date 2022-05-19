@@ -17,11 +17,11 @@
 #' @param altitudeRange_AGL numeric vector of length 2 with the start and end of the altitude range in meter a.g.l.
 #' @param altitudeBinSize numeric, size of the altitude bins in meter.
 #' @param protocolData dataframe with the protocol data from the data list created by the function ‘extractDBData’ or a subset of it created by the function ‘filterProtocolData’. Echoes not detected during the listed protocols will be excluded.
-#' @param pulseTypeSelection 
-#' @param rotationSelection 
+#' @param pulseTypeSelection character vector, pulse type selection which was used to filter protocols. Used to create the filename, if 'fileName' is not provided. If not set, the pulse type selection will not be appended to the filename.
+#' @param rotationSelection numeric vector, rotation selection which was used to filter protocols. Used to create the filename, if 'fileName' is not provided. If not set, the rotation selection will not be appended to the filename.
 #' @param visibilityData dataframe with the visibility data from the data list created by the function ‘extractDBData’.
 #' @param manualBlindTimes dataframe with the manual blind times created by the function ‘loadManualBlindTimes’
-#' @param blindTimeAsMtrZero 
+#' @param blindTimeAsMtrZero character string vector with the blind time types which should be treated as observation time with MTR zero.
 #' @param saveRDS_MTR logical, TRUE (default): use the function saveMTR.R to save the output.
 #' @param filepath character string, path location to save the MTR table, e.g. '~/projectName/MTRtable'.
 #' @param dbName Name of the data-base.
