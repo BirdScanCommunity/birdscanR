@@ -55,15 +55,15 @@ computeMTR_wrap(
 
 \item{protocolData}{dataframe with the protocol data from the data list created by the function ‘extractDBData’ or a subset of it created by the function ‘filterProtocolData’. Echoes not detected during the listed protocols will be excluded.}
 
-\item{pulseTypeSelection}{}
+\item{pulseTypeSelection}{character vector, pulse type selection which was used to filter protocols. Used to create the filename, if 'fileName' is not provided. If not set, the pulse type selection will not be appended to the filename.}
 
-\item{rotationSelection}{}
+\item{rotationSelection}{numeric vector, rotation selection which was used to filter protocols. Used to create the filename, if 'fileName' is not provided. If not set, the rotation selection will not be appended to the filename.}
 
 \item{visibilityData}{dataframe with the visibility data from the data list created by the function ‘extractDBData’.}
 
 \item{manualBlindTimes}{dataframe with the manual blind times created by the function ‘loadManualBlindTimes’}
 
-\item{blindTimeAsMtrZero}{}
+\item{blindTimeAsMtrZero}{character string vector with the blind time types which should be treated as observation time with MTR zero.}
 
 \item{saveRDS_MTR}{logical, TRUE (default): use the function saveMTR.R to save the output.}
 
