@@ -43,11 +43,10 @@ loadManualBlindTimes = function(filePath, blindTimesTZ, targetTZ){
   # ===========================================================================
     manualBlindTimes        = read.csv(file = filePath, header = FALSE) 
     
-  # Check whether there are any data in the file, and if not, return empty 
-  # data.frame
+  # Check whether there are any data in the file, and if not, set to NULL
   # ===========================================================================
     if (nrow(manualBlindTimes) == 0){
-      manualBlindTimes = data.frame(start = NULL, stop = NULL, type = NULL)
+      manualBlindTimes = NULL
       return(manualBlindTimes)
     } 
     
