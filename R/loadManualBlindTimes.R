@@ -42,6 +42,17 @@ loadManualBlindTimes = function(filePath, blindTimesTZ, targetTZ){
   # read csv with blindtimes
   # ===========================================================================
     manualBlindTimes        = read.csv(file = filePath, header = FALSE) 
+    
+  # Check whether there are any data in the file, and if not, return empty 
+  # data.frame
+  # ===========================================================================
+    if (nrow(manualBlindTimes) == 0){
+      manualBlindTimes = data.frame(start = NULL, stop = NULL, type = NULL)
+      return(manualBlindTimes)
+    } 
+    
+  # If not empty, name columns
+  # ===========================================================================
     names(manualBlindTimes) = c("start", "stop", "type")
 
   # convert blindtimes to target timezone
