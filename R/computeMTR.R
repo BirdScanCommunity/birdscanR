@@ -382,7 +382,7 @@ computeMTR = function(echoes,
             mtrThirdQuartile = suppressWarnings(
                                 aggregate(list(mtrThirdQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
                                           list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                          weighted.quantile, 
+                                          modi::weighted.quantile, 
                                           w = mtrTmp$timeChunkDuration_sec[mtrTmp$proportionalTimeObserved > propObsTimeCutoff], 
                                           prob = 0.75))
             mtrDay = merge(mtrDay, mtrThirdQuartile, 
@@ -496,7 +496,7 @@ computeMTR = function(echoes,
             mtrFirstQuartile = suppressWarnings(
                                  aggregate(list(mtrFirstQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
                                            list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                           weighted.quantile, 
+                                           modi::weighted.quantile, 
                                            w = mtrTmp$timeChunkDuration_sec[mtrTmp$proportionalTimeObserved > propObsTimeCutoff], 
                                            prob = 0.25))
             mtrNight = merge(mtrNight, mtrFirstQuartile, 
