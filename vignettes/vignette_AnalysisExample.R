@@ -654,7 +654,7 @@
                                           targetTimeZone     = cTargetTimeZone,
                                           timeRangeEchoData  = ctimeRangeEchoData,
                                           useEchoValidator   = useEchoValidator)
-          if (is.null(classProbCutoff)){classProbCutoff.char = 0} 
+          if (is.null(classProbCutoff)){classProbCutoff.char = 0} else {classProbCutoff.char = classProbCutoff}
           cOutputFile = file.path(outputDir.fe, 
                                   paste0(cDatabase, "_filtered_", 
                                          "cut", classProbCutoff.char, "_",
