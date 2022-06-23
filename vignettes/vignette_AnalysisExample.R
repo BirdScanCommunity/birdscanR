@@ -12,14 +12,14 @@
 # =============================================================================
 # = ------------------ SET WHAT YOU WANT TO DO ------------------------------ =
 # =============================================================================
-  getDBData              = TRUE # Set to TRUE if you wish to extract data from a birdscan sql database
-  getSunInfo             = TRUE # Set to TRUE if you want to get the sunrise/sunset information
-  addDayNightInfoPerEcho = TRUE # Set to TRUE if you want to add day/night info for each echo
-  filterProtocols        = TRUE # Set to TRUE to filter the protocol data 
-  computeBlindTimes      = TRUE # Set to TRUE to compute the times in which the radar was blind
-  filterEchoes           = TRUE # Set to TRUE to filter the echoes
-  calculateMTR           = TRUE # Set to TRUE to calculate MTRs
-  plotMTRs               = TRUE # Set to TRUE to create some explorative plots of the MTRs 
+  getDBData               = TRUE # Set to TRUE if you wish to extract data from a birdscan sql database
+  getSunInfo              = TRUE # Set to TRUE if you want to get the sunrise/sunset information
+  addDayNightInfoToEchoes = TRUE # Set to TRUE if you want to add day/night info for each echo
+  filterProtocols         = TRUE # Set to TRUE to filter the protocol data 
+  computeBlindTimes       = TRUE # Set to TRUE to compute the times in which the radar was blind
+  filterEchoes            = TRUE # Set to TRUE to filter the echoes
+  calculateMTR            = TRUE # Set to TRUE to calculate MTRs
+  plotMTRs                = TRUE # Set to TRUE to create some explorative plots of the MTRs 
   
 # =============================================================================
 # = ----------------------- INPUT SETTINGS ---------------------------------- =
@@ -74,9 +74,9 @@
         outputDirSunInfo = file.path(mainOutputDir, "SunData")
     }
     
-  # addDayNightInfoPerEcho - Input Settings --------------------------------- =
+  # addDayNightInfoToEchoes - Input Settings --------------------------------- =
   # ===========================================================================
-    if (addDayNightInfoPerEcho){
+    if (addDayNightInfoToEchoes){
       # Set paths to extracted db datafiles
         dbFiles.adn = list(db_20210106_Winterthur = file.path(mainOutputDir, "DBData", 
                                                               "db_20210106_Winterthur_DataExtract.rds"))
@@ -430,7 +430,7 @@
 # =============================================================================
 # Add day/night information to echoData, if requested
 # =============================================================================
-  if (addDayNightInfoPerEcho){
+  if (addDayNightInfoToEchoes){
     # Do for each of the input databases
     # =========================================================================
       for (cDatabase in names(dbFiles.adn)){
