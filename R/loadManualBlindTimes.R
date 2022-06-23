@@ -41,12 +41,12 @@ loadManualBlindTimes = function(filePath, blindTimesTZ, targetTZ){
   
   # read csv with blindtimes
   # ===========================================================================
-    manualBlindTimes        = read.csv(file = filePath, header = FALSE) 
+    manualBlindTimes = tryCatch(read.csv(file = filePath, header = FALSE), 
+                                error = function(x) x = NULL)
     
-  # Check whether there are any data in the file, and if not, set to NULL
+  # Check whether there are any data in the file, and if not, return NULL
   # ===========================================================================
-    if (nrow(manualBlindTimes) == 0){
-      manualBlindTimes = NULL
+    if (is.null(manualBlindTimes)){
       return(manualBlindTimes)
     } 
     
