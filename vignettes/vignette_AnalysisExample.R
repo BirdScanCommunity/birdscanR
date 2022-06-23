@@ -525,6 +525,7 @@
         # Get current radar and target timezone
         # =====================================================================
           cRadarTimeZone  = radarTimeZones.cbt[[cDatabase]]
+          cBlindTimesTZ   = cRadarTimeZone
           cTargetTimeZone = targetTimeZones.cbt[[cDatabase]]
         
         # Get current manual blind times 
@@ -542,7 +543,7 @@
               # times have to be of format 'yyyy-MM-dd hh:mm:ss'
               # =====================================================================
                 cManualBlindTimes = loadManualBlindTimes(filePath     = cFileName.blind,
-                                                         blindTimesTZ = cRadarTimeZone,
+                                                         blindTimesTZ = cBlindTimesTZ,
                                                          targetTZ     = cTargetTimeZone)
           # CASE: manBlindSource == "mandb"
           # ===================================================================        
