@@ -46,9 +46,11 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
 
 # Make sure visibility blindtimes are not overlapping
 # =============================================================================
-  overlaps = visibilityDataSorted$blind_from_targetTZ[2:(length(visibilityDataSorted[, 1]))] < visibilityDataSorted$blind_to_targetTZ[1:(length(visibilityDataSorted[, 1])-1)]
-  visibilityDataSorted$blind_to_targetTZ[c(overlaps, FALSE)] = visibilityDataSorted$blind_from_targetTZ[c(FALSE, overlaps)]
-
+  if(nrow(visibilityDataSorted) > 1){}
+    overlaps = visibilityDataSorted$blind_from_targetTZ[2:(length(visibilityDataSorted[, 1]))] < visibilityDataSorted$blind_to_targetTZ[1:(length(visibilityDataSorted[, 1])-1)]
+    visibilityDataSorted$blind_to_targetTZ[c(overlaps, FALSE)] = visibilityDataSorted$blind_from_targetTZ[c(FALSE, overlaps)]
+  }
+  
 # Add column 'type' to visibilityData
 # =============================================================================
   visibilityDataSorted = data.frame(visibilityDataSorted, type = "visibility")
@@ -67,8 +69,10 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
     
     # Make sure manual blindtimes are not overlapping
     # =========================================================================
-      overlaps = manualBlindTimesSorted$start_targetTZ[2:(length(manualBlindTimesSorted[, 1]))] < manualBlindTimesSorted$stop_targetTZ[1:(length(manualBlindTimesSorted[, 1])-1)]
-      manualBlindTimesSorted$stop_targetTZ[c(overlaps, FALSE)] = manualBlindTimesSorted$start_targetTZ[c(FALSE, overlaps)]
+      if (nrow(manualBlindTimesSorted) > 1){
+        overlaps = manualBlindTimesSorted$start_targetTZ[2:(length(manualBlindTimesSorted[, 1]))] < manualBlindTimesSorted$stop_targetTZ[1:(length(manualBlindTimesSorted[, 1])-1)]
+        manualBlindTimesSorted$stop_targetTZ[c(overlaps, FALSE)] = manualBlindTimesSorted$start_targetTZ[c(FALSE, overlaps)]
+      }
   }
 
 # Separate protocol change blindtimes (60s at begin of each protocol) in visibilitydata
