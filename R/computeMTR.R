@@ -359,8 +359,7 @@ computeMTR = function(echoes,
             mtrFirstQuartile = suppressWarnings(
                                 aggregate(list(mtrFirstQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
                                           list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                          modi::weighted.quantile, 
-                                          w = mtrTmp$timeChunkDuration_sec[mtrTmp$proportionalTimeObserved > propObsTimeCutoff], 
+                                          quantile, 
                                           prob = 0.25))
             mtrDay = merge(mtrDay, mtrFirstQuartile, 
                            by = "timeChunkDateSunset", all = TRUE)
@@ -369,8 +368,7 @@ computeMTR = function(echoes,
                                   aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, 
                                                    paste("mtr", classSelection[i], sep = ".")], 
                                             list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                            modi::weighted.quantile, 
-                                            w = mtrTmp$timeChunkDuration_sec[mtrTmp$proportionalTimeObserved > propObsTimeCutoff], 
+                                            quantile, 
                                             prob = 0.25))
               names(mtrFirstQuartile)[2] = paste("mtrFirstQuartile", classSelection[i], sep = ".")
               mtrDay  = merge(mtrDay, mtrFirstQuartile, 
@@ -382,8 +380,7 @@ computeMTR = function(echoes,
             mtrThirdQuartile = suppressWarnings(
                                 aggregate(list(mtrThirdQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
                                           list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                          modi::weighted.quantile, 
-                                          w = mtrTmp$timeChunkDuration_sec[mtrTmp$proportionalTimeObserved > propObsTimeCutoff], 
+                                          quantile, 
                                           prob = 0.75))
             mtrDay = merge(mtrDay, mtrThirdQuartile, 
                            by = "timeChunkDateSunset", all = TRUE)
@@ -392,8 +389,7 @@ computeMTR = function(echoes,
                                   aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, 
                                                    paste("mtr", classSelection[i], sep = ".")], 
                                             list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                            modi::weighted.quantile, 
-                                            w = mtrTmp$timeChunkDuration_sec[mtrTmp$proportionalTimeObserved > propObsTimeCutoff], 
+                                            quantile, 
                                             prob = 0.75))
               names(mtrThirdQuartile)[2] = paste("mtrThirdQuartile", classSelection[i], sep = ".")
               mtrDay  = merge(mtrDay, mtrThirdQuartile, 
@@ -496,8 +492,7 @@ computeMTR = function(echoes,
             mtrFirstQuartile = suppressWarnings(
                                  aggregate(list(mtrFirstQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
                                            list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                           modi::weighted.quantile, 
-                                           w = mtrTmp$timeChunkDuration_sec[mtrTmp$proportionalTimeObserved > propObsTimeCutoff], 
+                                           quantile, 
                                            prob = 0.25))
             mtrNight = merge(mtrNight, mtrFirstQuartile, 
                              by = "timeChunkDateSunset", all = TRUE)
@@ -505,8 +500,7 @@ computeMTR = function(echoes,
               mtrFirstQuartile = suppressWarnings(
                                    aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")], 
                                              list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                             modi::weighted.quantile, 
-                                             w = mtrTmp$timeChunkDuration_sec[mtrTmp$proportionalTimeObserved > propObsTimeCutoff], 
+                                             quantile, 
                                              prob = 0.25))
               names(mtrFirstQuartile)[2] = paste("mtrFirstQuartile", 
                                                  classSelection[i], 
@@ -520,8 +514,7 @@ computeMTR = function(echoes,
             mtrThirdQuartile = suppressWarnings(
                                  aggregate(list(mtrThirdQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
                                            list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                           modi::weighted.quantile, 
-                                           w = mtrTmp$timeChunkDuration_sec[mtrTmp$proportionalTimeObserved > propObsTimeCutoff], 
+                                           quantile, 
                                            prob = 0.75))
             mtrNight = merge(mtrNight, mtrThirdQuartile, 
                              by = "timeChunkDateSunset", all = TRUE)
@@ -529,8 +522,7 @@ computeMTR = function(echoes,
               mtrThirdQuartile = suppressWarnings(
                                    aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")], 
                                              list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                             modi::weighted.quantile, 
-                                             w = mtrTmp$timeChunkDuration_sec[mtrTmp$proportionalTimeObserved > propObsTimeCutoff], 
+                                             quantile, 
                                              prob = 0.75))
               names(mtrThirdQuartile)[2] = paste("mtrThirdQuartile", 
                                                  classSelection[i], 
