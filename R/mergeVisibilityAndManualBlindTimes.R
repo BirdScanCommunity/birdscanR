@@ -46,7 +46,7 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
 
 # Make sure visibility blindtimes are not overlapping
 # =============================================================================
-  if(nrow(visibilityDataSorted) > 1){}
+  if(nrow(visibilityDataSorted) > 1){
     overlaps = visibilityDataSorted$blind_from_targetTZ[2:(length(visibilityDataSorted[, 1]))] < visibilityDataSorted$blind_to_targetTZ[1:(length(visibilityDataSorted[, 1])-1)]
     visibilityDataSorted$blind_to_targetTZ[c(overlaps, FALSE)] = visibilityDataSorted$blind_from_targetTZ[c(FALSE, overlaps)]
   }
