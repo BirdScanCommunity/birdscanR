@@ -9,7 +9,7 @@ Version: 0.0.0.9003
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 Description: Extract data from Birdscan MR1 sql databases and process them to 
              Migration Traffic Rates 
 URL: https://github.com/BirdScanCommunity/birdscanR
