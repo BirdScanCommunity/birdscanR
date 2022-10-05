@@ -35,20 +35,14 @@ loadManualBlindTimes = function(filePath, blindTimesTZ, targetTZ){
   # Check whether file exists
   # ===========================================================================
     if (!file.exists(filePath)){
-      stop(paste0("Cannot read the manual blind times file: '", filePath, 
-                  "' because it does not exist.. ", "Check your input!"))
-    }  
+      paste0("manual blind times file does not exist: '", filePath)
+      manualBlindTimes<-NULL
+    } else {
   
   # read csv with blindtimes
   # ===========================================================================
     manualBlindTimes = tryCatch(read.csv(file = filePath, header = FALSE), 
                                 error = function(x) x = NULL)
-    
-  # Check whether there are any data in the file, and if not, return NULL
-  # ===========================================================================
-    if (is.null(manualBlindTimes)){
-      return(manualBlindTimes)
-    } 
     
   # If not empty, name columns
   # ===========================================================================
@@ -60,7 +54,7 @@ loadManualBlindTimes = function(filePath, blindTimesTZ, targetTZ){
                                        colNames = c("start", "stop"), 
                                        originTZ = blindTimesTZ, 
                                        targetTZ = targetTZ )
-  
+  }
   # Return manual blind times
   # ===========================================================================
     return(manualBlindTimes)
