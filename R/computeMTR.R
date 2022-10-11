@@ -63,7 +63,7 @@ computeMTR = function(echoes,
 # =============================================================================
   message("Creating time bins..")
   timeBins = createTimeBins(timeRange           = timeRange, 
-                            timeBinDuration_sec = timeBinduration_sec, 
+                            timeBinDuration_sec = timeBinDuration_sec, 
                             timeZone            = timeZone, 
                             sunriseSunset       = sunriseSunset, 
                             sunOrCivil          = sunOrCivil)
