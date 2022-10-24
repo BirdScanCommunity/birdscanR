@@ -10,11 +10,11 @@
 #' in this script. 
 #' In addition to the radar blind times, manual blind times can be defined. Manual blind times have to 
 #' be defined in a csv file and loaded with the function ‘loadManualBlindTimes’. A default file is 
-#' available and can be edited: [your-project-directory]/Code/manualBlindTimes/manualBlindTimes.csv 
+#' available and can be edited: 'your-project-directory'/data/manualBlindTimes.csv 
 #' The filepath is defined as a global variable ‘manualBlindTimesFile’. A custom file and filepath 
 #' can be used instead. 
 #' The manual blind times have to be entered with 3 columns: 
-#' start time [yyyy-mm-dd hh:mm:ss], stop time [yyyy-MM-dd hh:mm:ss], type.  
+#' start time 'yyyy-mm-dd hh:mm:ss', stop time 'yyyy-MM-dd hh:mm:ss', type.  
 #' 
 #' Example: 
 #' 2021-01-16 04:15:00,2021-01-16 05:42:00,rain 
@@ -30,8 +30,10 @@
 #' @export
 #'
 # #' @examples
-# #' loadManualBlindTimes( filePath = ManualBlindTimesFile, blindTimesTZ = radarTimeZone, blindTimesTZ = targetTimeZone )
-loadManualBlindTimes = function(filePath, blindTimesTZ, targetTZ){
+# #' loadManualBlindTimes(filePath = ManualBlindTimesFile, blindTimesTZ = radarTimeZone, blindTimesTZ = targetTimeZone)
+loadManualBlindTimes = function(filePath, 
+                                blindTimesTZ, 
+                                targetTZ){
   # Check whether file exists
   # ===========================================================================
     if (!file.exists(filePath)){
