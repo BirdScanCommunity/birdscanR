@@ -10,11 +10,11 @@
 #' @return the result of the query
 #' @export
 #' 
-QUERY <- function(dbConnection, dbDriverChar, query, as.is=FALSE){
+QUERY <- function(dbConnection, dbDriverChar, query, as.is = FALSE){
    if(dbDriverChar == 'PostgreSQL'){
-      t  <- DBI::dbGetQuery(dbConnection, query, as.is=as.is)
+      t  <- DBI::dbGetQuery(dbConnection, query, as.is = as.is)
    } else {
-      t  <- RODBC::sqlQuery(dbConnection, query, as.is=as.is)
+      t  <- RODBC::sqlQuery(dbConnection, query, as.is = as.is)
    }
    return(t)
 }
