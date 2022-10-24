@@ -52,7 +52,7 @@ createTimeBins = function(timeRange,
   timeStart = timeRange[1] - 
               (as.numeric(format(timeRange[1], "%M"))*60) - 
               (as.numeric(format(timeRange[1], "%S"))) - 
-              (60*60* 24)
+              (60*60*24)
   timeStop  = timeRange[2] + (60*60*24)
   sequence  = seq(timeStart, timeStop, by = timeBinDuration_sec)
   timeBins  = data.frame(start      = sequence[1:(length(sequence)-1)], 
@@ -76,7 +76,7 @@ createTimeBins = function(timeRange,
 # =============================================================================
   timeBins = timeBins[order(timeBins$start),]
   
-  for (i in 1 : (length(timeBins[, 1]))){
+  for (i in 1:(length(timeBins[, 1]))){
     # adjust stop times
     if (i < length(timeBins[, 1])){
       if (timeBins$stop[i] != timeBins$start[i + 1]){
@@ -129,7 +129,7 @@ createTimeBins = function(timeRange,
   } else {
     dateSunset = min(timeBins$dateSunset, na.rm = TRUE) - (60*60*24)
   }
-  for (i in 1 : (length(timeBins[, 1]))){
+  for (i in 1:(length(timeBins[, 1]))){
     # set 'dateSunset'
     if (!is.na(timeBins$dateSunset[i])){
       dateSunset = timeBins$dateSunset[i]
