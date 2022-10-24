@@ -27,5 +27,5 @@ a data frame identical to \code{data}, any columns declared in \code{colNames} w
 Converts timestamps from radar timezone to an user-defined timezone
 }
 \author{
-Fabian Hertner (SBRS) \email{fabian.hertner@swiss-birdradar.com}
+Fabian Hertner (SBRS) \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

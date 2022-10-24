@@ -18,5 +18,5 @@ the radar table  as a data frame
 get the Radar table from  an already connected DB and rename the columns appropiately
 }
 \author{
-Fabian Hertner (SBRS) \email{fabian.hertner@swiss-birdradar.com}
+Fabian Hertner (SBRS) \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

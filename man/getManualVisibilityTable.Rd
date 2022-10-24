@@ -18,5 +18,5 @@ A dataframe with the manual visibility table
 load visibility table from an already connect local MS-SQL DB
 }
 \author{
-Baptiste Schmid (Swiss Ornithological Institute) \email{baptiste.schmid@vogelwarte.ch}
+Baptiste Schmid (Swiss Ornithological Institute) \email{baptiste.schmid@vogelwarte.ch}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }
