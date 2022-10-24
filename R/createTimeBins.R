@@ -7,7 +7,7 @@
 #' @param timeBinDuration_sec duration of timeBins in seconds (numeric). for values <= 0 a duration of 1 hour will be set
 #' @param timeZone timezone in which the timebins should be created as string. e.g. "Etc/GMT0"
 #' @param sunriseSunset dataframe with sunrise/sunset, civil dawn/dusk. computed with function 'twilight'
-#' @param sunOrCivil="civil" sunrise/sunset or civil dawn/dusk used to split day and night. Supported values: "sun" or "civil", default: "civil"
+#' @param sunOrCivil sunrise/sunset or civil dawn/dusk used to split day and night. Supported values: "sun" or "civil", default: "civil"
 #'
 #' @return returns a dataframe with the timebins information
 #' 

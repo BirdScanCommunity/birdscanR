@@ -3,14 +3,14 @@
 #' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@@vogelwarte.ch} 
 #' @description With the function \code{filterEchoData} the echo data can be filtered by several parameters. The function returns the filtered echo data.
 #'
-#' @param echoData=NULL dataframe with the echo data from the data list created by the function \code{extractDBData}.
-#' @param timeRangeTargetTZ=NULL POSIXct vector of length 2 with start and end time with target timezone. Echoes outside the time range will be excluded.
-#' @param protocolData=NULL dataframe with the protocol data from the data list created by the function \code{extractDBData} or a subset of it created by the function \code{filterProtocolData}. Echoes not detected during the listed protocols will be excluded.
-#' @param classSelection=NULL character string vector with the classes that should be included.
-#' @param classProbCutOff=NULL numeric cutoff value for class probabilities. Echoes with a lower class probability will be excluded.
-#' @param altitudeRange_AGL=NULL numeric vector of length 2 with start and end of the altitude range. Echoes outside the altitude range will be excluded.
-#' @param manualBlindTimes=NULL dataframe with the manual blind times created by the function \code{loadManualBlindTimes}.
-#' @param echoValidator=NULL logical, if set to TRUE, echoes labelled by the echo validator as “non-bio scatterer” will be excluded. If set to FALSE, all echoes are included.
+#' @param echoData dataframe with the echo data from the data list created by the function \code{extractDBData}.
+#' @param timeRangeTargetTZ POSIXct vector of length 2 with start and end time with target timezone. Echoes outside the time range will be excluded.
+#' @param protocolData dataframe with the protocol data from the data list created by the function \code{extractDBData} or a subset of it created by the function \code{filterProtocolData}. Echoes not detected during the listed protocols will be excluded.
+#' @param classSelection character string vector with the classes that should be included.
+#' @param classProbCutOff numeric cutoff value for class probabilities. Echoes with a lower class probability will be excluded.
+#' @param altitudeRange_AGL numeric vector of length 2 with start and end of the altitude range. Echoes outside the altitude range will be excluded.
+#' @param manualBlindTimes dataframe with the manual blind times created by the function \code{loadManualBlindTimes}.
+#' @param echoValidator logical, if set to TRUE, echoes labelled by the echo validator as “non-bio scatterer” will be excluded. If set to FALSE, all echoes are included.
 #' 
 #' @return returns the filtered echo data in the same format as provided in the parameter \code{echoData}.
 #' @export

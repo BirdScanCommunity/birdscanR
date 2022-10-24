@@ -14,10 +14,10 @@
 #' @param timeBinDuration_sec duration of timeBins in seconds (numeric). for values <= 0 a duration of 1 hour will be set
 #' @param timeZone timezone in which the timebins should be created as string. e.g. "Etc/GMT0"
 #' @param sunriseSunset dataframe with sunrise/sunset, civil dawn/dusk. computed with function 'twilight'
-#' @param sunOrCivil="civil" sunrise/sunset or civil dawn/dusk used to split day and night. Supported values: "sun" or "civil", default: "civil"
+#' @param sunOrCivil sunrise/sunset or civil dawn/dusk used to split day and night. Supported values: "sun" or "civil", default: "civil"
 #' @param protocolData dataframe with the protocol data from the data list created by the function \code{extractDBData} or a subset of it created by the function \code{filterProtocolData}.
 #' @param blindTimes dataframe containing the blind times created by the function \code{mergeVisibilityAndManualBlindTimes}.
-#' @param blindTimeAsMtrZero=NULL character string vector with the blind time types which should be treated as observation time with MTR zero.
+#' @param blindTimeAsMtrZero character string vector with the blind time types which should be treated as observation time with MTR zero.
 #' @param propObsTimeCutoff numeric between 0 and 1. If the MTR is computed per day and night, time bins with a proportional observation time smaller than propObsTimeCutoff are ignored when combining the time bins. If the MTR is computed for each time bin, the parameter is ignored.
 #' @param computePerDayNight logical, TRUE: MTR is computed per day and night FALSE: MTR is computed for each time bin
 #' @param computeAltitudeDistribution logical, TRUE: compute the mean height and altitude distribution of MTR for the pre-defined quantiles 0.05, 0.25, 0.5, 0.75, 0.95
@@ -41,9 +41,9 @@ computeMTR = function(echoes,
                       timeZone,
                       sunriseSunset,
                       sunOrCivil                  = "civil",
-                      protocolData                = protocolData, 
-                      blindTimes                  = blindTimes, 
-                      blindTimeAsMtrZero          = blindTimeAsMtrZero,
+                      protocolData, 
+                      blindTimes, 
+                      blindTimeAsMtrZero          = NULL,
                       propObsTimeCutoff           = 0, 
                       computePerDayNight          = FALSE, 
                       computeAltitudeDistribution = TRUE){

@@ -2,14 +2,17 @@
 #' @title Converts timestamps from radar timezone to an user-defined timezone
 #' @author Fabian Hertner (SBRS) \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
 #' @description Converts timestamps from radar timezone to an user-defined timezone
-#' @param data=NULL a data frame containing BirdScan data
-#' @param colNames="" a character vector containing valid column names, as present in `data`
-#' @param originTZ="Etc/GMT0" character, the time zone name of data to be converted (default is "etc/GMT0")
-#' @param targetTZ="Etc/GMT0" character, the time zone name to convert data into (default is "etc/GMT0")
+#' @param data a data frame containing BirdScan data
+#' @param colNames a character vector containing valid column names, as present in `data`
+#' @param originTZ character, the time zone name of data to be converted (default is "etc/GMT0")
+#' @param targetTZ character, the time zone name to convert data into (default is "etc/GMT0")
 #'
 #' @return a data frame identical to `data`, any columns declared in `colNames` will have their name changed with a suffix (`_originTZ` or `_targetTZ`) added.
 #' @export
-convertTimeZone = function(data = NULL, colNames = "", originTZ = "Etc/GMT0", targetTZ = "Etc/GMT0"){
+convertTimeZone = function(data     = NULL, 
+                           colNames = "", 
+                           originTZ = "Etc/GMT0", 
+                           targetTZ = "Etc/GMT0"){
   if(!is.null(data)){
     for(i in 1:length(colNames)){
       # new column names

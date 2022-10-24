@@ -5,13 +5,16 @@
 #' 
 #' @param timeRange The range of dates in which to calculate the twilight
 #' @param latLon A list of X, Y coordinates 
-#' @param crs_datum="WGS84" The coordinate reference system and datum of the X, Y coordinates
+#' @param crs_datum The coordinate reference system and datum of the X, Y coordinates
 #' @param timeZone The timezone of the area of interest
 #'
 #' @return A data frame with the results
 #' @export
 #' 
-twilight = function(timeRange, latLon, crs_datum = "WGS84", timeZone){
+twilight = function(timeRange, 
+                    latLon, 
+                    crs_datum = "WGS84", 
+                    timeZone){
   dateSeq = seq(as.Date(timeRange[1], tz = timeZone) - 1, 
                 as.Date(timeRange[2], tz = timeZone) + 2, 
                 "day")

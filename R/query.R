@@ -5,7 +5,7 @@
 #' @param dbConnection a valid  database connection
 #' @param dbDriverChar the name of the driver. 
 #' @param query an SQL string with your query
-#' @param as.is=FALSE If TRUE, leaves data as it is.
+#' @param as.is If TRUE, leaves data as it is.
 #'
 #' @return the result of the query
 #' @export

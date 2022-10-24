@@ -1,5 +1,5 @@
 Package: birdscanR
-Version: 0.0.0.9007
+Version: 0.0.0.9008
 Date: 2022-10-11
 Title: Migration Traffic Rate Calculation Package for Birdscan MR1 Radars
 Authors@R: c(person("Birgen", "Haest", email = "birgen.haest@vogelwarte.ch", role = c("aut", "cre"), comment =c(ORCID = 0000-0002-8739-6460)),

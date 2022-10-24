@@ -6,7 +6,7 @@
 #' @param timeBins dataframe with the time bins created by the function \code{createTimeBins}.
 #' @param protocolData dataframe with the protocol data from the data list created by the function \code{extractDBData} or a subset of it created by the function \code{filterProtocolData}.
 #' @param blindTimes dataframe containing the blind times created by the function \code{mergeVisibilityAndManualBlindTimes}.
-#' @param blindTimeAsMtrZero=NULL character string vector with the blind time types which should be treated as observation time with MTR zero.
+#' @param blindTimeAsMtrZero character string vector with the blind time types which should be treated as observation time with MTR zero.
 #'
 #' @return returns a dataframe with the timebins completed with the observation times of each timebin.
 #' 

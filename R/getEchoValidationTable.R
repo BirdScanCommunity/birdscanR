@@ -3,6 +3,7 @@
 #' @description  gets the EchoValidationTable from an already connected DB
 #' @author Fabian Hertner (SBRS) \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
 #' @param dbConnection a valid  database connection
+#' @param dbDriverChar dbDriverChar 'SQL Server' The name of the driver. Should be either 'SQL Server' or 'PostgreSQL'. If 'PostgreSQL', it connects to cloud.birdradar.com
 #'
 #' @return A dataframe called echovalidationTable
 #' @export
