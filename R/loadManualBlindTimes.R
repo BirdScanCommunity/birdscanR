@@ -36,7 +36,7 @@ loadManualBlindTimes = function(filePath, blindTimesTZ, targetTZ){
   # ===========================================================================
     if (!file.exists(filePath)){
       paste0("manual blind times file does not exist: '", filePath)
-      manualBlindTimes<-NULL
+      manualBlindTimes = NULL
     } else {
   
   # read csv with blindtimes
