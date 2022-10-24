@@ -25,8 +25,10 @@ stored in the visibility table or in the time_bins table in relation to the time
 To be flexible and not fixed to the 5 min time bins created by the radar, the visibility table is used
 in this script.
 In addition to the radar blind times, manual blind times can be defined. Manual blind times have to
-be defined in a csv file and loaded with the function ‘loadManualBlindTimes’. A default file is
-available and can be edited: 'your-project-directory'/data/manualBlindTimes.csv
+be defined in a csv file and are loaded with the function ‘loadManualBlindTimes’. A example dataset is
+available by running:
+\code{data(manualBlindTimes)}
+\code{write.csv(manualBlindTimes, file = 'the output file destination', row.names = F)}
 The filepath is defined as a global variable ‘manualBlindTimesFile’. A custom file and filepath
 can be used instead.
 The manual blind times have to be entered with 3 columns:
