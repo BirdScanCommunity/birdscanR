@@ -18,7 +18,7 @@ computeObservationTime(
 
 \item{blindTimes}{dataframe containing the blind times created by the function \code{mergeVisibilityAndManualBlindTimes}.}
 
-\item{blindTimeAsMtrZero=NULL}{character string vector with the blind time types which should be treated as observation time with MTR zero.}
+\item{blindTimeAsMtrZero}{character string vector with the blind time types which should be treated as observation time with MTR zero.}
 }
 \value{
 returns a dataframe with the timebins completed with the observation times of each timebin.

@@ -12,13 +12,13 @@ convertTimeZone(
 )
 }
 \arguments{
-\item{data=NULL}{a data frame containing BirdScan data}
+\item{data}{a data frame containing BirdScan data}
 
-\item{colNames=""}{a character vector containing valid column names, as present in \code{data}}
+\item{colNames}{a character vector containing valid column names, as present in \code{data}}
 
-\item{originTZ="Etc/GMT0"}{character, the time zone name of data to be converted (default is "etc/GMT0")}
+\item{originTZ}{character, the time zone name of data to be converted (default is "etc/GMT0")}
 
-\item{targetTZ="Etc/GMT0"}{character, the time zone name to convert data into (default is "etc/GMT0")}
+\item{targetTZ}{character, the time zone name to convert data into (default is "etc/GMT0")}
 }
 \value{
 a data frame identical to \code{data}, any columns declared in \code{colNames} will have their name changed with a suffix (\verb{_originTZ} or \verb{_targetTZ}) added.

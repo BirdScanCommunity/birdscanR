@@ -8,6 +8,8 @@ getRfClassification(dbConnection, dbDriverChar)
 }
 \arguments{
 \item{dbConnection}{a valid  database connection}
+
+\item{dbDriverChar}{dbDriverChar 'SQL Server' The name of the driver. Should be either 'SQL Server' or 'PostgreSQL'. If 'PostgreSQL', it connects to cloud.birdradar.com}
 }
 \value{
 A dataframe called rfclasses

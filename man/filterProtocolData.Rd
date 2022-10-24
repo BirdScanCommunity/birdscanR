@@ -11,11 +11,11 @@ filterProtocolData(
 )
 }
 \arguments{
-\item{protocolData=NULL}{dataframe with the protocol data from the data list created by the function \code{extractDBData}}
+\item{protocolData}{dataframe with the protocol data from the data list created by the function \code{extractDBData}}
 
-\item{pulseTypeSelection=NULL}{character vector with the pulse types which should be included in the subset. Options: “S”, “M”, “L” (short-, medium-, long-pulse). Default is NULL: no filtering applied based on pulseType.}
+\item{pulseTypeSelection}{character vector with the pulse types which should be included in the subset. Options: “S”, “M”, “L” (short-, medium-, long-pulse). Default is NULL: no filtering applied based on pulseType.}
 
-\item{rotationSelection=NULL}{numeric vector to select the operation modes with and/or without antennarotation. Options: 0, 1. (0 = no rotation, 1 = rotation). Default is NULL: no filtering applied based on rotation mode.}
+\item{rotationSelection}{numeric vector to select the operation modes with and/or without antennarotation. Options: 0, 1. (0 = no rotation, 1 = rotation). Default is NULL: no filtering applied based on rotation mode.}
 }
 \value{
 returns the filtered protocol data in the same format as provided in the parameter \code{protocolData}.

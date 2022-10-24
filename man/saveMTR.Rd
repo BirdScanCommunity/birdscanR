@@ -20,17 +20,17 @@ saveMTR(
 
 \item{filepath}{character string, path of the directory. If the directory does not exist it will be created if possible.}
 
-\item{fileName=NULL}{Filename (string) for the file. If not set, the filename will be built using the input of the variables 'filenamePrefix', 'dbName', 'classAbbreviations', and other info in the 'mtr' data. If set, overrides the automatic filename creation.}
+\item{fileName}{Filename (string) for the file. If not set, the filename will be built using the input of the variables 'filenamePrefix', 'dbName', 'classAbbreviations', and other info in the 'mtr' data. If set, overrides the automatic filename creation.}
 
-\item{fileNamePrefix=NULL}{prefix of the filename (string). If not set, "mtr" is used. Different information about the MTR data will be appended to the filename.}
+\item{fileNamePrefix}{prefix of the filename (string). If not set, "mtr" is used. Different information about the MTR data will be appended to the filename.}
 
-\item{dbName=NULL}{character string, name of the database. Used to create the filename, if 'fileName' is not provided.}
+\item{dbName}{character string, name of the database. Used to create the filename, if 'fileName' is not provided.}
 
-\item{rotSelection=NULL}{numeric vector, rotation selection which was used to filter protocols. Used to create the filename, if 'fileName' is not provided. If not set, the rotation selection will not be appended to the filename.}
+\item{rotSelection}{numeric vector, rotation selection which was used to filter protocols. Used to create the filename, if 'fileName' is not provided. If not set, the rotation selection will not be appended to the filename.}
 
-\item{pulseTypeSelection=NULL}{character vector, pulse type selection which was used to filter protocols. Used to create the filename, if 'fileName' is not provided. If not set, the pulse type selection will not be appended to the filename.}
+\item{pulseTypeSelection}{character vector, pulse type selection which was used to filter protocols. Used to create the filename, if 'fileName' is not provided. If not set, the pulse type selection will not be appended to the filename.}
 
-\item{classAbbreviations=NULL}{Two-column dataframe with character first column named 'class' and character second 'abbr', containing the full names of the classes and their abbreviations to use in the output filename. Default = NULL, meaning the abbreviations will be used that are stored in the package; See data(classAbbreviations). Used to create the filename, if 'fileName' is not provided.}
+\item{classAbbreviations}{Two-column dataframe with character first column named 'class' and character second 'abbr', containing the full names of the classes and their abbreviations to use in the output filename. Default = NULL, meaning the abbreviations will be used that are stored in the package; See data(classAbbreviations). Used to create the filename, if 'fileName' is not provided.}
 }
 \description{
 saves MTR data to a .rds file in the directory \code{filepath}. If the directory is not existing it will be created if possible.

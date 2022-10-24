@@ -13,7 +13,7 @@ QUERY(dbConnection, dbDriverChar, query, as.is = FALSE)
 
 \item{query}{an SQL string with your query}
 
-\item{as.is=FALSE}{If TRUE, leaves data as it is.}
+\item{as.is}{If TRUE, leaves data as it is.}
 }
 \value{
 the result of the query

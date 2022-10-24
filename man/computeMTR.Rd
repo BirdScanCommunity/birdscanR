@@ -14,9 +14,9 @@ computeMTR(
   timeZone,
   sunriseSunset,
   sunOrCivil = "civil",
-  protocolData = protocolData,
-  blindTimes = blindTimes,
-  blindTimeAsMtrZero = blindTimeAsMtrZero,
+  protocolData,
+  blindTimes,
+  blindTimeAsMtrZero = NULL,
   propObsTimeCutoff = 0,
   computePerDayNight = FALSE,
   computeAltitudeDistribution = TRUE
@@ -39,19 +39,19 @@ computeMTR(
 
 \item{sunriseSunset}{dataframe with sunrise/sunset, civil dawn/dusk. computed with function 'twilight'}
 
+\item{sunOrCivil}{sunrise/sunset or civil dawn/dusk used to split day and night. Supported values: "sun" or "civil", default: "civil"}
+
 \item{protocolData}{dataframe with the protocol data from the data list created by the function \code{extractDBData} or a subset of it created by the function \code{filterProtocolData}.}
 
 \item{blindTimes}{dataframe containing the blind times created by the function \code{mergeVisibilityAndManualBlindTimes}.}
+
+\item{blindTimeAsMtrZero}{character string vector with the blind time types which should be treated as observation time with MTR zero.}
 
 \item{propObsTimeCutoff}{numeric between 0 and 1. If the MTR is computed per day and night, time bins with a proportional observation time smaller than propObsTimeCutoff are ignored when combining the time bins. If the MTR is computed for each time bin, the parameter is ignored.}
 
 \item{computePerDayNight}{logical, TRUE: MTR is computed per day and night FALSE: MTR is computed for each time bin}
 
 \item{computeAltitudeDistribution}{logical, TRUE: compute the mean height and altitude distribution of MTR for the pre-defined quantiles 0.05, 0.25, 0.5, 0.75, 0.95}
-
-\item{sunOrCivil="civil"}{sunrise/sunset or civil dawn/dusk used to split day and night. Supported values: "sun" or "civil", default: "civil"}
-
-\item{blindTimeAsMtrZero=NULL}{character string vector with the blind time types which should be treated as observation time with MTR zero.}
 }
 \value{
 mtr

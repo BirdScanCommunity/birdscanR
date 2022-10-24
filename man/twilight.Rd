@@ -11,9 +11,9 @@ twilight(timeRange, latLon, crs_datum = "WGS84", timeZone)
 
 \item{latLon}{A list of X, Y coordinates}
 
-\item{timeZone}{The timezone of the area of interest}
+\item{crs_datum}{The coordinate reference system and datum of the X, Y coordinates}
 
-\item{crs_datum="WGS84"}{The coordinate reference system and datum of the X, Y coordinates}
+\item{timeZone}{The timezone of the area of interest}
 }
 \value{
 A data frame with the results

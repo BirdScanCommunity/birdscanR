@@ -21,7 +21,7 @@ createTimeBins(
 
 \item{sunriseSunset}{dataframe with sunrise/sunset, civil dawn/dusk. computed with function 'twilight'}
 
-\item{sunOrCivil="civil"}{sunrise/sunset or civil dawn/dusk used to split day and night. Supported values: "sun" or "civil", default: "civil"}
+\item{sunOrCivil}{sunrise/sunset or civil dawn/dusk used to split day and night. Supported values: "sun" or "civil", default: "civil"}
 }
 \value{
 returns a dataframe with the timebins information
