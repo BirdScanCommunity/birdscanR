@@ -9,8 +9,7 @@
 #'
 #' @return a data frame identical to `data`, any columns declared in `colNames` will have their name changed with a suffix (`_originTZ` or `_targetTZ`) added.
 #' @export
-convertTimeZone = function(data = NULL, colNames = "", originTZ = "Etc/GMT0", targetTZ = "Etc/GMT0")
-{
+convertTimeZone = function(data = NULL, colNames = "", originTZ = "Etc/GMT0", targetTZ = "Etc/GMT0"){
   if(!is.null(data)){
     for(i in 1:length(colNames)){
       # new column names
