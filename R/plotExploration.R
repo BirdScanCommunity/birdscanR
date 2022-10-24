@@ -129,10 +129,10 @@ plotExploration = function(echoData         = NULL,
           # Plot
           # ===================================================================
             subtitle = paste0(format(timeRange[[i]][1], "%d-%b-%Y"), 
-                                " to ", 
-                                format(timeRange[[i]][2], "%d-%b-%Y"))
+                              " to ", 
+                              format(timeRange[[i]][2], "%d-%b-%Y"))
             
-            explorationPlot = ggplot()
+            explorationPlot = ggplot2::ggplot()
           
           # create background data
           # ===================================================================
@@ -189,24 +189,24 @@ plotExploration = function(echoData         = NULL,
           # ===================================================================
             if (length(background) > 1){
               explorationPlot = explorationPlot + 
-                                  geom_rect(background, 
-                                            mapping = aes(ymin = yStart , 
-                                                          ymax = yStop, 
-                                                          xmin = xStart, 
-                                                          xmax = xStop, 
-                                                          fill = type), 
-                                            alpha = 0.5)  
+                                  ggplot2::geom_rect(background, 
+                                                     mapping = ggplot2::aes(ymin = yStart , 
+                                                                            ymax = yStop, 
+                                                                            xmin = xStart, 
+                                                                            xmax = xStop, 
+                                                                            fill = type), 
+                                                     alpha = 0.5)  
             }
           
           # plot echoes
           # ===================================================================
             explorationPlot = explorationPlot + 
-                                geom_point(echoDataPlot, 
-                                           mapping = aes(x      = time_stamp_targetTZ, 
-                                                         y      = feature1.altitude_AGL, 
-                                                         colour = class, 
-                                                         shape = class), 
-                                           na.rm = TRUE)
+                                ggplot2::geom_point(echoDataPlot, 
+                                                    mapping = ggplot2::aes(x      = time_stamp_targetTZ, 
+                                                                           y      = feature1.altitude_AGL, 
+                                                                           colour = class, 
+                                                                           shape = class), 
+                                                    na.rm = TRUE)
           
           # overprint insect classes
           # ===================================================================
@@ -215,12 +215,12 @@ plotExploration = function(echoData         = NULL,
             if (length(insects[, 1])){
               insects$class   = factor(insects$class, levels = classLevels)
               explorationPlot = explorationPlot + 
-                                  geom_point(insects, 
-                                             mapping = aes(x      = time_stamp_targetTZ, 
-                                                           y      = feature1.altitude_AGL, 
-                                                           colour = class, 
-                                                           shape  = class), 
-                                             na.rm   = TRUE)
+                                  ggplot2::geom_point(insects, 
+                                                      mapping = ggplot2::aes(x      = time_stamp_targetTZ, 
+                                                                             y      = feature1.altitude_AGL, 
+                                                                             colour = class, 
+                                                                             shape  = class), 
+                                                      na.rm   = TRUE)
             }
           
           # overprint bird classes
@@ -230,44 +230,44 @@ plotExploration = function(echoData         = NULL,
             if (length(birds[, 1])){
               birds$class = factor(birds$class, levels = classLevels)
               explorationPlot = explorationPlot + 
-                                  geom_point(birds, 
-                                             mapping = aes(x      = time_stamp_targetTZ, 
-                                                           y      = feature1.altitude_AGL, 
-                                                           colour = class, 
-                                                           shape  = class), 
-                                             na.rm = TRUE)
+                                  ggplot2::geom_point(birds, 
+                                                      mapping = ggplot2::aes(x      = time_stamp_targetTZ, 
+                                                                             y      = feature1.altitude_AGL, 
+                                                                             colour = class, 
+                                                                             shape  = class), 
+                                                      na.rm = TRUE)
             }
             
             explorationPlot = explorationPlot + 
-                                scale_color_manual(values = classColors) +
-                                scale_shape_manual(values = classShapes) + 
-                                scale_fill_manual(values = backgroundColors) +
-                                coord_cartesian(ylim = yScale)
+                                ggplot2::scale_color_manual(values = classColors) +
+                                ggplot2::scale_shape_manual(values = classShapes) + 
+                                ggplot2::scale_fill_manual(values = backgroundColors) +
+                                ggplot2::coord_cartesian(ylim = yScale)
             
             explorationPlot = explorationPlot + 
-                                scale_x_datetime(date_breaks = "1 days", 
-                                                 labels = function(x) format(x, "%d-%b-%Y")) + 
-                                labs(fill = "", shape = "", colour = "") +
-                                ggtitle(label = "Exploration", 
-                                        subtitle = subtitle) + 
-                                xlab("Date") + 
-                                ylab("Altitude a.g.l [m]") +
-                                theme(plot.title = element_text(size  = 12, 
-                                                                face  = "bold", 
-                                                                hjust = 0.5),
-                                       plot.subtitle = element_text(size  = 10, 
-                                                                    color = "grey40", 
-                                                                    hjust = 0.5),
-                                       axis.text.x = element_text(angle = 90))
+                                ggplot2::scale_x_datetime(date_breaks = "1 days", 
+                                                          labels = function(x) format(x, "%d-%b-%Y")) + 
+                                ggplot2::labs(fill = "", shape = "", colour = "") +
+                                ggplot2::ggtitle(label = "Exploration", 
+                                                 subtitle = subtitle) + 
+                                ggplot2::xlab("Date") + 
+                                ggplot2::ylab("Altitude a.g.l [m]") +
+                                ggplot2::theme(plot.title     = ggplot2::element_text(size  = 12, 
+                                                                                      face  = "bold", 
+                                                                                      hjust = 0.5),
+                                                plot.subtitle = ggplot2::element_text(size  = 10, 
+                                                                                      color = "grey40", 
+                                                                                      hjust = 0.5),
+                                                axis.text.x   = ggplot2::element_text(angle = 90))
           
           # save plot
           # ===================================================================
-          savePlotToFile(plot           = explorationPlot, 
-                          filePath      = filePath, 
-                          plotType      = "exploration", 
-                          plotWidth_mm  = difftime(timeRange[[i]][2], timeRange[[i]][1], "days") * 100 + 50, 
-                          plotHeight_mm = 150, 
-                          timeRange     = c(timeRange[[i]][1], timeRange[[i]][2]))  
+            savePlotToFile(plot           = explorationPlot, 
+                           filePath      = filePath, 
+                           plotType      = "exploration", 
+                           plotWidth_mm  = difftime(timeRange[[i]][2], timeRange[[i]][1], "days") * 100 + 50, 
+                           plotHeight_mm = 150, 
+                           timeRange     = c(timeRange[[i]][1], timeRange[[i]][2]))  
         }
       }
   }

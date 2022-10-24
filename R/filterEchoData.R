@@ -43,7 +43,7 @@ filterEchoData = function(echoData          = NULL,
 # =============================================================================
   if ((!is.null(timeRangeTargetTZ))    && 
       (length(timeRangeTargetTZ) == 2) && 
-      (is(timeRangeTargetTZ, "POSIXct"))){
+      (methods::is(timeRangeTargetTZ, "POSIXct"))){
     echoData = echoData[(echoData$time_stamp_targetTZ > timeRangeTargetTZ[1]) & 
                         (echoData$time_stamp_targetTZ < timeRangeTargetTZ[2]),]
   }
@@ -83,10 +83,10 @@ filterEchoData = function(echoData          = NULL,
 # =============================================================================
   if ((!is.null(manualBlindTimes)) && 
       (all(c("start_targetTZ", "stop_targetTZ") %in% names(manualBlindTimes))) && 
-      (is(manualBlindTimes$start_targetTZ, "POSIXct")) && 
-      (is(manualBlindTimes$stop_targetTZ, "POSIXct"))){
+      (methods::is(manualBlindTimes$start_targetTZ, "POSIXct")) && 
+      (methods::is(manualBlindTimes$stop_targetTZ, "POSIXct"))){
     echoDataInBlindTime = rep(FALSE, length(echoData[, 1]))
-    for (i in 1 : length(manualBlindTimes[, 1])){
+    for (i in 1:length(manualBlindTimes[, 1])){
       echoDataInBlindTime = echoDataInBlindTime | 
                             ((echoData$time_stamp_targetTZ >= manualBlindTimes$start_targetTZ[i]) & 
                              (echoData$time_stamp_targetTZ <= manualBlindTimes$stop_targetTZ[i]))

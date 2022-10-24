@@ -1,6 +1,6 @@
 #### twilight -----------------------------------------------------------------
 #' @title Calculate the twilight hours for given locations
-#' 
+#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
 #' @description  Calculate the  duration of night in hours and seconds. It calculate also the time of both solar and civil start of the day and end of the day.
 #' 
 #' @param timeRange The range of dates in which to calculate the twilight

@@ -84,7 +84,11 @@ extractDbData = function(dbDriverChar              = "SQL Server",
  
 # Check whether there is a connection
 # =============================================================================
-  if (if (dbDriverChar == "PostgreSQL"){isPostgresqlIdCurrent(dbConnection)} else {dbConnection != -1}){
+  if (if(dbDriverChar == "PostgreSQL"){
+        RPostgreSQL::isPostgresqlIdCurrent(dbConnection)
+      } else {
+        dbConnection != -1
+      }){
     # Do nothing
   } else {
     stop("Could not open database. Make sure to set dbServer, dbName, and credentials right.")

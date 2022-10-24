@@ -82,29 +82,29 @@ savePlotToFile = function(plot               = NULL,
     # save plot
     # =========================================================================
       if (!is.null(plotWidth_mm) && !is.null(plotHeight_mm)){
-        ggsave(filename  = fileName, 
-               plot      = plot, 
-               device    = png(), 
-               path      = filePath, 
-               scale     = 1, 
-               width     = plotWidth_mm, 
-               height    = plotHeight_mm, 
-               units     = "mm", 
-               dpi       = 300, 
-               limitsize = FALSE)  
+        ggplot2::ggsave(filename  = fileName, 
+                        plot      = plot, 
+                        device    = png(), 
+                        path      = filePath, 
+                        scale     = 1, 
+                        width     = plotWidth_mm, 
+                        height    = plotHeight_mm, 
+                        units     = "mm", 
+                        dpi       = 300, 
+                        limitsize = FALSE)  
       } else {
-        ggsave(filename  = fileName, 
-               plot      = plot, 
-               device    = png(), 
-               path      = filePath, 
-               scale     = 1, 
-               dpi       = 300, 
-               limitsize = FALSE)  
+        ggplot2::ggsave(filename  = fileName, 
+                        plot      = plot, 
+                        device    = png(), 
+                        path      = filePath, 
+                        scale     = 1, 
+                        dpi       = 300, 
+                        limitsize = FALSE)  
       }
     
     # Close plotting device
     # =========================================================================
-      dev.off()
+      # dev.off()
   }
 }
 

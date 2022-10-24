@@ -23,6 +23,7 @@
 #' @param computeAltitudeDistribution logical, TRUE: compute the mean height and altitude distribution of MTR for the pre-defined quantiles 0.05, 0.25, 0.5, 0.75, 0.95
 #'
 #' @return mtr
+#' @importFrom magrittr %>%
 #' @export
 #'
 # #' @examples 
@@ -198,55 +199,55 @@ computeMTR = function(echoes,
                                                        label = timeBins$id, right = FALSE)))
   all_mtr = echoes %>% 
           # add information on effective observation time
-            left_join(x  = ., 
-                      y  = mtr %>% distinct(timeChunkId, observationTime_h), 
-                      by = "timeChunkId") %>% 
+            dplyr::left_join(x  = ., 
+                             y  = mtr %>% dplyr::distinct(timeChunkId, observationTime_h), 
+                             by = "timeChunkId") %>% 
     
           # calcualte the MTR for each echo - will be summed up in a later step
-            mutate("mtr_echo" = mtr_factor_rf / observationTime_h) %>% 
+            dplyr::mutate("mtr_echo" = mtr_factor_rf / observationTime_h) %>% 
     
           # group the data with time and height intervals
-            group_by(timeChunkId, altitudeChunkId) %>% 
+            dplyr::group_by(timeChunkId, altitudeChunkId) %>% 
     
-            summarise(
+            dplyr::summarise(
               # count the number of echoes per timeXheight interval
                 "nEchoes" = length(mtr_factor_rf), 
               # sum the mtr-factors of all echoes per timeXheight interval
-                "sumOfMTRFactors" = sum(mtr_factor_rf, na.rm=TRUE), 
+                "sumOfMTRFactors" = sum(mtr_factor_rf, na.rm = TRUE), 
               # sum the mtr of all echoes per timeXheight interval - equivalent as "sumOfMTRFactors / observationTime_h"
                 "mtr" = sum(mtr_echo, na.rm = TRUE)) %>% 
     
           # add the class denomination to merge with the per-class MTR dataset
-            add_column(class = "allClasses") %>% 
+            tibble::add_column(class = "allClasses") %>% 
     
           # select and reorder the columns of interest 
-            select(timeChunkId, altitudeChunkId, class, nEchoes, sumOfMTRFactors, mtr) %>% 
+            dplyr::select(timeChunkId, altitudeChunkId, class, nEchoes, sumOfMTRFactors, mtr) %>% 
     
           # use wide-format to match @fabian's original format
-            pivot_wider(names_from =  class, values_from = c(nEchoes, sumOfMTRFactors, mtr), names_sep = ".", values_fill = 0) 
+            tidyr::pivot_wider(names_from =  class, values_from = c(nEchoes, sumOfMTRFactors, mtr), names_sep = ".", values_fill = 0) 
     
   each_mtr = echoes %>% 
            # add information on effective observation time
-             left_join(x  = ., 
-                       y  = mtr %>% distinct(timeChunkId, observationTime_h), 
+             dplyr::left_join(x  = ., 
+                       y  = mtr %>% dplyr::distinct(timeChunkId, observationTime_h), 
                        by = "timeChunkId") %>% 
-             mutate("mtr_echo" = mtr_factor_rf/observationTime_h) %>%
-             group_by(timeChunkId, altitudeChunkId, class) %>% 
-             summarise("nEchoes" = length(mtr_factor_rf),
-                       "sumOfMTRFactors" = sum(mtr_factor_rf, na.rm=TRUE),
-                       "mtr" = sum(mtr_echo, na.rm = TRUE)) %>% 
-             select(timeChunkId, altitudeChunkId, class, nEchoes, sumOfMTRFactors, mtr) %>% 
-             pivot_wider(names_from  =  class, 
-                         values_from = c(nEchoes, sumOfMTRFactors, mtr), 
-                         names_sep   = ".", 
-                         values_fill = 0)
+             dplyr::mutate("mtr_echo" = mtr_factor_rf/observationTime_h) %>%
+             dplyr::group_by(timeChunkId, altitudeChunkId, class) %>% 
+             dplyr::summarise("nEchoes" = length(mtr_factor_rf),
+                              "sumOfMTRFactors" = sum(mtr_factor_rf, na.rm=TRUE),
+                              "mtr" = sum(mtr_echo, na.rm = TRUE)) %>% 
+             dplyr::select(timeChunkId, altitudeChunkId, class, nEchoes, sumOfMTRFactors, mtr) %>% 
+             tidyr::pivot_wider(names_from  =  class, 
+                                values_from = c(nEchoes, sumOfMTRFactors, mtr), 
+                                names_sep   = ".", 
+                                values_fill = 0)
   
-  mtr = left_join(mtr, all_mtr, by = c("timeChunkId", "altitudeChunkId")) %>% 
-        left_join(each_mtr, by = c("timeChunkId", "altitudeChunkId"))
+  mtr = dplyr::left_join(mtr, all_mtr, by = c("timeChunkId", "altitudeChunkId")) %>% 
+        dplyr::left_join(each_mtr, by = c("timeChunkId", "altitudeChunkId"))
   
 # replace NA as ZERO for nEchoes, sumMTRfacotrs, mtr, if "proportionalTimeObserved"] != 0
 # =============================================================================
-  for (i in 0 : length(classSelection)){ # i = 0
+  for (i in 0:length(classSelection)){ # i = 0
     i_class = ifelse(i == 0, "allClasses", classSelection[i])
     # if...
     i_index = which((mtr[, paste("nEchoes", i_class, sep = ".")] %in% NA) &
@@ -262,7 +263,7 @@ computeMTR = function(echoes,
     #  Combine all timebins of one day (grouped by timeChunkDateSunset) to one 
     # =========================================================================
     if ("timeChunkDateSunset" %in% colnames(mtr) && !all(is.na(mtr$timeChunkDateSunset))){
-      for (k in 1 : length(unique(mtr$altitudeChunkId))){
+      for (k in 1:length(unique(mtr$altitudeChunkId))){
         # Day MTR ----
         # =====================================================================
           # combine all timebins with the same value in 'timeChunkDateSunset','altitudeChunkId' and 'dayOrNight'
@@ -271,22 +272,22 @@ computeMTR = function(echoes,
                                  mtr$dayOrNight == "day" & 
                                  mtr$altitudeChunkId == k,]
             timeChunkDate  = mtrTmp %>% 
-                              group_by(timeChunkDateSunset) %>% 
+                              dplyr::group_by(timeChunkDateSunset) %>% 
                               dplyr::summarise(x = min(timeChunkBegin))
             timeChunkDate  = timeChunkDate[!is.na(timeChunkDate$x) & 
                                            !is.na(timeChunkDate$timeChunkDateSunset),]
             timeChunkBegin = mtrTmp %>% 
-                              group_by(timeChunkDateSunset) %>% 
+                              dplyr::group_by(timeChunkDateSunset) %>% 
                               dplyr::summarise(x = min(timeChunkBegin))
             timeChunkBegin = timeChunkBegin[!is.na(timeChunkBegin$x) & 
                                             !is.na(timeChunkBegin$timeChunkDateSunset),]
             timeChunkEnd   = mtrTmp %>% 
-                              group_by(timeChunkDateSunset) %>% 
+                              dplyr::group_by(timeChunkDateSunset) %>% 
                               dplyr::summarise(x = max(timeChunkEnd))
             timeChunkEnd          = timeChunkEnd[!is.na(timeChunkEnd$x) & 
                                                  !is.na(timeChunkEnd$timeChunkDateSunset),]
             timeChunkDateSunset   = mtrTmp %>% 
-                                      group_by(timeChunkDateSunset) %>% 
+                                      dplyr::group_by(timeChunkDateSunset) %>% 
                                       dplyr::summarise(x = max(timeChunkDateSunset))
             timeChunkDateSunset   = timeChunkDateSunset[!is.na(timeChunkDateSunset$x) & 
                                                         !is.na(timeChunkDateSunset$timeChunkDateSunset),]
@@ -404,22 +405,22 @@ computeMTR = function(echoes,
                                  mtr$dayOrNight == "night" & 
                                  mtr$altitudeChunkId == k,]
             timeChunkDate  = mtrTmp %>% 
-                               group_by(timeChunkDateSunset) %>% 
+                               dplyr::group_by(timeChunkDateSunset) %>% 
                                dplyr::summarise(x = min(timeChunkBegin))
             timeChunkDate  = timeChunkDate[!is.na(timeChunkDate$x) & 
                                            !is.na(timeChunkDate$timeChunkDateSunset),]
             timeChunkBegin = mtrTmp %>% 
-                               group_by(timeChunkDateSunset) %>% 
+                               dplyr::group_by(timeChunkDateSunset) %>% 
                                dplyr::summarise(x = min(timeChunkBegin))
             timeChunkBegin = timeChunkBegin[!is.na(timeChunkBegin$x) & 
                                             !is.na(timeChunkBegin$timeChunkDateSunset),]
             timeChunkEnd   = mtrTmp %>% 
-                               group_by(timeChunkDateSunset) %>% 
+                               dplyr::group_by(timeChunkDateSunset) %>% 
                                dplyr::summarise(x = max(timeChunkEnd))
             timeChunkEnd   = timeChunkEnd[!is.na(timeChunkEnd$x) & 
                                           !is.na(timeChunkEnd$timeChunkDateSunset),]
             timeChunkDateSunset   = mtrTmp %>% 
-                                      group_by(timeChunkDateSunset) %>% 
+                                      dplyr::group_by(timeChunkDateSunset) %>% 
                                       dplyr::summarise(x = max(timeChunkDateSunset))
             timeChunkDateSunset   = timeChunkDateSunset[!is.na(timeChunkDateSunset$x) & 
                                                         !is.na(timeChunkDateSunset$timeChunkDateSunset),]
@@ -459,7 +460,7 @@ computeMTR = function(echoes,
                                 list(mtrTmp$timeChunkDateSunset), 
                                 sum, na.rm = TRUE)
             mtrNight = data.frame(mtrNight, nEchoes.allClasses = nEchoes$x)
-            for (i in 1 : length(classSelection)){
+            for (i in 1:length(classSelection)){
               nEchoes = aggregate(mtrTmp[, paste("nEchoes", classSelection[i], sep = ".")], 
                                   list(mtrTmp$timeChunkDateSunset), 
                                   sum, na.rm = TRUE)
@@ -473,7 +474,7 @@ computeMTR = function(echoes,
                                         sum, na.rm = TRUE)
             mtrNight = data.frame(mtrNight, 
                                   sumOfMTRFactors.allClasses = sumOfMTRFactors$x)
-            for (i in 1 : length(classSelection)){
+            for (i in 1:length(classSelection)){
               sumOfMTRFactors = aggregate(mtrTmp[, paste("sumOfMTRFactors", classSelection[i], sep = ".")], 
                                           list(mtrTmp$timeChunkDateSunset), 
                                           sum, na.rm = TRUE)
@@ -483,7 +484,7 @@ computeMTR = function(echoes,
           # mtr
           # ===================================================================
             mtrNight = data.frame(mtrNight, mtr.allClasses = NA)
-            for (i in 1 : length(classSelection)){
+            for (i in 1:length(classSelection)){
               mtrNight[, paste("mtr", classSelection[i], sep = ".")] = NA
             }
           
@@ -496,7 +497,7 @@ computeMTR = function(echoes,
                                            prob = 0.25))
             mtrNight = merge(mtrNight, mtrFirstQuartile, 
                              by = "timeChunkDateSunset", all = TRUE)
-            for (i in 1 : length(classSelection)){
+            for (i in 1:length(classSelection)){
               mtrFirstQuartile = suppressWarnings(
                                    aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")], 
                                              list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
@@ -518,7 +519,7 @@ computeMTR = function(echoes,
                                            prob = 0.75))
             mtrNight = merge(mtrNight, mtrThirdQuartile, 
                              by = "timeChunkDateSunset", all = TRUE)
-            for (i in 1 : length(classSelection)){
+            for (i in 1:length(classSelection)){
               mtrThirdQuartile = suppressWarnings(
                                    aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")], 
                                              list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
@@ -554,7 +555,7 @@ computeMTR = function(echoes,
       # =======================================================================
         mtr$mtr.allClasses[mtr$observationTime_h > 0] = mtr$sumOfMTRFactors.allClasses[mtr$observationTime_h > 0] / 
                                                           mtr$observationTime_h[mtr$observationTime_h > 0]
-        for (i in 1 : length(classSelection)){
+        for (i in 1:length(classSelection)){
           mtr[mtr$observationTime_h > 0 , paste("mtr", classSelection[i], sep = ".")] = mtr[mtr$observationTime_h > 0, 
                                                                                             paste("sumOfMTRFactors", classSelection[i], sep = ".")] / 
                                                                                         mtr$observationTime_h[mtr$observationTime_h > 0]

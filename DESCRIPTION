@@ -1,5 +1,5 @@
 Package: birdscanR
-Version: 0.0.0.9006
+Version: 0.0.0.9007
 Date: 2022-10-11
 Title: Migration Traffic Rate Calculation Package for Birdscan MR1 Radars
 Authors@R: c(person("Birgen", "Haest", email = "birgen.haest@vogelwarte.ch", role = c("aut", "cre"), comment =c(ORCID = 0000-0002-8739-6460)),
@@ -17,15 +17,19 @@ URL: https://github.com/BirdScanCommunity/birdscanR
 BugReports: https://github.com/BirdScanCommunity/birdscanR/issues
 LazyData: true
 Depends:
-  R (>= 3.5.0),
-  tidyverse
+  R (>= 3.5.0)
 Imports: 
   DBI,
   dplyr,
+  ggplot2,
+  magrittr,
   maptools,
+  methods,
   modi,
   reshape2,
   RODBC,
   RPostgreSQL,
   rstudioapi,
-  sp
+  sp,
+  tibble,
+  tidyr
