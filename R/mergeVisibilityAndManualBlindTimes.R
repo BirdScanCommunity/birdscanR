@@ -185,7 +185,7 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
     # -- Priorise manual blindtimes over visibility blindtimes ----------------
     # Loop over visibility blindtimes
     # =========================================================================
-      for (i in 1 : length(visibilityDataSorted[, 1])){
+      for (i in 1:length(visibilityDataSorted[, 1])){
         if (visibilityDataSorted$type[i] != "protocolChange"){
           # if visibility blindtime ends inside manual blindtime, set end of 
           # visibility blindtime to start of manual blindtime
@@ -218,7 +218,7 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
     # Split visibility blindtimes if manual blindtime is inside visibility blind time
     # Loop over manual blindtimes
     # =========================================================================
-      for (i in 1 : length(manualBlindTimesSorted[, 1])){
+      for (i in 1:length(manualBlindTimesSorted[, 1])){
         visBTWithManualBTInside = (visibilityDataSorted$blind_from_targetTZ < manualBlindTimesSorted$start_targetTZ[i]) &
                                   (visibilityDataSorted$blind_to_targetTZ   > manualBlindTimesSorted$stop_targetTZ[i])
         
