@@ -12,6 +12,8 @@
 #' @param radarTimeZone NULL String specifying the radar time zone. Default is NULL: extract the timezone from the site table of the sql database.
 #' @param targetTimeZone "Etc/GMT0" String specifying the target time zone. Default is "Etc/GMT0".
 #' @param listOfRfFeaturesToExtract NULL or a list of feature to extract
+#' @param siteLocation Geographic location of the radar measurements in decimal format: c(Latitude, Longitude)
+#' @param sunOrCivil optional character string, “sun” (sunrise/sunset times) or “civil” (civil twilight times) to group by day and night. Default is "civil".
 #'
 #' @return a list of R objects with data extracted from the Database echoData,  protocolData, siteData, visibilityData, timeBinData, rfFeatures, availableClasses, classProbabilitiesAndMtrFactors
 #' @export
@@ -25,13 +27,16 @@ extractDbData = function(dbDriverChar              = "SQL Server",
                          dbDataDir                 = NULL,
                          radarTimeZone             = NULL, 
                          targetTimeZone            = "Etc/GMT0", 
-                         listOfRfFeaturesToExtract = NULL){
+                         listOfRfFeaturesToExtract = NULL, 
+                         siteLocation              = NULL, 
+                         sunOrCivil                = "civil"){
 # Check whether the necessary input is present
 # =============================================================================
   if(is.null(dbServer)){stop("dbserver is not defined. Please check your input!")}
   if(is.null(dbName)){stop("dbName is not defined. Please check your input!")}
   if(is.null(targetTimeZone)){stop("targetTimeZone is not defined. Please check your input!")}
-  if((saveDbToFile == TRUE) & is.null(dbDataDir)){stop("saveDbToFile is set to TRUE, but no dbDataDir path to save it to has been provided. Please check your input!")}
+  if((saveDbToFile == TRUE) & is.null(dbDataDir)){stop("saveDbToFile is set to TRUE, 
+                                                       but no dbDataDir path to save it to has been provided. Please check your input!")}
   
 # Open the database connection
 # =============================================================================
@@ -117,9 +122,7 @@ extractDbData = function(dbDriverChar              = "SQL Server",
 # load visibility from local MS-SQL DB
 # =============================================================================
   message("Extracting visibility table from DB...")
-  visibilityTable = getVisibilityTable(dbConnection, dbDriverChar)
-  visibilityData  = visibilityTable
-  rm(visibilityTable)
+  visibilityData = getVisibilityTable(dbConnection, dbDriverChar)
 
 # load manual visibility from local MS-SQL DB
 # =============================================================================
@@ -285,7 +288,38 @@ extractDbData = function(dbDriverChar              = "SQL Server",
                         classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors)
     }
   
-# Create directory if not existing
+# Start sunrise/sunset and twilight information calculation
+# =============================================================================
+  message("Computing sunrise/sunset and twilight information..")
+  
+# Set min and max time_stamps of echodata as timerange for 
+# sunrise/sunset calculation
+# ===========================================================================
+  timeRangeSunriseSunset = c(min(outputList$echoData$time_stamp_targetTZ), 
+                             max(outputList$echoData$time_stamp_targetTZ))  
+
+# Compute sunrise/sunset and dawn/dusk (civil)
+# ===========================================================================
+  sunriseSunset = twilight(timeRange = timeRangeSunriseSunset, 
+                           latLon    = siteLocation, 
+                           timeZone  = TimeZone$targetTimeZone)
+
+# Add the sunrise/sunset information to the output list
+# ===========================================================================
+  outputList$sunriseSunset = sunriseSunset  
+  rm(sunriseSunset)
+
+# Start adding day/night information for each echo
+# ===========================================================================
+  message("Adding day/night information per echo..")
+        
+# Add day/night infor per echo
+# =====================================================================
+  cData$echoData = addDayNightInfoPerEcho(echoData      = outputList$echoData,
+                                          sunriseSunset = outputList$sunriseSunset, 
+                                          sunOrCivil    = sunOrCivil)
+  
+# Create the output directory if it doesn't exist
 # =============================================================================
   dir.create(dbDataDir, showWarnings = F, recursive = T)
      
