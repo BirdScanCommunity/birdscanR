@@ -315,9 +315,9 @@ extractDbData = function(dbDriverChar              = "SQL Server",
         
 # Add day/night infor per echo
 # =====================================================================
-  cData$echoData = addDayNightInfoPerEcho(echoData      = outputList$echoData,
-                                          sunriseSunset = outputList$sunriseSunset, 
-                                          sunOrCivil    = sunOrCivil)
+  outputList$echoData = addDayNightInfoPerEcho(echoData      = outputList$echoData,
+                                               sunriseSunset = outputList$sunriseSunset, 
+                                               sunOrCivil    = sunOrCivil)
   
 # Create the output directory if it doesn't exist
 # =============================================================================
