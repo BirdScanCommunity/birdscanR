@@ -202,7 +202,7 @@ computeMTR = function(echoes,
                              y  = mtr %>% dplyr::distinct(timeChunkId, observationTime_h), 
                              by = "timeChunkId") %>% 
     
-          # calcualte the MTR for each echo - will be summed up in a later step
+          # calculate the MTR for each echo - will be summed up in a later step
             dplyr::mutate("mtr_echo" = mtr_factor_rf / observationTime_h) %>% 
     
           # group the data with time and height intervals

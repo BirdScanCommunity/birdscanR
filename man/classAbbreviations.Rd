@@ -3,7 +3,7 @@
 \docType{data}
 \name{classAbbreviations}
 \alias{classAbbreviations}
-\title{Defaul class abbreviations table of the birdscanR package}
+\title{Default class abbreviations table of the birdscanR package}
 \format{
 An object of class \code{"data.frame"}.
 }
