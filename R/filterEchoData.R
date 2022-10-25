@@ -4,7 +4,7 @@
 #' @description With the function \code{filterEchoData} the echo data can be filtered by several parameters. The function returns the filtered echo data.
 #'
 #' @param echoData dataframe with the echo data from the data list created by the function \code{extractDBData}.
-#' @param timeRangeTargetTZ POSIXct vector of length 2 with start and end time with target timezone. Echoes outside the time range will be excluded.
+#' @param timeRangeTargetTZ Character vector of length 2, with start and end of timerange, formatted as "%Y-%m-%d %H:%M". Echoes outside the time range will be excluded.
 #' @param targetTimeZone "Etc/GMT0" String specifying the target time zone. Default is "Etc/GMT0".
 #' @param protocolData dataframe with the protocol data from the data list created by the function \code{extractDBData} or a subset of it created by the function \code{filterProtocolData}. Echoes not detected during the listed protocols will be excluded.
 #' @param classSelection character string vector with the classes that should be included.

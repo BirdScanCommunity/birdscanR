@@ -6,17 +6,21 @@
 #' The options are selected with the parameter ‘computePerDayNight’. 
 #' - compute MTR for each time bin: This option computes the MTR for each time bin defined in the time bin dataframe. The time bins that were split due to sunrise/sunset during the time bin will be combined to one bin.
 #' - compute MTR per day/night: The time bins of each day and night will be combined and the mean MTR is computed for each day and night. Aside this, the spread (first and third Quartile) for each day and night is computed. The spread is dependent on the chosen time bin duration/amount of time bins. 
+#' @param dbName Character string, containing the name of the database you are processing
 #' @param echoes dataframe with the echo data from the data list created by the function ‘extractDBData’ or a subset of it created by the function ‘filterEchoData’. 
 #' @param classSelection character string vector with all classes which should be used to calculate the MTR. The MTR and number of Echoes will be calculated for each class as well as for all classes together. 
 #' @param altitudeRange numeric vector of length 2 with the start and end of the altitude range in meter a.g.l. 
 #' @param altitudeBinSize numeric, size of the altitude bins in meter. 
-#' @param timeRange vector of length 2, with start and end of timerange as POSIXct
+#' @param timeRange Character vector of length 2, with start and end of timerange, formatted as "%Y-%m-%d %H:%M" 
 #' @param timeBinDuration_sec duration of timeBins in seconds (numeric). for values <= 0 a duration of 1 hour will be set
 #' @param timeZone timezone in which the timebins should be created as string. e.g. "Etc/GMT0"
 #' @param sunriseSunset dataframe with sunrise/sunset, civil dawn/dusk. computed with function 'twilight'
 #' @param sunOrCivil sunrise/sunset or civil dawn/dusk used to split day and night. Supported values: "sun" or "civil", default: "civil"
 #' @param protocolData dataframe with the protocol data from the data list created by the function \code{extractDBData} or a subset of it created by the function \code{filterProtocolData}.
-#' @param blindTimes dataframe containing the blind times created by the function \code{mergeVisibilityAndManualBlindTimes}.
+#' @param visibilityData dataframe with the visibility data from the data list created by the function ‘extractDBData’.
+#' @param manualBlindTimes dataframe with the manual blind times created by the function \code{loadManualBlindTimes}.
+#' @param saveBlindTimes Logical, determines whether to save the blind times to a file. Default: False.
+#' @param blindTimesOutputDir Character string containting the path to save the blind times to. Default: 'your-working-directory'
 #' @param blindTimeAsMtrZero character string vector with the blind time types which should be treated as observation time with MTR zero.
 #' @param propObsTimeCutoff numeric between 0 and 1. If the MTR is computed per day and night, time bins with a proportional observation time smaller than propObsTimeCutoff are ignored when combining the time bins. If the MTR is computed for each time bin, the parameter is ignored.
 #' @param computePerDayNight logical, TRUE: MTR is computed per day and night FALSE: MTR is computed for each time bin
@@ -32,7 +36,8 @@
 # #' computeMTR(echoes = echoDataSubset, classSelection = classSelection, altitudeBins = altitudeBins_25_1025_binSize50, timeBins = timeBins_1h_DayNight, propObsTimeCutoff = propObsTimeCutoff, computePerDayNight = TRUE)
 # #' computeMTR(echoes = echoDataSubset, classSelection = classSelection, altitudeBins = altitudeBins_25_1000_oneBin, timeBins = timeBins_1h_DayNight, propObsTimeCutoff = propObsTimeCutoff, computePerDayNight = TRUE)
 # =============================================================================
-computeMTR = function(echoes, 
+computeMTR = function(dbName, 
+                      echoes, 
                       classSelection, 
                       altitudeRange,
                       altitudeBinSize,
@@ -42,7 +47,10 @@ computeMTR = function(echoes,
                       sunriseSunset,
                       sunOrCivil                  = "civil",
                       protocolData, 
-                      blindTimes, 
+                      visibilityData,
+                      manualBlindTimes            = NULL,
+                      saveBlindTimes              = FALSE,
+                      blindTimesOutputDir         = getwd(),
                       blindTimeAsMtrZero          = NULL,
                       propObsTimeCutoff           = 0, 
                       computePerDayNight          = FALSE, 
@@ -58,7 +66,13 @@ computeMTR = function(echoes,
                             avgAltitude = NA_real_)
   altitudeBins$size        = altitudeBins$end - altitudeBins$begin
   altitudeBins$avgAltitude = ((altitudeBins$begin + altitudeBins$end)) / 2
-  
+ 
+# Convert the timebin time range input to a POSIXct object
+# =====================================================================
+  timeRange = as.POSIXct(timeRange, 
+                         format = "%Y-%m-%d %H:%M", 
+                         tz     = timeZone)
+   
 # Create Timebins
 # =============================================================================
   message("Creating time bins..")
@@ -67,6 +81,20 @@ computeMTR = function(echoes,
                             timeZone            = timeZone, 
                             sunriseSunset       = sunriseSunset, 
                             sunOrCivil          = sunOrCivil)
+  
+# compute blindtimes
+# =====================================================================
+  message("Calculating blind times..")
+  blindTimes = mergeVisibilityAndManualBlindTimes(visibilityData   = visibilityData, 
+                                                  manualBlindTimes = manualBlindTimes, 
+                                                  protocolData     = protocolData)
+  
+# Save blind times to file, if requested
+# =====================================================================
+  if (saveBlindTimes){
+    saveRDS(blindTimes, file = file.path(blindTimesOutputDir, 
+                                         paste0(dbName, "_overallBlindTimes.rds")))
+  }
   
 # Compute observation time for each timebin
 # =============================================================================
