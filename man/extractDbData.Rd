@@ -14,7 +14,9 @@ extractDbData(
   dbDataDir = NULL,
   radarTimeZone = NULL,
   targetTimeZone = "Etc/GMT0",
-  listOfRfFeaturesToExtract = NULL
+  listOfRfFeaturesToExtract = NULL,
+  siteLocation = NULL,
+  sunOrCivil = "civil"
 )
 }
 \arguments{
@@ -37,6 +39,10 @@ extractDbData(
 \item{targetTimeZone}{"Etc/GMT0" String specifying the target time zone. Default is "Etc/GMT0".}
 
 \item{listOfRfFeaturesToExtract}{NULL or a list of feature to extract}
+
+\item{siteLocation}{Geographic location of the radar measurements in decimal format: c(Latitude, Longitude)}
+
+\item{sunOrCivil}{optional character string, “sun” (sunrise/sunset times) or “civil” (civil twilight times) to group by day and night. Default is "civil".}
 }
 \value{
 a list of R objects with data extracted from the Database echoData,  protocolData, siteData, visibilityData, timeBinData, rfFeatures, availableClasses, classProbabilitiesAndMtrFactors

@@ -1,10 +1,11 @@
-#### filterEchoData ------------------------------------------------------
+#### filterEchoData -----------------------------------------------------------
 #' @title filterEchoData
 #' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@@vogelwarte.ch} 
 #' @description With the function \code{filterEchoData} the echo data can be filtered by several parameters. The function returns the filtered echo data.
 #'
 #' @param echoData dataframe with the echo data from the data list created by the function \code{extractDBData}.
 #' @param timeRangeTargetTZ POSIXct vector of length 2 with start and end time with target timezone. Echoes outside the time range will be excluded.
+#' @param targetTimeZone "Etc/GMT0" String specifying the target time zone. Default is "Etc/GMT0".
 #' @param protocolData dataframe with the protocol data from the data list created by the function \code{extractDBData} or a subset of it created by the function \code{filterProtocolData}. Echoes not detected during the listed protocols will be excluded.
 #' @param classSelection character string vector with the classes that should be included.
 #' @param classProbCutOff numeric cutoff value for class probabilities. Echoes with a lower class probability will be excluded.
@@ -15,7 +16,8 @@
 #' @return returns the filtered echo data in the same format as provided in the parameter \code{echoData}.
 #' @export
 filterEchoData = function(echoData          = NULL, 
-                          timeRangeTargetTZ = NULL, 
+                          timeRangeTargetTZ = NULL,
+                          targetTimeZone    = "Etc/GMT0",
                           protocolData      = NULL, 
                           classSelection    = NULL, 
                           classProbCutOff   = NULL, 
@@ -38,6 +40,12 @@ filterEchoData = function(echoData          = NULL,
                 "check your input for the following columns: ", 
                 paste(requiredEchoDataCols, collapse = ", ")))
   }
+  
+# Convert the time range input to a POSIXct object
+# =============================================================================
+  timeRangeTargetTZ = as.POSIXct(timeRangeTargetTZ, 
+                                 format = "%Y-%m-%d %H:%M", 
+                                 tz     = targetTimeZone)
   
 # Filter by timerange
 # =============================================================================
