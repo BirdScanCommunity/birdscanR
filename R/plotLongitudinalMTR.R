@@ -8,8 +8,8 @@
 #' The MTR data should be computed with one altitude bin, if MTR data with multiple altitude bins are passed to the function, the only the lowest altitude bin is plotted.  
 #' The MTR data should be computed per day and night (setting the parameter ‘computePerDayNight’ of the function ‘computeMTR’ to TRUE, otherwise the plot will fail. 
 #' @param maxMTR optional numeric variable, fixes the maximum value of the y-Scale of the plot to the given value. If negative or not set, the y-Scale is auto-scaled.
-#' @param timeRange optional list of POSIXct vectors length 2, start and end time of the timeranges that should be plotted. The date/time format is “yyyy-MM-dd hh:mm”. 
-#' Target timezone has to be added to the times (Figure 14 as example). If not set, all MTR data is plotted in one plot. 
+#' @param timeRange optional list of string vectors length 2, start and end time of the timeranges that should be plotted. The date/time format is “yyyy-MM-dd hh:mm”. 
+#' @param targetTimeZone "Etc/GMT0" String specifying the target time zone. Default is "Etc/GMT0".
 #' @param plotClass character string with the class of which the MTR data should be plotted. If not set or set to “allClasses”, MTR of all classes will be plotted. 
 #' @param propObsTimeCutoff numeric between 0 and 1. If the MTR is computed per day and night, time bins with a proportional observation time smaller than propObsTimeCutoff are ignored when combining the time bins. If the MTR is computed for each time bin, the parameter is ignored.
 #' @param plotSpread logical, choose if the spread (first and third quartile) should be plotted.
@@ -24,6 +24,7 @@
 plotLongitudinalMTR = function(mtr, 
                                maxMTR, 
                                timeRange         = NULL, 
+                               targetTimeZone    = "Etc/GMT0",
                                plotClass         = "allClasses", 
                                propObsTimeCutoff = 0.2, 
                                plotSpread        = TRUE, 
@@ -34,6 +35,13 @@ plotLongitudinalMTR = function(mtr,
     warning("no MTR data to plot.")
     return()
   }
+  
+# Convert the timeRange input to a POSIXct object
+# =============================================================================
+  posixCTListCon = function(x){
+    as.POSIXct(x, format = "%Y-%m-%d %H:%M", tz = targetTimeZone)
+  }
+  timeRange = lapply(timeRange, posixCTListCon)
   
 # extract classSelection
 # =============================================================================

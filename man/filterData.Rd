@@ -27,7 +27,7 @@ filterData(
 
 \item{rotationSelection}{numeric vector to select the operation modes with and/or without antennarotation. Options: 0, 1. (0 = no rotation, 1 = rotation). Default is NULL: no filtering applied based on rotation mode.}
 
-\item{timeRangeTargetTZ}{POSIXct vector of length 2 with start and end time with target timezone. Echoes outside the time range will be excluded.}
+\item{timeRangeTargetTZ}{Character vector of length 2, with start and end of timerange, formatted as "\%Y-\%m-\%d \%H:\%M". Echoes outside the time range will be excluded.}
 
 \item{targetTimeZone}{"Etc/GMT0" String specifying the target time zone. Default is "Etc/GMT0".}
 

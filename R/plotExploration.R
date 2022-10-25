@@ -4,9 +4,10 @@
 #' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@@vogelwarte.ch}  
 #' @description TBC
 #' @param echoData dataframe with the echo data from the data list created by the function ‘extractDBData’ or a subset of it created by the function ‘filterEchoData’
-#' @param timeRange optional list of POSIXct vectors length 2, start and end time of the timeranges that should be plotted. 
-#' The date/time format is “yyyy-MM-dd hh:mm”. Target timezone has to be added to the times (Figure 14 as example). If not set, all echo data is plotted in one plot.  
+#' @param timeRange optional list of string vectors length 2, start and end time of the timeranges that should be plotted. 
+#' The date/time format is “yyyy-MM-dd hh:mm”. If not set, all echo data is plotted in one plot.  
 #' Note: Too long time-ranges may produce an error if the created image is too large and the function can’t allocate the file. 
+#' @param targetTimeZone "Etc/GMT0" String specifying the target time zone. Default is "Etc/GMT0".
 #' @param manualBlindTimes optional dataframe with the manual blind times created by the function ‘loadManualBlindTimes’. If not set, manual blind times are not shown in the plot. 
 #' @param visibilityData optional dataframe with the visibility data created by the function ‘extractDBData’. If not set, visibility data are not shown in the plot. 
 #' @param protocolData optional dataframe with the protocol data used to filter the echoes, created by the function ‘extractDBData’ or a subset of it created by the 
@@ -23,6 +24,7 @@
 # #' plotExploration(echoData = echoDataSubset_all_25_5000, timeRange = timeRangePlot, manualBlindTimes = manualBlindTimes, visibilityData = data$visibilityData, protocolData = protocolDataSubset, sunriseSunset = sunriseSunset, maxAltitude = -1, filePath = plotDir)
 plotExploration = function(echoData         = NULL, 
                            timeRange        = NULL, 
+                           targetTimeZone   = "Etc/GMT0",
                            manualBlindTimes = NULL, 
                            visibilityData   = NULL, 
                            protocolData     = NULL, 
@@ -98,6 +100,13 @@ plotExploration = function(echoData         = NULL,
         sunriseSunset$is_night[sunriseSunset$is_night != 1] = "day"
         sunriseSunset$is_night[sunriseSunset$is_night == 1] = "night"
     }
+      
+    # Convert the timeRange input to a POSIXct object
+    # =============================================================================
+      posixCTListCon = function(x){
+        as.POSIXct(x, format = "%Y-%m-%d %H:%M", tz = targetTimeZone)
+      }
+      timeRange = lapply(timeRange, posixCTListCon)
     
     # timeRanges to plot
     # =========================================================================

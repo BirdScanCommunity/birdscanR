@@ -7,6 +7,7 @@
 plotExploration(
   echoData = NULL,
   timeRange = NULL,
+  targetTimeZone = "Etc/GMT0",
   manualBlindTimes = NULL,
   visibilityData = NULL,
   protocolData = NULL,
@@ -18,9 +19,11 @@ plotExploration(
 \arguments{
 \item{echoData}{dataframe with the echo data from the data list created by the function ‘extractDBData’ or a subset of it created by the function ‘filterEchoData’}
 
-\item{timeRange}{optional list of POSIXct vectors length 2, start and end time of the timeranges that should be plotted.
-The date/time format is “yyyy-MM-dd hh:mm”. Target timezone has to be added to the times (Figure 14 as example). If not set, all echo data is plotted in one plot.
+\item{timeRange}{optional list of string vectors length 2, start and end time of the timeranges that should be plotted.
+The date/time format is “yyyy-MM-dd hh:mm”. If not set, all echo data is plotted in one plot.
 Note: Too long time-ranges may produce an error if the created image is too large and the function can’t allocate the file.}
+
+\item{targetTimeZone}{"Etc/GMT0" String specifying the target time zone. Default is "Etc/GMT0".}
 
 \item{manualBlindTimes}{optional dataframe with the manual blind times created by the function ‘loadManualBlindTimes’. If not set, manual blind times are not shown in the plot.}
 

@@ -5,6 +5,7 @@
 \title{computeMTR}
 \usage{
 computeMTR(
+  dbName,
   echoes,
   classSelection,
   altitudeRange,
@@ -15,7 +16,10 @@ computeMTR(
   sunriseSunset,
   sunOrCivil = "civil",
   protocolData,
-  blindTimes,
+  visibilityData,
+  manualBlindTimes = NULL,
+  saveBlindTimes = FALSE,
+  blindTimesOutputDir = getwd(),
   blindTimeAsMtrZero = NULL,
   propObsTimeCutoff = 0,
   computePerDayNight = FALSE,
@@ -23,6 +27,8 @@ computeMTR(
 )
 }
 \arguments{
+\item{dbName}{Character string, containing the name of the database you are processing}
+
 \item{echoes}{dataframe with the echo data from the data list created by the function ‘extractDBData’ or a subset of it created by the function ‘filterEchoData’.}
 
 \item{classSelection}{character string vector with all classes which should be used to calculate the MTR. The MTR and number of Echoes will be calculated for each class as well as for all classes together.}
@@ -31,7 +37,7 @@ computeMTR(
 
 \item{altitudeBinSize}{numeric, size of the altitude bins in meter.}
 
-\item{timeRange}{vector of length 2, with start and end of timerange as POSIXct}
+\item{timeRange}{Character vector of length 2, with start and end of timerange, formatted as "\%Y-\%m-\%d \%H:\%M"}
 
 \item{timeBinDuration_sec}{duration of timeBins in seconds (numeric). for values <= 0 a duration of 1 hour will be set}
 
@@ -43,7 +49,13 @@ computeMTR(
 
 \item{protocolData}{dataframe with the protocol data from the data list created by the function \code{extractDBData} or a subset of it created by the function \code{filterProtocolData}.}
 
-\item{blindTimes}{dataframe containing the blind times created by the function \code{mergeVisibilityAndManualBlindTimes}.}
+\item{visibilityData}{dataframe with the visibility data from the data list created by the function ‘extractDBData’.}
+
+\item{manualBlindTimes}{dataframe with the manual blind times created by the function \code{loadManualBlindTimes}.}
+
+\item{saveBlindTimes}{Logical, determines whether to save the blind times to a file. Default: False.}
+
+\item{blindTimesOutputDir}{Character string containting the path to save the blind times to. Default: 'your-working-directory'}
 
 \item{blindTimeAsMtrZero}{character string vector with the blind time types which should be treated as observation time with MTR zero.}
 

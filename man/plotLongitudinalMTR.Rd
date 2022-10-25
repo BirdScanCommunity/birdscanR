@@ -8,6 +8,7 @@ plotLongitudinalMTR(
   mtr,
   maxMTR,
   timeRange = NULL,
+  targetTimeZone = "Etc/GMT0",
   plotClass = "allClasses",
   propObsTimeCutoff = 0.2,
   plotSpread = TRUE,
@@ -21,8 +22,9 @@ The MTR data should be computed per day and night (setting the parameter ‘comp
 
 \item{maxMTR}{optional numeric variable, fixes the maximum value of the y-Scale of the plot to the given value. If negative or not set, the y-Scale is auto-scaled.}
 
-\item{timeRange}{optional list of POSIXct vectors length 2, start and end time of the timeranges that should be plotted. The date/time format is “yyyy-MM-dd hh:mm”.
-Target timezone has to be added to the times (Figure 14 as example). If not set, all MTR data is plotted in one plot.}
+\item{timeRange}{optional list of string vectors length 2, start and end time of the timeranges that should be plotted. The date/time format is “yyyy-MM-dd hh:mm”.}
+
+\item{targetTimeZone}{"Etc/GMT0" String specifying the target time zone. Default is "Etc/GMT0".}
 
 \item{plotClass}{character string with the class of which the MTR data should be plotted. If not set or set to “allClasses”, MTR of all classes will be plotted.}
 

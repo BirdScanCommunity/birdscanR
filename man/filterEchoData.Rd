@@ -19,7 +19,7 @@ filterEchoData(
 \arguments{
 \item{echoData}{dataframe with the echo data from the data list created by the function \code{extractDBData}.}
 
-\item{timeRangeTargetTZ}{POSIXct vector of length 2 with start and end time with target timezone. Echoes outside the time range will be excluded.}
+\item{timeRangeTargetTZ}{Character vector of length 2, with start and end of timerange, formatted as "\%Y-\%m-\%d \%H:\%M". Echoes outside the time range will be excluded.}
 
 \item{targetTimeZone}{"Etc/GMT0" String specifying the target time zone. Default is "Etc/GMT0".}
 
