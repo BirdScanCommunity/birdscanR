@@ -47,7 +47,6 @@ computeMTR = function(echoes,
                       propObsTimeCutoff           = 0, 
                       computePerDayNight          = FALSE, 
                       computeAltitudeDistribution = TRUE){
-
 # Create altitudeBins
 # =============================================================================
   message("Creating altitude bins..")
@@ -291,18 +290,18 @@ computeMTR = function(echoes,
                                       dplyr::summarise(x = max(timeChunkDateSunset))
             timeChunkDateSunset   = timeChunkDateSunset[!is.na(timeChunkDateSunset$x) & 
                                                         !is.na(timeChunkDateSunset$timeChunkDateSunset),]
-            operationTime_sec     = aggregate(mtrTmp$operationTime_sec, 
-                                              list(mtrTmp$timeChunkDateSunset), 
-                                              sum, na.rm = TRUE)
-            blindTime_sec         = aggregate(mtrTmp$blindTime_sec, 
-                                              list(mtrTmp$timeChunkDateSunset), 
-                                              sum, na.rm = TRUE)
-            observationTime_sec   = aggregate(mtrTmp$observationTime_sec, 
-                                              list(mtrTmp$timeChunkDateSunset), 
-                                              sum, na.rm = TRUE)
-            timeChunkDuration_sec = aggregate(mtrTmp$timeChunkDuration_sec, 
-                                              list(mtrTmp$timeChunkDateSunset), 
-                                              sum, na.rm = TRUE)
+            operationTime_sec     = stats::aggregate(mtrTmp$operationTime_sec, 
+                                                     list(mtrTmp$timeChunkDateSunset), 
+                                                     sum, na.rm = TRUE)
+            blindTime_sec         = stats::aggregate(mtrTmp$blindTime_sec, 
+                                                     list(mtrTmp$timeChunkDateSunset), 
+                                                     sum, na.rm = TRUE)
+            observationTime_sec   = stats::aggregate(mtrTmp$observationTime_sec, 
+                                                     list(mtrTmp$timeChunkDateSunset), 
+                                                     sum, na.rm = TRUE)
+            timeChunkDuration_sec = stats::aggregate(mtrTmp$timeChunkDuration_sec, 
+                                                     list(mtrTmp$timeChunkDateSunset), 
+                                                     sum, na.rm = TRUE)
             
             mtrDay = data.frame(timeChunkDate            = as.Date(timeChunkDate$x), 
                                 timeChunkBegin           = timeChunkBegin$x, 
@@ -323,28 +322,28 @@ computeMTR = function(echoes,
           
           # nEchoes
           # =====================================================================
-            nEchoes = aggregate(mtrTmp$nEchoes.allClasses, 
-                                list(mtrTmp$timeChunkDateSunset), 
-                                sum, na.rm = TRUE)
+            nEchoes = stats::aggregate(mtrTmp$nEchoes.allClasses, 
+                                       list(mtrTmp$timeChunkDateSunset), 
+                                       sum, na.rm = TRUE)
             mtrDay = data.frame(mtrDay, nEchoes.allClasses = nEchoes$x)
             for (i in 1:length(classSelection)){
-              nEchoes = aggregate(mtrTmp[, paste("nEchoes", classSelection[i], sep = ".")], 
-                                  list(mtrTmp$timeChunkDateSunset), 
-                                  sum, na.rm = TRUE)
+              nEchoes = stats::aggregate(mtrTmp[, paste("nEchoes", classSelection[i], sep = ".")], 
+                                         list(mtrTmp$timeChunkDateSunset), 
+                                         sum, na.rm = TRUE)
               mtrDay[, paste("nEchoes", classSelection[i], sep = ".")] = nEchoes$x 
             }
           
           # sum of mtr factors
           # =====================================================================
-            sumOfMTRFactors = aggregate(mtrTmp$sumOfMTRFactors.allClasses, 
-                                        list(mtrTmp$timeChunkDateSunset), 
-                                        sum, na.rm = TRUE)
+            sumOfMTRFactors = stats::aggregate(mtrTmp$sumOfMTRFactors.allClasses, 
+                                               list(mtrTmp$timeChunkDateSunset), 
+                                               sum, na.rm = TRUE)
             mtrDay = data.frame(mtrDay, sumOfMTRFactors.allClasses = sumOfMTRFactors$x)
             for (i in 1:length(classSelection)){
-              sumOfMTRFactors = aggregate(mtrTmp[, paste("sumOfMTRFactors", 
-                                                         classSelection[i], sep = ".")], 
-                                          list(mtrTmp$timeChunkDateSunset), 
-                                          sum, na.rm = TRUE)
+              sumOfMTRFactors = stats::aggregate(mtrTmp[, paste("sumOfMTRFactors", 
+                                                                classSelection[i], sep = ".")], 
+                                                 list(mtrTmp$timeChunkDateSunset), 
+                                                 sum, na.rm = TRUE)
               mtrDay[, paste("sumOfMTRFactors", classSelection[i], sep = ".")] = sumOfMTRFactors$x 
             }
           
@@ -358,19 +357,19 @@ computeMTR = function(echoes,
           # first quartiles
           # =====================================================================
             mtrFirstQuartile = suppressWarnings(
-                                aggregate(list(mtrFirstQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                          list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                          quantile, 
-                                          prob = 0.25))
+                                stats::aggregate(list(mtrFirstQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
+                                                 list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
+                                                 stats::quantile(), 
+                                                 prob = 0.25))
             mtrDay = merge(mtrDay, mtrFirstQuartile, 
                            by = "timeChunkDateSunset", all = TRUE)
             for (i in 1:length(classSelection)){
               mtrFirstQuartile = suppressWarnings(
-                                  aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, 
-                                                   paste("mtr", classSelection[i], sep = ".")], 
-                                            list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                            quantile, 
-                                            prob = 0.25))
+                                  stats::aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, 
+                                                          paste("mtr", classSelection[i], sep = ".")], 
+                                                   list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
+                                                   stats::quantile(), 
+                                                   prob = 0.25))
               names(mtrFirstQuartile)[2] = paste("mtrFirstQuartile", classSelection[i], sep = ".")
               mtrDay  = merge(mtrDay, mtrFirstQuartile, 
                               by = "timeChunkDateSunset", all = TRUE)
@@ -379,19 +378,19 @@ computeMTR = function(echoes,
           # third quartiles
           # =====================================================================
             mtrThirdQuartile = suppressWarnings(
-                                aggregate(list(mtrThirdQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                          list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                          quantile, 
-                                          prob = 0.75))
+                                stats::aggregate(list(mtrThirdQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
+                                                 list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
+                                                 stats::quantile(), 
+                                                 prob = 0.75))
             mtrDay = merge(mtrDay, mtrThirdQuartile, 
                            by = "timeChunkDateSunset", all = TRUE)
             for (i in 1:length(classSelection)){
               mtrThirdQuartile = suppressWarnings(
-                                  aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, 
+                                  stats::aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, 
                                                    paste("mtr", classSelection[i], sep = ".")], 
-                                            list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                            quantile, 
-                                            prob = 0.75))
+                                                   list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
+                                                   stats::quantile(), 
+                                                   prob = 0.75))
               names(mtrThirdQuartile)[2] = paste("mtrThirdQuartile", classSelection[i], sep = ".")
               mtrDay  = merge(mtrDay, mtrThirdQuartile, 
                               by = "timeChunkDateSunset", all = TRUE)
@@ -424,18 +423,18 @@ computeMTR = function(echoes,
                                       dplyr::summarise(x = max(timeChunkDateSunset))
             timeChunkDateSunset   = timeChunkDateSunset[!is.na(timeChunkDateSunset$x) & 
                                                         !is.na(timeChunkDateSunset$timeChunkDateSunset),]
-            operationTime_sec     = aggregate(mtrTmp$operationTime_sec, 
-                                              list(mtrTmp$timeChunkDateSunset), 
-                                              sum, na.rm = TRUE)
-            blindTime_sec         = aggregate(mtrTmp$blindTime_sec, 
-                                              list(mtrTmp$timeChunkDateSunset), 
-                                              sum, na.rm = TRUE)
-            observationTime_sec   = aggregate(mtrTmp$observationTime_sec, 
-                                              list(mtrTmp$timeChunkDateSunset), 
-                                              sum, na.rm = TRUE)
-            timeChunkDuration_sec = aggregate(mtrTmp$timeChunkDuration_sec, 
-                                              list(mtrTmp$timeChunkDateSunset), 
-                                              sum, na.rm = TRUE)
+            operationTime_sec     = stats::aggregate(mtrTmp$operationTime_sec, 
+                                                     list(mtrTmp$timeChunkDateSunset), 
+                                                     sum, na.rm = TRUE)
+            blindTime_sec         = stats::aggregate(mtrTmp$blindTime_sec, 
+                                                     list(mtrTmp$timeChunkDateSunset), 
+                                                     sum, na.rm = TRUE)
+            observationTime_sec   = stats::aggregate(mtrTmp$observationTime_sec, 
+                                                     list(mtrTmp$timeChunkDateSunset), 
+                                                     sum, na.rm = TRUE)
+            timeChunkDuration_sec = stats::aggregate(mtrTmp$timeChunkDuration_sec, 
+                                                     list(mtrTmp$timeChunkDateSunset), 
+                                                     sum, na.rm = TRUE)
             
             mtrNight = data.frame(timeChunkDate            = as.Date(timeChunkDate$x), 
                                   timeChunkBegin           = timeChunkBegin$x, 
@@ -456,28 +455,28 @@ computeMTR = function(echoes,
           
           # nEchoes
           # ===================================================================
-            nEchoes = aggregate(mtrTmp$nEchoes.allClasses, 
-                                list(mtrTmp$timeChunkDateSunset), 
-                                sum, na.rm = TRUE)
+            nEchoes = stats::aggregate(mtrTmp$nEchoes.allClasses, 
+                                       list(mtrTmp$timeChunkDateSunset), 
+                                       sum, na.rm = TRUE)
             mtrNight = data.frame(mtrNight, nEchoes.allClasses = nEchoes$x)
             for (i in 1:length(classSelection)){
-              nEchoes = aggregate(mtrTmp[, paste("nEchoes", classSelection[i], sep = ".")], 
-                                  list(mtrTmp$timeChunkDateSunset), 
-                                  sum, na.rm = TRUE)
+              nEchoes = stats::aggregate(mtrTmp[, paste("nEchoes", classSelection[i], sep = ".")], 
+                                         list(mtrTmp$timeChunkDateSunset), 
+                                         sum, na.rm = TRUE)
               mtrNight[, paste("nEchoes", classSelection[i], sep = ".")] = nEchoes$x 
             }
           
           # sum of mtr factors
           # ===================================================================
-            sumOfMTRFactors = aggregate(mtrTmp$sumOfMTRFactors.allClasses, 
-                                        list(mtrTmp$timeChunkDateSunset), 
-                                        sum, na.rm = TRUE)
+            sumOfMTRFactors = stats::aggregate(mtrTmp$sumOfMTRFactors.allClasses, 
+                                               list(mtrTmp$timeChunkDateSunset), 
+                                               sum, na.rm = TRUE)
             mtrNight = data.frame(mtrNight, 
                                   sumOfMTRFactors.allClasses = sumOfMTRFactors$x)
             for (i in 1:length(classSelection)){
-              sumOfMTRFactors = aggregate(mtrTmp[, paste("sumOfMTRFactors", classSelection[i], sep = ".")], 
-                                          list(mtrTmp$timeChunkDateSunset), 
-                                          sum, na.rm = TRUE)
+              sumOfMTRFactors = stats::aggregate(mtrTmp[, paste("sumOfMTRFactors", classSelection[i], sep = ".")], 
+                                                 list(mtrTmp$timeChunkDateSunset), 
+                                                 sum, na.rm = TRUE)
               mtrNight[, paste("sumOfMTRFactors", classSelection[i], sep = ".")] = sumOfMTRFactors$x 
             }
           
@@ -491,18 +490,18 @@ computeMTR = function(echoes,
           # first quartiles
           # ===================================================================
             mtrFirstQuartile = suppressWarnings(
-                                 aggregate(list(mtrFirstQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                           list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                           quantile, 
-                                           prob = 0.25))
+                                 stats::aggregate(list(mtrFirstQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
+                                                  list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
+                                                  stats::quantile(), 
+                                                  prob = 0.25))
             mtrNight = merge(mtrNight, mtrFirstQuartile, 
                              by = "timeChunkDateSunset", all = TRUE)
             for (i in 1:length(classSelection)){
               mtrFirstQuartile = suppressWarnings(
-                                   aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")], 
-                                             list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                             quantile, 
-                                             prob = 0.25))
+                                   stats::aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")], 
+                                                    list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
+                                                    stats::quantile(), 
+                                                    prob = 0.25))
               names(mtrFirstQuartile)[2] = paste("mtrFirstQuartile", 
                                                  classSelection[i], 
                                                  sep = ".")
@@ -513,18 +512,18 @@ computeMTR = function(echoes,
           # third quartiles
           # ===================================================================
             mtrThirdQuartile = suppressWarnings(
-                                 aggregate(list(mtrThirdQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                           list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                           quantile, 
-                                           prob = 0.75))
+                                 stats::aggregate(list(mtrThirdQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
+                                                  list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
+                                                  stats::quantile(), 
+                                                  prob = 0.75))
             mtrNight = merge(mtrNight, mtrThirdQuartile, 
                              by = "timeChunkDateSunset", all = TRUE)
             for (i in 1:length(classSelection)){
               mtrThirdQuartile = suppressWarnings(
-                                   aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")], 
-                                             list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                             quantile, 
-                                             prob = 0.75))
+                                   stats::aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")], 
+                                                    list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
+                                                    stats::quantile(), 
+                                                    prob = 0.75))
               names(mtrThirdQuartile)[2] = paste("mtrThirdQuartile", 
                                                  classSelection[i], 
                                                  sep = ".")
@@ -628,9 +627,9 @@ computeMTR = function(echoes,
         } else if (mtr[k, paste("sumOfMTRFactors", classLabel, sep = ".")] <= 0.000001){
           mtr[k, paste("meanAltitude", classLabel, sep = ".")] = 0
         } else {
-          mtr[k, paste("meanAltitude", classLabel, sep = ".")] = weighted.mean(x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, 
-                                                                               w = echoesInTimeAndAltitudeBin$mtr_factor_rf, 
-                                                                               na.rm = TRUE)
+          mtr[k, paste("meanAltitude", classLabel, sep = ".")] = stats::weighted.mean(x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, 
+                                                                                      w = echoesInTimeAndAltitudeBin$mtr_factor_rf, 
+                                                                                      na.rm = TRUE)
           if (nrow(echoesInTimeAndAltitudeBin) > 1){
             mtr[k, paste("altitudeQuantile_0.05", classLabel, sep = ".")] = suppressWarnings(
                                                                               modi::weighted.quantile(x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, 

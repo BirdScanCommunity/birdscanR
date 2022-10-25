@@ -9,8 +9,10 @@
 #' To be flexible and not fixed to the 5 min time bins created by the radar, the visibility table is used 
 #' in this script. 
 #' In addition to the radar blind times, manual blind times can be defined. Manual blind times have to 
-#' be defined in a csv file and loaded with the function ‘loadManualBlindTimes’. A default file is 
-#' available and can be edited: 'your-project-directory'/data/manualBlindTimes.csv 
+#' be defined in a csv file and are loaded with the function ‘loadManualBlindTimes’. A example dataset is 
+#' available by running: 
+#'  `data(manualBlindTimes)`
+#'  `write.csv(manualBlindTimes, file = 'the output file destination', row.names = F)`
 #' The filepath is defined as a global variable ‘manualBlindTimesFile’. A custom file and filepath 
 #' can be used instead. 
 #' The manual blind times have to be entered with 3 columns: 
@@ -40,23 +42,23 @@ loadManualBlindTimes = function(filePath,
       paste0("manual blind times file does not exist: '", filePath)
       manualBlindTimes = NULL
     } else {
+    # read csv with blindtimes
+    # ===========================================================================
+      manualBlindTimes = tryCatch(utils::read.csv(file = filePath, header = FALSE), 
+                                  error = function(x) x = NULL)
+      
+    # If not empty, name columns
+    # ===========================================================================
+      names(manualBlindTimes) = c("start", "stop", "type")
   
-  # read csv with blindtimes
-  # ===========================================================================
-    manualBlindTimes = tryCatch(read.csv(file = filePath, header = FALSE), 
-                                error = function(x) x = NULL)
-    
-  # If not empty, name columns
-  # ===========================================================================
-    names(manualBlindTimes) = c("start", "stop", "type")
-
-  # convert blindtimes to target timezone
-  # ===========================================================================
-    manualBlindTimes = convertTimeZone(data     = manualBlindTimes, 
-                                       colNames = c("start", "stop"), 
-                                       originTZ = blindTimesTZ, 
-                                       targetTZ = targetTZ )
-  }
+    # convert blindtimes to target timezone
+    # ===========================================================================
+      manualBlindTimes = convertTimeZone(data     = manualBlindTimes, 
+                                         colNames = c("start", "stop"), 
+                                         originTZ = blindTimesTZ, 
+                                         targetTZ = targetTZ )
+    }
+  
   # Return manual blind times
   # ===========================================================================
     return(manualBlindTimes)

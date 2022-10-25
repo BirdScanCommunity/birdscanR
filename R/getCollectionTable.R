@@ -80,7 +80,7 @@ getCollectionTable = function(dbConnection , dbDriverChar){
    featureCols                                 = match(names(collectionTable), featureNames$feature)
    colNames                                    = paste(featureNames$feature, featureNames$featureNames, sep = ".")
    colNames[is.na(featureNames$featureNames) ] = NA
-   names(collectionTable)[!is.na(featureCols)] = colNames [na.omit(featureCols)]
+   names(collectionTable)[!is.na(featureCols)] = colNames [stats::na.omit(featureCols)]
    collectionTable                             = collectionTable[!is.na(names(collectionTable))]
    
    names(collectionTable)[names(collectionTable) == "mtr_fact" ]                   = "mtr_factor_old"

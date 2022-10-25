@@ -129,20 +129,20 @@ plotLongitudinalMTR = function(mtr,
             longPlot = longPlot + 
                        ggplot2::geom_errorbar(ggplot2::aes(ymin = mtrFirstQuartile, 
                                                            ymax = mtrThirdQuartile), 
-                                              width = 0.2, 
-                                              position = position_dodge(0.9), 
-                                              color = "grey40")
+                                              width    = 0.2, 
+                                              position = ggplot2::position_dodge(0.9), 
+                                              color    = "grey40")
           }
           longPlot = longPlot + 
-                      ggplot2::geom_col(aes(as.factor(timeChunkDate), 
-                                            obs, 
-                                            fill = obsType), 
+                      ggplot2::geom_col(ggplot2::aes(as.factor(timeChunkDate), 
+                                                     obs, 
+                                                     fill = obsType), 
                                         position = "dodge2", 
                                         fill = "grey50") + 
                       ggplot2::ggtitle(label = "Daily MTR", subtitle = subtitle) + 
                       ggplot2::xlab("Date") + 
                       ggplot2::ylab("MTR [ind./h/km]") +
-                      ggplot2::geom_text(position = position_dodge(width = 0.9), 
+                      ggplot2::geom_text(position = ggplot2::position_dodge(width = 0.9), 
                                          ggplot2::aes(y = yScale[1] * 1.75 , 
                                                       hjust = "bottom", 
                                                       vjust = "center"), 
