@@ -2,7 +2,7 @@
 #' @title plotExploration
 #'
 #' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@@vogelwarte.ch}  
-#' @description TBC
+#' @description This function creates a time series plot showing all of the observed echoes at their respecive altitudes. These plots are helpful to roughly visually explore your data (and for example spot oddities).
 #' @param echoData dataframe with the echo data from the data list created by the function ‘extractDBData’ or a subset of it created by the function ‘filterEchoData’
 #' @param timeRange optional list of string vectors length 2, start and end time of the timeranges that should be plotted. 
 #' The date/time format is “yyyy-MM-dd hh:mm”. If not set, all echo data is plotted in one plot.  

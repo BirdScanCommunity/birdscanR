@@ -388,7 +388,7 @@ The function `plotLongitudinalMTR()` creates a time series plot of the mtr value
   
 ```
 
-The second plotting function `plotExploration()` allows :
+With the second plotting function `plotExploration()` you can create a time series plot of the detected objects. Each object is shown at the respective height (m agl) and time:
 
 ```{r, eval=FALSE}
 # Make an exploration plot
