@@ -61,7 +61,7 @@ computeMTR(
 
 \item{propObsTimeCutoff}{numeric between 0 and 1. If the MTR is computed per day and night, time bins with a proportional observation time smaller than propObsTimeCutoff are ignored when combining the time bins. If the MTR is computed for each time bin, the parameter is ignored.}
 
-\item{computePerDayNight}{logical, TRUE: MTR is computed per day and night FALSE: MTR is computed for each time bin}
+\item{computePerDayNight}{logical, TRUE: MTR is computed per day and night. The time bins of each day and night will be combined and the mean MTR is computed for each day and night. The spread (first and third Quartile) for each day and night are also computed. The spread is dependent on the chosen time bin duration/amount of time bins; When FALSE: MTR is computed for each time bin. This option computes the MTR for each time bin defined in the time bin dataframe. The time bins that were split due to sunrise/sunset during the time bin will be combined to one bin.}
 
 \item{computeAltitudeDistribution}{logical, TRUE: compute the mean height and altitude distribution of MTR for the pre-defined quantiles 0.05, 0.25, 0.5, 0.75, 0.95}
 }
@@ -69,13 +69,7 @@ computeMTR(
 mtr
 }
 \description{
-Make the original function 'computeMTR' faster.
-There are two options to compute MTR values.
-The options are selected with the parameter ‘computePerDayNight’.
-\itemize{
-\item compute MTR for each time bin: This option computes the MTR for each time bin defined in the time bin dataframe. The time bins that were split due to sunrise/sunset during the time bin will be combined to one bin.
-\item compute MTR per day/night: The time bins of each day and night will be combined and the mean MTR is computed for each day and night. Aside this, the spread (first and third Quartile) for each day and night is computed. The spread is dependent on the chosen time bin duration/amount of time bins.
-}
+This function will estimate the Activity / Migration Traffic Rates (MTR, expressed as #objects / km / hour) based on the observations in your database.
 }
 \author{
 Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}; with edits by Baptiste Schmid, \email{baptiste.schmid@vogelwarte.ch}, and Birgen Haest, \email{birgen.haest@vogelwarte.ch}
