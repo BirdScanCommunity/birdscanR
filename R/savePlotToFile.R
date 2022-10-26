@@ -59,13 +59,15 @@ savePlotToFile = function(plot               = NULL,
         fileName = paste(fileName, altitude, sep = "_")
       }
     
-    # classes for fileName
+    # classSelection for fileName
     # =========================================================================
       if (!is.null(classSelection)){
-        classes = paste(classAbbreviations$abbr[match(classSelection, 
-                                                       classAbbreviations$class)], 
-                         collapse = "")
-        fileName = paste(fileName, classes, sep = "_")
+        # classes = paste(classAbbreviations$abbr[match(classSelection, 
+        #                                                classAbbreviations$class)], 
+        #                  collapse = "")
+        fileName = paste(fileName, classSelection, sep = "_")
+      } else {
+        fileName = paste(fileName, "allClasses", sep = "_")
       }
       
     # check for existing files

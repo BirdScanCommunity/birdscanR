@@ -333,9 +333,9 @@ Calculation of the migration traffic rates is done with the function computeMTR(
 
 # Create some plots to explore the calculated activity / migration traffic rates
 
-The `birdscanR` package provides some basic plotting functionality to visualize the mtr results. 
+The `birdscanR` package also provides two basic plotting functions to visualize and explore the mtr results. 
 
-Here's an example to create a time series plot of the mtr values (one per altitude bin in the mtr data):
+The function `plotLongitudinalMTR()` creates a time series plot of the mtr values (one per altitude bin in the mtr data):
 
 ```{r, eval=FALSE}
 # Make time series plot
@@ -361,11 +361,9 @@ Here's an example to create a time series plot of the mtr values (one per altitu
   # ===========================================================================
     maxMTR.plot = -1
 
-  # Set the propObsTimeCutOff 
-  # If the MTR is computed per day and night, time bins with a proportional 
-  # observation time smaller than propObsTimeCutoff are ignored when 
-  # combining the time bins. If the MTR is computed for each time bin, 
-  # the parameter is ignored.
+  # Set the propObsTimeCutOff for the plot
+  # Time bins with a proportional observation time smaller than 
+  # propObsTimeCutoff will not be shown in the plot
   # ===========================================================================
     propObsTimeCutoff.plot = 0.2
     
@@ -375,7 +373,7 @@ Here's an example to create a time series plot of the mtr values (one per altitu
     
   # Print message
   # ===========================================================================
-    message("Plotting longitudinal MTR..") 
+    message("Plotting time series of MTR values..") 
 
   # Make Plot 
   # ===========================================================================
@@ -390,7 +388,7 @@ Here's an example to create a time series plot of the mtr values (one per altitu
   
 ```
 
-And here's an example to create an exploration plot
+The second plotting function `plotExploration()` allows :
 
 ```{r, eval=FALSE}
 # Make an exploration plot

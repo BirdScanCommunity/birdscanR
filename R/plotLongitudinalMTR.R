@@ -2,11 +2,9 @@
 #' @title plotLongitudinalMTR
 #'
 #' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@@vogelwarte.ch}  
-#' @description Plots daily MTR values per day and night as a bar plot. For each bar the spread (first and third Quartile) is shown as error bars as well as the numbers of echoes. Periods with no observation are indicated with grey, negative bars.
+#' @description Plots a time series of MTR values as a bar plot. For each bar the spread (first and third Quartile) is shown as error bars as well as the numbers of echoes. Periods with no observation are indicated with grey, negative bars.
 #'
 #' @param mtr data frame with MTR values created by the function ‘computeMTR’. 
-#' The MTR data should be computed with one altitude bin, if MTR data with multiple altitude bins are passed to the function, the only the lowest altitude bin is plotted.  
-#' The MTR data should be computed per day and night (setting the parameter ‘computePerDayNight’ of the function ‘computeMTR’ to TRUE, otherwise the plot will fail. 
 #' @param maxMTR optional numeric variable, fixes the maximum value of the y-Scale of the plot to the given value. If negative or not set, the y-Scale is auto-scaled.
 #' @param timeRange optional list of string vectors length 2, start and end time of the timeranges that should be plotted. The date/time format is “yyyy-MM-dd hh:mm”. 
 #' @param targetTimeZone "Etc/GMT0" String specifying the target time zone. Default is "Etc/GMT0".
@@ -77,7 +75,7 @@ plotLongitudinalMTR = function(mtr,
 
 # Do for each altitude bin
 # =============================================================================
-  for (cAltBin in altBinIds){
+  for (cAltBin in 1:altBinIds){
     # Make a plot for each time range    
     # =========================================================================
       for (i in 1:nPlots){
@@ -100,7 +98,8 @@ plotLongitudinalMTR = function(mtr,
                                    grepl(plotClass, names(mtrPlot), fixed = TRUE)]
               names(mtrPlot) = gsub(paste0(".", plotClass), "", names(mtrPlot))
             
-            # Mark timeBins as not Observed if proportional observationtime smaller than propObsTimeCutoff
+            # Mark timeBins as not Observed if proportional observation time is 
+            # smaller than propObsTimeCutoff
             # =================================================================
               mtrPlot$proportionalTimeObserved[is.na(mtrPlot$proportionalTimeObserved)]                           = 0
               mtrPlot$mtr[mtrPlot$proportionalTimeObserved < propObsTimeCutoff | is.na(mtrPlot$mtr)]              = 0
@@ -120,6 +119,10 @@ plotLongitudinalMTR = function(mtr,
                 yScale   = c(maxScale*(-0.07), maxScale)
               }
             
+            # Add a timeStamp for the middle of each time bin
+            # =================================================================
+              mtrPlot$timeChunkMiddle = mtrPlot$timeChunkBegin+((mtrPlot$timeChunkEnd - mtrPlot$timeChunkBegin)/2)
+              
             # Plot
             # =================================================================
               subtitle = paste0(format(mtrPlot$timeChunkDate[1], "%d-%b-%Y"), " to ", 
@@ -130,11 +133,11 @@ plotLongitudinalMTR = function(mtr,
                                 paste(classSelection, collapse = ", "))
               
               longPlot = ggplot2::ggplot(mtrPlot, 
-                                         ggplot2::aes(x     = as.factor(timeChunkDate), 
+                                         ggplot2::aes(x     = timeChunkMiddle, 
                                                       y     = mtr, 
                                                       label = paste0("N=", nEchoes), 
                                                       fill  = dayOrNight)) + 
-                         ggplot2::geom_col(ggplot2::aes(as.factor(timeChunkDate), 
+                         ggplot2::geom_col(ggplot2::aes(timeChunkMiddle, 
                                                         mtr, 
                                                         fill = dayOrNight), 
                                            position = "dodge2")
@@ -147,7 +150,7 @@ plotLongitudinalMTR = function(mtr,
                                                   color    = "grey40")
               }
               longPlot = longPlot + 
-                          ggplot2::geom_col(ggplot2::aes(as.factor(timeChunkDate), 
+                          ggplot2::geom_col(ggplot2::aes(timeChunkMiddle, 
                                                          obs, 
                                                          fill = obsType), 
                                             position = "dodge2", 
@@ -164,7 +167,7 @@ plotLongitudinalMTR = function(mtr,
                                              angle = 90) +
                           ggplot2::scale_fill_manual(" ", 
                                                      values = c("day" = "goldenrod1", "night" = "navy")) +
-                          ggplot2::scale_x_discrete(labels = function(x) format(as.Date(x), "%d-%b-%Y")) +
+                          ggplot2::scale_x_datetime(labels = function(x) format(x, "%d-%b-%Y")) +
                           ggplot2::coord_cartesian(ylim = yScale) + 
                           ggplot2::theme(plot.title    = ggplot2::element_text(size = 12, 
                                                                                face = "bold", 
@@ -177,15 +180,15 @@ plotLongitudinalMTR = function(mtr,
             # save plot to file
             # =================================================================
               savePlotToFile(plot            = longPlot,
-                              filePath       = filePath, 
-                              plotType       = "mtrPerDay", 
-                              plotWidth_mm   = difftime(timeRange[[i]][2], 
-                                                        timeRange[[i]][1], "days") * 10 + 50, 
-                              plotHeight_mm  = 150, 
-                              timeRange      = c(timeRange[[i]][1], timeRange[[i]][2]), 
-                              classSelection = classSelection, 
-                              altitudeRange  = c(min(mtrPlot$altitudeChunkBegin), 
-                                                 max(mtrPlot$altitudeChunkEnd)))
+                             filePath       = filePath, 
+                             plotType       = "mtrPerDay", 
+                             plotWidth_mm   = difftime(timeRange[[i]][2], 
+                                                       timeRange[[i]][1], "days") * 10 + 50, 
+                             plotHeight_mm  = 150, 
+                             timeRange      = c(timeRange[[i]][1], timeRange[[i]][2]), 
+                             classSelection = plotClass, 
+                             altitudeRange  = c(min(mtrPlot$altitudeChunkBegin), 
+                                                max(mtrPlot$altitudeChunkEnd)))
           }
       }
   }
