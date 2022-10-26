@@ -80,7 +80,7 @@ plotExploration = function(echoData         = NULL,
     
     # day/night colors
     # =========================================================================
-      dayNightColors = c()
+      dayNightColors = c("day" = "goldenrod1", "night" = "navy")
     
     # class levels
     # =========================================================================
