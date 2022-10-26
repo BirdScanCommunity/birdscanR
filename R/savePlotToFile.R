@@ -72,15 +72,16 @@ savePlotToFile = function(plot               = NULL,
       
     # check for existing files
     # =========================================================================
-      idx = 0
-      while (file.exists(paste(filePath, paste0(fileName, "_", idx, ".png"), sep = "/"))){
-        idx = idx + 1
-      }
+      # idx = 0
+      # while (file.exists(paste(filePath, paste0(fileName, "_", idx, ".png"), sep = "/"))){
+      #   idx = idx + 1
+      # }
     
     # add index and png ending
     # =========================================================================
-      fileName = paste0(fileName, "_", idx, ".png")
-    
+      # fileName = paste0(fileName, "_", idx, ".png")
+      fileName = paste0(fileName, ".png")
+      
     # save plot
     # =========================================================================
       if (!is.null(plotWidth_mm) && !is.null(plotHeight_mm)){
