@@ -104,7 +104,7 @@ savePlotToFile = function(plot               = NULL,
     
     # Close plotting device
     # =========================================================================
-      # dev.off()
+      dev.off()
   }
 }
 

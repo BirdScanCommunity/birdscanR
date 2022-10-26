@@ -221,10 +221,10 @@ Filtering both the protocol and echo data (extracted in the previous step) can b
                                     timeRangeTargetTZ  = timeRangeData,
                                     targetTimeZone     = targetTimeZone,
                                     classSelection     = classSelection, 
-                                    classProbCutOff    = classProbCutOff, 
+                                    classProbCutOff    = classProbCutoff, 
                                     altitudeRange_AGL  = altitudeRange, 
                                     manualBlindTimes   = cManualBlindTimes, 
-                                    echoValidator      = echoValidator)
+                                    echoValidator      = useEchoValidator)
 
 # Save the filtered echo and protocol data to the database data list
 # =============================================================================
@@ -244,12 +244,12 @@ Filtering both the protocol and echo data (extracted in the previous step) can b
                          paste0(dbName, "_filtered_", 
                                 "cut", classProbCutoff.char, "_",
                                 "altRange", paste(altitudeRange, collapse = "to"), "_", 
-                                "timeRange", paste(format(timeRangeData, "%Y%m%d"), 
+                                "timeRange", paste(format(as.Date(timeRangeData), "%Y%m%d"), 
                                                    collapse = "to"), 
                                 "_",
                                 "echoVal", as.character(useEchoValidator), 
                                 ".rds"))
-  saveRDS(cData, outputFile)
+  saveRDS(dbData, outputFile)
   
 # Print progress message
 # =============================================================================
@@ -310,7 +310,7 @@ Calculation of the migration traffic rates is done with the function computeMTR(
                                          collapse = "to"), 
                            "per", altitudeBinSize, "m_", 
                            "time", 
-                           paste(format(timeRangesTimeBins, "%Y%m%d"), 
+                           paste(format(as.Date(timeRangesTimeBins), "%Y%m%d"), 
                                  collapse = "to"), 
                            "perDayNight_", 
                            "cut", propObsTimeCutoff, ".rds")
@@ -319,7 +319,7 @@ Calculation of the migration traffic rates is done with the function computeMTR(
                     "_alt", paste(altitudeRange.mtr, 
                                   collapse = "to"), 
                     "per", altitudeBinSize, "m_", 
-                    "time", paste(format(timeRangesTimeBins, "%Y%m%d"), 
+                    "time", paste(format(as.Date(timeRangesTimeBins), "%Y%m%d"), 
                                   collapse = "to"), 
                     "per", timeBinduration_sec, "s_", 
                     "cut", propObsTimeCutoff, ".rds")
