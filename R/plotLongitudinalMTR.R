@@ -16,9 +16,6 @@
 #' @return pngs stored in the directory specified in filePath
 #' @export
 #'
-# #' @examples
-# #' # plot longitudinal MTR per day and night
-# #' plotLongitudinalMTR(mtr = mtr_DayNight_25mto1000m, maxMTR = -1, timeRange = timeRangePlot, plotClass = "allClasses", plotSpread = TRUE, filePath = plotDir) 
 plotLongitudinalMTR = function(mtr, 
                                maxMTR, 
                                timeRange         = NULL, 

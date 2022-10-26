@@ -19,8 +19,8 @@ twilight = function(timeRange,
                 as.Date(timeRange[2], tz = timeZone) + 2, 
                 "day")
   lon_lat = data.frame(X = latLon[2], Y = latLon[1])
-  crds    = sp::CRS(paste0("+proj=longlat +datum=", crs_datum)) # here i used GoogleEarth coodrinates that use the "WGS84" coodrinate system
-  lon_lat = sp::SpatialPoints(lon_lat, proj4string = crds) # here i used GoogleEarth coodrinates that use the "WGS84" coodrinate system
+  crds    = sp::CRS(paste0("+proj=longlat +datum=", crs_datum)) # here i used GoogleEarth coodrinates that use the "WGS84" coordinate system
+  lon_lat = sp::SpatialPoints(lon_lat, proj4string = crds) # here i used GoogleEarth coodrinates that use the "WGS84" coordinate system
   
   # make sure that date is in UTC
   # ===========================================================================

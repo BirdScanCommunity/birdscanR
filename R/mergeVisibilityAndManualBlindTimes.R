@@ -16,8 +16,6 @@
 #' @return dataframe with overall blind times
 #' @export
 #'
-# #' @examples
-# #' mergeVisibilityAndManualBlindTimes(visibilityData = data$visibilityData, manualBlindTimes = manualBlindTimes, protocolData = protocolDataSubset)
 mergeVisibilityAndManualBlindTimes = function(visibilityData, 
                                               manualBlindTimes = NULL, 
                                               protocolData){

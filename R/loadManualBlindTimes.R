@@ -31,8 +31,6 @@
 #' @return data frame with manual blind times
 #' @export
 #'
-# #' @examples
-# #' loadManualBlindTimes(filePath = ManualBlindTimesFile, blindTimesTZ = radarTimeZone, blindTimesTZ = targetTimeZone)
 loadManualBlindTimes = function(filePath, 
                                 blindTimesTZ, 
                                 targetTZ){

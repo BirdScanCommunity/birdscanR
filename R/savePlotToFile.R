@@ -15,7 +15,6 @@
 #'
 #' @export
 #' 
-
 savePlotToFile = function(plot               = NULL, 
                           filePath           = NULL, 
                           plotType           = NULL, 
