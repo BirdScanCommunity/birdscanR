@@ -333,10 +333,12 @@ Calculation of the migration traffic rates is done with the function computeMTR(
 
 # Create some plots to explore the calculated activity / migration traffic rates
 
-The `birdscanR` package provides some basic plotting functionality to visualize the mtr results. Here's an example to create a longitudinal plot:
+The `birdscanR` package provides some basic plotting functionality to visualize the mtr results. 
+
+Here's an example to create a time series plot of the mtr values (one per altitude bin in the mtr data):
 
 ```{r, eval=FALSE}
-# Make a longitudinal plot
+# Make time series plot
 # =============================================================================
   # Set time range for plots (in targetTimeZone) ; 
   # A plot is created for each timerange
