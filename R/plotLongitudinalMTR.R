@@ -75,7 +75,7 @@ plotLongitudinalMTR = function(mtr,
 
 # Do for each altitude bin
 # =============================================================================
-  for (cAltBin in 1:altBinIds){
+  for (cAltBin in altBinIds){
     # Make a plot for each time range    
     # =========================================================================
       for (i in 1:nPlots){
