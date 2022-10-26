@@ -383,8 +383,7 @@ computeMTR = function(dbName,
             mtrFirstQuartile = suppressWarnings(
                                 stats::aggregate(list(mtrFirstQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
                                                  list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                                 stats::quantile(), 
-                                                 prob = 0.25))
+                                                 FUN = function(x) stats::quantile(x, prob = 0.25)))
             mtrDay = merge(mtrDay, mtrFirstQuartile, 
                            by = "timeChunkDateSunset", all = TRUE)
             for (i in 1:length(classSelection)){
@@ -392,8 +391,7 @@ computeMTR = function(dbName,
                                   stats::aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, 
                                                           paste("mtr", classSelection[i], sep = ".")], 
                                                    list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                                   stats::quantile(), 
-                                                   prob = 0.25))
+                                                   FUN = function(x) stats::quantile(x, prob = 0.25)))
               names(mtrFirstQuartile)[2] = paste("mtrFirstQuartile", classSelection[i], sep = ".")
               mtrDay  = merge(mtrDay, mtrFirstQuartile, 
                               by = "timeChunkDateSunset", all = TRUE)
@@ -404,8 +402,7 @@ computeMTR = function(dbName,
             mtrThirdQuartile = suppressWarnings(
                                 stats::aggregate(list(mtrThirdQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
                                                  list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                                 stats::quantile(), 
-                                                 prob = 0.75))
+                                                 FUN = function(x) stats::quantile(x, prob = 0.75)))
             mtrDay = merge(mtrDay, mtrThirdQuartile, 
                            by = "timeChunkDateSunset", all = TRUE)
             for (i in 1:length(classSelection)){
@@ -413,8 +410,7 @@ computeMTR = function(dbName,
                                   stats::aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, 
                                                    paste("mtr", classSelection[i], sep = ".")], 
                                                    list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                                   stats::quantile(), 
-                                                   prob = 0.75))
+                                                   FUN = function(x) stats::quantile(x, prob = 0.75)))
               names(mtrThirdQuartile)[2] = paste("mtrThirdQuartile", classSelection[i], sep = ".")
               mtrDay  = merge(mtrDay, mtrThirdQuartile, 
                               by = "timeChunkDateSunset", all = TRUE)
@@ -516,16 +512,14 @@ computeMTR = function(dbName,
             mtrFirstQuartile = suppressWarnings(
                                  stats::aggregate(list(mtrFirstQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
                                                   list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                                  stats::quantile(), 
-                                                  prob = 0.25))
+                                                  FUN = function(x) stats::quantile(x, prob = 0.25)))
             mtrNight = merge(mtrNight, mtrFirstQuartile, 
                              by = "timeChunkDateSunset", all = TRUE)
             for (i in 1:length(classSelection)){
               mtrFirstQuartile = suppressWarnings(
                                    stats::aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")], 
                                                     list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                                    stats::quantile(), 
-                                                    prob = 0.25))
+                                                    FUN = function(x) stats::quantile(x, prob = 0.25)))
               names(mtrFirstQuartile)[2] = paste("mtrFirstQuartile", 
                                                  classSelection[i], 
                                                  sep = ".")
@@ -538,16 +532,14 @@ computeMTR = function(dbName,
             mtrThirdQuartile = suppressWarnings(
                                  stats::aggregate(list(mtrThirdQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
                                                   list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                                  stats::quantile(), 
-                                                  prob = 0.75))
+                                                  FUN = function(x) stats::quantile(x, prob = 0.75)))
             mtrNight = merge(mtrNight, mtrThirdQuartile, 
                              by = "timeChunkDateSunset", all = TRUE)
             for (i in 1:length(classSelection)){
               mtrThirdQuartile = suppressWarnings(
                                    stats::aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")], 
                                                     list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
-                                                    stats::quantile(), 
-                                                    prob = 0.75))
+                                                    FUN = function(x) stats::quantile(x, prob = 0.75)))
               names(mtrThirdQuartile)[2] = paste("mtrThirdQuartile", 
                                                  classSelection[i], 
                                                  sep = ".")
