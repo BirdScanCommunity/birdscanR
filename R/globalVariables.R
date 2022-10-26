@@ -7,4 +7,5 @@
                            "obs", "obsType", 
                            ".", "timeChunkId", "observationTime_h",
                            "mtr_factor_rf", "altitudeChunkId", 
-                           "mtr_echo"))
+                           "mtr_echo", 
+                           "timeChunkMiddle"))

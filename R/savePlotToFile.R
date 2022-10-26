@@ -107,7 +107,7 @@ savePlotToFile = function(plot               = NULL,
     
     # Close plotting device
     # =========================================================================
-      dev.off()
+      grDevices::dev.off()
   }
 }
 

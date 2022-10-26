@@ -16,9 +16,7 @@ plotLongitudinalMTR(
 )
 }
 \arguments{
-\item{mtr}{data frame with MTR values created by the function ‘computeMTR’.
-The MTR data should be computed with one altitude bin, if MTR data with multiple altitude bins are passed to the function, the only the lowest altitude bin is plotted.
-The MTR data should be computed per day and night (setting the parameter ‘computePerDayNight’ of the function ‘computeMTR’ to TRUE, otherwise the plot will fail.}
+\item{mtr}{data frame with MTR values created by the function ‘computeMTR’.}
 
 \item{maxMTR}{optional numeric variable, fixes the maximum value of the y-Scale of the plot to the given value. If negative or not set, the y-Scale is auto-scaled.}
 
@@ -38,7 +36,7 @@ The MTR data should be computed per day and night (setting the parameter ‘comp
 pngs stored in the directory specified in filePath
 }
 \description{
-Plots the daily MTR values per day and night as a bar plot (Figure 15). For each bar the spread (first and third Quartile) is shown as error bars as well as the numbers of echoes. Periods with no observation are indicated with grey, negative bars.
+Plots a time series of MTR values as a bar plot. For each bar the spread (first and third Quartile) is shown as error bars as well as the numbers of echoes. Periods with no observation are indicated with grey, negative bars.
 }
 \author{
 Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}

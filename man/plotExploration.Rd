@@ -42,7 +42,7 @@ function ‘filterProtocolData’. If not set, periods without a protocol are no
 pngs stored in the directory specified in filePath
 }
 \description{
-TBC
+This function creates a time series plot showing all of the observed echoes at their respecive altitudes. These plots are helpful to roughly visually explore your data (and for example spot oddities).
 }
 \author{
 Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
