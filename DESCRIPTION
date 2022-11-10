@@ -7,6 +7,7 @@ Authors@R: c(person("Birgen", "Haest", email = "birgen.haest@vogelwarte.ch", rol
              person("Baptiste", "Schmid", email = "baptiste.schmid@vogelwarte.ch", role = c("ctb")),
              person("Damiano", "Preatoni", email = "damiano.preatoni@uninsubria.it", role = c("ctb")),
              person("Johannes", "De Groeve", email = "j.degroeve@uva.nl", role = c("ctb")))
+             person("Felix", "Liechti", email = "felix.liechti@swiss-birdradar.com", role = c("ctb")))
 Description: Extract data from Birdscan MR1 sql databases and process them to Migration Traffic Rates. 
 Type: Package
 License: GPL-3
