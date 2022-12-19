@@ -1,5 +1,42 @@
 Package: birdscanR
+Version: 0.1.0
+Date: 2022-10-11
+Title: Migration Traffic Rate Calculation Package for Birdscan MR1 Radars
+Authors@R: c(person("Birgen", "Haest", email = "birgen.haest@vogelwarte.ch", role = c("aut", "cre"), comment =c(ORCID = 0000-0002-8739-6460)),
+             person("Fabian", "Hertner", email = "fabian.hertner@swiss-birdradar.com", role = c("aut")),
+             person("Baptiste", "Schmid", email = "baptiste.schmid@vogelwarte.ch", role = c("ctb")),
+             person("Damiano", "Preatoni", email = "damiano.preatoni@uninsubria.it", role = c("ctb")),
+             person("Johannes", "De Groeve", email = "j.degroeve@uva.nl", role = c("ctb")),
+             person("Felix", "Liechti", email = "felix.liechti@swiss-birdradar.com", role = c("ctb")))
+Description: Extract data from Birdscan MR1 sql databases and process them to Migration Traffic Rates. 
 Type: Package
-Title: Migration Traffic Rate Calculation Package for birdscan MR1 radars
-Version: 0.0.1.0
-RoxygenNote: 7.1.2
+License: GPL-3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1
+VignetteBuilder: knitr
+URL: https://github.com/BirdScanCommunity/birdscanR
+BugReports: https://github.com/BirdScanCommunity/birdscanR/issues
+LazyData: true
+Depends:
+  R (>= 3.5.0)
+Imports: 
+  DBI,
+  dplyr,
+  ggplot2,
+  grDevices,
+  magrittr,
+  maptools,
+  methods,
+  modi,
+  reshape2,
+  RODBC,
+  RPostgreSQL,
+  rstudioapi,
+  sp,
+  stats,
+  tibble,
+  tidyr,
+  utils
+Suggests:
+  knitr

@@ -1,0 +1,12 @@
+## Current release
+bibentry(bibtype = "Misc",
+         title   = "birdscanR: Migration Traffic Rate Calculation Package for Birdscan MR1 Radars.",
+         author  = c(person("Birgen", "Haest"),
+                     person("Fabian", "Hertner"),
+                     person("Baptiste", "Schmid"),
+                     person("Damiano", "Preatoni"),
+                     person("Johannes", "De Groeve"),
+                     person("Felix", "Liechti")),
+         year    = substr(Sys.Date(), 1, 4), 
+         url     = "https://zenodo.org/record/7326821",
+         doi     = "10.5281/zenodo.7326821")
