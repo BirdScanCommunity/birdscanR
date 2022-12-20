@@ -1,14 +1,14 @@
 Package: birdscanR
 Version: 0.1.0
-Date: 2022-10-11
-Title: Migration Traffic Rate Calculation Package for Birdscan MR1 Radars
-Authors@R: c(person("Birgen", "Haest", email = "birgen.haest@vogelwarte.ch", role = c("aut", "cre"), comment =c(ORCID = 0000-0002-8739-6460)),
+Date: 2022-12-20
+Title: Migration Traffic Rate Calculation Package for 'Birdscan MR1' Radars
+Authors@R: c(person("Birgen", "Haest", email = "birgen.haest@vogelwarte.ch", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-8739-6460")),
              person("Fabian", "Hertner", email = "fabian.hertner@swiss-birdradar.com", role = c("aut")),
              person("Baptiste", "Schmid", email = "baptiste.schmid@vogelwarte.ch", role = c("ctb")),
              person("Damiano", "Preatoni", email = "damiano.preatoni@uninsubria.it", role = c("ctb")),
              person("Johannes", "De Groeve", email = "j.degroeve@uva.nl", role = c("ctb")),
              person("Felix", "Liechti", email = "felix.liechti@swiss-birdradar.com", role = c("ctb")))
-Description: Extract data from Birdscan MR1 sql databases and process them to Migration Traffic Rates. 
+Description: Extract data from 'Birdscan MR1' SQL databases and process them to Migration Traffic Rates. 
 Type: Package
 License: GPL-3
 Encoding: UTF-8
