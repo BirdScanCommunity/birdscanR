@@ -8,5 +8,5 @@ bibentry(bibtype = "Misc",
                      person("Johannes", "De Groeve"),
                      person("Felix", "Liechti")),
          year    = substr(Sys.Date(), 1, 4), 
-         url     = "https://zenodo.org/record/7326821",
-         doi     = "10.5281/zenodo.7326821")
+         url     = "https://zenodo.org/record/7326820",
+         doi     = "10.5281/zenodo.7326820")
