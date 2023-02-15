@@ -28,7 +28,7 @@
 #'   
 #'   QUERY(dbConnection = dbConnection
 #'         dbDriverChar = dbDriverChar,
-#'         query        = Select * From collection order by row asc")
+#'         query        = "Select * From collection order by row asc")
 #' }
 #'   
 QUERY <- function(dbConnection, dbDriverChar, query, as.is = FALSE){

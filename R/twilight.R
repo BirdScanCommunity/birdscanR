@@ -14,7 +14,7 @@
 #' \dontrun{
 #' sunrisesunset = twilight(timeRange = c("2021-01-15 00:00", "2021-01-31 00:00"),
 #'                          latLon    = c(47.494427, 8.716432),
-#'                          timezone  = Etc/GMT0")
+#'                          timezone  = "Etc/GMT0")
 #' }
 twilight = function(timeRange, 
                     latLon, 
