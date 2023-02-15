@@ -2,7 +2,7 @@
 % Please edit documentation in R/query.R
 \name{QUERY}
 \alias{QUERY}
-\title{Query SQL database}
+\title{Query 'SQL' database}
 \usage{
 QUERY(dbConnection, dbDriverChar, query, as.is = FALSE)
 }
@@ -11,7 +11,7 @@ QUERY(dbConnection, dbDriverChar, query, as.is = FALSE)
 
 \item{dbDriverChar}{the name of the driver.}
 
-\item{query}{an SQL string with your query}
+\item{query}{an 'SQL' string with your query}
 
 \item{as.is}{If TRUE, leaves data as it is.}
 }
@@ -19,7 +19,7 @@ QUERY(dbConnection, dbDriverChar, query, as.is = FALSE)
 the result of the query
 }
 \description{
-Run an SQL query on an already connected DB
+Run an 'SQL' query on an already connected database
 }
 \author{
 Fabian Hertner (SBRS) \email{fabian.hertner@swiss-birdradar.com}

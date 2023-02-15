@@ -11,6 +11,21 @@
 #'
 #' @return returns a dataframe with the timebins information
 #' 
+#' @examples
+#' \dontrun{
+#' # Get sunrise/sunset 
+#' # =============================================================================
+#'   sunriseSunset = twilight(timeRange = c("2021-01-15 00:00", "2021-01-31 00:00"),
+#'                            latLon    = c(47.494427, 8.716432),
+#'                            timezone  = "Etc/GMT0")
+#'                          
+#'   timeBins = createTimeBins(timeRange           = c("2021-01-15 00:00", "2021-01-31 00:00"), 
+#'                             timeBinDuration_sec = 3600, 
+#'                             timeZone            = "Etc/GMT0", 
+#'                             sunriseSunset       = sunriseSunset, 
+#'                             sunOrCivil          = "civil")
+#' }
+#' 
 createTimeBins = function(timeRange, 
                           timeBinDuration_sec, 
                           timeZone, 

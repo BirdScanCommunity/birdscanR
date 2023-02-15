@@ -15,7 +15,27 @@ getSiteTable(dbConnection, dbDriverChar)
 A dataframe with the site table
 }
 \description{
-load site table from an already connect local MS-SQL DB
+load site table from an already connected 'Birdscan MR1' 'SQL' database
+}
+\examples{
+\dontrun{
+# Set server and database settings
+# =============================================================================
+  dbServer       = "MACHINE\\\\\\\\SERVERNAME"     # Set the name of your SQL server
+  dbName         = "db_Name"                   # Set the name of your database
+  dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
+
+# Open the connection with the database
+# =============================================================================
+  dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
+               ";database=", dbName,
+               ";uid=", rstudioapi::askForPassword("Database user"),
+               ";pwd=", rstudioapi::askForPassword("Database password"))
+  dbConnection = RODBC::odbcDriverConnect(dsn)
+
+siteTable = getSiteTable(dbConnection, dbDriverChar)
+}
+
 }
 \author{
 Fabian Hertner (SBRS) \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}

@@ -17,6 +17,26 @@ A dataframe called echovalidationTable
 \description{
 gets the EchoValidationTable from an already connected DB
 }
+\examples{
+\dontrun{
+# Set server and database settings
+# =============================================================================
+  dbServer       = "MACHINE\\\\\\\\SERVERNAME"     # Set the name of your SQL server
+  dbName         = "db_Name"                   # Set the name of your database
+  dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
+
+# Open the connection with the database
+# =============================================================================
+  dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
+               ";database=", dbName,
+               ";uid=", rstudioapi::askForPassword("Database user"),
+               ";pwd=", rstudioapi::askForPassword("Database password"))
+  dbConnection = RODBC::odbcDriverConnect(dsn)
+
+echovalidationTable = getEchoValidationTable(dbConnection, dbDriverChar)
+}
+
+}
 \author{
 Fabian Hertner (SBRS) \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

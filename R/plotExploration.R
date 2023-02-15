@@ -19,6 +19,53 @@
 #' @return pngs stored in the directory specified in filePath
 #' @export
 #'
+#' @examples 
+#' \dontrun{
+#' #' # Set server, database, and other input settings
+#' # =============================================================================
+#'   dbServer       = "MACHINE\\\\SERVERNAME"     # Set the name of your SQL server
+#'   dbName         = "db_Name"                   # Set the name of your database
+#'   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
+#'   mainOutputDir  = file.path(".", "results")
+#'   radarTimeZone  = "Etc/GMT0"
+#'   targetTimeZone = "Etc/GMT0"
+#'   listOfRfFeaturesToExtract = c(167, 168)
+#'   siteLocation   = c(47.494427, 8.716432)
+#'   sunOrCivil     = "civil"
+#'  
+#' # Get data
+#' # =============================================================================
+#'   dbData = extractDbData(dbDriverChar                   = dbDriverChar,
+#'                          dbServer                       = dbServer, 
+#'                          dbName                         = dbName, 
+#'                          saveDbToFile                   = TRUE,
+#'                          dbDataDir                      = mainOutputDir,
+#'                          radarTimeZone                  = radarTimeZone,
+#'                          targetTimeZone                 = targetTimeZone,
+#'                          listOfRfFeaturesToExtract      = listOfRfFeaturesToExtract,
+#'                          siteLocation                   = siteLocation, 
+#'                          sunOrCivil                     = sunOrCivil)
+#'                          
+#' # Get manual blindtimes
+#' # ===========================================================================
+#'   data("manualBlindTimes")
+#'   cManualBlindTimes = manualBlindTimes
+#' 
+#' # Make Plot 
+#' # ===========================================================================
+#'   timeRangePlot = list(c("2021-01-15 00:00", "2021-01-22 00:00"),
+#'                        c("2021-01-23 00:00", "2021-01-31 00:00"))
+#'   plotExploration(echoData         = dbData$echoData, 
+#'                   timeRange        = timeRangePlot, 
+#'                   targetTimeZone   = "Etc/GMT0",
+#'                   manualBlindTimes = cManualBlindTimes, 
+#'                   visibilityData   = dbData$visibilityData, 
+#'                   protocolData     = dbData$protocolData, 
+#'                   sunriseSunset    = dbData$sunriseSunset, 
+#'                   maxAltitude      = -1, 
+#'                   filePath         = "./") 
+#' }
+#' 
 plotExploration = function(echoData         = NULL, 
                            timeRange        = NULL, 
                            targetTimeZone   = "Etc/GMT0",

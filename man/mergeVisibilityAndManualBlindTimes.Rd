@@ -30,6 +30,39 @@ blind times are given the type “visibility”. After that the visibility and m
 will be merged. In case manual blind times and radar blind times are overlapping, radar blind
 times with type “visibility” will be overwritten, but not radar blind times with type “protocolChange”.
 }
+\examples{
+\dontrun{
+# Set server and database settings
+# =============================================================================
+  dbServer       = "MACHINE\\\\\\\\SERVERNAME"     # Set the name of your SQL server
+  dbName         = "db_Name"                   # Set the name of your database
+  dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
+
+# Open the connection with the database
+# =============================================================================
+  dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
+               ";database=", dbName,
+               ";uid=", rstudioapi::askForPassword("Database user"),
+               ";pwd=", rstudioapi::askForPassword("Database password"))
+  dbConnection = RODBC::odbcDriverConnect(dsn)
+
+# Get visibility table 
+# =============================================================================
+  visibilityTable = getVisibilityTable(dbConnection, dbDriverChar)
+
+# Get manual blind times
+# =============================================================================
+  data(manualBlindTimes)
+  cManualBlindTimes = manualBlindTimes
+  
+# Merge manual and automatic blind times
+# =============================================================================
+  blindTimes = mergeVisibilityAndManualBlindTimes(visibilityData   = visibilityTable, 
+                                                  manualBlindTimes = cManualBlindTimes, 
+                                                  protocolData     = protocolData)
+}
+
+}
 \author{
 Fabian Hertner (SBRS), \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest (SOI), \email{birgen.haest@vogelwarte.ch}
 }

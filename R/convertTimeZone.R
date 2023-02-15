@@ -9,6 +9,42 @@
 #'
 #' @return a data frame identical to `data`, any columns declared in `colNames` will have their name changed with a suffix (`_originTZ` or `_targetTZ`) added.
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#' # Set server, database, and other input settings for data extraction
+#' # =============================================================================
+#'   dbServer       = "MACHINE\\\\SERVERNAME"     # Set the name of your SQL server
+#'   dbName         = "db_Name"                   # Set the name of your database
+#'   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
+#'   mainOutputDir  = file.path(".", "results")
+#'   radarTimeZone  = "Etc/GMT0"
+#'   targetTimeZone = "Etc/GMT0"
+#'   listOfRfFeaturesToExtract = c(167, 168)
+#'   siteLocation   = c(47.494427, 8.716432)
+#'   sunOrCivil     = "civil"
+#'  
+#' # Get data
+#' # =============================================================================
+#'   dbData = extractDbData(dbDriverChar                   = dbDriverChar,
+#'                          dbServer                       = dbServer, 
+#'                          dbName                         = dbName, 
+#'                          saveDbToFile                   = TRUE,
+#'                          dbDataDir                      = mainOutputDir,
+#'                          radarTimeZone                  = radarTimeZone,
+#'                          targetTimeZone                 = targetTimeZone,
+#'                          listOfRfFeaturesToExtract      = listOfRfFeaturesToExtract,
+#'                          siteLocation                   = siteLocation, 
+#'                          sunOrCivil                     = sunOrCivil)
+#' 
+#' # Add day/night info to echo data
+#' # =============================================================================
+#'   echoData = convertTimeZone(data     = dbData$echoData, 
+#'                              colNames = c("time_stamp"), 
+#'                              originTZ = "Etc/GMT0", 
+#'                              targetTZ = "Etc/GMT-2")   
+#' }
+#' 
 convertTimeZone = function(data     = NULL, 
                            colNames = "", 
                            originTZ = "Etc/GMT0", 

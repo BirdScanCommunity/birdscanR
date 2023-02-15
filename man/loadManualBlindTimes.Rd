@@ -14,7 +14,7 @@ loadManualBlindTimes(filePath, blindTimesTZ, targetTZ)
 \item{targetTZ}{target timezone of the blind times}
 }
 \value{
-data frame with manual blind times
+A dataframe with the manual blind times
 }
 \description{
 Load manual blindtimes from csv file.
@@ -41,6 +41,21 @@ Manual blind time types can be chosen freely. When computing observation times, 
 if some of the defined manual blind time types should be treated as observed time with MTR zero or
 as blind time (e.g. rain). If no file is present or the file is empty, no manual blind times will
 be computed.
+}
+\examples{
+\dontrun{
+# load manual blind time example data from birdscanR package
+  data(manualBlindTimes)
+  
+# Save example manual blindtimes to a file
+  write.csv(manualBlindTimes, file = "manualBlindTimes.csv", row.names = F)
+  
+# Read the manual blind times from file
+  manualBlindTimes.new = loadManualBlindTimes(filePath     = "./manualBlindTimes.csv",
+                                              blindTimesTZ = "ETC/GMT", 
+                                              targetTZ     = "ETC/GMT")
+}
+
 }
 \author{
 Fabian Hertner (SBRS), \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest (SOI), \email{birgen.haest@vogelwarte.ch}

@@ -28,9 +28,22 @@
 #' @param filePath character string, absolute filepath of the manual blind time file
 #' @param blindTimesTZ timezone of the blind times 
 #' @param targetTZ target timezone of the blind times
-#' @return data frame with manual blind times
+#' @return A dataframe with the manual blind times
 #' @export
-#'
+#' @examples 
+#' \dontrun{
+#' # load manual blind time example data from birdscanR package
+#'   data(manualBlindTimes)
+#'   
+#' # Save example manual blindtimes to a file
+#'   write.csv(manualBlindTimes, file = "manualBlindTimes.csv", row.names = F)
+#'   
+#' # Read the manual blind times from file
+#'   manualBlindTimes.new = loadManualBlindTimes(filePath     = "./manualBlindTimes.csv",
+#'                                               blindTimesTZ = "ETC/GMT", 
+#'                                               targetTZ     = "ETC/GMT")
+#' }
+#' 
 loadManualBlindTimes = function(filePath, 
                                 blindTimesTZ, 
                                 targetTZ){

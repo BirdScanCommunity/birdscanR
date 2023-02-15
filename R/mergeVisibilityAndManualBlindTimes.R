@@ -16,6 +16,38 @@
 #' @return dataframe with overall blind times
 #' @export
 #'
+#' @examples
+#' \dontrun{
+#' # Set server and database settings
+#' # =============================================================================
+#'   dbServer       = "MACHINE\\\\SERVERNAME"     # Set the name of your SQL server
+#'   dbName         = "db_Name"                   # Set the name of your database
+#'   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
+#'
+#' # Open the connection with the database
+#' # =============================================================================
+#'   dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
+#'                ";database=", dbName,
+#'                ";uid=", rstudioapi::askForPassword("Database user"),
+#'                ";pwd=", rstudioapi::askForPassword("Database password"))
+#'   dbConnection = RODBC::odbcDriverConnect(dsn)
+#' 
+#' # Get visibility table 
+#' # =============================================================================
+#'   visibilityTable = getVisibilityTable(dbConnection, dbDriverChar)
+#' 
+#' # Get manual blind times
+#' # =============================================================================
+#'   data(manualBlindTimes)
+#'   cManualBlindTimes = manualBlindTimes
+#'   
+#' # Merge manual and automatic blind times
+#' # =============================================================================
+#'   blindTimes = mergeVisibilityAndManualBlindTimes(visibilityData   = visibilityTable, 
+#'                                                   manualBlindTimes = cManualBlindTimes, 
+#'                                                   protocolData     = protocolData)
+#' }
+#'
 mergeVisibilityAndManualBlindTimes = function(visibilityData, 
                                               manualBlindTimes = NULL, 
                                               protocolData){

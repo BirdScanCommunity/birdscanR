@@ -5,7 +5,7 @@ output: rmarkdown::html_vignette
 description: > 
   Which functions do I need to call to get out migration traffic rates from a Birdscan database? This vignette describes the main workflow to do so.
 vignette: >
-  %\VignetteIndexEntry{How to calculate Activity/Migration Traffic Rates}
+  %\VignetteIndexEntry{birdscanR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

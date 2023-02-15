@@ -17,6 +17,61 @@
 #' 
 #' @return returns the filtered echo and protocol data in the same format as provided in the parameters \code{echoData} and \code{protocolData}.
 #' @export
+#' @examples
+#' \dontrun{
+#' # Set server, database, and other input settings for data extraction
+#' # =============================================================================
+#'   dbServer       = "MACHINE\\\\SERVERNAME"     # Set the name of your SQL server
+#'   dbName         = "db_Name"                   # Set the name of your database
+#'   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
+#'   mainOutputDir  = file.path(".", "results")
+#'   radarTimeZone  = "Etc/GMT0"
+#'   targetTimeZone = "Etc/GMT0"
+#'   listOfRfFeaturesToExtract = c(167, 168)
+#'   siteLocation   = c(47.494427, 8.716432)
+#'   sunOrCivil     = "civil"
+#'  
+#' # Get data
+#' # =============================================================================
+#'   dbData = extractDbData(dbDriverChar                   = dbDriverChar,
+#'                          dbServer                       = dbServer, 
+#'                          dbName                         = dbName, 
+#'                          saveDbToFile                   = TRUE,
+#'                          dbDataDir                      = mainOutputDir,
+#'                          radarTimeZone                  = radarTimeZone,
+#'                          targetTimeZone                 = targetTimeZone,
+#'                          listOfRfFeaturesToExtract      = listOfRfFeaturesToExtract,
+#'                          siteLocation                   = siteLocation, 
+#'                          sunOrCivil                     = sunOrCivil)
+#'                          
+#' # Set input settings for filtering of the data
+#' # =============================================================================
+#'   pulseLengthSelection = "S"
+#'   rotationSelection    = 1
+#'   timeRangeData        = c("2021-01-15 00:00", "2021-01-31 00:00")
+#'   classSelection       = c("passerine_type", "wader_type", "swift_type", 
+#'                            "large_bird", "unid_bird", "bird_flock")
+#'   classProbCutoff      = NULL
+#'   altitudeRange        = c(50, 1000)
+#'   data(manualBlindTimes)
+#'   cManualBlindTimes    = manualBlindTimes
+#'   useEchoValidator     = FALSE
+#' 
+#' # Filter the data
+#' # =============================================================================
+#'   filteredData = filterData(echoData           = dbData$echoData,
+#'                             protocolData       = dbData$protocolData, 
+#'                             pulseTypeSelection = pulseLengthSelection, 
+#'                             rotationSelection  = rotationSelection,
+#'                             timeRangeTargetTZ  = timeRangeData,
+#'                             targetTimeZone     = targetTimeZone,
+#'                             classSelection     = classSelection, 
+#'                             classProbCutOff    = classProbCutoff, 
+#'                             altitudeRange_AGL  = altitudeRange, 
+#'                             manualBlindTimes   = cManualBlindTimes, 
+#'                             echoValidator      = useEchoValidator)   
+#' }
+#' 
 filterData = function(echoData           = NULL, 
                       protocolData       = NULL,
                       pulseTypeSelection = NULL, 

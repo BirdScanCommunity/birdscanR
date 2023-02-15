@@ -26,6 +26,69 @@
 #' @importFrom magrittr %>%
 #' @export
 #'
+#' @examples
+#' \dontrun{
+#' # Set server, database, and other input settings
+#' # =============================================================================
+#'   dbServer       = "MACHINE\\\\SERVERNAME"     # Set the name of your SQL server
+#'   dbName         = "db_Name"                   # Set the name of your database
+#'   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
+#'   mainOutputDir  = file.path(".", "results")
+#'   radarTimeZone  = "Etc/GMT0"
+#'   targetTimeZone = "Etc/GMT0"
+#'   listOfRfFeaturesToExtract = c(167, 168)
+#'   siteLocation   = c(47.494427, 8.716432)
+#'   sunOrCivil     = "civil"
+#'   timeRangeData       = c("2021-01-15 00:00", "2021-01-31 00:00")
+#'  
+#' # Get data
+#' # =============================================================================
+#'   dbData = extractDbData(dbDriverChar                   = dbDriverChar,
+#'                          dbServer                       = dbServer, 
+#'                          dbName                         = dbName, 
+#'                          saveDbToFile                   = TRUE,
+#'                          dbDataDir                      = mainOutputDir,
+#'                          radarTimeZone                  = radarTimeZone,
+#'                          targetTimeZone                 = targetTimeZone,
+#'                          listOfRfFeaturesToExtract      = listOfRfFeaturesToExtract,
+#'                          siteLocation                   = siteLocation, 
+#'                          sunOrCivil                     = sunOrCivil)
+#'                          
+#' # Get sunrise/sunset 
+#' # =============================================================================
+#'   sunriseSunset = twilight(timeRange = timeRangeData,
+#'                            latLon    = c(47.494427, 8.716432),
+#'                            timezone  = targetTimeZone)
+#'                           
+#' # Get manual blind times
+#' # =============================================================================
+#'   data(manualBlindTimes)
+#'   cManualBlindTimes = manualBlindTimes
+#' 
+#' # Compute migration traffic rate
+#' # =============================================================================
+#'   classSelection.mtr = c("insect")
+#'   mtrData = computeMTR(dbName                      = dbName, 
+#'                        echoes                      = dbData$echoData, 
+#'                        classSelection              = classSelection.mtr, 
+#'                        altitudeRange               = c(25, 1025),
+#'                        altitudeBinSize             = 50,
+#'                        timeRange                   = timeRangeData, 
+#'                        timeBinDuration_sec         = 1800,
+#'                        timeZone                    = targetTimeZone,
+#'                        sunriseSunset               = sunriseSunset,
+#'                        sunOrCivil                  = "civil",
+#'                        protocolData                = dbData$protocolData, 
+#'                        visibilityData              = dbData$visibilityData,
+#'                        manualBlindTimes            = cManualBlindTimes,
+#'                        saveBlindTimes              = FALSE,
+#'                        blindTimesOutputDir         = getwd(),
+#'                        blindTimeAsMtrZero          = NULL,
+#'                        propObsTimeCutoff           = 0, 
+#'                        computePerDayNight          = FALSE, 
+#'                        computeAltitudeDistribution = TRUE)   
+#' }
+#' 
 # =============================================================================
 computeMTR = function(dbName, 
                       echoes, 

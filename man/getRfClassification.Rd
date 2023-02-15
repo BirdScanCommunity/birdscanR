@@ -12,10 +12,30 @@ getRfClassification(dbConnection, dbDriverChar)
 \item{dbDriverChar}{dbDriverChar 'SQL Server' The name of the driver. Should be either 'SQL Server' or 'PostgreSQL'. If 'PostgreSQL', it connects to cloud.birdradar.com}
 }
 \value{
-A dataframe called rfclasses
+A list containing three variables: (1) rfclassificationTable: The rfClassification database table; (2) classProbabilitiesAndMtrFactors: A dataframe containing the classification probabilities for all classes for each object; and (3) availableClasses: the classes used for the classification of the objects.
 }
 \description{
-gets  rfclasses from local MS-SQL DB
+gets  rfclasses from a 'Birdscan MR1' 'SQL' database
+}
+\examples{
+\dontrun{
+# Set server and database settings
+# =============================================================================
+  dbServer       = "MACHINE\\\\\\\\SERVERNAME"     # Set the name of your SQL server
+  dbName         = "db_Name"                   # Set the name of your database
+  dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
+
+# Open the connection with the database
+# =============================================================================
+  dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
+               ";database=", dbName,
+               ";uid=", rstudioapi::askForPassword("Database user"),
+               ";pwd=", rstudioapi::askForPassword("Database password"))
+  dbConnection = RODBC::odbcDriverConnect(dsn)
+
+rfClassification = getRfClassification(dbConnection, dbDriverChar)
+}
+
 }
 \author{
 Fabian Hertner (SBRS) \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
