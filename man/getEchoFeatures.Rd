@@ -24,7 +24,7 @@ load echo rffeature map from 'Birdscan MR1' 'SQL' database
 \dontrun{
 # Set server and database settings
 # ===========================================================================
-  dbServer       = "MACHINE\\\\\\\\SERVERNAME"     # Set the name of your SQL server
+  dbServer       = "MACHINE\\\\SERVERNAME"     # Set the name of your SQL server
   dbName         = "db_Name"                   # Set the name of your database
   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
 

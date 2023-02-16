@@ -61,7 +61,7 @@ saves created plots as .png.
 \dontrun{
 #' # Set server, database, and other input settings
 # ===========================================================================
-  dbServer       = "MACHINE\\\\\\\\SERVERNAME"     # Set the name of your SQL server
+  dbServer       = "MACHINE\\\\SERVERNAME"     # Set the name of your SQL server
   dbName         = "db_Name"                   # Set the name of your database
   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
   mainOutputDir  = file.path(".", "results")

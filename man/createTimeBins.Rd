@@ -35,22 +35,6 @@ returns a dataframe with the time bins information
 Create time bins with a given duration. Time bins expanding over
 a day/night change will be split in two time bins.
 }
-\examples{
-\dontrun{
-# Get sunrise/sunset 
-# ===========================================================================
-  sunriseSunset = twilight(timeRange = c("2021-01-15 00:00", "2021-01-31 00:00"),
-                           latLon    = c(47.494427, 8.716432),
-                           timeZone  = "Etc/GMT0")
-                         
-  timeBins = createTimeBins(timeRange           = c("2021-01-15 00:00", "2021-01-31 00:00"), 
-                            timeBinDuration_sec = 3600, 
-                            timeZone            = "Etc/GMT0", 
-                            sunriseSunset       = sunriseSunset, 
-                            sunOrCivil          = "civil")
-}
-
-}
 \author{
 Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
 Birgen Haest, \email{birgen.haest@vogelwarte.ch}

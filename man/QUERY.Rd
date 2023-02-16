@@ -9,11 +9,11 @@ QUERY(dbConnection, dbDriverChar, query, as.is = FALSE)
 \arguments{
 \item{dbConnection}{a valid  database connection}
 
-\item{dbDriverChar}{the name of the driver.}
+\item{dbDriverChar}{the name of the driver}
 
 \item{query}{an 'SQL' string with your query}
 
-\item{as.is}{If TRUE, leaves data as it is.}
+\item{as.is}{If TRUE, leaves data as it is}
 }
 \value{
 the result of the query
@@ -25,7 +25,7 @@ Run an 'SQL' query on an already connected database
 \dontrun{
 # Set server and database settings
 # ===========================================================================
-  dbServer       = "MACHINE\\\\\\\\SERVERNAME" # Set the name of your SQL server
+  dbServer       = "MACHINE\\\\SERVERNAME"   # Set the name of your SQL server
   dbName         = "db_Name"               # Set the name of your database
   dbDriverChar   = "SQL Server"            # Set either "SQL Server" or "PostgreSQL"
 
@@ -37,7 +37,7 @@ Run an 'SQL' query on an already connected database
                ";pwd=", rstudioapi::askForPassword("Database password"))
   dbConnection = RODBC::odbcDriverConnect(dsn)
   
-  QUERY(dbConnection = dbConnection
+  QUERY(dbConnection = dbConnection,
         dbDriverChar = dbDriverChar,
         query        = "Select * From collection order by row asc")
 }
