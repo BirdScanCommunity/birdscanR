@@ -25,24 +25,34 @@ filterData(
 
 \item{pulseTypeSelection}{character vector with the pulse types which should be included in the subset. Options: “S”, “M”, “L” (short-, medium-, long-pulse). Default is NULL: no filtering applied based on pulseType.}
 
-\item{rotationSelection}{numeric vector to select the operation modes with and/or without antennarotation. Options: 0, 1. (0 = no rotation, 1 = rotation). Default is NULL: no filtering applied based on rotation mode.}
+\item{rotationSelection}{numeric vector to select the operation modes with and/or without antenna rotation. Options: 0, 1. (0 = no rotation, 1 = rotation). Default is NULL: no filtering applied based on rotation mode.}
 
-\item{timeRangeTargetTZ}{Character vector of length 2, with start and end of timerange, formatted as "\%Y-\%m-\%d \%H:\%M". Echoes outside the time range will be excluded.}
+\item{timeRangeTargetTZ}{Character vector of length 2, with start and end of
+time range, formatted as "\%Y-\%m-\%d \%H:\%M". Echoes outside the time range will
+be excluded.}
 
-\item{targetTimeZone}{"Etc/GMT0" String specifying the target time zone. Default is "Etc/GMT0".}
+\item{targetTimeZone}{"Etc/GMT0" String specifying the target time zone.
+Default is "Etc/GMT0".}
 
-\item{classSelection}{character string vector with the classes that should be included.}
+\item{classSelection}{character string vector with the classes that should be
+included.}
 
-\item{classProbCutOff}{numeric cutoff value for class probabilities. Echoes with a lower class probability will be excluded.}
+\item{classProbCutOff}{numeric cutoff value for class probabilities. Echoes
+with a lower class probability will be excluded.}
 
-\item{altitudeRange_AGL}{numeric vector of length 2 with start and end of the altitude range. Echoes outside the altitude range will be excluded.}
+\item{altitudeRange_AGL}{numeric vector of length 2 with start and end of the
+altitude range. Echoes outside the altitude range will be excluded.}
 
-\item{manualBlindTimes}{dataframe with the manual blind times created by the function \code{loadManualBlindTimes}.}
+\item{manualBlindTimes}{dataframe with the manual blind times created by the
+function \code{loadManualBlindTimes}.}
 
-\item{echoValidator}{logical, if set to TRUE, echoes labelled by the echo validator as “non-bio scatterer” will be excluded. If set to FALSE, all echoes are included.}
+\item{echoValidator}{logical, if set to TRUE, echoes labelled by the echo
+validator as “non-bio scatterer” will be excluded. If set to FALSE, all
+echoes are included.}
 }
 \value{
-returns the filtered echo and protocol data in the same format as provided in the parameters \code{echoData} and \code{protocolData}.
+returns the filtered echo and protocol data in the same format as
+provided in the parameters \code{echoData} and \code{protocolData}.
 }
 \description{
 With the function \code{filterData} both the echo and protocol data can be filtered by several parameters. The function returns the filtered echo and protocol data.
@@ -50,7 +60,7 @@ With the function \code{filterData} both the echo and protocol data can be filte
 \examples{
 \dontrun{
 # Set server, database, and other input settings for data extraction
-# =============================================================================
+# ===========================================================================
   dbServer       = "MACHINE\\\\\\\\SERVERNAME"     # Set the name of your SQL server
   dbName         = "db_Name"                   # Set the name of your database
   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
@@ -62,7 +72,7 @@ With the function \code{filterData} both the echo and protocol data can be filte
   sunOrCivil     = "civil"
  
 # Get data
-# =============================================================================
+# ===========================================================================
   dbData = extractDbData(dbDriverChar                   = dbDriverChar,
                          dbServer                       = dbServer, 
                          dbName                         = dbName, 
@@ -75,7 +85,7 @@ With the function \code{filterData} both the echo and protocol data can be filte
                          sunOrCivil                     = sunOrCivil)
                          
 # Set input settings for filtering of the data
-# =============================================================================
+# ===========================================================================
   pulseLengthSelection = "S"
   rotationSelection    = 1
   timeRangeData        = c("2021-01-15 00:00", "2021-01-31 00:00")
@@ -88,7 +98,7 @@ With the function \code{filterData} both the echo and protocol data can be filte
   useEchoValidator     = FALSE
 
 # Filter the data
-# =============================================================================
+# ===========================================================================
   filteredData = filterData(echoData           = dbData$echoData,
                             protocolData       = dbData$protocolData, 
                             pulseTypeSelection = pulseLengthSelection, 

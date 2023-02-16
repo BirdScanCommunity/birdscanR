@@ -12,24 +12,31 @@ computeObservationTime(
 )
 }
 \arguments{
-\item{timeBins}{dataframe with the time bins created by the function \code{createTimeBins}.}
+\item{timeBins}{dataframe with the time bins created by the function
+\code{createTimeBins}.}
 
-\item{protocolData}{dataframe with the protocol data from the data list created by the function \code{extractDBData} or a subset of it created by the function \code{filterProtocolData}.}
+\item{protocolData}{dataframe with the protocol data from the data list
+created by the function \code{extractDBData} or a subset of it created by the
+function \code{filterProtocolData}.}
 
-\item{blindTimes}{dataframe containing the blind times created by the function \code{mergeVisibilityAndManualBlindTimes}.}
+\item{blindTimes}{dataframe containing the blind times created by the
+function \code{mergeVisibilityAndManualBlindTimes}.}
 
-\item{blindTimeAsMtrZero}{character string vector with the blind time types which should be treated as observation time with MTR zero.}
+\item{blindTimeAsMtrZero}{character string vector with the blind time types
+which should be treated as observation time with MTR zero.}
 }
 \value{
-returns a dataframe with the timebins completed with the observation times of each timebin.
+returns a dataframe with the time bins completed with the observation
+times of each time bin.
 }
 \description{
-Compute blind times and observation times during timebins based on protocol data and blind times
+Compute blind times and observation times during time bins based
+on protocol data and blind times
 }
 \examples{
 \dontrun{
 # Set server, database, and other input settings 
-# =============================================================================
+# ===========================================================================
   dbServer            = "MACHINE\\\\\\\\SERVERNAME"     # Set the name of your SQL server
   dbName              = "db_Name"                   # Set the name of your database
   dbDriverChar        = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
@@ -39,7 +46,7 @@ Compute blind times and observation times during timebins based on protocol data
   timeBinduration_sec = 3600
   
 # Open the connection with the database
-# =============================================================================
+# ===========================================================================
   dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
                ";database=", dbName,
                ";uid=", rstudioapi::askForPassword("Database user"),
@@ -47,17 +54,17 @@ Compute blind times and observation times during timebins based on protocol data
   dbConnection = RODBC::odbcDriverConnect(dsn)
   
 # Get protocol data
-# =============================================================================
+# ===========================================================================
   protocolData = getProtocolTable(dbConnection, dbDriverChar)
                          
 # Get sunrise/sunset 
-# =============================================================================
+# ===========================================================================
   sunriseSunset = twilight(timeRange = timeRangeData,
                            latLon    = c(47.494427, 8.716432),
-                           timezone  = radarTimeZone)
+                           timeZone  = radarTimeZone)
                          
 # Create Timebins
-# =============================================================================
+# ===========================================================================
   message("Creating time bins..")
   timeBins = createTimeBins(timeRange           = timeRangeData, 
                             timeBinDuration_sec = timeBinduration_sec, 
@@ -66,22 +73,22 @@ Compute blind times and observation times during timebins based on protocol data
                             sunOrCivil          = sunOrCivil)
 
 # Get visibility table 
-# =============================================================================
+# ===========================================================================
   visibilityTable = getVisibilityTable(dbConnection, dbDriverChar)
 
 # Get manual blind times
-# =============================================================================
+# ===========================================================================
   data(manualBlindTimes)
   cManualBlindTimes = manualBlindTimes
   
 # Merge manual and automatic blind times
-# =============================================================================
+# ===========================================================================
   blindTimes = mergeVisibilityAndManualBlindTimes(visibilityData   = visibilityTable, 
                                                   manualBlindTimes = cManualBlindTimes, 
                                                   protocolData     = protocolData)
 
 # Compute observation time per time bin
-# =============================================================================
+# ===========================================================================
   obsTime = computeObservationTime(timeBins     = timeBins, 
                                    protocolData = protocolData, 
                                    blindTimes   = blindTimes, 
@@ -90,5 +97,6 @@ Compute blind times and observation times during timebins based on protocol data
 
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
+Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

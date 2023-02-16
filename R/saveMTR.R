@@ -1,24 +1,44 @@
 #### saveMTR ------------------------------------------------------
 #' @title saveMTR
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@@vogelwarte.ch}  
-#' @description saves MTR data to a .rds file in the directory \code{filepath}. If the directory is not existing it will be created if possible.
+#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; 
+#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}  
+#' @description saves MTR data to a .rds file in the directory \code{filepath}. 
+#' If the directory is not existing it will be created if possible.
 #'
 #' @param mtr dataframe with MTR values created by the function \code{computeMTR}
-#' @param fileName Filename (string) for the file. If not set, the filename will be built using the input of the variables 'filenamePrefix', 'dbName', 'classAbbreviations', and other info in the 'mtr' data. If set, overrides the automatic filename creation.
-#' @param fileNamePrefix prefix of the filename (string). If not set, "mtr" is used. Different information about the MTR data will be appended to the filename.
-#' @param filepath character string, path of the directory. If the directory does not exist it will be created if possible.
-#' @param dbName character string, name of the database. Used to create the filename, if 'fileName' is not provided. 
-#' @param rotSelection numeric vector, rotation selection which was used to filter protocols. Used to create the filename, if 'fileName' is not provided. If not set, the rotation selection will not be appended to the filename.
-#' @param pulseTypeSelection character vector, pulse type selection which was used to filter protocols. Used to create the filename, if 'fileName' is not provided. If not set, the pulse type selection will not be appended to the filename.
-#' @param classAbbreviations Two-column dataframe with character first column named 'class' and character second 'abbr', containing the full names of the classes and their abbreviations to use in the output filename. Default = NULL, meaning the abbreviations will be used that are stored in the package; See data(classAbbreviations). Used to create the filename, if 'fileName' is not provided.  
+#' @param fileName Filename (string) for the file. If not set, the filename 
+#' will be built using the input of the variables 'filenamePrefix', 'dbName', 
+#' 'classAbbreviations', and other info in the 'mtr' data. If set, overrides 
+#' the automatic filename creation.
+#' @param fileNamePrefix prefix of the filename (string). If not set, "mtr" is 
+#' used. Different information about the MTR data will be appended to the 
+#' filename.
+#' @param filepath character string, path of the directory. If the directory 
+#' does not exist it will be created if possible.
+#' @param dbName character string, name of the database. Used to create the 
+#' filename, if 'fileName' is not provided. 
+#' @param rotSelection numeric vector, rotation selection which was used to 
+#' filter protocols. Used to create the filename, if 'fileName' is not 
+#' provided. If not set, the rotation selection will not be appended to the 
+#' filename.
+#' @param pulseTypeSelection character vector, pulse type selection which was 
+#' used to filter protocols. Used to create the filename, if 'fileName' is not 
+#' provided. If not set, the pulse type selection will not be appended to the 
+#' filename.
+#' @param classAbbreviations Two-column dataframe with character first column 
+#' named 'class' and character second 'abbr', containing the full names of the 
+#' classes and their abbreviations to use in the output filename. 
+#' Default = NULL, meaning the abbreviations will be used that are stored in 
+#' the package; See data(classAbbreviations). Used to create the filename, if 
+#' 'fileName' is not provided.  
 #'
-#' @return No return value, used to save mtr to file. 
+#' @return No return value, used to save MTR to file. 
 #' @export
 #' 
 #' @examples
 #' \dontrun{
 #' # Set server, database, and other input settings
-#' # =============================================================================
+#' # ===========================================================================
 #'   dbServer       = "MACHINE\\\\SERVERNAME"     # Set the name of your SQL server
 #'   dbName         = "db_Name"                   # Set the name of your database
 #'   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
@@ -31,7 +51,7 @@
 #'   timeRangeData       = c("2021-01-15 00:00", "2021-01-31 00:00")
 #'  
 #' # Get data
-#' # =============================================================================
+#' # ===========================================================================
 #'   dbData = extractDbData(dbDriverChar                   = dbDriverChar,
 #'                          dbServer                       = dbServer, 
 #'                          dbName                         = dbName, 
@@ -44,18 +64,18 @@
 #'                          sunOrCivil                     = sunOrCivil)
 #'                          
 #' # Get sunrise/sunset 
-#' # =============================================================================
+#' # ===========================================================================
 #'   sunriseSunset = twilight(timeRange = timeRangeData,
 #'                            latLon    = c(47.494427, 8.716432),
-#'                            timezone  = targetTimeZone)
+#'                            timeZone  = targetTimeZone)
 #'                           
 #' # Get manual blind times
-#' # =============================================================================
+#' # ===========================================================================
 #'   data(manualBlindTimes)
 #'   cManualBlindTimes = manualBlindTimes
 #' 
 #' # Compute migration traffic rate
-#' # =============================================================================
+#' # ===========================================================================
 #'   classSelection.mtr = c("insect")
 #'   mtrData = computeMTR(dbName                      = dbName, 
 #'                        echoes                      = dbData$echoData, 
@@ -91,7 +111,7 @@ saveMTR = function(mtr,
                    classAbbreviations = NULL){
 # Check whether output file path can be created, or exists already
 # =============================================================================
-  dir.create(filepath, showWarnings = F, recursive = T)
+  dir.create(filepath, showWarnings = FALSE, recursive = TRUE)
   if (!dir.exists(filepath)){
     stop(paste0("Output file path does not exist, but can also not be created. ", 
                 "Check your input!"))
@@ -123,7 +143,7 @@ saveMTR = function(mtr,
                       "to build the fileName."))
         }
       
-      # get begin and end of timerange
+      # get begin and end of time range
       # =======================================================================
         timeStart = format(min(mtr$timeChunkBegin), "%Y%m%d")
         timeStop  = format(max(mtr$timeChunkEnd), "%Y%m%d")

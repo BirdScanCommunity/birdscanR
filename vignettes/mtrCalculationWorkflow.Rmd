@@ -15,11 +15,11 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ***
 # Summary
 
-This vignette provides an example of the basic workflow to go from an MS-SQL or PostGreSQL Birdscan database to Activity Rates, or Migration Traffic Rates. The workflow includes 3 steps:
+This vignette provides an example of the basic workflow to go from an 'MS-SQL' or 'PostgreSQL' Birdscan database to Activity Rates, or Migration Traffic Rates. The workflow includes 3 steps:
 
 1.    Extract the relevant data from the SQL database.
 
-1.    Filter the data to your target output period, class, etcetera.
+1.    Filter the data to your target output period, class, and other preferences.
 
 1.    Calculate the activity or migration traffic rates
 
@@ -333,9 +333,9 @@ Calculation of the migration traffic rates is done with the function computeMTR(
 
 # Create some plots to explore the calculated activity / migration traffic rates
 
-The `birdscanR` package also provides two basic plotting functions to visualize and explore the mtr results. 
+The `birdscanR` package also provides two basic plotting functions to visualize and explore the MTR results. 
 
-The function `plotLongitudinalMTR()` creates a time series plot of the mtr values (one per altitude bin in the mtr data):
+The function `plotLongitudinalMTR()` creates a time series plot of the MTR values (one per altitude bin in the MTR data):
 
 ```{r, eval=FALSE}
 # Make time series plot
@@ -388,7 +388,7 @@ The function `plotLongitudinalMTR()` creates a time series plot of the mtr value
   
 ```
 
-With the second plotting function `plotExploration()` you can create a time series plot of the detected objects. Each object is shown at the respective height (m agl) and time:
+With the second plotting function `plotExploration()` you can create a time series plot of the detected objects. Each object is shown at the respective height (m above ground level) and time:
 
 ```{r, eval=FALSE}
 # Make an exploration plot

@@ -3,7 +3,8 @@
 \docType{data}
 \name{manualBlindTimes}
 \alias{manualBlindTimes}
-\title{Example file on how to include manual blind times for your birdscan database.}
+\title{Example file on how to include manual blind times for your 'Birdscan MR1'
+database.}
 \format{
 An object of class \code{"data.frame"}.
 }

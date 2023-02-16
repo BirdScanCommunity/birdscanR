@@ -11,22 +11,31 @@ filterProtocolData(
 )
 }
 \arguments{
-\item{protocolData}{dataframe with the protocol data from the data list created by the function \code{extractDBData}}
+\item{protocolData}{dataframe with the protocol data from the data list
+created by the function \code{extractDBData}}
 
-\item{pulseTypeSelection}{character vector with the pulse types which should be included in the subset. Options: “S”, “M”, “L” (short-, medium-, long-pulse). Default is NULL: no filtering applied based on pulseType.}
+\item{pulseTypeSelection}{character vector with the pulse types which should
+be included in the subset. Options: “S”, “M”, “L” (short-, medium-,
+long-pulse). Default is NULL: no filtering applied based on pulseType.}
 
-\item{rotationSelection}{numeric vector to select the operation modes with and/or without antennarotation. Options: 0, 1. (0 = no rotation, 1 = rotation). Default is NULL: no filtering applied based on rotation mode.}
+\item{rotationSelection}{numeric vector to select the operation modes with
+and/or without antenna rotation. Options: 0, 1. (0 = no rotation,
+1 = rotation). Default is NULL: no filtering applied based on rotation mode.}
 }
 \value{
-returns the filtered protocol data in the same format as provided in the parameter \code{protocolData}.
+returns the filtered protocol data in the same format as provided in
+the parameter \code{protocolData}.
 }
 \description{
-With the function \code{filterProtocolData} the protocol data can be filtered by the operation mode (pulse-type and antennarotation). The function returns the filtered subset of the protocoldata which can later be used to filter the echoes based on the operation mode/protocol
+With the function \code{filterProtocolData} the protocol data
+can be filtered by the operation mode (pulse-type and antenna rotation). The
+function returns the filtered subset of the protocol data which can later be
+used to filter the echoes based on the operation mode/protocol
 }
 \examples{
 \dontrun{
 # Set server, database, and other input settings for data extraction
-# =============================================================================
+# ===========================================================================
   dbServer       = "MACHINE\\\\\\\\SERVERNAME"     # Set the name of your SQL server
   dbName         = "db_Name"                   # Set the name of your database
   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
@@ -38,7 +47,7 @@ With the function \code{filterProtocolData} the protocol data can be filtered by
   sunOrCivil     = "civil"
  
 # Get data
-# =============================================================================
+# ===========================================================================
   dbData = extractDbData(dbDriverChar                   = dbDriverChar,
                          dbServer                       = dbServer, 
                          dbName                         = dbName, 
@@ -51,12 +60,12 @@ With the function \code{filterProtocolData} the protocol data can be filtered by
                          sunOrCivil                     = sunOrCivil)
                          
 # Set input settings for filtering of the data
-# =============================================================================
+# ===========================================================================
   pulseLengthSelection = "S"
   rotationSelection    = 1
 
 # Filter the echo data
-# =============================================================================
+# ===========================================================================
   filteredProtocolData = filterProtocolData(protocolData       = dbData$protocolData,
                                             pulseTypeSelection = pulseLengthSelection, 
                                             rotationSelection  = rotationSelection)   
@@ -64,5 +73,6 @@ With the function \code{filterProtocolData} the protocol data can be filtered by
 
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
+Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

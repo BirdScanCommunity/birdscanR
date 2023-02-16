@@ -1,23 +1,30 @@
 #### createTimeBins ------------------------------------------------------
 #' @title createTimeBins
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@@vogelwarte.ch}  
-#' @description Create timebins with a given duration. timebins expanding over a day/night change will be split in two timebins.
+#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; 
+#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}  
+#' @description Create time bins with a given duration. Time bins expanding over 
+#' a day/night change will be split in two time bins.
 #'
-#' @param timeRange vector of length 2, with start and end of timerange as POSIXct
-#' @param timeBinDuration_sec duration of timeBins in seconds (numeric). for values <= 0 a duration of 1 hour will be set
-#' @param timeZone timezone in which the timebins should be created as string. e.g. "Etc/GMT0"
-#' @param sunriseSunset dataframe with sunrise/sunset, civil dawn/dusk. computed with function 'twilight'
-#' @param sunOrCivil sunrise/sunset or civil dawn/dusk used to split day and night. Supported values: "sun" or "civil", default: "civil"
+#' @param timeRange vector of length 2, with start and end of time range as 
+#' POSIXct
+#' @param timeBinDuration_sec duration of timeBins in seconds (numeric). for 
+#' values <= 0 a duration of 1 hour will be set
+#' @param timeZone time zone in which the time bins should be created as string, 
+#' e.g. "Etc/GMT0"
+#' @param sunriseSunset dataframe with sunrise/sunset, civil dawn/dusk. computed 
+#' with function 'twilight'
+#' @param sunOrCivil sunrise/sunset or civil dawn/dusk used to split day and 
+#' night. Supported values: "sun" or "civil", default: "civil"
 #'
-#' @return returns a dataframe with the timebins information
+#' @return returns a dataframe with the time bins information
 #' 
 #' @examples
 #' \dontrun{
 #' # Get sunrise/sunset 
-#' # =============================================================================
+#' # ===========================================================================
 #'   sunriseSunset = twilight(timeRange = c("2021-01-15 00:00", "2021-01-31 00:00"),
 #'                            latLon    = c(47.494427, 8.716432),
-#'                            timezone  = "Etc/GMT0")
+#'                            timeZone  = "Etc/GMT0")
 #'                          
 #'   timeBins = createTimeBins(timeRange           = c("2021-01-15 00:00", "2021-01-31 00:00"), 
 #'                             timeBinDuration_sec = 3600, 
@@ -34,7 +41,8 @@ createTimeBins = function(timeRange,
 # Check whether input are ok
 # =============================================================================
   if (timeRange[1] > timeRange[2]){
-    warning("End of timerange is before begin of timerange. Set a valid timerange to create timebins.")  
+    warning(paste0("End of time range is before begin of time range. Set a ", 
+                   "valid time range to create time bins."))  
     return()
   } 
   if (timeBinDuration_sec <= 0){
@@ -165,7 +173,8 @@ createTimeBins = function(timeRange,
 # add 'duration_sec' column to timeBins
 # =============================================================================
   timeBins              = data.frame(timeBins, duration_sec = NA)
-  timeBins$duration_sec = as.numeric(difftime(timeBins$stop, timeBins$start, units = "secs"))
+  timeBins$duration_sec = as.numeric(difftime(timeBins$stop, timeBins$start, 
+                                              units = "secs"))
   row.names = timeBins$id
   
 # Return output

@@ -17,23 +17,39 @@ savePlotToFile(
 )
 }
 \arguments{
-\item{plot}{plot to be saved (ggplot)}
+\item{plot}{'ggplot' plot to be saved}
 
-\item{filePath}{character string, path of the directory, e.g. "your-project-directory/Data/MTR". If the directory does not exist it will be created if possible.}
+\item{filePath}{character string, path of the directory, e.g.
+"your-project-directory/Data/MTR". If the directory does not exist it will
+be created if possible.}
 
-\item{plotType}{character string, name/description of the plot, used to create the filename. If not set, the pulse type selection will not be appended to the filename}
+\item{plotType}{character string, name/description of the plot, used to
+create the filename. If not set, the pulse type selection will not be
+appended to the filename}
 
-\item{plotWidth_mm}{numeric, width of the plot in mm. If not set, the size of the png will be set automatically.}
+\item{plotWidth_mm}{numeric, width of the plot in mm. If not set, the size
+of the png will be set automatically.}
 
-\item{plotHeight_mm}{numeric, height of the plot in mm. If not set, the size of the png will be set automatically.}
+\item{plotHeight_mm}{numeric, height of the plot in mm. If not set, the size
+of the png will be set automatically.}
 
-\item{timeRange}{POSIXct vector of size 2, timeRange of the plot, used to create the filename. If not set, the pulse type selection will not be appended to the filename}
+\item{timeRange}{POSIXct vector of size 2, time range of the plot, used to
+create the filename. If not set, the pulse type selection will not be
+appended to the filename}
 
-\item{classSelection}{character string vector, classes that were used to create the plot, used to create the filename. If not set, the pulse type selection will not be appended to the filename}
+\item{classSelection}{character string vector, classes that were used to
+create the plot, used to create the filename. If not set, the pulse type
+selection will not be appended to the filename}
 
-\item{altitudeRange}{numeric vector of size 2, altitude range used to create the plot, used to create the filename. If not set, the pulse type selection will not be appended to the filename}
+\item{altitudeRange}{numeric vector of size 2, altitude range used to create
+the plot, used to create the filename. If not set, the pulse type selection
+will not be appended to the filename}
 
-\item{classAbbreviations}{Two-column dataframe with character first column named 'class' and character second 'abbr', containing the full names of the classes and their abbreviations to use in the output filename. Default = NULL, meaning the abbreviations will be used that are stored in the package; See data(classAbbreviations)}
+\item{classAbbreviations}{Two-column dataframe with character first column
+named 'class' and character second 'abbr', containing the full names of the
+classes and their abbreviations to use in the output filename.
+Default = NULL, meaning the abbreviations will be used that are stored in
+the package; See data(classAbbreviations).}
 }
 \value{
 No return value, used to save plots to file.
@@ -44,7 +60,7 @@ saves created plots as .png.
 \examples{
 \dontrun{
 #' # Set server, database, and other input settings
-# =============================================================================
+# ===========================================================================
   dbServer       = "MACHINE\\\\\\\\SERVERNAME"     # Set the name of your SQL server
   dbName         = "db_Name"                   # Set the name of your database
   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
@@ -56,7 +72,7 @@ saves created plots as .png.
   sunOrCivil     = "civil"
  
 # Get data
-# =============================================================================
+# ===========================================================================
   dbData = extractDbData(dbDriverChar                   = dbDriverChar,
                          dbServer                       = dbServer, 
                          dbName                         = dbName, 
@@ -98,5 +114,6 @@ saves created plots as .png.
 
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
+Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

@@ -15,18 +15,19 @@ getRadarTable(dbConnection, dbDriverChar)
 the radar table  as a data frame
 }
 \description{
-get the Radar table from  an already connected DB and rename the columns appropiately
+get the Radar table from  an already connected DB and rename
+the columns appropriately
 }
 \examples{
 \dontrun{
 # Set server and database settings
-# =============================================================================
+# ===========================================================================
   dbServer       = "MACHINE\\\\\\\\SERVERNAME"     # Set the name of your SQL server
   dbName         = "db_Name"                   # Set the name of your database
   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
 
 # Open the connection with the database
-# =============================================================================
+# ===========================================================================
   dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
                ";database=", dbName,
                ";uid=", rstudioapi::askForPassword("Database user"),
@@ -38,5 +39,6 @@ radarTable = getRadarTable(dbConnection, dbDriverChar)
 
 }
 \author{
-Fabian Hertner (SBRS) \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
+Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

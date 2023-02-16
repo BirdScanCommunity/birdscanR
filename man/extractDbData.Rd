@@ -20,7 +20,9 @@ extractDbData(
 )
 }
 \arguments{
-\item{dbDriverChar}{'SQL Server' The name of the driver. Should be either 'SQL Server' or 'PostgreSQL'. If 'PostgreSQL', it connects to cloud.birdradar.com}
+\item{dbDriverChar}{'SQL Server' The name of the driver. Should be either
+'SQL Server' or 'PostgreSQL'. If 'PostgreSQL', it connects to
+cloud.birdradar.com}
 
 \item{dbServer}{NULL The name of the Server}
 
@@ -30,22 +32,31 @@ extractDbData(
 
 \item{dbPwd}{NULL The password for the user name}
 
-\item{saveDbToFile}{FALSE Set to TRUE if you want to save the extracted database data to an rds file. The output filename is automatically set to dbName_DataExtract.rds}
+\item{saveDbToFile}{FALSE Set to TRUE if you want to save the extracted
+database data to an rds file. The output filename is automatically set to
+dbName_DataExtract.rds}
 
-\item{dbDataDir}{NULL The path to the output directory where to store the extracted dataset. If the directory does not exist, it will be created.}
+\item{dbDataDir}{NULL The path to the output directory where to store the
+extracted dataset. If the directory does not exist, it will be created.}
 
-\item{radarTimeZone}{NULL String specifying the radar time zone. Default is NULL: extract the timezone from the site table of the sql database.}
+\item{radarTimeZone}{NULL String specifying the radar time zone. Default is
+NULL: extract the time zone from the site table of the 'SQL' database.}
 
-\item{targetTimeZone}{"Etc/GMT0" String specifying the target time zone. Default is "Etc/GMT0".}
+\item{targetTimeZone}{"Etc/GMT0" String specifying the target time zone.
+Default is "Etc/GMT0".}
 
 \item{listOfRfFeaturesToExtract}{NULL or a list of feature to extract}
 
-\item{siteLocation}{Geographic location of the radar measurements in decimal format: c(Latitude, Longitude)}
+\item{siteLocation}{Geographic location of the radar measurements in decimal
+format: c(Latitude, Longitude)}
 
-\item{sunOrCivil}{optional character string, “sun” (sunrise/sunset times) or “civil” (civil twilight times) to group by day and night. Default is "civil".}
+\item{sunOrCivil}{optional character string, “sun” (sunrise/sunset times) or
+“civil” (civil twilight times) to group by day and night. Default is "civil".}
 }
 \value{
-a list of R objects with data extracted from the Database echoData, protocolData, siteData, visibilityData, timeBinData, rfFeatures, availableClasses, classProbabilitiesAndMtrFactors
+a list of R objects with data extracted from the Database: 'echoData',
+'protocolData', 'siteData', 'visibilityData', 'timeBinData', 'rfFeatures',
+'availableClasses', 'classProbabilitiesAndMtrFactors'
 }
 \description{
 Load the data from the database or file and save it to file
@@ -53,7 +64,7 @@ Load the data from the database or file and save it to file
 \examples{
 \dontrun{
 # Set server, database, and other input settings
-# =============================================================================
+# ===========================================================================
   dbServer       = "MACHINE\\\\\\\\SERVERNAME"     # Set the name of your SQL server
   dbName         = "db_Name"                   # Set the name of your database
   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
@@ -65,7 +76,7 @@ Load the data from the database or file and save it to file
   sunOrCivil     = "civil"
  
 # Get data
-# =============================================================================
+# ===========================================================================
   dbData = extractDbData(dbDriverChar                   = dbDriverChar,
                          dbServer                       = dbServer, 
                          dbName                         = dbName, 
@@ -80,5 +91,6 @@ Load the data from the database or file and save it to file
 
 }
 \author{
-Fabian Hertner (SBRS) \email{fabian.hertner@swiss-birdradar.com}, \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
+Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

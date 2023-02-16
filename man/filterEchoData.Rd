@@ -17,34 +17,49 @@ filterEchoData(
 )
 }
 \arguments{
-\item{echoData}{dataframe with the echo data from the data list created by the function \code{extractDBData}.}
+\item{echoData}{dataframe with the echo data from the data list created by
+the function \code{extractDBData}.}
 
-\item{timeRangeTargetTZ}{Character vector of length 2, with start and end of timerange, formatted as "\%Y-\%m-\%d \%H:\%M". Echoes outside the time range will be excluded.}
+\item{timeRangeTargetTZ}{Character vector of length 2, with start and end of
+time range, formatted as "\%Y-\%m-\%d \%H:\%M". Echoes outside the time range will
+be excluded.}
 
-\item{targetTimeZone}{"Etc/GMT0" String specifying the target time zone. Default is "Etc/GMT0".}
+\item{targetTimeZone}{"Etc/GMT0" String specifying the target time zone.
+Default is "Etc/GMT0".}
 
-\item{protocolData}{dataframe with the protocol data from the data list created by the function \code{extractDBData} or a subset of it created by the function \code{filterProtocolData}. Echoes not detected during the listed protocols will be excluded.}
+\item{protocolData}{dataframe with the protocol data from the data list
+created by the function \code{extractDBData} or a subset of it created by
+the function \code{filterProtocolData}. Echoes not detected during the listed
+protocols will be excluded.}
 
-\item{classSelection}{character string vector with the classes that should be included.}
+\item{classSelection}{character string vector with the classes that should
+be included.}
 
-\item{classProbCutOff}{numeric cutoff value for class probabilities. Echoes with a lower class probability will be excluded.}
+\item{classProbCutOff}{numeric cutoff value for class probabilities. Echoes
+with a lower class probability will be excluded.}
 
-\item{altitudeRange_AGL}{numeric vector of length 2 with start and end of the altitude range. Echoes outside the altitude range will be excluded.}
+\item{altitudeRange_AGL}{numeric vector of length 2 with start and end of the
+altitude range. Echoes outside the altitude range will be excluded.}
 
-\item{manualBlindTimes}{dataframe with the manual blind times created by the function \code{loadManualBlindTimes}.}
+\item{manualBlindTimes}{dataframe with the manual blind times created by the
+function \code{loadManualBlindTimes}.}
 
-\item{echoValidator}{logical, if set to TRUE, echoes labelled by the echo validator as “non-bio scatterer” will be excluded. If set to FALSE, all echoes are included.}
+\item{echoValidator}{logical, if set to TRUE, echoes labelled by the echo
+validator as “non-bio scatterer” will be excluded. If set to FALSE, all
+echoes are included.}
 }
 \value{
-returns the filtered echo data in the same format as provided in the parameter \code{echoData}.
+returns the filtered echo data in the same format as provided in the
+parameter \code{echoData}.
 }
 \description{
-With the function \code{filterEchoData} the echo data can be filtered by several parameters. The function returns the filtered echo data.
+With the function \code{filterEchoData} the echo data can be
+filtered by several parameters. The function returns the filtered echo data.
 }
 \examples{
 \dontrun{
 # Set server, database, and other input settings for data extraction
-# =============================================================================
+# ===========================================================================
   dbServer       = "MACHINE\\\\\\\\SERVERNAME"     # Set the name of your SQL server
   dbName         = "db_Name"                   # Set the name of your database
   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
@@ -56,7 +71,7 @@ With the function \code{filterEchoData} the echo data can be filtered by several
   sunOrCivil     = "civil"
  
 # Get data
-# =============================================================================
+# ===========================================================================
   dbData = extractDbData(dbDriverChar                   = dbDriverChar,
                          dbServer                       = dbServer, 
                          dbName                         = dbName, 
@@ -69,7 +84,7 @@ With the function \code{filterEchoData} the echo data can be filtered by several
                          sunOrCivil                     = sunOrCivil)
                          
 # Set input settings for filtering of the data
-# =============================================================================
+# ===========================================================================
   timeRangeData     = c("2021-01-15 00:00", "2021-01-31 00:00")
   classSelection    = c("passerine_type", "wader_type", "swift_type", 
                         "large_bird", "unid_bird", "bird_flock")
@@ -80,7 +95,7 @@ With the function \code{filterEchoData} the echo data can be filtered by several
   useEchoValidator  = FALSE
 
 # Filter the echo data
-# =============================================================================
+# ===========================================================================
   filteredEchoData = filterEchoData(echoData           = dbData$echoData,
                                     timeRangeTargetTZ  = timeRangeData,
                                     targetTimeZone     = targetTimeZone,
@@ -94,5 +109,6 @@ With the function \code{filterEchoData} the echo data can be filtered by several
 
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
+Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

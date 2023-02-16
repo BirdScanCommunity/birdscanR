@@ -1,20 +1,25 @@
 #### twilight -----------------------------------------------------------------
 #' @title Calculate the twilight hours for given locations
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
-#' @description  Calculate the  duration of night in hours and seconds. It calculate also the time of both solar and civil start of the day and end of the day.
+#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; 
+#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @description  Calculate the  duration of night in hours and seconds. It 
+#' calculate also the time of both solar and civil start of the day and end of 
+#' the day.
 #' 
 #' @param timeRange The range of dates in which to calculate the twilight
 #' @param latLon A list of X, Y coordinates 
-#' @param crs_datum The coordinate reference system and datum of the X, Y coordinates
-#' @param timeZone The timezone of the area of interest
+#' @param crs_datum The coordinate reference system and datum of the X, Y 
+#' coordinates
+#' @param timeZone The time zone of the area of interest
 #'
 #' @return A data frame with the results
 #' @export
 #' @examples 
 #' \dontrun{
-#' sunrisesunset = twilight(timeRange = c("2021-01-15 00:00", "2021-01-31 00:00"),
+#' sunrisesunset = twilight(timeRange = c("2021-01-15 00:00", 
+#'                                        "2021-01-31 00:00"),
 #'                          latLon    = c(47.494427, 8.716432),
-#'                          timezone  = "Etc/GMT0")
+#'                          timeZone  = "Etc/GMT0")
 #' }
 twilight = function(timeRange, 
                     latLon, 
@@ -24,8 +29,10 @@ twilight = function(timeRange,
                 as.Date(timeRange[2], tz = timeZone) + 2, 
                 "day")
   lon_lat = data.frame(X = latLon[2], Y = latLon[1])
-  crds    = sp::CRS(paste0("+proj=longlat +datum=", crs_datum)) # here i used GoogleEarth coodrinates that use the "WGS84" coordinate system
-  lon_lat = sp::SpatialPoints(lon_lat, proj4string = crds) # here i used GoogleEarth coodrinates that use the "WGS84" coordinate system
+  # here i used GoogleEarth coodrinates that use the "WGS84" coordinate system
+  crds    = sp::CRS(paste0("+proj=longlat +datum=", crs_datum)) 
+  # here i used GoogleEarth coodrinates that use the "WGS84" coordinate system
+  lon_lat = sp::SpatialPoints(lon_lat, proj4string = crds) 
   
   # make sure that date is in UTC
   # ===========================================================================
@@ -87,6 +94,7 @@ twilight = function(timeRange,
   
   return(twilightData)
   
-} # end of twilight-function
+} 
 
-#twilight(timeRange = timeRangeEchoData, latLon = siteLocation, timeZone = targetTimeZone)
+#twilight(timeRange = timeRangeEchoData, latLon = siteLocation, 
+#         timeZone = targetTimeZone)

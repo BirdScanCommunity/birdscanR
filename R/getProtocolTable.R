@@ -1,22 +1,24 @@
 #### getProtocolTable ------------------------------------------------------------
 #' @title  Get BirdScan protocol table
 #' @description load protocol table from an already connected 'Birdscan MR1' 'SQL' database
-#' @author Fabian Hertner (SBRS) \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; 
+#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
 #' @param dbConnection a valid  database connection
-#' @param dbDriverChar the name of the driver. If different from 'PostgreSQL' it connects to cloud.birdradar.com
+#' @param dbDriverChar the name of the driver. If different from 'PostgreSQL' 
+#' it connects to cloud.birdradar.com
 #'
-#' @return A dataframe with the protocal table
+#' @return A dataframe with the protocol table
 #' @export
 #' @examples
 #' \dontrun{
 #' # Set server and database settings
-#' # =============================================================================
+#' # ===========================================================================
 #'   dbServer       = "MACHINE\\\\SERVERNAME"     # Set the name of your SQL server
 #'   dbName         = "db_Name"                   # Set the name of your database
 #'   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
 #'
 #' # Open the connection with the database
-#' # =============================================================================
+#' # ===========================================================================
 #'   dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
 #'                ";database=", dbName,
 #'                ";uid=", rstudioapi::askForPassword("Database user"),

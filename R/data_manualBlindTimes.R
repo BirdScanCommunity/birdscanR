@@ -1,4 +1,5 @@
-#' Example file on how to include manual blind times for your birdscan database. 
+#' Example file on how to include manual blind times for your 'Birdscan MR1' 
+#' database. 
 #'
 #' To create your own manual blind times file, just copy this file, and adjust.
 #'

@@ -9,7 +9,8 @@ getEchoFeatures(dbConnection, dbDriverChar, listOfRfFeaturesToExtract)
 \arguments{
 \item{dbConnection}{a valid  database connection}
 
-\item{dbDriverChar}{the name of the driver. If different from 'PostgreSQL' it connects to cloud.birdradar.com}
+\item{dbDriverChar}{the name of the driver. If different from 'PostgreSQL'
+it connects to cloud.birdradar.com}
 
 \item{listOfRfFeaturesToExtract}{a list of feature to extract}
 }
@@ -22,13 +23,13 @@ load echo rffeature map from 'Birdscan MR1' 'SQL' database
 \examples{
 \dontrun{
 # Set server and database settings
-# =============================================================================
+# ===========================================================================
   dbServer       = "MACHINE\\\\\\\\SERVERNAME"     # Set the name of your SQL server
   dbName         = "db_Name"                   # Set the name of your database
   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
 
 # Open the connection with the database
-# =============================================================================
+# ===========================================================================
   dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
                ";database=", dbName,
                ";uid=", rstudioapi::askForPassword("Database user"),
@@ -37,16 +38,18 @@ load echo rffeature map from 'Birdscan MR1' 'SQL' database
 
 # Set list of Rf features you also want to extract
 # Vector with RF features to extract. Feature IDs can be found in the  
-# rffeatures table in the sql database.  
+# 'rfFeatures' table in the sql database.  
 # Example: Get wing beat frequency and credibility: c(167, 168)
 # Set to NULL to not extract any.
-# =============================================================================
+# ===========================================================================
   listOfRfFeaturesToExtract = c(167, 168) 
 
-echoFeatures = getEchoFeatures(dbConnection, dbDriverChar, listOfRfFeaturesToExtract)
+echoFeatures = getEchoFeatures(dbConnection, dbDriverChar, 
+                               listOfRfFeaturesToExtract)
 }
 
 }
 \author{
-Fabian Hertner (SBRS) \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
+Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

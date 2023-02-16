@@ -9,7 +9,8 @@ getCollectionTable(dbConnection, dbDriverChar)
 \arguments{
 \item{dbConnection}{a valid  database connection}
 
-\item{dbDriverChar}{the name of the driver. If different from 'PostgreSQL' it connects to cloud.birdradar.com}
+\item{dbDriverChar}{the name of the driver. If different from 'PostgreSQL'
+it connects to cloud.birdradar.com}
 }
 \value{
 A dataframe with the collection table
@@ -20,13 +21,13 @@ load collection from 'Birdscan MR1' 'SQL' database
 \examples{
 \dontrun{
 # Set server and database settings
-# =============================================================================
+# ===========================================================================
   dbServer       = "MACHINE\\\\\\\\SERVERNAME"     # Set the name of your SQL server
   dbName         = "db_Name"                   # Set the name of your database
   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
 
 # Open the connection with the database
-# =============================================================================
+# ===========================================================================
 dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
              ";database=", dbName,
              ";uid=", rstudioapi::askForPassword("Database user"),
@@ -38,5 +39,6 @@ collectionTable = getCollectionTable(dbConnection, dbDriverChar)
 
 }
 \author{
-Fabian Hertner (SBRS) \email{fabian.hertner@swiss-birdradar.com}, Birgen Haest (SOI) \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
+Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }
