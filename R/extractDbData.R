@@ -1,22 +1,61 @@
 #### extractDbData ------------------------------------------------------------
 #' @title Extract DB Data
 #' @description Load the data from the database or file and save it to file
-#' @author Fabian Hertner (SBRS) \email{fabian.hertner@@swiss-birdradar.com}, \email{birgen.haest@@vogelwarte.ch}
-#' @param dbDriverChar 'SQL Server' The name of the driver. Should be either 'SQL Server' or 'PostgreSQL'. If 'PostgreSQL', it connects to cloud.birdradar.com
+#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; 
+#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @param dbDriverChar 'SQL Server' The name of the driver. Should be either 
+#' 'SQL Server' or 'PostgreSQL'. If 'PostgreSQL', it connects to 
+#' cloud.birdradar.com
 #' @param dbServer NULL The name of the Server
 #' @param dbName NULL The name of the Database
 #' @param dbUser NULL The USER name of the Server
 #' @param dbPwd NULL The password for the user name
-#' @param saveDbToFile FALSE Set to TRUE if you want to save the extracted database data to an rds file. The output filename is automatically set to dbName_DataExtract.rds 
-#' @param dbDataDir NULL The path to the output directory where to store the extracted dataset. If the directory does not exist, it will be created.
-#' @param radarTimeZone NULL String specifying the radar time zone. Default is NULL: extract the timezone from the site table of the sql database.
-#' @param targetTimeZone "Etc/GMT0" String specifying the target time zone. Default is "Etc/GMT0".
+#' @param saveDbToFile FALSE Set to TRUE if you want to save the extracted 
+#' database data to an rds file. The output filename is automatically set to 
+#' dbName_DataExtract.rds 
+#' @param dbDataDir NULL The path to the output directory where to store the 
+#' extracted dataset. If the directory does not exist, it will be created.
+#' @param radarTimeZone NULL String specifying the radar time zone. Default is 
+#' NULL: extract the time zone from the site table of the 'SQL' database.
+#' @param targetTimeZone "Etc/GMT0" String specifying the target time zone. 
+#' Default is "Etc/GMT0".
 #' @param listOfRfFeaturesToExtract NULL or a list of feature to extract
-#' @param siteLocation Geographic location of the radar measurements in decimal format: c(Latitude, Longitude)
-#' @param sunOrCivil optional character string, “sun” (sunrise/sunset times) or “civil” (civil twilight times) to group by day and night. Default is "civil".
+#' @param siteLocation Geographic location of the radar measurements in decimal 
+#' format: c(Latitude, Longitude)
+#' @param sunOrCivil optional character string, “sun” (sunrise/sunset times) or 
+#' “civil” (civil twilight times) to group by day and night. Default is "civil".
 #'
-#' @return a list of R objects with data extracted from the Database echoData,  protocolData, siteData, visibilityData, timeBinData, rfFeatures, availableClasses, classProbabilitiesAndMtrFactors
+#' @return a list of R objects with data extracted from the Database: 'echoData', 
+#' 'protocolData', 'siteData', 'visibilityData', 'timeBinData', 'rfFeatures', 
+#' 'availableClasses', 'classProbabilitiesAndMtrFactors'
 #' @export
+#' @examples
+#' \dontrun{
+#' # Set server, database, and other input settings
+#' # ===========================================================================
+#'   dbServer       = "MACHINE\\SERVERNAME"     # Set the name of your SQL server
+#'   dbName         = "db_Name"                   # Set the name of your database
+#'   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
+#'   mainOutputDir  = file.path(".", "results")
+#'   radarTimeZone  = "Etc/GMT0"
+#'   targetTimeZone = "Etc/GMT0"
+#'   listOfRfFeaturesToExtract = c(167, 168)
+#'   siteLocation   = c(47.494427, 8.716432)
+#'   sunOrCivil     = "civil"
+#'  
+#' # Get data
+#' # ===========================================================================
+#'   dbData = extractDbData(dbDriverChar                   = dbDriverChar,
+#'                          dbServer                       = dbServer, 
+#'                          dbName                         = dbName, 
+#'                          saveDbToFile                   = TRUE,
+#'                          dbDataDir                      = mainOutputDir,
+#'                          radarTimeZone                  = radarTimeZone,
+#'                          targetTimeZone                 = targetTimeZone,
+#'                          listOfRfFeaturesToExtract      = listOfRfFeaturesToExtract,
+#'                          siteLocation                   = siteLocation, 
+#'                          sunOrCivil                     = sunOrCivil)
+#' }
 #' 
 extractDbData = function(dbDriverChar              = "SQL Server", 
                          dbServer                  = NULL, 
@@ -32,11 +71,17 @@ extractDbData = function(dbDriverChar              = "SQL Server",
                          sunOrCivil                = "civil"){
 # Check whether the necessary input is present
 # =============================================================================
-  if(is.null(dbServer)){stop("dbserver is not defined. Please check your input!")}
+  if(is.null(dbServer)){
+    stop("dbserver is not defined. Please check your input!")
+  }
   if(is.null(dbName)){stop("dbName is not defined. Please check your input!")}
-  if(is.null(targetTimeZone)){stop("targetTimeZone is not defined. Please check your input!")}
-  if((saveDbToFile == TRUE) & is.null(dbDataDir)){stop("saveDbToFile is set to TRUE, 
-                                                       but no dbDataDir path to save it to has been provided. Please check your input!")}
+  if(is.null(targetTimeZone)){
+    stop("targetTimeZone is not defined. Please check your input!")
+  }
+  if((saveDbToFile == TRUE) & is.null(dbDataDir)){
+    stop("saveDbToFile is set to TRUE, but no dbDataDir path to save it to has 
+         been provided. Please check your input!")
+  }
   
 # Open the database connection
 # =============================================================================
@@ -96,7 +141,8 @@ extractDbData = function(dbDriverChar              = "SQL Server",
       }){
     # Do nothing
   } else {
-    stop("Could not open database. Make sure to set dbServer, dbName, and credentials right.")
+    stop("Could not open database. Make sure to set dbServer, dbName, 
+         and credentials right.")
   }  
   
 # load collection table
@@ -127,7 +173,8 @@ extractDbData = function(dbDriverChar              = "SQL Server",
 # load manual visibility from local MS-SQL DB
 # =============================================================================
   message("Extracting MANUAL visibility table from DB...")
-  manualVisibilityTable = try(getManualVisibilityTable(dbConnection, dbDriverChar), 
+  manualVisibilityTable = try(getManualVisibilityTable(dbConnection, 
+                                                       dbDriverChar), 
                               silent = TRUE)
   if (is.data.frame(manualVisibilityTable)){  
     message("MANUAL visibility table extracted")
@@ -216,26 +263,34 @@ extractDbData = function(dbDriverChar              = "SQL Server",
 # =============================================================================
   asl      = data.frame("feature1.altitude_ASL" = echoData$feature1.altitude_AGL) + 
               siteData$altitude
-  echoData = data.frame(echoData[, 1:match("feature1.altitude_AGL", names(echoData))], 
+  echoData = data.frame(echoData[, 1:match("feature1.altitude_AGL", 
+                                           names(echoData))], 
                         asl, 
-                        echoData[, (match("feature1.altitude_AGL", names(echoData))+1):length(echoData)])
+                        echoData[, (match("feature1.altitude_AGL", 
+                                          names(echoData))+1):length(echoData)])
   rm(asl)
  
 # get radarTZ from siteData (or siteTable)
 # =============================================================================
   if (is.null(radarTimeZone)){
-    tz_shift = as.numeric(siteData$timeShift) # Get time zone saved in the database table 'dbo.site'
+    # Get time zone saved in the database table 'dbo.site'
+      tz_shift = as.numeric(siteData$timeShift) 
       
-    if (is.na(tz_shift) | is.null(tz_shift)){stop("set a radarTimeZone, or update the timeshift column in the dbo-site table")}
+    if (is.na(tz_shift) | is.null(tz_shift)){
+      stop("set a radarTimeZone, or update the timeshift column in the dbo-site 
+           table")
+    }
     if (tz_shift >= 0 | tz_shift < 0){
-      radarTimeZone = paste0("Etc/GMT", ifelse(tz_shift >=0 , "-", "+"), abs(tz_shift)) # note that "UTC+1" is denoted as "Etc/GMT-1"
-      message(paste0("Radar timezone extracted from dbo.site is :", radarTimeZone))
+      radarTimeZone = paste0("Etc/GMT", ifelse(tz_shift >=0 , "-", "+"), 
+                             abs(tz_shift)) # note that "UTC+1" is denoted as "Etc/GMT-1"
+      message(paste0("Radar time zone extracted from dbo.site is :", 
+                     radarTimeZone))
     }
   }
   TimeZone = data.frame("radarTimeZone"  = radarTimeZone,
                         "targetTimeZone" = targetTimeZone)
    
-# timezone conversion
+# time zone conversion
 # =============================================================================
   visibilityData = convertTimeZone(data     = visibilityData, 
                                    colNames = c("blind_from", "blind_to"), 
@@ -292,7 +347,7 @@ extractDbData = function(dbDriverChar              = "SQL Server",
 # =============================================================================
   message("Computing sunrise/sunset and twilight information..")
   
-# Set min and max time_stamps of echodata as timerange for 
+# Set min and max time_stamps of echodata as time range for 
 # sunrise/sunset calculation
 # ===========================================================================
   timeRangeSunriseSunset = c(min(outputList$echoData$time_stamp_targetTZ), 
@@ -321,7 +376,7 @@ extractDbData = function(dbDriverChar              = "SQL Server",
   
 # Create the output directory if it doesn't exist
 # =============================================================================
-  dir.create(dbDataDir, showWarnings = F, recursive = T)
+  dir.create(dbDataDir, showWarnings = FALSE, recursive = TRUE)
      
 # save DB Data to a file, if requested
 # =============================================================================

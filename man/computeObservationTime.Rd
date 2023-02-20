@@ -12,20 +12,28 @@ computeObservationTime(
 )
 }
 \arguments{
-\item{timeBins}{dataframe with the time bins created by the function \code{createTimeBins}.}
+\item{timeBins}{dataframe with the time bins created by the function
+\code{createTimeBins}.}
 
-\item{protocolData}{dataframe with the protocol data from the data list created by the function \code{extractDBData} or a subset of it created by the function \code{filterProtocolData}.}
+\item{protocolData}{dataframe with the protocol data from the data list
+created by the function \code{extractDBData} or a subset of it created by the
+function \code{filterProtocolData}.}
 
-\item{blindTimes}{dataframe containing the blind times created by the function \code{mergeVisibilityAndManualBlindTimes}.}
+\item{blindTimes}{dataframe containing the blind times created by the
+function \code{mergeVisibilityAndManualBlindTimes}.}
 
-\item{blindTimeAsMtrZero}{character string vector with the blind time types which should be treated as observation time with MTR zero.}
+\item{blindTimeAsMtrZero}{character string vector with the blind time types
+which should be treated as observation time with MTR zero.}
 }
 \value{
-returns a dataframe with the timebins completed with the observation times of each timebin.
+returns a dataframe with the time bins completed with the observation
+times of each time bin.
 }
 \description{
-Compute blind times and observation times during timebins based on protocol data and blind times
+Compute blind times and observation times during time bins based
+on protocol data and blind times
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
+Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

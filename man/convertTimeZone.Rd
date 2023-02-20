@@ -2,7 +2,7 @@
 % Please edit documentation in R/convertTimeZone.R
 \name{convertTimeZone}
 \alias{convertTimeZone}
-\title{Converts timestamps from radar timezone to an user-defined timezone}
+\title{Converts timestamps from radar time zone to an user-defined time zone}
 \usage{
 convertTimeZone(
   data = NULL,
@@ -14,18 +14,60 @@ convertTimeZone(
 \arguments{
 \item{data}{a data frame containing BirdScan data}
 
-\item{colNames}{a character vector containing valid column names, as present in \code{data}}
+\item{colNames}{a character vector containing valid column names, as present
+in \code{data}}
 
-\item{originTZ}{character, the time zone name of data to be converted (default is "etc/GMT0")}
+\item{originTZ}{character, the time zone name of data to be converted
+(default is "etc/GMT0")}
 
-\item{targetTZ}{character, the time zone name to convert data into (default is "etc/GMT0")}
+\item{targetTZ}{character, the time zone name to convert data into
+(default is "etc/GMT0")}
 }
 \value{
-a data frame identical to \code{data}, any columns declared in \code{colNames} will have their name changed with a suffix (\verb{_originTZ} or \verb{_targetTZ}) added.
+a data frame identical to \code{data}, any columns declared in \code{colNames}
+will have their name changed with a suffix (\verb{_originTZ} or \verb{_targetTZ}) added.
 }
 \description{
-Converts timestamps from radar timezone to an user-defined timezone
+Converts timestamps from radar time zone to an user-defined time
+zone
+}
+\examples{
+\dontrun{
+# Set server, database, and other input settings for data extraction
+# ===========================================================================
+  dbServer       = "MACHINE\\\\SERVERNAME"     # Set the name of your SQL server
+  dbName         = "db_Name"                   # Set the name of your database
+  dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
+  mainOutputDir  = file.path(".", "results")
+  radarTimeZone  = "Etc/GMT0"
+  targetTimeZone = "Etc/GMT0"
+  listOfRfFeaturesToExtract = c(167, 168)
+  siteLocation   = c(47.494427, 8.716432)
+  sunOrCivil     = "civil"
+ 
+# Get data
+# ===========================================================================
+  dbData = extractDbData(dbDriverChar                   = dbDriverChar,
+                         dbServer                       = dbServer, 
+                         dbName                         = dbName, 
+                         saveDbToFile                   = TRUE,
+                         dbDataDir                      = mainOutputDir,
+                         radarTimeZone                  = radarTimeZone,
+                         targetTimeZone                 = targetTimeZone,
+                         listOfRfFeaturesToExtract      = listOfRfFeaturesToExtract,
+                         siteLocation                   = siteLocation, 
+                         sunOrCivil                     = sunOrCivil)
+
+# Add day/night info to echo data
+# ===========================================================================
+  echoData = convertTimeZone(data     = dbData$echoData, 
+                             colNames = c("time_stamp"), 
+                             originTZ = "Etc/GMT0", 
+                             targetTZ = "Etc/GMT-2")   
+}
+
 }
 \author{
-Fabian Hertner (SBRS) \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
+Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

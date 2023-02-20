@@ -1,20 +1,60 @@
-#### mergeVisibilityAndManualBlindTimes ------------------------------------------------------
+#### mergeVisibilityAndManualBlindTimes ----------------------------------------
 #' @title mergeVisibilityAndManualBlindTimes
-#' @author Fabian Hertner (SBRS), \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest (SOI), \email{birgen.haest@@vogelwarte.ch}
-#' @description Function to merge manual blindtimes with blindtimes from visibility table. 
-#' For further processing the radar (visibility) and manual blind times have to be merged 
-#' with the function ‘mergeVisibilityAndManualBlindTimes’. This function will add a blind 
-#' time type to the radar/visibility blind times. Blind times during the blocktime (usually 60s) 
-#' at the beginning of each protocol are given the type “protocolChange”, the rest of the radar 
-#' blind times are given the type “visibility”. After that the visibility and manual blind times 
-#' will be merged. In case manual blind times and radar blind times are overlapping, radar blind 
-#' times with type “visibility” will be overwritten, but not radar blind times with type “protocolChange”. 
-#' @param visibilityData dataframe with the visibility data from the data list created by the function ‘extractDBData’.
-#' @param manualBlindTimes dataframe with the manual blind times created by the function ‘loadManualBlindTimes’.
-#' @param protocolData dataframe with the protocol data from the data list created by the function ‘extractDBData’ or a subset of it created by the function ‘filterProtocolData’.
+#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; 
+#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @description Function to merge manual blind times with blind times from 
+#' visibility table. For further processing the radar (visibility) and manual 
+#' blind times have to be merged with the function 
+#' ‘mergeVisibilityAndManualBlindTimes’. This function will add a blind time 
+#' type to the radar/visibility blind times. Blind times during the block time 
+#' (usually 60s) at the beginning of each protocol are given the type 
+#' 'protocolChange', the rest of the radar blind times are given the type 
+#' “visibility”. After that the visibility and manual blind times will be 
+#' merged. In case manual blind times and radar blind times are overlapping, 
+#' radar blind times with type “visibility” will be overwritten, but not radar 
+#' blind times with type “protocolChange”. 
+#' @param visibilityData dataframe with the visibility data from the data list 
+#' created by the function ‘extractDBData’.
+#' @param manualBlindTimes dataframe with the manual blind times created by the 
+#' function ‘loadManualBlindTimes’.
+#' @param protocolData dataframe with the protocol data from the data list 
+#' created by the function ‘extractDBData’ or a subset of it created by the 
+#' function ‘filterProtocolData’.
 #'
 #' @return dataframe with overall blind times
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#' # Set server and database settings
+#' # ===========================================================================
+#'   dbServer       = "MACHINE\\SERVERNAME" # Set the name of your SQL server
+#'   dbName         = "db_Name"               # Set the name of your database
+#'   dbDriverChar   = "SQL Server"            # Set either "SQL Server" or "PostgreSQL"
+#'
+#' # Open the connection with the database
+#' # ===========================================================================
+#'   dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
+#'                ";database=", dbName,
+#'                ";uid=", rstudioapi::askForPassword("Database user"),
+#'                ";pwd=", rstudioapi::askForPassword("Database password"))
+#'   dbConnection = RODBC::odbcDriverConnect(dsn)
+#' 
+#' # Get visibility table 
+#' # ===========================================================================
+#'   visibilityTable = getVisibilityTable(dbConnection, dbDriverChar)
+#' 
+#' # Get manual blind times
+#' # ===========================================================================
+#'   data(manualBlindTimes)
+#'   cManualBlindTimes = manualBlindTimes
+#'   
+#' # Merge manual and automatic blind times
+#' # ===========================================================================
+#'   blindTimes = mergeVisibilityAndManualBlindTimes(visibilityData   = visibilityTable, 
+#'                                                   manualBlindTimes = cManualBlindTimes, 
+#'                                                   protocolData     = protocolData)
+#' }
 #'
 mergeVisibilityAndManualBlindTimes = function(visibilityData, 
                                               manualBlindTimes = NULL, 
@@ -38,11 +78,11 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
 # =============================================================================
   visibilityDataSorted = visibilityData[order(visibilityData$blind_from_targetTZ),]
 
-# Remove rows where start >= stop in visibility blindtimes
+# Remove rows where start >= stop in visibility blind times
 # =============================================================================
   visibilityDataSorted = visibilityDataSorted[visibilityDataSorted$blind_from_targetTZ < visibilityDataSorted$blind_to_targetTZ,]
 
-# Make sure visibility blindtimes are not overlapping
+# Make sure visibility blind times are not overlapping
 # =============================================================================
   if(nrow(visibilityDataSorted) > 1){
     overlaps = visibilityDataSorted$blind_from_targetTZ[2:(length(visibilityDataSorted[, 1]))] < visibilityDataSorted$blind_to_targetTZ[1:(length(visibilityDataSorted[, 1])-1)]
@@ -61,11 +101,11 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
     # =========================================================================
       manualBlindTimesSorted = manualBlindTimes[order(manualBlindTimes$start_targetTZ),]
     
-    # Remove rows where start >= stop in manual blindtimes
+    # Remove rows where start >= stop in manual blind times
     # =========================================================================
       manualBlindTimesSorted = manualBlindTimesSorted[manualBlindTimesSorted$start_targetTZ < manualBlindTimesSorted$stop_targetTZ,]
     
-    # Make sure manual blindtimes are not overlapping
+    # Make sure manual blind times are not overlapping
     # =========================================================================
       if (nrow(manualBlindTimesSorted) > 1){
         overlaps = manualBlindTimesSorted$start_targetTZ[2:(length(manualBlindTimesSorted[, 1]))] < manualBlindTimesSorted$stop_targetTZ[1:(length(manualBlindTimesSorted[, 1])-1)]
@@ -73,7 +113,8 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
       }
   }
 
-# Separate protocol change blindtimes (60s at begin of each protocol) in visibilitydata
+# Separate protocol change blind times (60s at begin of each protocol) in 
+# visibilitydata
 # =============================================================================
   protocolId = -1
   nVis = length(visibilityDataSorted[, 1])
@@ -123,12 +164,13 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
     # =========================================================================
       protChangeBT = visibilityDataSorted[visibilityDataSorted$type == "protocolChange",]
       
-    # --- Priorise protocolChange blindtimes over manual blindtimes --------- =
-    # Loop over manual blindtimes, and adjust start or stop of blind time in 
+    # --- Priorise protocolChange blind times over manual blind times --------- =
+    # Loop over manual blind times, and adjust start or stop of blind time in 
     # case of overlap with protocolChange blind time
     # =========================================================================
       for (i in 1:length(manualBlindTimesSorted[, 1])){
-        # if manual blindtime ends inside protocolChange blindtime, set end of manual blindtime to start of protocolChange blindtime
+        # if manual blindtime ends inside protocolChange blindtime, set end of 
+        # manual blindtime to start of protocolChange blindtime
         # =====================================================================
           protChangeStart = protChangeBT$blind_from_targetTZ[(protChangeBT$blind_from_targetTZ < manualBlindTimesSorted$stop_targetTZ[i]) &
                                                              (protChangeBT$blind_to_targetTZ >= manualBlindTimesSorted$stop_targetTZ[i])]
@@ -138,7 +180,8 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
             warning("overlapping visibilityData, should not happen.")
           }
         
-        # if manual blindtime starts inside protocolChange blindtime, set start of manual blindtime to end of protocolChange blindtime
+        # if manual blindtime starts inside protocolChange blindtime, set start 
+        # of manual blindtime to end of protocolChange blindtime
         # =====================================================================
           protChangeEnd = protChangeBT$blind_to_targetTZ[protChangeBT$blind_from_targetTZ <= manualBlindTimesSorted$start_targetTZ[i]
                                                                & protChangeBT$blind_to_targetTZ > manualBlindTimesSorted$start_targetTZ[i]]
@@ -149,18 +192,19 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
           }
         }
     
-    # Remove rows where start >= stop in manual blindtimes
+    # Remove rows where start >= stop in manual blind times
     # =========================================================================
       manualBlindTimesSorted = manualBlindTimesSorted[manualBlindTimesSorted$start_targetTZ < manualBlindTimesSorted$stop_targetTZ,]
     
-    # Split manual blindtimes if protocolChange blindtime is inside manual blind time
-    # Loop over protocolChange blindtimes
+    # Split manual blind times if protocolChange blindtime is inside manual 
+    # blind time. Loop over protocolChange blind times
     # =========================================================================
       for (i in 1:length(protChangeBT[, 1])){
         manBTWithProtChangeBTInside = (manualBlindTimesSorted$start_targetTZ < protChangeBT$blind_from_targetTZ[i]) & 
                                       (manualBlindTimesSorted$stop_targetTZ > protChangeBT$blind_to_targetTZ[i])
         
-        # if protocolChange blindtime is within manual blind time, split manual blindtime
+        # if protocolChange blindtime is within manual blind time, split manual 
+        # blind time
         # =====================================================================
           if (sum(manBTWithProtChangeBTInside) == 1){
             split = manualBlindTimesSorted[manBTWithProtChangeBTInside,]
@@ -168,11 +212,11 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
             manualBlindTimesSorted$start_targetTZ[manBTWithProtChangeBTInside] = protChangeBT$blind_to_targetTZ[i]
             manualBlindTimesSorted = rbind(manualBlindTimesSorted, split)
           } else if (sum(manBTWithProtChangeBTInside) > 1){
-            warning("overlapping manual blindtimes, should not happen.")
+            warning("overlapping manual blind times, should not happen.")
           }
       }
     
-    # Remove rows where start >= stop in manual blindtimes
+    # Remove rows where start >= stop in manual blind times
     # =========================================================================
       manualBlindTimesSorted = manualBlindTimesSorted[manualBlindTimesSorted$start_targetTZ < manualBlindTimesSorted$stop_targetTZ,]
    
@@ -180,8 +224,8 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
     # =========================================================================
       manualBlindTimesSorted = manualBlindTimesSorted[order(manualBlindTimesSorted$start_targetTZ),]
   
-    # -- Priorise manual blindtimes over visibility blindtimes ----------------
-    # Loop over visibility blindtimes
+    # -- Priorise manual blind times over visibility blind times --------------
+    # Loop over visibility blind times
     # =========================================================================
       for (i in 1:length(visibilityDataSorted[, 1])){
         if (visibilityDataSorted$type[i] != "protocolChange"){
@@ -209,12 +253,12 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
         }
       }
     
-    # Remove rows where start >= stop in visibility blindtimes
+    # Remove rows where start >= stop in visibility blind times
     # =========================================================================
       visibilityDataSorted = visibilityDataSorted[visibilityDataSorted$blind_from_targetTZ < visibilityDataSorted$blind_to_targetTZ,]
     
-    # Split visibility blindtimes if manual blindtime is inside visibility blind time
-    # Loop over manual blindtimes
+    # Split visibility blind times if manual blindtime is inside visibility 
+    # blind time. Loop over manual blind times
     # =========================================================================
       for (i in 1:length(manualBlindTimesSorted[, 1])){
         visBTWithManualBTInside = (visibilityDataSorted$blind_from_targetTZ < manualBlindTimesSorted$start_targetTZ[i]) &
@@ -229,12 +273,12 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
             visibilityDataSorted$blind_from_targetTZ[visBTWithManualBTInside] = manualBlindTimesSorted$stop_targetTZ[i]
             visibilityDataSorted    = rbind(visibilityDataSorted, split)
           } else if (sum(visBTWithManualBTInside) > 1){
-            warning("overlapping visibility blindtimes, should not happen.")
+            warning("overlapping visibility blind times, should not happen.")
           }
       }
   }
 
-# Remove rows where start >= stop in visibility blindtimes
+# Remove rows where start >= stop in visibility blind times
 # =============================================================================
   visibilityDataSorted = visibilityDataSorted[visibilityDataSorted$blind_from_targetTZ < visibilityDataSorted$blind_to_targetTZ,]
 
@@ -245,11 +289,11 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
 # Check for problems with visibility values 
 # =============================================================================
   if (any(visibilityDataSorted$blind_to_targetTZ < visibilityDataSorted$blind_from_targetTZ)){
-    warning("negative visibility blindtimes, something went wrong...")
+    warning("negative visibility blind times, something went wrong...")
   }
   if (any(visibilityDataSorted$blind_from_targetTZ[2:length(visibilityDataSorted[, 1])] < 
           visibilityDataSorted$blind_to_targetTZ[1:(length(visibilityDataSorted[, 1])-1)])){
-    warning("overlapping visibility blindtimes, something went wrong...")
+    warning("overlapping visibility blind times, something went wrong...")
   }
   
 # If manualBlindTimes are provided, merge them with visibility blind times
@@ -268,7 +312,7 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
                                    type           = visibilityDataSorted$type)
   }
 
-# sort overall blindtimes chronological
+# sort overall blind times chronological
 # =============================================================================
   overallBlindTimes   = overallBlindTimes[order(overallBlindTimes$start_targetTZ),]
 

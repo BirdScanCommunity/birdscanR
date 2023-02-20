@@ -11,25 +11,66 @@ mergeVisibilityAndManualBlindTimes(
 )
 }
 \arguments{
-\item{visibilityData}{dataframe with the visibility data from the data list created by the function ‘extractDBData’.}
+\item{visibilityData}{dataframe with the visibility data from the data list
+created by the function ‘extractDBData’.}
 
-\item{manualBlindTimes}{dataframe with the manual blind times created by the function ‘loadManualBlindTimes’.}
+\item{manualBlindTimes}{dataframe with the manual blind times created by the
+function ‘loadManualBlindTimes’.}
 
-\item{protocolData}{dataframe with the protocol data from the data list created by the function ‘extractDBData’ or a subset of it created by the function ‘filterProtocolData’.}
+\item{protocolData}{dataframe with the protocol data from the data list
+created by the function ‘extractDBData’ or a subset of it created by the
+function ‘filterProtocolData’.}
 }
 \value{
 dataframe with overall blind times
 }
 \description{
-Function to merge manual blindtimes with blindtimes from visibility table.
-For further processing the radar (visibility) and manual blind times have to be merged
-with the function ‘mergeVisibilityAndManualBlindTimes’. This function will add a blind
-time type to the radar/visibility blind times. Blind times during the blocktime (usually 60s)
-at the beginning of each protocol are given the type “protocolChange”, the rest of the radar
-blind times are given the type “visibility”. After that the visibility and manual blind times
-will be merged. In case manual blind times and radar blind times are overlapping, radar blind
-times with type “visibility” will be overwritten, but not radar blind times with type “protocolChange”.
+Function to merge manual blind times with blind times from
+visibility table. For further processing the radar (visibility) and manual
+blind times have to be merged with the function
+‘mergeVisibilityAndManualBlindTimes’. This function will add a blind time
+type to the radar/visibility blind times. Blind times during the block time
+(usually 60s) at the beginning of each protocol are given the type
+'protocolChange', the rest of the radar blind times are given the type
+“visibility”. After that the visibility and manual blind times will be
+merged. In case manual blind times and radar blind times are overlapping,
+radar blind times with type “visibility” will be overwritten, but not radar
+blind times with type “protocolChange”.
+}
+\examples{
+\dontrun{
+# Set server and database settings
+# ===========================================================================
+  dbServer       = "MACHINE\\\\SERVERNAME" # Set the name of your SQL server
+  dbName         = "db_Name"               # Set the name of your database
+  dbDriverChar   = "SQL Server"            # Set either "SQL Server" or "PostgreSQL"
+
+# Open the connection with the database
+# ===========================================================================
+  dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
+               ";database=", dbName,
+               ";uid=", rstudioapi::askForPassword("Database user"),
+               ";pwd=", rstudioapi::askForPassword("Database password"))
+  dbConnection = RODBC::odbcDriverConnect(dsn)
+
+# Get visibility table 
+# ===========================================================================
+  visibilityTable = getVisibilityTable(dbConnection, dbDriverChar)
+
+# Get manual blind times
+# ===========================================================================
+  data(manualBlindTimes)
+  cManualBlindTimes = manualBlindTimes
+  
+# Merge manual and automatic blind times
+# ===========================================================================
+  blindTimes = mergeVisibilityAndManualBlindTimes(visibilityData   = visibilityTable, 
+                                                  manualBlindTimes = cManualBlindTimes, 
+                                                  protocolData     = protocolData)
+}
+
 }
 \author{
-Fabian Hertner (SBRS), \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest (SOI), \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
+Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

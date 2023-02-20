@@ -1,31 +1,128 @@
 #### computeMTR ------------------------------------------------------
 #' @title computeMTR
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; with edits by Baptiste Schmid, \email{baptiste.schmid@@vogelwarte.ch}, and Birgen Haest, \email{birgen.haest@@vogelwarte.ch}  
-#' @description This function will estimate the Activity / Migration Traffic Rates (MTR, expressed as #objects / km / hour) based on the observations in your database.
-#' @param dbName Character string, containing the name of the database you are processing
-#' @param echoes dataframe with the echo data from the data list created by the function ‘extractDBData’ or a subset of it created by the function ‘filterEchoData’. 
-#' @param classSelection character string vector with all classes which should be used to calculate the MTR. The MTR and number of Echoes will be calculated for each class as well as for all classes together. 
-#' @param altitudeRange numeric vector of length 2 with the start and end of the altitude range in meter a.g.l. 
+#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; 
+#' Baptiste Schmid, \email{baptiste.schmid@@vogelwarte.ch};  
+#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @description This function will estimate the Activity / Migration Traffic 
+#' Rates (MTR, expressed as #objects / km / hour) based on the observations in 
+#' your database.
+#' @param dbName Character string, containing the name of the database you are 
+#' processing
+#' @param echoes dataframe with the echo data from the data list created by the 
+#' function ‘extractDBData’ or a subset of it created by the function 
+#' ‘filterEchoData’. 
+#' @param classSelection character string vector with all classes which should 
+#' be used to calculate the MTR. The MTR and number of Echoes will be calculated 
+#' for each class as well as for all classes together. 
+#' @param altitudeRange numeric vector of length 2 with the start and end of the 
+#' altitude range in meter a.g.l. 
 #' @param altitudeBinSize numeric, size of the altitude bins in meter. 
-#' @param timeRange Character vector of length 2, with start and end of timerange, formatted as "%Y-%m-%d %H:%M" 
-#' @param timeBinDuration_sec duration of timeBins in seconds (numeric). for values <= 0 a duration of 1 hour will be set
-#' @param timeZone timezone in which the timebins should be created as string. e.g. "Etc/GMT0"
-#' @param sunriseSunset dataframe with sunrise/sunset, civil dawn/dusk. computed with function 'twilight'
-#' @param sunOrCivil sunrise/sunset or civil dawn/dusk used to split day and night. Supported values: "sun" or "civil", default: "civil"
-#' @param protocolData dataframe with the protocol data from the data list created by the function \code{extractDBData} or a subset of it created by the function \code{filterProtocolData}.
-#' @param visibilityData dataframe with the visibility data from the data list created by the function ‘extractDBData’.
-#' @param manualBlindTimes dataframe with the manual blind times created by the function \code{loadManualBlindTimes}.
-#' @param saveBlindTimes Logical, determines whether to save the blind times to a file. Default: False.
-#' @param blindTimesOutputDir Character string containting the path to save the blind times to. Default: 'your-working-directory'
-#' @param blindTimeAsMtrZero character string vector with the blind time types which should be treated as observation time with MTR zero.
-#' @param propObsTimeCutoff numeric between 0 and 1. If the MTR is computed per day and night, time bins with a proportional observation time smaller than propObsTimeCutoff are ignored when combining the time bins. If the MTR is computed for each time bin, the parameter is ignored.
-#' @param computePerDayNight logical, TRUE: MTR is computed per day and night. The time bins of each day and night will be combined and the mean MTR is computed for each day and night. The spread (first and third Quartile) for each day and night are also computed. The spread is dependent on the chosen time bin duration/amount of time bins; When FALSE: MTR is computed for each time bin. This option computes the MTR for each time bin defined in the time bin dataframe. The time bins that were split due to sunrise/sunset during the time bin will be combined to one bin. 
-#' @param computeAltitudeDistribution logical, TRUE: compute the mean height and altitude distribution of MTR for the pre-defined quantiles 0.05, 0.25, 0.5, 0.75, 0.95
+#' @param timeRange Character vector of length 2, with start and end of time 
+#' range, formatted as "%Y-%m-%d %H:%M" 
+#' @param timeBinDuration_sec duration of timeBins in seconds (numeric). for 
+#' values <= 0 a duration of 1 hour will be set
+#' @param timeZone time zone in which the time bins should be created as string, 
+#' e.g. "Etc/GMT0"
+#' @param sunriseSunset dataframe with sunrise/sunset, civil dawn/dusk. computed 
+#' with function 'twilight'
+#' @param sunOrCivil sunrise/sunset or civil dawn/dusk used to split day and 
+#' night. Supported values: "sun" or "civil", default: "civil"
+#' @param protocolData dataframe with the protocol data from the data list 
+#' created by the function \code{extractDBData} or a subset of it created by the 
+#' function \code{filterProtocolData}.
+#' @param visibilityData dataframe with the visibility data from the data list 
+#' created by the function ‘extractDBData’.
+#' @param manualBlindTimes dataframe with the manual blind times created by the 
+#' function \code{loadManualBlindTimes}.
+#' @param saveBlindTimes Logical, determines whether to save the blind times to 
+#' a file. Default: False.
+#' @param blindTimesOutputDir Character string containing the path to save the 
+#' blind times to. Default: 'your-working-directory'
+#' @param blindTimeAsMtrZero character string vector with the blind time types 
+#' which should be treated as observation time with MTR zero.
+#' @param propObsTimeCutoff numeric between 0 and 1. If the MTR is computed per 
+#' day and night, time bins with a proportional observation time smaller than 
+#' propObsTimeCutoff are ignored when combining the time bins. If the MTR is 
+#' computed for each time bin, the parameter is ignored.
+#' @param computePerDayNight logical, TRUE: MTR is computed per day and night. 
+#' The time bins of each day and night will be combined and the mean MTR is 
+#' computed for each day and night. The spread (first and third Quartile) for 
+#' each day and night are also computed. The spread is dependent on the chosen 
+#' time bin duration/amount of time bins; When FALSE: MTR is computed for each 
+#' time bin. This option computes the MTR for each time bin defined in the time 
+#' bin dataframe. The time bins that were split due to sunrise/sunset during the 
+#' time bin will be combined to one bin. 
+#' @param computeAltitudeDistribution logical, TRUE: compute the mean height and 
+#' altitude distribution of MTR for the pre-defined quantiles 0.05, 0.25, 0.5, 
+#' 0.75, 0.95
 #'
-#' @return mtr
+#' @return Migration Traffic Rates
 #' @importFrom magrittr %>%
 #' @export
 #'
+#' @examples
+#' \dontrun{
+#' # Set server, database, and other input settings
+#' # ===========================================================================
+#'   dbServer       = "MACHINE\\SERVERNAME"     # Set the name of your SQL server
+#'   dbName         = "db_Name"                   # Set the name of your database
+#'   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
+#'   mainOutputDir  = file.path(".", "results")
+#'   radarTimeZone  = "Etc/GMT0"
+#'   targetTimeZone = "Etc/GMT0"
+#'   listOfRfFeaturesToExtract = c(167, 168)
+#'   siteLocation   = c(47.494427, 8.716432)
+#'   sunOrCivil     = "civil"
+#'   timeRangeData       = c("2021-01-15 00:00", "2021-01-31 00:00")
+#'  
+#' # Get data
+#' # ===========================================================================
+#'   dbData = extractDbData(dbDriverChar                   = dbDriverChar,
+#'                          dbServer                       = dbServer, 
+#'                          dbName                         = dbName, 
+#'                          saveDbToFile                   = TRUE,
+#'                          dbDataDir                      = mainOutputDir,
+#'                          radarTimeZone                  = radarTimeZone,
+#'                          targetTimeZone                 = targetTimeZone,
+#'                          listOfRfFeaturesToExtract      = listOfRfFeaturesToExtract,
+#'                          siteLocation                   = siteLocation, 
+#'                          sunOrCivil                     = sunOrCivil)
+#'                          
+#' # Get sunrise/sunset 
+#' # ===========================================================================
+#'   sunriseSunset = twilight(timeRange = timeRangeData,
+#'                            latLon    = c(47.494427, 8.716432),
+#'                            timeZone  = targetTimeZone)
+#'                           
+#' # Get manual blind times
+#' # ===========================================================================
+#'   data(manualBlindTimes)
+#'   cManualBlindTimes = manualBlindTimes
+#' 
+#' # Compute migration traffic rate
+#' # ===========================================================================
+#'   classSelection.mtr = c("insect")
+#'   mtrData = computeMTR(dbName                      = dbName, 
+#'                        echoes                      = dbData$echoData, 
+#'                        classSelection              = classSelection.mtr, 
+#'                        altitudeRange               = c(25, 1025),
+#'                        altitudeBinSize             = 50,
+#'                        timeRange                   = timeRangeData, 
+#'                        timeBinDuration_sec         = 1800,
+#'                        timeZone                    = targetTimeZone,
+#'                        sunriseSunset               = sunriseSunset,
+#'                        sunOrCivil                  = "civil",
+#'                        protocolData                = dbData$protocolData, 
+#'                        visibilityData              = dbData$visibilityData,
+#'                        manualBlindTimes            = cManualBlindTimes,
+#'                        saveBlindTimes              = FALSE,
+#'                        blindTimesOutputDir         = getwd(),
+#'                        blindTimeAsMtrZero          = NULL,
+#'                        propObsTimeCutoff           = 0, 
+#'                        computePerDayNight          = FALSE, 
+#'                        computeAltitudeDistribution = TRUE)   
+#' }
+#' 
 # =============================================================================
 computeMTR = function(dbName, 
                       echoes, 
@@ -119,7 +216,7 @@ computeMTR = function(dbName,
     return()
   }
   
-# combine timebins splitted by day/night
+# combine time bins splitted by day/night
 # =============================================================================
   if (computePerDayNight == FALSE){
     for (i in 2 : length(timeBins[, 1])){
@@ -145,7 +242,7 @@ computeMTR = function(dbName,
       }
     }
     
-    # exclude combined timebins and reset timebins id
+    # exclude combined time bins and reset time bins id
     # =========================================================================
       timeBins = timeBins[timeBins$id >= 0,]
       timeBins = timeBins[order(timeBins$start),]
@@ -230,9 +327,9 @@ computeMTR = function(dbName,
             dplyr::summarise(
               # count the number of echoes per timeXheight interval
                 "nEchoes" = length(mtr_factor_rf), 
-              # sum the mtr-factors of all echoes per timeXheight interval
+              # sum the MTR-factors of all echoes per timeXheight interval
                 "sumOfMTRFactors" = sum(mtr_factor_rf, na.rm = TRUE), 
-              # sum the mtr of all echoes per timeXheight interval - equivalent as "sumOfMTRFactors / observationTime_h"
+              # sum the MTR of all echoes per timeXheight interval - equivalent as "sumOfMTRFactors / observationTime_h"
                 "mtr" = sum(mtr_echo, na.rm = TRUE)) %>% 
     
           # add the class denomination to merge with the per-class MTR dataset
@@ -263,7 +360,7 @@ computeMTR = function(dbName,
   mtr = dplyr::left_join(mtr, all_mtr, by = c("timeChunkId", "altitudeChunkId")) %>% 
         dplyr::left_join(each_mtr, by = c("timeChunkId", "altitudeChunkId"))
   
-# replace NA as ZERO for nEchoes, sumMTRfacotrs, mtr, if "proportionalTimeObserved"] != 0
+# replace NA as ZERO for nEchoes, sumMTRfacotrs, MTR, if "proportionalTimeObserved"] != 0
 # =============================================================================
   for (i in 0:length(classSelection)){ # i = 0
     i_class = ifelse(i == 0, "allClasses", classSelection[i])
@@ -278,13 +375,14 @@ computeMTR = function(dbName,
 # Compute MTR per day and night, if requested
 # =============================================================================
   if (computePerDayNight == TRUE){
-    #  Combine all timebins of one day (grouped by timeChunkDateSunset) to one 
+    #  Combine all time bins of one day (grouped by timeChunkDateSunset) to one 
     # =========================================================================
     if ("timeChunkDateSunset" %in% colnames(mtr) && !all(is.na(mtr$timeChunkDateSunset))){
       for (k in 1:length(unique(mtr$altitudeChunkId))){
         # Day MTR ----
         # =====================================================================
-          # combine all timebins with the same value in 'timeChunkDateSunset','altitudeChunkId' and 'dayOrNight'
+          # combine all time bins with the same value in 'timeChunkDateSunset',
+          # 'altitudeChunkId' and 'dayOrNight'
           # ===================================================================
             mtrTmp         = mtr[!is.na(mtr$dayOrNight) & 
                                  mtr$dayOrNight == "day" & 
@@ -340,7 +438,7 @@ computeMTR = function(dbName,
                                 altitudeChunkAvgAltitude = min(mtrTmp$altitudeChunkAvgAltitude))
           
           # nEchoes
-          # =====================================================================
+          # ====================================================================
             nEchoes = stats::aggregate(mtrTmp$nEchoes.allClasses, 
                                        list(mtrTmp$timeChunkDateSunset), 
                                        sum, na.rm = TRUE)
@@ -353,7 +451,7 @@ computeMTR = function(dbName,
             }
           
           # sum of mtr factors
-          # =====================================================================
+          # ====================================================================
             sumOfMTRFactors = stats::aggregate(mtrTmp$sumOfMTRFactors.allClasses, 
                                                list(mtrTmp$timeChunkDateSunset), 
                                                sum, na.rm = TRUE)
@@ -366,15 +464,15 @@ computeMTR = function(dbName,
               mtrDay[, paste("sumOfMTRFactors", classSelection[i], sep = ".")] = sumOfMTRFactors$x 
             }
           
-          # mtr
-          # =====================================================================
+          # MTR
+          # ====================================================================
             mtrDay = data.frame(mtrDay, mtr.allClasses = NA)
             for (i in 1:length(classSelection)){
               mtrDay[, paste("mtr", classSelection[i], sep = ".")] = NA
             }
           
           # first quartiles
-          # =====================================================================
+          # ====================================================================
             mtrFirstQuartile = suppressWarnings(
                                 stats::aggregate(list(mtrFirstQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
                                                  list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
@@ -393,7 +491,7 @@ computeMTR = function(dbName,
             }
           
           # third quartiles
-          # =====================================================================
+          # ====================================================================
             mtrThirdQuartile = suppressWarnings(
                                 stats::aggregate(list(mtrThirdQuartile.allClasses = mtrTmp$mtr.allClasses[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
                                                  list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]), 
@@ -413,7 +511,8 @@ computeMTR = function(dbName,
         
         # NIGHT MTR
         # =====================================================================
-          # combine all timebins with the same value in 'timeChunkDateSunset','altitudeChunkId' and 'dayOrNight'
+          # combine all time bins with the same value in 'timeChunkDateSunset',
+          # 'altitudeChunkId' and 'dayOrNight'
           # ===================================================================
             mtrTmp         = mtr[!is.na(mtr$dayOrNight) & 
                                  mtr$dayOrNight == "night" & 
@@ -481,7 +580,7 @@ computeMTR = function(dbName,
               mtrNight[, paste("nEchoes", classSelection[i], sep = ".")] = nEchoes$x 
             }
           
-          # sum of mtr factors
+          # sum of MTR factors
           # ===================================================================
             sumOfMTRFactors = stats::aggregate(mtrTmp$sumOfMTRFactors.allClasses, 
                                                list(mtrTmp$timeChunkDateSunset), 
@@ -495,7 +594,7 @@ computeMTR = function(dbName,
               mtrNight[, paste("sumOfMTRFactors", classSelection[i], sep = ".")] = sumOfMTRFactors$x 
             }
           
-          # mtr
+          # MTR
           # ===================================================================
             mtrNight = data.frame(mtrNight, mtr.allClasses = NA)
             for (i in 1:length(classSelection)){
@@ -543,7 +642,7 @@ computeMTR = function(dbName,
             }
         
             
-        # Add day night mtrs for current altitude chunk to overview mtr data
+        # Add day night mtrs for current altitude chunk to overview MTR data
         # ===================================================================== 
           if (exists("mtrDayNight")){
             mtrDayNight = rbind(mtrDayNight, mtrDay, mtrNight)

@@ -7,41 +7,60 @@
 loadManualBlindTimes(filePath, blindTimesTZ, targetTZ)
 }
 \arguments{
-\item{filePath}{character string, absolute filepath of the manual blind time file}
+\item{filePath}{character string, absolute filepath of the manual blind time
+file}
 
-\item{blindTimesTZ}{timezone of the blind times}
+\item{blindTimesTZ}{time zone of the blind times}
 
-\item{targetTZ}{target timezone of the blind times}
+\item{targetTZ}{target time zone of the blind times}
 }
 \value{
-data frame with manual blind times
+A dataframe with the manual blind times
 }
 \description{
-Load manual blindtimes from csv file.
-For the MTR computation the times when the radar was blind have to be known. The radar itself can
-be blind in case of a protocol change (blocktime at the beginning of each protocol, usually 60s) or
-due to rain/snow or clutter (nearby objects, leaves or similar on radome, etc.). These times are
-stored in the visibility table or in the time_bins table in relation to the time bins duration (5min).
-To be flexible and not fixed to the 5 min time bins created by the radar, the visibility table is used
-in this script.
-In addition to the radar blind times, manual blind times can be defined. Manual blind times have to
-be defined in a csv file and are loaded with the function ‘loadManualBlindTimes’. A example dataset is
-available by running:
+Load manual blind times from csv file.
+For the MTR computation the times when the radar was blind have to be known.
+The radar itself can be blind in case of a protocol change (block time at the
+beginning of each protocol, usually 60s) or due to rain/snow or clutter
+(nearby objects, leaves or similar on radome, etc.). These times are stored
+in the visibility table or in the time_bins table in relation to the time
+bins duration (5min). To be flexible and not fixed to the 5 min time bins
+created by the radar, the visibility table is used in this script. In
+addition to the radar blind times, manual blind times can be defined. Manual
+blind times have to be defined in a csv file and are loaded with the function
+‘loadManualBlindTimes’. A example dataset is available by running:
 \code{data(manualBlindTimes)}
 \code{write.csv(manualBlindTimes, file = 'the output file destination', row.names = F)}
-The filepath is defined as a global variable ‘manualBlindTimesFile’. A custom file and filepath
-can be used instead.
-The manual blind times have to be entered with 3 columns:
+The file path is defined as a global variable ‘manualBlindTimesFile’. A
+custom file and filepath can be used instead. The manual blind times have to
+be entered with 3 columns:
 start time 'yyyy-mm-dd hh:mm:ss', stop time 'yyyy-MM-dd hh:mm:ss', type.
 
 Example:
 2021-01-16 04:15:00,2021-01-16 05:42:00,rain
 2021-01-17 16:33:00,2021-01-17 18:04:00,clutter
-Manual blind time types can be chosen freely. When computing observation times, it can be decided
-if some of the defined manual blind time types should be treated as observed time with MTR zero or
-as blind time (e.g. rain). If no file is present or the file is empty, no manual blind times will
-be computed.
+Manual blind time types can be chosen freely. When computing observation
+times, it can be decided if some of the defined manual blind time types
+should be treated as observed time with MTR zero or as blind time
+(e.g. rain). If no file is present or the file is empty, no manual blind
+times will be computed.
+}
+\examples{
+\dontrun{
+# load manual blind time example data from birdscanR package
+  data(manualBlindTimes)
+  
+# Save example manual blind times to a file
+  write.csv(manualBlindTimes, file = "manualBlindTimes.csv", row.names = F)
+  
+# Read the manual blind times from file
+  manualBlindTimes.new = loadManualBlindTimes(filePath     = "./manualBlindTimes.csv",
+                                              blindTimesTZ = "ETC/GMT", 
+                                              targetTZ     = "ETC/GMT")
+}
+
 }
 \author{
-Fabian Hertner (SBRS), \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest (SOI), \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
+Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

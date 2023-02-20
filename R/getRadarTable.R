@@ -1,13 +1,33 @@
 #### getRadarTable ------------------------------------------------------------
 #' @title  Get a BirdScan radar table
-#' @description  get the Radar table from  an already connected DB and rename the columns appropiately
-#' @author Fabian Hertner (SBRS) \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @description  get the Radar table from  an already connected DB and rename 
+#' the columns appropriately
+#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; 
+#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
 #' @param dbConnection a valid  database connection
 #' @param dbDriverChar the name of the driver. 
 #'
 #' @return the radar table  as a data frame
 #' @export
-#' 
+#' @examples
+#' \dontrun{
+#' # Set server and database settings
+#' # ===========================================================================
+#'   dbServer       = "MACHINE\\SERVERNAME"     # Set the name of your SQL server
+#'   dbName         = "db_Name"                   # Set the name of your database
+#'   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
+#'
+#' # Open the connection with the database
+#' # ===========================================================================
+#'   dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
+#'                ";database=", dbName,
+#'                ";uid=", rstudioapi::askForPassword("Database user"),
+#'                ";pwd=", rstudioapi::askForPassword("Database password"))
+#'   dbConnection = RODBC::odbcDriverConnect(dsn)
+#'
+#' radarTable = getRadarTable(dbConnection, dbDriverChar)
+#' }
+#'
 getRadarTable = function(dbConnection, dbDriverChar){
   radarTable = QUERY(dbConnection, dbDriverChar, "Select * From radar")
    

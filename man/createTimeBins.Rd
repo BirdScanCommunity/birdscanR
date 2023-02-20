@@ -13,22 +13,29 @@ createTimeBins(
 )
 }
 \arguments{
-\item{timeRange}{vector of length 2, with start and end of timerange as POSIXct}
+\item{timeRange}{vector of length 2, with start and end of time range as
+POSIXct}
 
-\item{timeBinDuration_sec}{duration of timeBins in seconds (numeric). for values <= 0 a duration of 1 hour will be set}
+\item{timeBinDuration_sec}{duration of timeBins in seconds (numeric). for
+values <= 0 a duration of 1 hour will be set}
 
-\item{timeZone}{timezone in which the timebins should be created as string. e.g. "Etc/GMT0"}
+\item{timeZone}{time zone in which the time bins should be created as string,
+e.g. "Etc/GMT0"}
 
-\item{sunriseSunset}{dataframe with sunrise/sunset, civil dawn/dusk. computed with function 'twilight'}
+\item{sunriseSunset}{dataframe with sunrise/sunset, civil dawn/dusk. computed
+with function 'twilight'}
 
-\item{sunOrCivil}{sunrise/sunset or civil dawn/dusk used to split day and night. Supported values: "sun" or "civil", default: "civil"}
+\item{sunOrCivil}{sunrise/sunset or civil dawn/dusk used to split day and
+night. Supported values: "sun" or "civil", default: "civil"}
 }
 \value{
-returns a dataframe with the timebins information
+returns a dataframe with the time bins information
 }
 \description{
-Create timebins with a given duration. timebins expanding over a day/night change will be split in two timebins.
+Create time bins with a given duration. Time bins expanding over
+a day/night change will be split in two time bins.
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
+Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

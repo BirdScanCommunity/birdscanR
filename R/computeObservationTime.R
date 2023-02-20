@@ -1,20 +1,29 @@
 #### computeObservationTime ---------------------------------------------------
 #' @title computeObservationTime
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; with edits by Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
-#' @description Compute blind times and observation times during timebins based on protocol data and blind times
+#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; 
+#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @description Compute blind times and observation times during time bins based
+#'  on protocol data and blind times
 #'
-#' @param timeBins dataframe with the time bins created by the function \code{createTimeBins}.
-#' @param protocolData dataframe with the protocol data from the data list created by the function \code{extractDBData} or a subset of it created by the function \code{filterProtocolData}.
-#' @param blindTimes dataframe containing the blind times created by the function \code{mergeVisibilityAndManualBlindTimes}.
-#' @param blindTimeAsMtrZero character string vector with the blind time types which should be treated as observation time with MTR zero.
+#' @param timeBins dataframe with the time bins created by the function 
+#' \code{createTimeBins}.
+#' @param protocolData dataframe with the protocol data from the data list 
+#' created by the function \code{extractDBData} or a subset of it created by the 
+#' function \code{filterProtocolData}.
+#' @param blindTimes dataframe containing the blind times created by the 
+#' function \code{mergeVisibilityAndManualBlindTimes}.
+#' @param blindTimeAsMtrZero character string vector with the blind time types 
+#' which should be treated as observation time with MTR zero.
 #'
-#' @return returns a dataframe with the timebins completed with the observation times of each timebin.
+#' @return returns a dataframe with the time bins completed with the observation 
+#' times of each time bin.
 #' 
 computeObservationTime = function(timeBins, 
                                   protocolData, 
                                   blindTimes, 
                                   blindTimeAsMtrZero = NULL){
-  
+  oldOptions = options()
+  on.exit(options(oldOptions))
   options(scipen = 999, digits = 9)
   
 # Sort protocolData and blindTimes chronological
@@ -182,14 +191,14 @@ computeObservationTime = function(timeBins,
     protocolData = protocolData[!is.na(protocolData$timeBinId),]
     blindTimes = blindTimes[!is.na(blindTimes$timeBinId) & !is.na(blindTimes$protocolID),]
   
-  # loop over timebins
+  # loop over time bins
   # ===========================================================================
   for (i in 1:length(timeBins[, 1])){
-    # protocol durations in timebins (operationtime)
+    # protocol durations in time bins (operationtime)
     # =========================================================================
       timeBins$operationTime_sec[i] = sum(protocolData[protocolData$timeBinId == timeBins[i,]$id,]$duration_sec)
     
-    # blindTime durations in timebins during protocol (blindTime)
+    # blindTime durations in time bins during protocol (blindTime)
     # ===========================================================================
     if (is.null(blindTimeAsMtrZero)){
       timeBins$blindTime_sec[i] = sum(blindTimes[blindTimes$timeBinId == timeBins[i,]$id,]$duration_sec)
@@ -207,7 +216,7 @@ computeObservationTime = function(timeBins,
                                                                      timeBins$duration_sec[timeBins$duration_sec > 0]
     timeBins$proportionalTimeObserved[timeBins$duration_sec == 0] = 0
 
-# Return timebins
+# Return time bins
 # =============================================================================
   return(timeBins)
 }

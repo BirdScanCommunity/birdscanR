@@ -2,25 +2,48 @@
 % Please edit documentation in R/query.R
 \name{QUERY}
 \alias{QUERY}
-\title{Query SQL database}
+\title{Query 'SQL' database}
 \usage{
 QUERY(dbConnection, dbDriverChar, query, as.is = FALSE)
 }
 \arguments{
 \item{dbConnection}{a valid  database connection}
 
-\item{dbDriverChar}{the name of the driver.}
+\item{dbDriverChar}{the name of the driver}
 
-\item{query}{an SQL string with your query}
+\item{query}{an 'SQL' string with your query}
 
-\item{as.is}{If TRUE, leaves data as it is.}
+\item{as.is}{If TRUE, leaves data as it is}
 }
 \value{
 the result of the query
 }
 \description{
-Run an SQL query on an already connected DB
+Run an 'SQL' query on an already connected database
+}
+\examples{
+\dontrun{
+# Set server and database settings
+# ===========================================================================
+  dbServer       = "MACHINE\\\\SERVERNAME"   # Set the name of your SQL server
+  dbName         = "db_Name"               # Set the name of your database
+  dbDriverChar   = "SQL Server"            # Set either "SQL Server" or "PostgreSQL"
+
+# Open the connection with the database
+# ===========================================================================
+  dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
+               ";database=", dbName,
+               ";uid=", rstudioapi::askForPassword("Database user"),
+               ";pwd=", rstudioapi::askForPassword("Database password"))
+  dbConnection = RODBC::odbcDriverConnect(dsn)
+  
+  QUERY(dbConnection = dbConnection,
+        dbDriverChar = dbDriverChar,
+        query        = "Select * From collection order by row asc")
+}
+  
 }
 \author{
-Fabian Hertner (SBRS) \email{fabian.hertner@swiss-birdradar.com}
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
+Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }
