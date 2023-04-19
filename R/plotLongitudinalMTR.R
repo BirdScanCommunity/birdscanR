@@ -124,12 +124,14 @@ plotLongitudinalMTR = function(mtr,
     return()
   }
   
-# Convert the timeRange input to a POSIXct object
+# Convert the timeRange input to a POSIXct object, if it was defined
 # =============================================================================
-  posixCTListCon = function(x){
-    as.POSIXct(x, format = "%Y-%m-%d %H:%M", tz = targetTimeZone)
+  if (!is.null(timeRange)){
+    posixCTListCon = function(x){as.POSIXct(x, 
+                                            format = "%Y-%m-%d %H:%M", 
+                                            tz = targetTimeZone)}
+    timeRange = lapply(timeRange, posixCTListCon)
   }
-  timeRange = lapply(timeRange, posixCTListCon)
   
 # extract classSelection
 # =============================================================================
@@ -174,6 +176,7 @@ plotLongitudinalMTR = function(mtr,
         # =====================================================================
           if (is.null(timeRange)){
             mtrPlot = mtr[mtr$altitudeChunkId == cAltBin,]
+            timeRange    = c(min(echoDataPlot$time_stamp_targetTZ), max(echoDataPlot$time_stamp_targetTZ))
           } else {
             mtrPlot = mtr[(mtr$altitudeChunkId == cAltBin) & 
                           (mtr$timeChunkBegin > timeRange[[i]][1]) & 
@@ -272,12 +275,18 @@ plotLongitudinalMTR = function(mtr,
             
             # save plot to file
             # =================================================================
+              plotWidth_mm   = difftime(timeRange[[i]][2], 
+                                        timeRange[[i]][1], 
+                                        "days") * 10 + 50
+              plotHeight_mm  = 150
+              if (plotWidth_mm < plotHeight_mm){
+                plotWidth_mm = plotHeight_mm
+              }
               savePlotToFile(plot            = longPlot,
                              filePath       = filePath, 
                              plotType       = "mtrPerDay", 
-                             plotWidth_mm   = difftime(timeRange[[i]][2], 
-                                                       timeRange[[i]][1], "days") * 10 + 50, 
-                             plotHeight_mm  = 150, 
+                             plotWidth_mm   = plotWidth_mm, 
+                             plotHeight_mm  = plotHeight_mm, 
                              timeRange      = c(timeRange[[i]][1], timeRange[[i]][2]), 
                              classSelection = plotClass, 
                              altitudeRange  = c(min(mtrPlot$altitudeChunkBegin), 
