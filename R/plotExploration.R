@@ -343,9 +343,9 @@ plotExploration = function(echoData         = NULL,
           
           # save plot
           # ===================================================================
-            plotWidth_mm   = difftime(timeRange[[i]][2], 
-                                      timeRange[[i]][1], 
-                                      "days") * 10 + 50
+            plotWidth_mm   = as.numeric(difftime(timeRange[[i]][2], 
+                                                 timeRange[[i]][1], 
+                                                 "days") * 10 + 50)
             plotHeight_mm  = 150
             if (plotWidth_mm < plotHeight_mm){
               plotWidth_mm = plotHeight_mm
