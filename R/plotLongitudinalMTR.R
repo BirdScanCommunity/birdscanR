@@ -175,8 +175,8 @@ plotLongitudinalMTR = function(mtr,
         # Subset mtr data to current time range
         # =====================================================================
           if (is.null(timeRange)){
-            mtrPlot = mtr[mtr$altitudeChunkId == cAltBin,]
-            timeRange    = c(min(mtrPlot$timeChunkBegin), max(mtrPlot$timeChunkEnd))
+            mtrPlot   = mtr[mtr$altitudeChunkId == cAltBin,]
+            timeRange = list(c(min(mtrPlot$timeChunkBegin), max(mtrPlot$timeChunkEnd)))
           } else {
             mtrPlot = mtr[(mtr$altitudeChunkId == cAltBin) & 
                           (mtr$timeChunkBegin > timeRange[[i]][1]) & 

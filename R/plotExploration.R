@@ -187,7 +187,7 @@ plotExploration = function(echoData         = NULL,
       for (i in 1:nPlots){
         if (is.null(timeRange)){
           echoDataPlot = echoData
-          timeRange    = c(min(echoDataPlot$time_stamp_targetTZ), max(echoDataPlot$time_stamp_targetTZ))
+          timeRange    = list(c(min(echoDataPlot$time_stamp_targetTZ), max(echoDataPlot$time_stamp_targetTZ)))
         } else {
           echoDataPlot = echoData[(echoData$time_stamp_targetTZ >= timeRange[[i]][1]) & 
                                   (echoData$time_stamp_targetTZ <= timeRange[[i]][2]),]  
