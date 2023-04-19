@@ -251,7 +251,7 @@ plotLongitudinalMTR = function(mtr,
                                                          fill = obsType), 
                                             position = "dodge2", 
                                             fill = "grey50") + 
-                          ggplot2::ggtitle(label = "Daily MTR", subtitle = subtitle) + 
+                          ggplot2::ggtitle(label = "MTR", subtitle = subtitle) + 
                           ggplot2::xlab("Date") + 
                           ggplot2::ylab("MTR [ind./h/km]") +
                           ggplot2::geom_text(position = ggplot2::position_dodge(width = 0.9), 
