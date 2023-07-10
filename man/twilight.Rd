@@ -2,17 +2,20 @@
 % Please edit documentation in R/twilight.R
 \name{twilight}
 \alias{twilight}
-\title{Calculate the twilight hours for given locations}
+\title{Get the nautical, civil, and solar dawn and dusk for a given timerange
+and locations.}
 \usage{
 twilight(timeRange, latLon, crs_datum = "WGS84", timeZone)
 }
 \arguments{
-\item{timeRange}{The range of dates in which to calculate the twilight}
+\item{timeRange}{A two-element character vector with elements of the form
+\%Y-\%m-\%d defining the start and end of the timerange for which you want to
+get the twilight information.}
 
 \item{latLon}{A list of X, Y coordinates}
 
 \item{crs_datum}{The coordinate reference system and datum of the X, Y
-coordinates}
+coordinates. Default = "WGS84.}
 
 \item{timeZone}{The time zone of the area of interest}
 }
@@ -20,9 +23,9 @@ coordinates}
 A data frame with the results
 }
 \description{
-Calculate the  duration of night in hours and seconds. It
-calculate also the time of both solar and civil start of the day and end of
-the day.
+Get the time of nautical (sun at 12 degrees below horizon), civil
+(sun at 6 degrees below horizon) and solar (sun at 0 degrees below horizon)
+dawn and dusk for each day over a given time range.
 }
 \examples{
 \dontrun{
