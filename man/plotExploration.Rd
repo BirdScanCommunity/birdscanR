@@ -43,7 +43,7 @@ the echoes, created by the function ‘extractDBData’ or a subset of it create
 by the function ‘filterProtocolData’. If not set, periods without a protocol
 are not shown in the plot.}
 
-\item{sunriseSunset}{optional dataframe with sunrise/sunset and civil
+\item{sunriseSunset}{optional dataframe with sunrise/sunset, civil, and nautical
 twilight times created by the function ‘twilight’. If not set, day/night
 times are not shown in the plot.}
 

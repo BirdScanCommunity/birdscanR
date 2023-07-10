@@ -16,7 +16,8 @@ extractDbData(
   targetTimeZone = "Etc/GMT0",
   listOfRfFeaturesToExtract = NULL,
   siteLocation = NULL,
-  sunOrCivil = "civil"
+  sunOrCivil = "civil",
+  crepuscule = "nauticalSolar"
 )
 }
 \arguments{
@@ -50,8 +51,16 @@ Default is "Etc/GMT0".}
 \item{siteLocation}{Geographic location of the radar measurements in decimal
 format: c(Latitude, Longitude)}
 
-\item{sunOrCivil}{optional character string, “sun” (sunrise/sunset times) or
-“civil” (civil twilight times) to group by day and night. Default is "civil".}
+\item{sunOrCivil}{optional character variable, Set to “sun” to use
+sunrise/sunset times or to “civil” to use civil twilight times to group echoes
+into day/night. Default is "civil".}
+
+\item{crepuscule}{optional character variable, Set to “nauticalSolar” to use
+the time between nautical dusk/dawn and sunrise/sunset times to define the
+crepuscular period, or to "nauticalCivil" to use the time between nautical
+and civil dusk/dawn to define the crepuscular period, or to "civilSolar" to use
+the time between civil dusk/dawn and sunrise/sunset times to define the
+crepuscular period. Default is "nauticalSolar".}
 }
 \value{
 a list of R objects with data extracted from the Database: 'echoData',
@@ -73,7 +82,7 @@ Load the data from the database or file and save it to file
   targetTimeZone = "Etc/GMT0"
   listOfRfFeaturesToExtract = c(167, 168)
   siteLocation   = c(47.494427, 8.716432)
-  sunOrCivil     = "civil"
+  sunOrCivil   = "civil"
  
 # Get data
 # ===========================================================================
@@ -86,7 +95,8 @@ Load the data from the database or file and save it to file
                          targetTimeZone                 = targetTimeZone,
                          listOfRfFeaturesToExtract      = listOfRfFeaturesToExtract,
                          siteLocation                   = siteLocation, 
-                         sunOrCivil                     = sunOrCivil)
+                         sunOrCivil                   = sunOrCivil,
+                         crepuscule                     = "nauticalSolar")
 }
 
 }

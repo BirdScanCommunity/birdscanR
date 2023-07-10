@@ -1,5 +1,7 @@
-# birdscanR 0.1.3
-* Fixed bugs in the two plotting functions.
+# birdscanR 0.2.0
+* Added functionality: Add sample classification into crepuscularMorning, day, crepuscularNight, and night when extracting data. 
+* Added functionality: Enable mtr calculation for day, crepuscule, and night instead of merely day/night only (both options available now).  
+* Bug fixes: Small bug fixes in the two plotting functions.
 
 # birdscanR 0.1.1
 

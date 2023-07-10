@@ -13,8 +13,19 @@
 #' e.g. "Etc/GMT0"
 #' @param sunriseSunset dataframe with sunrise/sunset, civil dawn/dusk. computed 
 #' with function 'twilight'
+#' @param dnBins Logical. Default TRUE. Determines whether timebins based on 
+#' day/night values (determined by the parameter 'sunOrCivil') are created. 
+#' @param crepBins Logical. Default FALSE. Determines whether timebins with 
+#'  crepuscular time phases are created (determined by the parameter 'crepuscule'). 
 #' @param sunOrCivil sunrise/sunset or civil dawn/dusk used to split day and 
 #' night. Supported values: "sun" or "civil", default: "civil"
+#' @param crepuscule Used to split into crepusculeMorning, day, crepusculeEvening, 
+#' and night. Set to “nauticalSolar” to use the time between nautical dusk/dawn 
+#' and sunrise/sunset times to define the crepuscular period, or to 
+#' "nauticalCivil" to use the time between nautical and civil dusk/dawn to define 
+#' the crepuscular period, or to "civilSolar" to use the time between civil 
+#' dusk/dawn and sunrise/sunset times to define the crepuscular period. Default 
+#' is "nauticalSolar".
 #'
 #' @return returns a dataframe with the time bins information
 #' 
@@ -22,7 +33,10 @@ createTimeBins = function(timeRange,
                           timeBinDuration_sec, 
                           timeZone, 
                           sunriseSunset, 
-                          sunOrCivil = "civil"){
+                          dnBins   = TRUE,
+                          crepBins = FALSE,
+                          sunOrCivil = "civil",
+                          crepuscule = "nauticalSolar"){
 # Check whether input are ok
 # =============================================================================
   if (timeRange[1] > timeRange[2]){
@@ -33,29 +47,109 @@ createTimeBins = function(timeRange,
   if (timeBinDuration_sec <= 0){
     timeBinDuration_sec = 60 * 60
   }
-  
-# Create day/night timeBins
-# =============================================================================
-  if (sunOrCivil == "sun"){
-    timeBinsDN = data.frame(start      = sunriseSunset$sunStart, 
-                            stop       = sunriseSunset$sunStop, 
-                            dayOrNight = sunriseSunset$is_night, 
-                            dateSunset = sunriseSunset$date)
-  } else {
-    timeBinsDN = data.frame(start      = sunriseSunset$civilStart, 
-                            stop       = sunriseSunset$civilStop, 
-                            dayOrNight = sunriseSunset$is_night, 
-                            dateSunset = sunriseSunset$date)
+  if (dnBins & crepBins){
+    stop(paste0("Please set only one of the options 'dnBins' or ", 
+                "'crepBins' to TRUE, and rerun createTimeBins()."))
   }
   
-# Limit day/night timeBins to timeRange
+# Create day/night timeBins, if requested
 # =============================================================================
-  timeBinsDN = timeBinsDN[(timeBinsDN$start >= timeRange[1]) & 
-                          (timeBinsDN$start <= timeRange[2]),]
-  timeBinsDN$dayOrNight[timeBinsDN$dayOrNight == 1] = "night"
-  timeBinsDN$dayOrNight[timeBinsDN$dayOrNight == 0] = "day"
+  if (dnBins){
+    if (sunOrCivil == "sun"){
+      timeBinsDN = data.frame(start      = sunriseSunset$sunStart,
+                              stop       = sunriseSunset$sunStop,
+                              dayOrNight = sunriseSunset$is_night,
+                              dateSunset = sunriseSunset$date)
+    } else {
+      timeBinsDN = data.frame(start      = sunriseSunset$civilStart,
+                              stop       = sunriseSunset$civilStop,
+                              dayOrNight = sunriseSunset$is_night,
+                              dateSunset = sunriseSunset$date)
+    }  
+    timeBinsDN$dayOrNight[timeBinsDN$dayOrNight == 1] = "night"
+    timeBinsDN$dayOrNight[timeBinsDN$dayOrNight == 0] = "day"
+  }
   
-# Create timeBins
+# Create crepuscule timeBins
+# =============================================================================
+  if (crepBins){
+    if (crepuscule %in% "civilSolar"){
+      timeBinsCrep = data.frame(start      = sunriseSunset$civilStart[sunriseSunset$is_night == 0],
+                                    stop       = sunriseSunset$sunStart[sunriseSunset$is_night == 0],
+                                    dielPhase  = "crepusculeMorning",
+                                    dateSunset = sunriseSunset$date[sunriseSunset$is_night == 0])
+      tmpBinsCrep  = data.frame(start      = sunriseSunset$sunStart[sunriseSunset$is_night == 0],
+                                stop       = sunriseSunset$sunStop[sunriseSunset$is_night == 0],
+                                dielPhase  = "day",
+                                dateSunset = sunriseSunset$date[sunriseSunset$is_night == 0])
+      timeBinsCrep = rbind(timeBinsCrep, tmpBinsCrep)
+      tmpBinsCrep  = data.frame(start      = sunriseSunset$sunStart[sunriseSunset$is_night == 1],
+                                stop       = sunriseSunset$civilStart[sunriseSunset$is_night == 1],
+                                dielPhase  = "crepusculeEvening",
+                                dateSunset = sunriseSunset$date[sunriseSunset$is_night == 1])
+      timeBinsCrep = rbind(timeBinsCrep, tmpBinsCrep)
+      tmpBinsCrep  = data.frame(start      = sunriseSunset$civilStart[sunriseSunset$is_night == 1],
+                                stop       = sunriseSunset$civilStop[sunriseSunset$is_night == 1],
+                                dielPhase  = "night",
+                                dateSunset = sunriseSunset$date[sunriseSunset$is_night == 1])
+      timeBinsCrep = rbind(timeBinsCrep, tmpBinsCrep)
+  
+    } else if (crepuscule %in% "nauticalCivil"){
+      timeBinsCrep = data.frame(start      = sunriseSunset$nauticalStart[sunriseSunset$is_night == 0],
+                                stop       = sunriseSunset$civilStart[sunriseSunset$is_night == 0],
+                                dielPhase  = "crepusculeMorning",
+                                dateSunset = sunriseSunset$date[sunriseSunset$is_night == 0])
+      tmpBinsCrep  = data.frame(start      = sunriseSunset$civilStart[sunriseSunset$is_night == 0],
+                                stop       = sunriseSunset$civilStop[sunriseSunset$is_night == 0],
+                                dielPhase  = "day",
+                                dateSunset = sunriseSunset$date[sunriseSunset$is_night == 0])
+      timeBinsCrep = rbind(timeBinsCrep, tmpBinsCrep)
+      tmpBinsCrep  = data.frame(start      = sunriseSunset$civilStart[sunriseSunset$is_night == 1],
+                                stop       = sunriseSunset$nauticalStart[sunriseSunset$is_night == 1],
+                                dielPhase  = "crepusculeEvening",
+                                dateSunset = sunriseSunset$date[sunriseSunset$is_night == 1])
+      timeBinsCrep = rbind(timeBinsCrep, tmpBinsCrep)
+      tmpBinsCrep  = data.frame(start      = sunriseSunset$nauticalStart[sunriseSunset$is_night == 1],
+                                stop       = sunriseSunset$nauticalStop[sunriseSunset$is_night == 1],
+                                dielPhase  = "night",
+                                dateSunset = sunriseSunset$date[sunriseSunset$is_night == 1])
+      timeBinsCrep = rbind(timeBinsCrep, tmpBinsCrep)
+  
+    } else {   # the default "nauticalSolar"
+      timeBinsCrep = data.frame(start      = sunriseSunset$nauticalStart[sunriseSunset$is_night == 0],
+                                stop       = sunriseSunset$sunStart[sunriseSunset$is_night == 0],
+                                dielPhase  = "crepusculeMorning",
+                                dateSunset = sunriseSunset$date[sunriseSunset$is_night == 0])
+      tmpBinsCrep  = data.frame(start      = sunriseSunset$sunStart[sunriseSunset$is_night == 0],
+                                stop       = sunriseSunset$sunStop[sunriseSunset$is_night == 0],
+                                dielPhase  = "day",
+                                dateSunset = sunriseSunset$date[sunriseSunset$is_night == 0])
+      timeBinsCrep = rbind(timeBinsCrep, tmpBinsCrep)
+      tmpBinsCrep  = data.frame(start      = sunriseSunset$sunStart[sunriseSunset$is_night == 1],
+                                stop       = sunriseSunset$nauticalStart[sunriseSunset$is_night == 1],
+                                dielPhase  = "crepusculeEvening",
+                                dateSunset = sunriseSunset$date[sunriseSunset$is_night == 1])
+      timeBinsCrep = rbind(timeBinsCrep, tmpBinsCrep)
+      tmpBinsCrep  = data.frame(start      = sunriseSunset$nauticalStart[sunriseSunset$is_night == 1],
+                                stop       = sunriseSunset$nauticalStop[sunriseSunset$is_night == 1],
+                                dielPhase  = "night",
+                                dateSunset = sunriseSunset$date[sunriseSunset$is_night == 1])
+      timeBinsCrep = rbind(timeBinsCrep, tmpBinsCrep)
+    }
+  }
+  
+# Limit timeBins to timeRange
+# =============================================================================
+  if (dnBins){
+    timeBinsDN = timeBinsDN[(timeBinsDN$start >= timeRange[1]) &
+                            (timeBinsDN$start <= timeRange[2]),]
+  } else if (crepBins){
+    timeBinsCrep = timeBinsCrep[(timeBinsCrep$start >= timeRange[1]) &
+                                (timeBinsCrep$start <= timeRange[2]),]
+  }
+  
+
+# Create timeBins with the requested timeBinDuration
 # =============================================================================
   timeStart = timeRange[1] - 
               (as.numeric(format(timeRange[1], "%M"))*60) - 
@@ -63,95 +157,210 @@ createTimeBins = function(timeRange,
               (60*60*24)
   timeStop  = timeRange[2] + (60*60*24)
   sequence  = seq(timeStart, timeStop, by = timeBinDuration_sec)
-  timeBins  = data.frame(start      = sequence[1:(length(sequence)-1)], 
-                         stop       = sequence[2:length(sequence)], 
-                         dayOrNight = NA, 
-                         dateSunset = as.POSIXct(NA, tz = timeZone))
-  timeBins  = timeBins[(timeBins$stop > timeRange[1]) & 
-                       (timeBins$start < timeRange[2]),]
+  if (dnBins){
+    timeBins    = data.frame(start            = sequence[1:(length(sequence)-1)], 
+                             stop             = sequence[2:length(sequence)], 
+                             dayOrNight       = NA,
+                             dateSunset       = as.POSIXct(NA, tz = timeZone))
+  } else if (crepBins){
+    timeBins  = data.frame(start            = sequence[1:(length(sequence)-1)], 
+                           stop             = sequence[2:length(sequence)], 
+                           dielPhase        = NA_character_,
+                           dateSunset       = as.POSIXct(NA, tz = timeZone))
+  }
+  timeBins                             = timeBins[(timeBins$stop > timeRange[1]) & 
+                                                  (timeBins$start < timeRange[2]),]
   timeBins$start[1]                    = timeRange[1]
   timeBins$stop[length(timeBins[, 1])] = timeRange[2]
   
-# Remove timeBins with same starttime as any startime in timeBinsDN
+# Remove timeBins with same starttime as any startime in timeBinsCrep or timeBinsDN
 # =============================================================================
-  timeBins = timeBins[!timeBins$start %in% timeBinsDN$start,]
+  if (dnBins){
+    timeBins   = timeBins[!timeBins$start %in% timeBinsDN$start,]         
+  } else if (crepBins){
+    timeBins = timeBins[!timeBins$start %in% timeBinsCrep$start,]
+  }
   
-# Combine timeBins
+# Combine timeBins with crepuscular/dn timebins
 # =============================================================================
-  timeBins = rbind(timeBinsDN, timeBins)
+  if (dnBins){
+    timeBins = rbind(timeBinsDN, timeBins)
+  } else if (crepBins){
+    timeBins = rbind(timeBinsCrep, timeBins)
+  }
   
 # Sort timeBins by start time
 # =============================================================================
-  timeBins = timeBins[order(timeBins$start),]
+  timeBins   = timeBins[order(timeBins$start),]
   
-  for (i in 1:(length(timeBins[, 1]))){
-    # adjust stop times
-    if (i < length(timeBins[, 1])){
-      if (timeBins$stop[i] != timeBins$start[i + 1]){
-        timeBins$stop[i] = timeBins$start[i + 1]
-      }
+# Make sure all timebins are sequentially timed
+# =============================================================================
+  if (dnBins){
+    for (i in 1:nrow(timeBins)){
+      # adjust stop times
+      # =======================================================================
+        if (i < nrow(timeBins)){
+          if (timeBins$stop[i] != timeBins$start[i + 1]){
+            timeBins$stop[i] = timeBins$start[i + 1]
+          }
+        }
+    }
+  } else if (crepBins){
+    for (i in 1:nrow(timeBins)){
+      # adjust stop times
+      # =======================================================================
+        if (i < nrow(timeBins)){
+          if (timeBins$stop[i] != timeBins$start[i + 1]){
+            if (timeBins$stop[i] > timeBins$stop[i + 1]){
+              timeBins$stop[i+1] = timeBins$stop[i]
+              timeBins$stop[i] = timeBins$start[i + 1]
+            } else {
+              timeBins$stop[i] = timeBins$start[i + 1]
+            }
+          }
+        }
     }
   }
   
-# Get night and day times
+# Get night and day times, if requested
 # =============================================================================
-  if (sunOrCivil == "sun"){
-    nightTimes = data.frame(start = sunriseSunset[sunriseSunset$is_night == 1,]$sunStart, 
-                            stop  = sunriseSunset[sunriseSunset$is_night == 1,]$sunStop)
-    dayTimes   = data.frame(start = sunriseSunset[sunriseSunset$is_night == 0,]$sunStart, 
-                            stop  = sunriseSunset[sunriseSunset$is_night == 0,]$sunStop)
-  } else if (sunOrCivil == "civil"){
-    nightTimes = data.frame(start = sunriseSunset[sunriseSunset$is_night == 1,]$civilStart, 
-                            stop  = sunriseSunset[sunriseSunset$is_night == 1,]$civilStop)
-    dayTimes   = data.frame(start = sunriseSunset[sunriseSunset$is_night == 0,]$civilStart, 
-                            stop  = sunriseSunset[sunriseSunset$is_night == 0,]$civilStop)
-  } else {
-    nightTimes = data.frame(start = sunriseSunset[sunriseSunset$is_night == 1,]$sunStart, 
-                            stop  = sunriseSunset[sunriseSunset$is_night == 1,]$sunStop)
-    dayTimes   = data.frame(start = sunriseSunset[sunriseSunset$is_night == 0,]$sunStart, 
-                            stop  = sunriseSunset[sunriseSunset$is_night == 0,]$sunStop)
+  if (dnBins){
+    if (sunOrCivil == "sun"){
+      nightTimes = data.frame(start = sunriseSunset[sunriseSunset$is_night == 1,]$sunStart, 
+                              stop  = sunriseSunset[sunriseSunset$is_night == 1,]$sunStop)
+      dayTimes   = data.frame(start = sunriseSunset[sunriseSunset$is_night == 0,]$sunStart, 
+                              stop  = sunriseSunset[sunriseSunset$is_night == 0,]$sunStop)
+    } else if (sunOrCivil == "civil"){
+      nightTimes = data.frame(start = sunriseSunset[sunriseSunset$is_night == 1,]$civilStart, 
+                              stop  = sunriseSunset[sunriseSunset$is_night == 1,]$civilStop)
+      dayTimes   = data.frame(start = sunriseSunset[sunriseSunset$is_night == 0,]$civilStart, 
+                              stop  = sunriseSunset[sunriseSunset$is_night == 0,]$civilStop)
+    } else {
+      nightTimes = data.frame(start = sunriseSunset[sunriseSunset$is_night == 1,]$sunStart, 
+                              stop  = sunriseSunset[sunriseSunset$is_night == 1,]$sunStop)
+      dayTimes   = data.frame(start = sunriseSunset[sunriseSunset$is_night == 0,]$sunStart, 
+                              stop  = sunriseSunset[sunriseSunset$is_night == 0,]$sunStop)
+    }
+    sunrise = dayTimes$start
+    sunset  = dayTimes$stop
   }
-  sunrise = dayTimes$start
-  sunset  = dayTimes$stop
   
-# assign day/night to timeBins based on meantime of timebin
+# assign day/night to timeBins based on meantime of timebin, if dnBins
 # =============================================================================
-  timeBinsMean = timeBins$start + difftime(timeBins$stop, timeBins$start, "secs") / 2
-  
-  isNight = vapply(timeBinsMean, 
-                   function(x) {x >= nightTimes$start & x < nightTimes$stop}, 
-                   logical(length(nightTimes[, 1])))
-  isNight = colSums(isNight)
-  isDay   = vapply(timeBinsMean, 
-                   function(x) {x >= dayTimes$start & x < dayTimes$stop}, 
-                   logical(length(dayTimes[, 1]))) 
-  isDay   = colSums(isDay)
-  
-  timeBins$dayOrNight[as.logical(isNight)] = "night"
-  timeBins$dayOrNight[as.logical(isDay)]   = "day"
-  
-# set dateSunset
-# =============================================================================
-  if (timeBins$dayOrNight[!is.na(timeBins$dayOrNight)][1] == "day"){
-    dateSunset = min(timeBins$dateSunset, na.rm = TRUE)
-  } else {
-    dateSunset = min(timeBins$dateSunset, na.rm = TRUE) - (60*60*24)
+  if (dnBins){
+    timeBinsMean = timeBins$start + difftime(timeBins$stop, timeBins$start, "secs") / 2
+    isNight = vapply(timeBinsMean, 
+                     function(x) {x >= nightTimes$start & x < nightTimes$stop}, 
+                     logical(length(nightTimes[, 1])))
+    isNight = colSums(isNight)
+    isDay   = vapply(timeBinsMean, 
+                     function(x) {x >= dayTimes$start & x < dayTimes$stop}, 
+                     logical(length(dayTimes[, 1]))) 
+    isDay   = colSums(isDay)
+    timeBins$dayOrNight[as.logical(isNight)] = "night"
+    timeBins$dayOrNight[as.logical(isDay)]   = "day"
   }
-  for (i in 1:(length(timeBins[, 1]))){
-    # set 'dateSunset'
-    if (!is.na(timeBins$dateSunset[i])){
-      dateSunset = timeBins$dateSunset[i]
-    } else if (!is.na(timeBins$dayOrNight[i])){
-      timeBins$dateSunset[i] = dateSunset  
+ 
+# Get day, crepuscular, and night periods, if requested
+# =============================================================================
+  if (crepBins){
+    if (crepuscule %in% "civilSolar"){
+      days              = data.frame(start = sunriseSunset$sunStart[sunriseSunset$is_night == 0], 
+                                     stop  = sunriseSunset$sunStop[sunriseSunset$is_night == 0])
+      crepusculeMorning = data.frame(start = sunriseSunset$civilStart[sunriseSunset$is_night == 0], 
+                                     stop  = sunriseSunset$sunStart[sunriseSunset$is_night == 0])
+      crepusculeEvening = data.frame(start = sunriseSunset$sunStart[sunriseSunset$is_night == 1], 
+                                     stop  = sunriseSunset$civilStart[sunriseSunset$is_night == 1])
+      nights            = data.frame(start = sunriseSunset$civilStart[sunriseSunset$is_night == 1], 
+                                     stop  = sunriseSunset$civilStop[sunriseSunset$is_night == 1])
+    } else if (crepuscule %in% "nauticalCivil"){
+      days              = data.frame(start = sunriseSunset$civilStart[sunriseSunset$is_night == 0], 
+                                     stop  = sunriseSunset$civilStop[sunriseSunset$is_night == 0])
+      crepusculeMorning = data.frame(start = sunriseSunset$nauticalStart[sunriseSunset$is_night == 0], 
+                                     stop  = sunriseSunset$civilStart[sunriseSunset$is_night == 0])
+      crepusculeEvening = data.frame(start = sunriseSunset$civilStart[sunriseSunset$is_night == 1], 
+                                     stop  = sunriseSunset$nauticalStart[sunriseSunset$is_night == 1])
+      nights            = data.frame(start = sunriseSunset$nauticalStart[sunriseSunset$is_night == 1], 
+                                     stop  = sunriseSunset$nauticalStop[sunriseSunset$is_night == 1])
+    } else { # default 'nauticalSolar' option
+      days              = data.frame(start = sunriseSunset$sunStart[sunriseSunset$is_night == 0], 
+                                     stop  = sunriseSunset$sunStop[sunriseSunset$is_night == 0])
+      crepusculeMorning = data.frame(start = sunriseSunset$nauticalStart[sunriseSunset$is_night == 0], 
+                                     stop  = sunriseSunset$sunStart[sunriseSunset$is_night == 0])
+      crepusculeEvening = data.frame(start = sunriseSunset$sunStart[sunriseSunset$is_night == 1], 
+                                     stop  = sunriseSunset$nauticalStart[sunriseSunset$is_night == 1])
+      nights            = data.frame(start = sunriseSunset$nauticalStart[sunriseSunset$is_night == 1], 
+                                     stop  = sunriseSunset$nauticalStop[sunriseSunset$is_night == 1])
+    }
+  }
+   
+# assign crepuscular phase to timeBins based on meantime of timebin, 
+#  if crepBins == TRUE
+# =============================================================================
+  if (crepBins){
+    timeBinsMean = timeBins$start + difftime(timeBins$stop, timeBins$start, "secs") / 2
+    isCrepMorning = vapply(timeBinsMean, 
+                     function(x) {x >= crepusculeMorning$start & x < crepusculeMorning$stop}, 
+                     logical(nrow(crepusculeMorning)))
+    isCrepMorning = colSums(isCrepMorning)
+    isCrepEvening = vapply(timeBinsMean, 
+                     function(x) {x >= crepusculeEvening$start & x < crepusculeEvening$stop}, 
+                     logical(nrow(crepusculeEvening)))
+    isCrepEvening = colSums(isCrepEvening)
+    isNight = vapply(timeBinsMean, 
+                     function(x) {x >= nights$start & x < nights$stop}, 
+                     logical(nrow(nights)))
+    isNight = colSums(isNight)
+    isDay   = vapply(timeBinsMean, 
+                     function(x) {x >= days$start & x < days$stop}, 
+                     logical(nrow(days))) 
+    isDay   = colSums(isDay)
+    timeBins$dielPhase[as.logical(isCrepMorning)] = "crepusculeMorning"
+    timeBins$dielPhase[as.logical(isCrepEvening)] = "crepusculeEvening"
+    timeBins$dielPhase[as.logical(isNight)] = "night"
+    timeBins$dielPhase[as.logical(isDay)]   = "day"
+  }
+  
+# Set dateSunset
+# =============================================================================
+  if (crepBins){
+    if (timeBins$dielPhase[!is.na(timeBins$dielPhase)][1] == "day"){
+      dateSunset = min(timeBins$dateSunset, na.rm = TRUE)
+    } else {
+      dateSunset = min(timeBins$dateSunset, na.rm = TRUE) - (60*60*24)
+    }
+    for (i in 1:nrow(timeBins)){
+      # set 'dateSunset'
+      # =========================================================================
+        if (!is.na(timeBins$dateSunset[i])){
+          dateSunset = timeBins$dateSunset[i]
+        } else if (!is.na(timeBins$dielPhase[i])){
+          timeBins$dateSunset[i] = dateSunset  
+        }
+    }
+  } else {
+    if (timeBins$dayOrNight[!is.na(timeBins$dayOrNight)][1] == "day"){
+      dateSunset = min(timeBins$dateSunset, na.rm = TRUE)
+    } else {
+      dateSunset = min(timeBins$dateSunset, na.rm = TRUE) - (60*60*24)
+    }
+    for (i in 1:nrow(timeBins)){
+      # set 'dateSunset'
+      # =========================================================================
+        if (!is.na(timeBins$dateSunset[i])){
+          dateSunset = timeBins$dateSunset[i]
+        } else if (!is.na(timeBins$dayOrNight[i])){
+          timeBins$dateSunset[i] = dateSunset  
+        }
     }
   }
   
-# add 'date' column to timeBins
+# add 'date' column to timeBins 
 # =============================================================================
   timeBins      = data.frame(date = NA, timeBins)
   timeBins$date = as.Date(timeBins$start , tz = timeZone)
   
-# add 'id' column to timBins
+# add 'id' column to timeBins
 # =============================================================================
   timeBins = data.frame(id = seq(1, length(timeBins[, 1]), by = 1), timeBins)
   
@@ -159,13 +368,10 @@ createTimeBins = function(timeRange,
 # =============================================================================
   timeBins              = data.frame(timeBins, duration_sec = NA)
   timeBins$duration_sec = as.numeric(difftime(timeBins$stop, timeBins$start, 
-                                              units = "secs"))
-  row.names = timeBins$id
+                                                units = "secs"))
+  row.names(timeBins) <- timeBins$id
   
 # Return output
 # =============================================================================
   return(timeBins)
 }
-
-#createTimeBins(timeRange = timeRangeTimeBins, sunriseSunset = sunriseSunset, timeBinDuration_sec = timeBinduration_sec, sunOrCivil = sunOrCivil, timeZone = targetTimeZone)
-#createTimeBins(timeRange = timeRangeTimeBins, sunriseSunset = sunriseSunset, timeBinDuration_sec = timeBinduration_sec, sunOrCivil = sunOrCivil, timeZone = targetTimeZone)

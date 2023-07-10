@@ -9,7 +9,10 @@ createTimeBins(
   timeBinDuration_sec,
   timeZone,
   sunriseSunset,
-  sunOrCivil = "civil"
+  dnBins = TRUE,
+  crepBins = FALSE,
+  sunOrCivil = "civil",
+  crepuscule = "nauticalSolar"
 )
 }
 \arguments{
@@ -25,8 +28,22 @@ e.g. "Etc/GMT0"}
 \item{sunriseSunset}{dataframe with sunrise/sunset, civil dawn/dusk. computed
 with function 'twilight'}
 
+\item{dnBins}{Logical. Default TRUE. Determines whether timebins based on
+day/night values (determined by the parameter 'sunOrCivil') are created.}
+
+\item{crepBins}{Logical. Default FALSE. Determines whether timebins with
+crepuscular time phases are created (determined by the parameter 'crepuscule').}
+
 \item{sunOrCivil}{sunrise/sunset or civil dawn/dusk used to split day and
 night. Supported values: "sun" or "civil", default: "civil"}
+
+\item{crepuscule}{Used to split into crepusculeMorning, day, crepusculeEvening,
+and night. Set to “nauticalSolar” to use the time between nautical dusk/dawn
+and sunrise/sunset times to define the crepuscular period, or to
+"nauticalCivil" to use the time between nautical and civil dusk/dawn to define
+the crepuscular period, or to "civilSolar" to use the time between civil
+dusk/dawn and sunrise/sunset times to define the crepuscular period. Default
+is "nauticalSolar".}
 }
 \value{
 returns a dataframe with the time bins information
