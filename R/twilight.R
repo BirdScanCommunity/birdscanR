@@ -159,11 +159,14 @@ twilight = function(timeRange,
                                             tz = timeZone)
 
   # Omit rows for which any of the twilight times contains an NA
+  #  --- 2023.08.30: These lines are commented out now, because they lead to
+  #  ---             days being deleted undwantedly for locations at higher 
+  #  ---             latitudes
   # ===========================================================================
-    twilightCols = c("sunStart", "sunStop", "civilStart", "civilStop", "nauticalStart", "nauticalStop")
-    twilightData = twilightData[apply(twilightData[, twilightCols], 
-                                      MARGIN = 1, 
-                                      FUN = function(x){all(!is.na(x))}),]
+    # twilightCols = c("sunStart", "sunStop", "civilStart", "civilStop", "nauticalStart", "nauticalStop")
+    # twilightData = twilightData[apply(twilightData[, twilightCols], 
+    #                                   MARGIN = 1, 
+    #                                   FUN = function(x){all(!is.na(x))}),]
   
   # Calculate day and night durations in hours and seconds -- THIS IS NO LONGER USED.
   # ===========================================================================
