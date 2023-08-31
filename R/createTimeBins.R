@@ -136,6 +136,75 @@ createTimeBins = function(timeRange,
                                 dateSunset = sunriseSunset$date[sunriseSunset$is_night == 1])
       timeBinsCrep = rbind(timeBinsCrep, tmpBinsCrep)
     }
+    
+    # Fix twilight timing NA values occuring at higher latitudes
+    # NOTE: THIS WAS SO FAR ONLY TESTED FOR NORTHERN HEMISPHERE SUMMER  
+    #       SITUATIONS, NOT FOR WINTER NOR FOR SOUTHERN HEMISPHERE 
+    #       LIKELY TO STILL NEED FURTHER FIXING FOR THESE SITUATIONS
+    # =========================================================================
+      # Sort all by dateSunset and factored dielPhase !!!!
+      # =======================================================================
+        timeBinsCrep$dielPhase = factor(timeBinsCrep$dielPhase, 
+                                        levels = c("crepusculeMorning",
+                                                   "day", 
+                                                   "crepusculeEvening",
+                                                   "night"))
+        timeBinsCrep = timeBinsCrep[order(timeBinsCrep$dateSunset, timeBinsCrep$dielPhase),]  
+
+      # Find the lines with na for start and stop
+      # =======================================================================
+        rowsDoubleNA = which((is.na(timeBinsCrep$start)) & (is.na(timeBinsCrep$stop)))
+        if (length(rowsDoubleNA) != 0){
+          # Update the stop in the line before with the mean of the start of the 
+          # line before and the stop after
+          # ===================================================================
+            if (1 %in% rowsDoubleNA){
+          	  timeBinsCrep = timeBinsCrep[2:nrow(timeBinsCrep), ]
+          	  rowsDoubleNA = rowsDoubleNA[2:length(rowsDoubleNA)]
+          	}
+            timeBinsCrep$stop[(rowsDoubleNA-1)]   = as.POSIXct(rowMeans(data.frame(as.numeric(timeBinsCrep$start[(rowsDoubleNA-1)]), 
+                                                                                   as.numeric(timeBinsCrep$stop[(rowsDoubleNA+1)]))), 
+                                                               tz = "ETC/GMT0")
+            
+          # Update the start of the line after with the mean of the start of the 
+          # line before and the stop after
+          # ===================================================================
+            if (nrow(timeBinsCrep) %in% rowsDoubleNA){
+              timeBinsCrep = timeBinsCrep[1:(nrow(timeBinsCrep)-1), ]
+              rowsDoubleNA = rowsDoubleNA[1:(length(rowsDoubleNA)-1)]
+            }
+            timeBinsCrep$start[(rowsDoubleNA+1)]  = as.POSIXct(rowMeans(data.frame(as.numeric(timeBinsCrep$start[(rowsDoubleNA-1)]), 
+                                                                                   as.numeric(timeBinsCrep$stop[(rowsDoubleNA+1)]))), 
+                                                               tz = "ETC/GMT0")
+            
+          # Delete the lines with na for start and stop
+          # ===================================================================
+            timeBinsCrep = timeBinsCrep[-rowsDoubleNA,]
+        }
+      
+      # Find the lines for which the stop is na and the start of the next line 
+      #  is NA
+      # =======================================================================
+        rowsStopNAStartPlusOneNA = which(is.na(timeBinsCrep$stop))
+        if (nrow(timeBinsCrep) %in% rowsStopNAStartPlusOneNA){
+          rowsStopNAStartPlusOneNA = rowsStopNAStartPlusOneNA[-(length(rowsStopNAStartPlusOneNA))]
+          timeBinsCrep             = timeBinsCrep[1:(nrow(timeBinsCrep)-1), ]
+        }
+        if (length(rowsStopNAStartPlusOneNA) != 0){
+          # Update the stop of the line with the mean of the start of the line 
+          #  and the stop of the next line
+          # ===================================================================
+            timeBinsCrep$stop[rowsStopNAStartPlusOneNA] = as.POSIXct(rowMeans(data.frame(as.numeric(timeBinsCrep$start[rowsStopNAStartPlusOneNA]), 
+                                                                                         as.numeric(timeBinsCrep$stop[(rowsStopNAStartPlusOneNA+1)]))), 
+                                                                     tz = "ETC/GMT0")
+            
+          # Update the start of the next line with the mean of the start of the 
+          #  line and the stop of the next line
+          # ===================================================================
+            timeBinsCrep$start[(rowsStopNAStartPlusOneNA+1)]  = as.POSIXct(rowMeans(data.frame(as.numeric(timeBinsCrep$start[(rowsStopNAStartPlusOneNA)]), 
+                                                                                               as.numeric(timeBinsCrep$stop[(rowsStopNAStartPlusOneNA+1)]))), 
+                                                                           tz = "ETC/GMT0")
+        }
   }
   
 # Limit timeBins to timeRange
@@ -302,23 +371,32 @@ createTimeBins = function(timeRange,
     isCrepMorning = vapply(timeBinsMean, 
                      function(x) {x >= crepusculeMorning$start & x < crepusculeMorning$stop}, 
                      logical(nrow(crepusculeMorning)))
-    isCrepMorning = colSums(isCrepMorning)
+    isCrepMorning = colSums(isCrepMorning, na.rm = TRUE)
     isCrepEvening = vapply(timeBinsMean, 
                      function(x) {x >= crepusculeEvening$start & x < crepusculeEvening$stop}, 
                      logical(nrow(crepusculeEvening)))
-    isCrepEvening = colSums(isCrepEvening)
+    isCrepEvening = colSums(isCrepEvening, na.rm = TRUE)
     isNight = vapply(timeBinsMean, 
                      function(x) {x >= nights$start & x < nights$stop}, 
                      logical(nrow(nights)))
-    isNight = colSums(isNight)
+    isNight = colSums(isNight, na.rm = TRUE)
     isDay   = vapply(timeBinsMean, 
                      function(x) {x >= days$start & x < days$stop}, 
                      logical(nrow(days))) 
-    isDay   = colSums(isDay)
+    isDay   = colSums(isDay, na.rm = TRUE)
     timeBins$dielPhase[as.logical(isCrepMorning)] = "crepusculeMorning"
     timeBins$dielPhase[as.logical(isCrepEvening)] = "crepusculeEvening"
     timeBins$dielPhase[as.logical(isNight)] = "night"
     timeBins$dielPhase[as.logical(isDay)]   = "day"
+    
+    # Complete the values for dielPhase where currently NA (fix for locations 
+    #  at higher latitudes)
+    # =========================================================================
+      for (cRow in 2:nrow(timeBins)){
+        if (is.na(timeBins$dielPhase[cRow])){
+          timeBins$dielPhase[cRow]= timeBins$dielPhase[cRow-1]
+        }
+      }
   }
   
 # Set dateSunset

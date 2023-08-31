@@ -764,7 +764,7 @@ computeMTR = function(dbName,
     }
   } 
   
-# Compute MTR per day, night, and crepuscular twilight phase, if requested        ### NEEDS ADJUSTING
+# Compute MTR per day, night, and crepuscular twilight phase, if requested        
 # =============================================================================
   if (computePerDayCrepusculeNight == TRUE){
     #  Combine all time bins of one day (grouped by timeChunkDateSunset) to one 
