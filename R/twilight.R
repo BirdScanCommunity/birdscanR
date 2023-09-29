@@ -44,12 +44,12 @@ twilight = function(timeRange,
   
   # Get the nautical dawn and dusk
   # ===========================================================================
-    nauticalDawn = maptools::crepuscule(crds        = lon_lat, 
+    nauticalDawn = suntools::crepuscule(crds        = lon_lat, 
                                         dateTime    = dateSeq, 
                                         solarDep    = 12, 
                                         direction   = "dawn", 
                                         POSIXct.out = TRUE)$time 
-    nauticalDusk = maptools::crepuscule(crds        = lon_lat, 
+    nauticalDusk = suntools::crepuscule(crds        = lon_lat, 
                                         dateTime    = dateSeq, 
                                         solarDep    = 12, 
                                         direction   = "dusk", 
@@ -57,12 +57,12 @@ twilight = function(timeRange,
   
   # Get the civil dawn and dusk
   # ===========================================================================
-    civilDawn = maptools::crepuscule(crds        = lon_lat, 
+    civilDawn = suntools::crepuscule(crds        = lon_lat, 
                                     dateTime    = dateSeq, 
                                     solarDep    = 6, 
                                     direction   = "dawn", 
                                     POSIXct.out = TRUE)$time  
-    civilDusk = maptools::crepuscule(crds        = lon_lat, 
+    civilDusk = suntools::crepuscule(crds        = lon_lat, 
                                     dateTime    = dateSeq, 
                                     solarDep    = 6, 
                                     direction   = "dusk", 
@@ -70,12 +70,12 @@ twilight = function(timeRange,
     
   # Get the solar dawn and dusk
   # ===========================================================================
-    sunrise = maptools::crepuscule(crds        = lon_lat, 
+    sunrise = suntools::crepuscule(crds        = lon_lat, 
                                    dateTime    = dateSeq, 
                                    solarDep    = 0, 
                                    direction   = "dawn", 
                                    POSIXct.out = TRUE)$time  
-    sunset  = maptools::crepuscule(crds        = lon_lat, 
+    sunset  = suntools::crepuscule(crds        = lon_lat, 
                                    dateTime    = dateSeq, 
                                    solarDep    = 0, 
                                    direction   = "dusk", 
