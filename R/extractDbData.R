@@ -22,8 +22,15 @@
 #' @param listOfRfFeaturesToExtract NULL or a list of feature to extract
 #' @param siteLocation Geographic location of the radar measurements in decimal 
 #' format: c(Latitude, Longitude)
-#' @param sunOrCivil optional character string, “sun” (sunrise/sunset times) or 
-#' “civil” (civil twilight times) to group by day and night. Default is "civil".
+#' @param sunOrCivil optional character variable, Set to “sun” to use 
+#' sunrise/sunset times or to “civil” to use civil twilight times to group echoes 
+#' into day/night. Default is "civil".
+#' @param crepuscule optional character variable, Set to “nauticalSolar” to use 
+#' the time between nautical dusk/dawn and sunrise/sunset times to define the 
+#' crepuscular period, or to "nauticalCivil" to use the time between nautical 
+#' and civil dusk/dawn to define the crepuscular period, or to "civilSolar" to use 
+#' the time between civil dusk/dawn and sunrise/sunset times to define the 
+#' crepuscular period. Default is "nauticalSolar".
 #'
 #' @return a list of R objects with data extracted from the Database: 'echoData', 
 #' 'protocolData', 'siteData', 'visibilityData', 'timeBinData', 'rfFeatures', 
@@ -41,7 +48,7 @@
 #'   targetTimeZone = "Etc/GMT0"
 #'   listOfRfFeaturesToExtract = c(167, 168)
 #'   siteLocation   = c(47.494427, 8.716432)
-#'   sunOrCivil     = "civil"
+#'   sunOrCivil   = "civil"
 #'  
 #' # Get data
 #' # ===========================================================================
@@ -54,7 +61,8 @@
 #'                          targetTimeZone                 = targetTimeZone,
 #'                          listOfRfFeaturesToExtract      = listOfRfFeaturesToExtract,
 #'                          siteLocation                   = siteLocation, 
-#'                          sunOrCivil                     = sunOrCivil)
+#'                          sunOrCivil                   = sunOrCivil,
+#'                          crepuscule                     = "nauticalSolar")
 #' }
 #' 
 extractDbData = function(dbDriverChar              = "SQL Server", 
@@ -68,7 +76,8 @@ extractDbData = function(dbDriverChar              = "SQL Server",
                          targetTimeZone            = "Etc/GMT0", 
                          listOfRfFeaturesToExtract = NULL, 
                          siteLocation              = NULL, 
-                         sunOrCivil                = "civil"){
+                         sunOrCivil              = "civil",
+                         crepuscule                = "nauticalSolar"){
 # Check whether the necessary input is present
 # =============================================================================
   if(is.null(dbServer)){
@@ -349,30 +358,31 @@ extractDbData = function(dbDriverChar              = "SQL Server",
   
 # Set min and max time_stamps of echodata as time range for 
 # sunrise/sunset calculation
-# ===========================================================================
+# =============================================================================
   timeRangeSunriseSunset = c(min(outputList$echoData$time_stamp_targetTZ), 
                              max(outputList$echoData$time_stamp_targetTZ))  
 
 # Compute sunrise/sunset and dawn/dusk (civil)
-# ===========================================================================
+# =============================================================================
   sunriseSunset = twilight(timeRange = timeRangeSunriseSunset, 
                            latLon    = siteLocation, 
                            timeZone  = TimeZone$targetTimeZone)
 
 # Add the sunrise/sunset information to the output list
-# ===========================================================================
+# =============================================================================
   outputList$sunriseSunset = sunriseSunset  
   rm(sunriseSunset)
 
 # Start adding day/night information for each echo
-# ===========================================================================
+# =============================================================================
   message("Adding day/night information per echo..")
         
 # Add day/night infor per echo
-# =====================================================================
+# =============================================================================
   outputList$echoData = addDayNightInfoPerEcho(echoData      = outputList$echoData,
                                                sunriseSunset = outputList$sunriseSunset, 
-                                               sunOrCivil    = sunOrCivil)
+                                               sunOrCivil  = sunOrCivil,
+                                               crepuscule    = crepuscule)
   
 # Create the output directory if it doesn't exist
 # =============================================================================

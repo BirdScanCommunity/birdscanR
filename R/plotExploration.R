@@ -26,7 +26,7 @@
 #' the echoes, created by the function ‘extractDBData’ or a subset of it created 
 #' by the function ‘filterProtocolData’. If not set, periods without a protocol 
 #' are not shown in the plot. 
-#' @param sunriseSunset optional dataframe with sunrise/sunset and civil 
+#' @param sunriseSunset optional dataframe with sunrise/sunset, civil, and nautical  
 #' twilight times created by the function ‘twilight’. If not set, day/night 
 #' times are not shown in the plot. 
 #' @param maxAltitude optional numeric, fixes the maximum value of the y-Scale 
@@ -165,12 +165,14 @@ plotExploration = function(echoData         = NULL,
         sunriseSunset$is_night[sunriseSunset$is_night == 1] = "night"
     }
       
-    # Convert the timeRange input to a POSIXct object
+    # Convert the timeRange input to a POSIXct object, if it was defined
     # =========================================================================
-      posixCTListCon = function(x){
-        as.POSIXct(x, format = "%Y-%m-%d %H:%M", tz = targetTimeZone)
+      if (!is.null(timeRange)){
+        posixCTListCon = function(x){
+          as.POSIXct(x, format = "%Y-%m-%d %H:%M", tz = targetTimeZone)
+        }
+        timeRange = lapply(timeRange, posixCTListCon)
       }
-      timeRange = lapply(timeRange, posixCTListCon)
     
     # timeRanges to plot
     # =========================================================================
@@ -185,6 +187,7 @@ plotExploration = function(echoData         = NULL,
       for (i in 1:nPlots){
         if (is.null(timeRange)){
           echoDataPlot = echoData
+          timeRange    = list(c(min(echoDataPlot$time_stamp_targetTZ), max(echoDataPlot$time_stamp_targetTZ)))
         } else {
           echoDataPlot = echoData[(echoData$time_stamp_targetTZ >= timeRange[[i]][1]) & 
                                   (echoData$time_stamp_targetTZ <= timeRange[[i]][2]),]  
@@ -204,7 +207,6 @@ plotExploration = function(echoData         = NULL,
             subtitle = paste0(format(timeRange[[i]][1], "%d-%b-%Y"), 
                               " to ", 
                               format(timeRange[[i]][2], "%d-%b-%Y"))
-            
             explorationPlot = ggplot2::ggplot()
           
           # create background data
@@ -341,13 +343,18 @@ plotExploration = function(echoData         = NULL,
           
           # save plot
           # ===================================================================
+            plotWidth_mm   = as.numeric(difftime(timeRange[[i]][2], 
+                                                 timeRange[[i]][1], 
+                                                 "days") * 10 + 50)
+            plotHeight_mm  = 150
+            if (plotWidth_mm < plotHeight_mm){
+              plotWidth_mm = plotHeight_mm
+            }
             savePlotToFile(plot           = explorationPlot, 
                            filePath      = filePath, 
                            plotType      = "exploration", 
-                           plotWidth_mm  = difftime(timeRange[[i]][2], 
-                                                    timeRange[[i]][1], 
-                                                    "days") * 100 + 50, 
-                           plotHeight_mm = 150, 
+                           plotWidth_mm  = plotWidth_mm, 
+                           plotHeight_mm = plotHeight_mm, 
                            timeRange     = c(timeRange[[i]][1], 
                                              timeRange[[i]][2]))  
         }

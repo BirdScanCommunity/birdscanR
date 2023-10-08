@@ -15,6 +15,7 @@ computeMTR(
   timeZone,
   sunriseSunset,
   sunOrCivil = "civil",
+  crepuscule = "nauticalSolar",
   protocolData,
   visibilityData,
   manualBlindTimes = NULL,
@@ -23,6 +24,7 @@ computeMTR(
   blindTimeAsMtrZero = NULL,
   propObsTimeCutoff = 0,
   computePerDayNight = FALSE,
+  computePerDayCrepusculeNight = FALSE,
   computeAltitudeDistribution = TRUE
 )
 }
@@ -52,11 +54,18 @@ values <= 0 a duration of 1 hour will be set}
 \item{timeZone}{time zone in which the time bins should be created as string,
 e.g. "Etc/GMT0"}
 
-\item{sunriseSunset}{dataframe with sunrise/sunset, civil dawn/dusk. computed
-with function 'twilight'}
+\item{sunriseSunset}{dataframe with sunrise/sunset, and civil and nautical
+dawn/dusk. Computed with the function 'twilight'.}
 
 \item{sunOrCivil}{sunrise/sunset or civil dawn/dusk used to split day and
-night. Supported values: "sun" or "civil", default: "civil"}
+night. Supported values: "sun" or "civil". Default: "civil"}
+
+\item{crepuscule}{optional character variable, Set to “nauticalSolar” to use
+the time between nautical dusk/dawn and sunrise/sunset times to define the
+crepuscular period, or to "nauticalCivil" to use the time between nautical
+and civil dusk/dawn to define the crepuscular period, or to "civilSolar" to use
+the time between civil dusk/dawn and sunrise/sunset times to define the
+crepuscular period. Default is "nauticalSolar".}
 
 \item{protocolData}{dataframe with the protocol data from the data list
 created by the function \code{extractDBData} or a subset of it created by the
@@ -91,6 +100,16 @@ time bin. This option computes the MTR for each time bin defined in the time
 bin dataframe. The time bins that were split due to sunrise/sunset during the
 time bin will be combined to one bin.}
 
+\item{computePerDayCrepusculeNight}{logical, TRUE: MTR is computed per
+crepusculeMorning, day, crepusculeEvening, and night. The time bins of each
+of these diel phases will be combined and the mean MTR is computed for each
+phase. The spread (first and third Quartile) for each phase is also computed.
+The spread is dependent on the chosen time bin duration/amount of time bins;
+When FALSE: MTR is computed for each time bin. This option computes the MTR
+for each time bin defined in the time bin dataframe. The time bins that were
+split due to sunrise/sunset during the time bin will be combined to one bin.
+Default = FALSE.}
+
 \item{computeAltitudeDistribution}{logical, TRUE: compute the mean height and
 altitude distribution of MTR for the pre-defined quantiles 0.05, 0.25, 0.5,
 0.75, 0.95}
@@ -116,7 +135,8 @@ your database.
   listOfRfFeaturesToExtract = c(167, 168)
   siteLocation   = c(47.494427, 8.716432)
   sunOrCivil     = "civil"
-  timeRangeData       = c("2021-01-15 00:00", "2021-01-31 00:00")
+  crepuscule     = "nauticalSolar"
+  timeRangeData  = c("2021-01-15 00:00", "2021-01-31 00:00")
  
 # Get data
 # ===========================================================================
@@ -129,7 +149,8 @@ your database.
                          targetTimeZone                 = targetTimeZone,
                          listOfRfFeaturesToExtract      = listOfRfFeaturesToExtract,
                          siteLocation                   = siteLocation, 
-                         sunOrCivil                     = sunOrCivil)
+                         sunOrCivil                     = sunOrCivil, 
+                         crepuscule                     = crepuscule)
                          
 # Get sunrise/sunset 
 # ===========================================================================
@@ -145,25 +166,27 @@ your database.
 # Compute migration traffic rate
 # ===========================================================================
   classSelection.mtr = c("insect")
-  mtrData = computeMTR(dbName                      = dbName, 
-                       echoes                      = dbData$echoData, 
-                       classSelection              = classSelection.mtr, 
-                       altitudeRange               = c(25, 1025),
-                       altitudeBinSize             = 50,
-                       timeRange                   = timeRangeData, 
-                       timeBinDuration_sec         = 1800,
-                       timeZone                    = targetTimeZone,
-                       sunriseSunset               = sunriseSunset,
-                       sunOrCivil                  = "civil",
-                       protocolData                = dbData$protocolData, 
-                       visibilityData              = dbData$visibilityData,
-                       manualBlindTimes            = cManualBlindTimes,
-                       saveBlindTimes              = FALSE,
-                       blindTimesOutputDir         = getwd(),
-                       blindTimeAsMtrZero          = NULL,
-                       propObsTimeCutoff           = 0, 
-                       computePerDayNight          = FALSE, 
-                       computeAltitudeDistribution = TRUE)   
+  mtrData = computeMTR(dbName                       = dbName, 
+                       echoes                       = dbData$echoData, 
+                       classSelection               = classSelection.mtr, 
+                       altitudeRange                = c(25, 1025),
+                       altitudeBinSize              = 50,
+                       timeRange                    = timeRangeData, 
+                       timeBinDuration_sec          = 1800,
+                       timeZone                     = targetTimeZone,
+                       sunriseSunset                = sunriseSunset,
+                       sunOrCivil                   = "civil",
+                       crepuscule                   = crepuscule,
+                       protocolData                 = dbData$protocolData, 
+                       visibilityData               = dbData$visibilityData,
+                       manualBlindTimes             = cManualBlindTimes,
+                       saveBlindTimes               = FALSE,
+                       blindTimesOutputDir          = getwd(),
+                       blindTimeAsMtrZero           = NULL,
+                       propObsTimeCutoff            = 0, 
+                       computePerDayNight           = FALSE,
+                       computePerDayCrepusculeNight = FALSE 
+                       computeAltitudeDistribution  = TRUE)   
 }
 
 }

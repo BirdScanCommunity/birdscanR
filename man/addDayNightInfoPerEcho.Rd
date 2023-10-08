@@ -4,7 +4,12 @@
 \alias{addDayNightInfoPerEcho}
 \title{addDayNightInfoPerEcho}
 \usage{
-addDayNightInfoPerEcho(echoData, sunriseSunset, sunOrCivil = "civil")
+addDayNightInfoPerEcho(
+  echoData,
+  sunriseSunset,
+  sunOrCivil = "civil",
+  crepuscule = "nauticalSolar"
+)
 }
 \arguments{
 \item{echoData}{dataframe with the echo data from the data list created by
@@ -13,17 +18,26 @@ the function ‘extractDBData’}
 \item{sunriseSunset}{dataframe with sunrise/sunset and civil twilight times
 created by the function ‘twilight’}
 
-\item{sunOrCivil}{optional character string, “sun” (sunrise/sunset times) or
-“civil” (civil twilight times) to group by day and night. Default is "civil".}
+\item{sunOrCivil}{optional character variable, Set to “sun” to use
+sunrise/sunset times or to “civil” to use civil twilight times to group echoes
+into day/night. Default is "civil".}
+
+\item{crepuscule}{optional character variable, Set to “nauticalSolar” to use
+the time between nautical dusk/dawn and sunrise/sunset times to define the
+crepuscular period, or to "nauticalCivil" to use the time between nautical
+and civil dusk/dawn to define the crepuscular period, or to "civilSolar" to use
+the time between civil dusk/dawn and sunrise/sunset times to define the
+crepuscular period. Default is "nauticalSolar".}
 }
 \value{
-data frame with two columns added for dayOrNight and dateSunset.
+data frame with thre columns added, i.e. 'dayOrNight', 'dayOrCrepOrNight',
+and 'dateSunset'.
 }
 \description{
-The function ‘addDayNightInfoPerEcho’ adds the two columns
-‘dayOrNight’ and ‘dateSunset’ to the echo data. This information is not
-used any further by the script, but allows the user to filter echo data
-easily by “day” and “night”.
+The function ‘addDayNightInfoPerEcho’ adds three columns
+‘dayOrNight’, ''dayOrCrepOrNight' and ‘dateSunset’ to the echo data. This
+allows the user to filter echo data easily by “day” and “night”, or "day",
+"crepuscular", and "night".
 }
 \examples{
 \dontrun{
@@ -37,7 +51,7 @@ easily by “day” and “night”.
   targetTimeZone = "Etc/GMT0"
   listOfRfFeaturesToExtract = c(167, 168)
   siteLocation   = c(47.494427, 8.716432)
-  sunOrCivil     = "civil"
+  sunOrCivil   = "civil"
  
 # Get data
 # ===========================================================================
@@ -50,7 +64,8 @@ easily by “day” and “night”.
                          targetTimeZone                 = targetTimeZone,
                          listOfRfFeaturesToExtract      = listOfRfFeaturesToExtract,
                          siteLocation                   = siteLocation, 
-                         sunOrCivil                     = sunOrCivil)
+                         sunOrCivil                   = sunOrCivil, 
+                         crepuscule                     = "nauticalSolar")
                          
 # Get sunrise/sunset information
 # ===========================================================================
@@ -63,7 +78,7 @@ easily by “day” and “night”.
 # ===========================================================================
   echoData = addDayNightInfoPerEcho(echoData      = dbData$echoData,
                                     sunriseSunset = pulseLengthSelection, 
-                                    sunOrCivil    = "civil")   
+                                    sunOrCivil  = "civil")   
 }
 
 }

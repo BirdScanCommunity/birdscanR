@@ -124,12 +124,14 @@ plotLongitudinalMTR = function(mtr,
     return()
   }
   
-# Convert the timeRange input to a POSIXct object
+# Convert the timeRange input to a POSIXct object, if it was defined
 # =============================================================================
-  posixCTListCon = function(x){
-    as.POSIXct(x, format = "%Y-%m-%d %H:%M", tz = targetTimeZone)
+  if (!is.null(timeRange)){
+    posixCTListCon = function(x){as.POSIXct(x, 
+                                            format = "%Y-%m-%d %H:%M", 
+                                            tz = targetTimeZone)}
+    timeRange = lapply(timeRange, posixCTListCon)
   }
-  timeRange = lapply(timeRange, posixCTListCon)
   
 # extract classSelection
 # =============================================================================
@@ -173,7 +175,8 @@ plotLongitudinalMTR = function(mtr,
         # Subset mtr data to current time range
         # =====================================================================
           if (is.null(timeRange)){
-            mtrPlot = mtr[mtr$altitudeChunkId == cAltBin,]
+            mtrPlot   = mtr[mtr$altitudeChunkId == cAltBin,]
+            timeRange = list(c(min(mtrPlot$timeChunkBegin), max(mtrPlot$timeChunkEnd)))
           } else {
             mtrPlot = mtr[(mtr$altitudeChunkId == cAltBin) & 
                           (mtr$timeChunkBegin > timeRange[[i]][1]) & 
@@ -248,7 +251,7 @@ plotLongitudinalMTR = function(mtr,
                                                          fill = obsType), 
                                             position = "dodge2", 
                                             fill = "grey50") + 
-                          ggplot2::ggtitle(label = "Daily MTR", subtitle = subtitle) + 
+                          ggplot2::ggtitle(label = "MTR", subtitle = subtitle) + 
                           ggplot2::xlab("Date") + 
                           ggplot2::ylab("MTR [ind./h/km]") +
                           ggplot2::geom_text(position = ggplot2::position_dodge(width = 0.9), 
@@ -272,12 +275,18 @@ plotLongitudinalMTR = function(mtr,
             
             # save plot to file
             # =================================================================
+              plotWidth_mm   = as.numeric(difftime(timeRange[[i]][2], 
+                                                   timeRange[[i]][1], 
+                                                   "days") * 10 + 50)
+              plotHeight_mm  = 150
+              if (plotWidth_mm < plotHeight_mm){
+                plotWidth_mm = plotHeight_mm
+              }
               savePlotToFile(plot            = longPlot,
                              filePath       = filePath, 
                              plotType       = "mtrPerDay", 
-                             plotWidth_mm   = difftime(timeRange[[i]][2], 
-                                                       timeRange[[i]][1], "days") * 10 + 50, 
-                             plotHeight_mm  = 150, 
+                             plotWidth_mm   = plotWidth_mm, 
+                             plotHeight_mm  = plotHeight_mm, 
                              timeRange      = c(timeRange[[i]][1], timeRange[[i]][2]), 
                              classSelection = plotClass, 
                              altitudeRange  = c(min(mtrPlot$altitudeChunkBegin), 
