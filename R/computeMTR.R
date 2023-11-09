@@ -718,7 +718,7 @@ computeMTR = function(dbName,
             
         # Add day night mtrs for current altitude chunk to overview MTR data
         # ===================================================================== 
-          if (exists("mtrDayNight", envir = environment())){
+          if (exists("mtrDayNight", envir = environment(), inherits = FALSE)){
             mtrDayNight = rbind(mtrDayNight, mtrDay, mtrNight)
           } else {
             mtrDayNight = rbind(mtrDay, mtrNight)
