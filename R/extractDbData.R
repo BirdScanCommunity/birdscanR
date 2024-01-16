@@ -34,7 +34,8 @@
 #'
 #' @return a list of R objects with data extracted from the Database: 'echoData', 
 #' 'protocolData', 'siteData', 'visibilityData', 'timeBinData', 'rfFeatures', 
-#' 'availableClasses', 'classProbabilitiesAndMtrFactors'
+#' 'availableClasses', 'availableBatClasses', 'classProbabilitiesAndMtrFactors',
+#' 'batProbabilitiesAndMtrFactors'
 #' @export
 #' @examples
 #' \dontrun{
@@ -227,6 +228,11 @@ extractDbData = function(dbDriverChar              = "SQL Server",
   message("Extracting RF classification...")
   rfclassificationTable = getRfClassification(dbConnection, dbDriverChar)
 
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::
+# load bat classification
+  message( "Extracting Bat classification..." )
+  batClassificationTable = getBatClassification(dbConnection, dbDriverChar)
+  
 # load echo validation from local MS-SQL DB
 # =============================================================================
   message("Extracting echo_validation table from DB...")
@@ -244,11 +250,16 @@ extractDbData = function(dbDriverChar              = "SQL Server",
                    by = "echo", all.x = TRUE, all.y = FALSE)
   echoData = merge(echoData, rfclassificationTable$rfclassificationTable, 
                    by = "echo", all.x = TRUE, all.y = FALSE)
+  echoData = merge(echoData, batClassificationTable$batClassificationTable, 
+                   by = "echo", all.x = TRUE, all.y = FALSE )
   availableClasses = rfclassificationTable$availableClasses
+  availableBatClasses = batClassificationTable$availableClasses
   classProbabilitiesAndMtrFactors = rfclassificationTable$classProbabilitiesAndMtrFactors
+  batProbabilitiesAndMtrFactors = batClassificationTable$classProbabilitiesAndMtrFactors
   rfFeatures                      = echoRfFeatureMap$rfFeatures
   rm(collectionTable, echoRfFeatureMap, 
-     echovalidationTable, rfclassificationTable)
+     echovalidationTable, rfclassificationTable,
+     batClassificationTable)
 
 # rename protocolTable
 # =============================================================================
@@ -334,9 +345,11 @@ extractDbData = function(dbDriverChar              = "SQL Server",
                         manualVisibilityTable           = manualVisibilityTable,
                         timeBinData                     = timeBinData,
                         availableClasses                = availableClasses,
+                        availableBatClasses             = availableBatClasses,
                         rfFeatures                      = rfFeatures,
                         TimeZone                        = TimeZone,
-                        classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors)
+                        classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors,
+                        batProbabilitiesAndMtrFactors   = batProbabilitiesAndMtrFactors)
       
   # CASE: automatic VisibilityTable
   # ===========================================================================
@@ -347,9 +360,11 @@ extractDbData = function(dbDriverChar              = "SQL Server",
                         visibilityData                  = visibilityData,
                         timeBinData                     = timeBinData,
                         availableClasses                = availableClasses,
+                        availableBatClasses             = availableBatClasses,
                         rfFeatures                      = rfFeatures,
                         TimeZone                        = TimeZone,
-                        classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors)
+                        classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors,
+                        batProbabilitiesAndMtrFactors   = batProbabilitiesAndMtrFactors)
     }
   
 # Start sunrise/sunset and twilight information calculation
