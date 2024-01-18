@@ -1,3 +1,7 @@
+# birdscanR 0.2.0.9001
+* Added functionality: The function 'getBatClassification()' was added to get the data from the MR1 SQL tables 'bat_classification' and 'bat_class_probability'. The function 'extractDbData()' was updated to also extract the bat classification results using the prior function.
+* Added functionality: The function 'reclassToBats()' was added to change the class of the echoes to 'bat' for those having a classification probability higher than a specified threshold.
+
 # birdscanR 0.2.0
 * Added functionality: Add sample classification into crepuscularMorning, day, crepuscularNight, and night when extracting data. 
 * Added functionality: Enable mtr calculation for day, crepuscule, and night instead of merely day/night only (both options available now).  
