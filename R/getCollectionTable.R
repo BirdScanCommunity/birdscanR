@@ -71,7 +71,9 @@ getCollectionTable = function(dbConnection , dbDriverChar){
                                                "distLeftToBottom",     # Distance between left side and bottom of echo (samples)
                                                "nSamplesInEcho",       # Length of echo (samples)
                                                "areaOfEcho",           # Area of echo (seconds multiplied by meter)
-                                               NA, NA, NA, NA, NA, NA, NA, NA, 
+                                               NA,
+                                               "speed",                # Speed (m/s) - This is the new speed variable, included in the Birdscan software as of v1.7
+                                               NA, NA, NA, NA, NA, NA, 
                                                NA, NA, NA, NA, NA, NA, NA))
     
    # load collection from 'MS-SQL' database
