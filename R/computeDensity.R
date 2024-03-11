@@ -757,13 +757,13 @@ computeDensity = function(dbName,
 
       density = densityDayNight
       
-      # # Proportional observation time
-      # # =======================================================================
-      #   density$proportionalTimeObserved[density$operationTime_sec > 0] = density$observationTime_sec[density$operationTime_sec > 0] / 
-      #                                                               density$timeChunkDuration_sec[density$operationTime_sec > 0]
-      #   density$proportionalTimeObserved[density$operationTime_sec == 0] = 0 
-      # 
-      # # density
+      # Proportional observation time
+      # =======================================================================
+        density$proportionalTimeObserved[density$operationTime_sec > 0] = density$observationTime_sec[density$operationTime_sec > 0] /
+                                                                    density$timeChunkDuration_sec[density$operationTime_sec > 0]
+        density$proportionalTimeObserved[density$operationTime_sec == 0] = 0
+
+      # # density --- THIS WORKED FOR MTR BUT NOT FOR DENSITY - OBSOLETE
       # # =======================================================================
       #   density$density.allClasses[density$observationTime_h > 0] = density$sumOfMTRFactors.allClasses[density$observationTime_h > 0] / 
       #                                                     density$observationTime_h[density$observationTime_h > 0]
@@ -842,21 +842,21 @@ computeDensity = function(dbName,
                                                      sum, na.rm = TRUE)
             
             densityDay = data.frame(timeChunkDate            = as.Date(timeChunkDate$x), 
-                                timeChunkBegin           = timeChunkBegin$x, 
-                                timeChunkEnd             = timeChunkEnd$x,
-                                timeChunkDateSunset      = timeChunkDateSunset$x,
-                                timeChunkDuration_sec    = timeChunkDuration_sec$x,
-                                blindTime_sec            = blindTime_sec$x,
-                                operationTime_sec        = operationTime_sec$x,
-                                observationTime_sec      = observationTime_sec$x,
-                                observationTime_h        = observationTime_sec$x / 3600,
-                                proportionalTimeObserved = NA,
-                                dielPhase               = "day",
-                                altitudeChunkId          = min(densityTmp$altitudeChunkId),
-                                altitudeChunkBegin       = min(densityTmp$altitudeChunkBegin),
-                                altitudeChunkEnd         = min(densityTmp$altitudeChunkEnd),
-                                altitudeChunkSize        = min(densityTmp$altitudeChunkSize),
-                                altitudeChunkAvgAltitude = min(densityTmp$altitudeChunkAvgAltitude))
+                                    timeChunkBegin           = timeChunkBegin$x, 
+                                    timeChunkEnd             = timeChunkEnd$x,
+                                    timeChunkDateSunset      = timeChunkDateSunset$x,
+                                    timeChunkDuration_sec    = timeChunkDuration_sec$x,
+                                    blindTime_sec            = blindTime_sec$x,
+                                    operationTime_sec        = operationTime_sec$x,
+                                    observationTime_sec      = observationTime_sec$x,
+                                    observationTime_h        = observationTime_sec$x / 3600,
+                                    proportionalTimeObserved = NA,
+                                    dielPhase               = "day",
+                                    altitudeChunkId          = min(densityTmp$altitudeChunkId),
+                                    altitudeChunkBegin       = min(densityTmp$altitudeChunkBegin),
+                                    altitudeChunkEnd         = min(densityTmp$altitudeChunkEnd),
+                                    altitudeChunkSize        = min(densityTmp$altitudeChunkSize),
+                                    altitudeChunkAvgAltitude = min(densityTmp$altitudeChunkAvgAltitude))
           
           # nEchoes
           # ====================================================================
@@ -887,9 +887,20 @@ computeDensity = function(dbName,
           
           # density
           # ====================================================================
-            densityDay = data.frame(densityDay, density.allClasses = NA)
+            # densityDay = data.frame(densityDay, density.allClasses = NA)
+            # for (i in 1:length(classSelection)){
+            #   densityDay[, paste("density", classSelection[i], sep = ".")] = NA
+            # }
+            densityAllClasses = stats::aggregate(densityTmp$density.allClasses, 
+                                                 list(densityTmp$timeChunkDateSunset), 
+                                                 mean, na.rm = TRUE)
+            densityDay = data.frame(densityDay, 
+                                    density.allClasses = densityAllClasses$x)
             for (i in 1:length(classSelection)){
-              densityDay[, paste("density", classSelection[i], sep = ".")] = NA
+              meanDensity = stats::aggregate(densityTmp[, paste("density", classSelection[i], sep = ".")], 
+                                             list(densityTmp$timeChunkDateSunset), 
+                                             mean, na.rm = TRUE)
+              densityDay[, paste("density", classSelection[i], sep = ".")] = meanDensity$x 
             }
           
           # first quartiles
@@ -1017,11 +1028,22 @@ computeDensity = function(dbName,
           
           # density
           # ===================================================================
-            densityNight = data.frame(densityNight, density.allClasses = NA)
+            # densityNight = data.frame(densityNight, density.allClasses = NA)
+            # for (i in 1:length(classSelection)){
+            #   densityNight[, paste("density", classSelection[i], sep = ".")] = NA
+            # }
+            densityAllClasses = stats::aggregate(densityTmp$density.allClasses, 
+                                                 list(densityTmp$timeChunkDateSunset), 
+                                                 mean, na.rm = TRUE)
+            densityNight = data.frame(densityNight, 
+                                      density.allClasses = densityAllClasses$x)
             for (i in 1:length(classSelection)){
-              densityNight[, paste("density", classSelection[i], sep = ".")] = NA
+              meanDensity = stats::aggregate(densityTmp[, paste("density", classSelection[i], sep = ".")], 
+                                             list(densityTmp$timeChunkDateSunset), 
+                                             mean, na.rm = TRUE)
+              densityNight[, paste("density", classSelection[i], sep = ".")] = meanDensity$x 
             }
-          
+            
           # first quartiles
           # ===================================================================
             densityFirstQuartile = suppressWarnings(
@@ -1149,9 +1171,20 @@ computeDensity = function(dbName,
           
           # density
           # ===================================================================
-            densityCrepMorn = data.frame(densityCrepMorn, density.allClasses = NA)
+            # densityCrepMorn = data.frame(densityCrepMorn, density.allClasses = NA)
+            # for (i in 1:length(classSelection)){
+            #   densityCrepMorn[, paste("density", classSelection[i], sep = ".")] = NA
+            # }
+            densityAllClasses = stats::aggregate(densityTmp$density.allClasses, 
+                                                 list(densityTmp$timeChunkDateSunset), 
+                                                 mean, na.rm = TRUE)
+            densityCrepMorn = data.frame(densityCrepMorn, 
+                                         density.allClasses = densityAllClasses$x)
             for (i in 1:length(classSelection)){
-              densityCrepMorn[, paste("density", classSelection[i], sep = ".")] = NA
+              meanDensity = stats::aggregate(densityTmp[, paste("density", classSelection[i], sep = ".")], 
+                                             list(densityTmp$timeChunkDateSunset), 
+                                             mean, na.rm = TRUE)
+              densityCrepMorn[, paste("density", classSelection[i], sep = ".")] = meanDensity$x 
             }
           
           # first quartiles
@@ -1281,9 +1314,20 @@ computeDensity = function(dbName,
           
           # density
           # ===================================================================
-            densityCrepEve = data.frame(densityCrepEve, density.allClasses = NA)
+            # densityCrepEve = data.frame(densityCrepEve, density.allClasses = NA)
+            # for (i in 1:length(classSelection)){
+            #   densityCrepEve[, paste("density", classSelection[i], sep = ".")] = NA
+            # }
+            densityAllClasses = stats::aggregate(densityTmp$density.allClasses, 
+                                                 list(densityTmp$timeChunkDateSunset), 
+                                                 mean, na.rm = TRUE)
+            densityCrepEve = data.frame(densityCrepEve, 
+                                        density.allClasses = densityAllClasses$x)
             for (i in 1:length(classSelection)){
-              densityCrepEve[, paste("density", classSelection[i], sep = ".")] = NA
+              meanDensity = stats::aggregate(densityTmp[, paste("density", classSelection[i], sep = ".")], 
+                                             list(densityTmp$timeChunkDateSunset), 
+                                             mean, na.rm = TRUE)
+              densityCrepEve[, paste("density", classSelection[i], sep = ".")] = meanDensity$x 
             }
           
           # first quartiles
@@ -1344,15 +1388,15 @@ computeDensity = function(dbName,
                                                                     density$timeChunkDuration_sec[density$operationTime_sec > 0]
         density$proportionalTimeObserved[density$operationTime_sec == 0] = 0 
       
-      # density
+      # density  --- THIS WORKED FOR MTR BUT NOT FOR DENSITY - OBSOLETE
       # =======================================================================
-        density$density.allClasses[density$observationTime_h > 0] = density$sumOfMTRFactors.allClasses[density$observationTime_h > 0] / 
-                                                          density$observationTime_h[density$observationTime_h > 0]
-        for (i in 1:length(classSelection)){
-          density[density$observationTime_h > 0 , paste("density", classSelection[i], sep = ".")] = density[density$observationTime_h > 0, 
-                                                                                            paste("sumOfMTRFactors", classSelection[i], sep = ".")] / 
-                                                                                        density$observationTime_h[density$observationTime_h > 0]
-        }
+        # density$density.allClasses[density$observationTime_h > 0] = density$sumOfMTRFactors.allClasses[density$observationTime_h > 0] / 
+        #                                                   density$observationTime_h[density$observationTime_h > 0]
+        # for (i in 1:length(classSelection)){
+        #   density[density$observationTime_h > 0 , paste("density", classSelection[i], sep = ".")] = density[density$observationTime_h > 0, 
+        #                                                                                     paste("sumOfMTRFactors", classSelection[i], sep = ".")] / 
+        #                                                                                 density$observationTime_h[density$observationTime_h > 0]
+        # }
       
       # sort by timeChunkBegin and set timeChunkId
       # =======================================================================
