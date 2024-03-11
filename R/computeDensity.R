@@ -1,10 +1,12 @@
 #### computeDensity ------------------------------------------------------
 #' @title computeDensity
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; 
+#' @author Birgen Haest, \email{birgen.haest@@vogelwarte.ch};
+#' Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; 
 #' Baptiste Schmid, \email{baptiste.schmid@@vogelwarte.ch};  
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
 #' @description This function will estimate the density (expressed as #objects / km3) 
-#' based on the observations in your database.
+#' based on the observations in your database. Note that this function only works 
+#' properly on Birdscan MR1 database versions >= 1.7.0.4 as the variable
+#' feature37.speed is required for the density calculation.
 #' @param dbName Character string, containing the name of the database you are 
 #' processing
 #' @param echoes dataframe with the echo data from the data list created by the 
@@ -1398,8 +1400,8 @@ computeDensity = function(dbName,
           density[k, paste("meanAltitude", classLabel, sep = ".")] = 0
         } else {
           density[k, paste("meanAltitude", classLabel, sep = ".")] = stats::weighted.mean(x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, 
-                                                                                      w = echoesInTimeAndAltitudeBin$mtr_factor_rf, 
-                                                                                      na.rm = TRUE)
+                                                                                          w = echoesInTimeAndAltitudeBin$mtr_factor_rf, 
+                                                                                          na.rm = TRUE)
           if (nrow(echoesInTimeAndAltitudeBin) > 1){
             density[k, paste("altitudeQuantile_0.05", classLabel, sep = ".")] = suppressWarnings(
                                                                               modi::weighted.quantile(x = echoesInTimeAndAltitudeBin$feature1.altitude_AGL, 
