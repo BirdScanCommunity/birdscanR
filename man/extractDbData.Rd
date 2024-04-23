@@ -65,7 +65,8 @@ crepuscular period. Default is "nauticalSolar".}
 \value{
 a list of R objects with data extracted from the Database: 'echoData',
 'protocolData', 'siteData', 'visibilityData', 'timeBinData', 'rfFeatures',
-'availableClasses', 'classProbabilitiesAndMtrFactors'
+'availableClasses', 'availableBatClasses', 'classProbabilitiesAndMtrFactors',
+'batProbabilitiesAndMtrFactors'
 }
 \description{
 Load the data from the database or file and save it to file

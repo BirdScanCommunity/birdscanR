@@ -34,23 +34,18 @@
 #' rfClassification = getBatClassification(dbConnection, dbDriverChar)
 #' }
 #'
-getBatClassification = function( dbConnection, dbDriverChar )
-{
+getBatClassification = function(dbConnection, dbDriverChar){
   # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
   # check if batClassification table exists
-  if( dbDriverChar == 'PostgreSQL' )
-  {
-    batClassificationTableExists <- dbExistsTable( dbConnection, "bat_classification" )
-    batProbabilityTableExists <- dbExistsTable( dbConnection, "bat_class_probability" )
-  }
-  else
-  {
-    batClassificationTableExists <- "bat_classification" %in% sqlTables(dbConnection)$TABLE_NAME
-    batProbabilityTableExists <- "bat_class_probability" %in% sqlTables(dbConnection)$TABLE_NAME  
+  if(dbDriverChar == 'PostgreSQL'){
+    batClassificationTableExists <- DBI::dbExistsTable( dbConnection, "bat_classification" )
+    batProbabilityTableExists <- DBI::dbExistsTable( dbConnection, "bat_class_probability" )
+  } else {
+    batClassificationTableExists <- "bat_classification" %in% RODBC::sqlTables(dbConnection)$TABLE_NAME
+    batProbabilityTableExists <- "bat_class_probability" %in% RODBC::sqlTables(dbConnection)$TABLE_NAME  
   }
   
-  if( batClassificationTableExists && batProbabilityTableExists )
-  {
+  if(batClassificationTableExists && batProbabilityTableExists){
     # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
     # load rfclasses from DB
     rfClasses = QUERY(dbConnection, dbDriverChar, 
@@ -89,8 +84,7 @@ getBatClassification = function( dbConnection, dbDriverChar )
     batClassProbabilityTable$class <- availableClasses$name[ match( batClassList, 
                                                                     availableClasses$id ) ]
     
-    if( nrow( batClassProbabilityTable ) > 0 )
-    {
+    if( nrow( batClassProbabilityTable ) > 0 ){
       classProbabilites <- reshape2::dcast( batClassProbabilityTable[ !is.na(batClassProbabilityTable$class) & 
                                                                       !is.na(batClassProbabilityTable$echo), ], 
                                             echo ~ class, 
@@ -113,8 +107,7 @@ getBatClassification = function( dbConnection, dbDriverChar )
                                                 by = "echo", 
                                                 all.x =TRUE, 
                                                 all.y = FALSE )
-    } else
-    {
+    } else {
       classProbabilitiesAndMtrFactors <- data.frame()
     }
     
@@ -125,16 +118,14 @@ getBatClassification = function( dbConnection, dbDriverChar )
     colnames( batClassificationTable )[ colnames( batClassificationTable ) == "class_probability"] <- "bat_class_probability"
     colnames( batClassificationTable )[ colnames( batClassificationTable ) == "mtr_factor_sphereDiaCm"] <- "bat_mtr_factor_sphereDiaCm"
     colnames( batClassificationTable )[ colnames( batClassificationTable ) == "classifierVersion"] <- "batClassifierVersion"
-  }
-  else
-  {
-    batClassificationTable <- data.frame( echo = integer(),
-                                          batClass = character(),
-                                          bat_mtr_factor_rf = double(),
-                                          bat_class_probability = double(),
-                                          bat_mtr_factor_sphereDiaCm = double(),
-                                          batClassifierVersion = character(),
-                                          stringsAsFactors = FALSE )
+  } else {
+    batClassificationTable <- data.frame(echo = integer(),
+                                         batClass = character(),
+                                         bat_mtr_factor_rf = double(),
+                                         bat_class_probability = double(),
+                                         bat_mtr_factor_sphereDiaCm = double(),
+                                         batClassifierVersion = character(),
+                                         stringsAsFactors = FALSE )
     classProbabilitiesAndMtrFactors <- data.frame( echo = integer(),
                                                    ClassProb.bat = double(),
                                                    ClassProb.nonbat = double(),
@@ -151,5 +142,7 @@ getBatClassification = function( dbConnection, dbDriverChar )
                                     stringsAsFactors = FALSE )
   }
   
-  return( list( batClassificationTable = batClassificationTable, classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors, availableClasses = availableClasses ) )
+  return(list(batClassificationTable          = batClassificationTable, 
+              classProbabilitiesAndMtrFactors = classProbabilitiesAndMtrFactors, 
+              availableClasses                = availableClasses ) )
 }
