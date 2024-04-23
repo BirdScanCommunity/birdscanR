@@ -58,7 +58,7 @@ getBatClassification = function( dbConnection, dbDriverChar )
     )
     colnames(rfClasses)[colnames(rfClasses) == "is_protected"] <- "isProtected"
     colnames(rfClasses)[colnames(rfClasses) == "sphere_dia_cm"] <- "sphereDiaCm"
-    colnames(rfClasses)[colnames(rfClasses) == "is_used_for_batClassification"] <- "isUsedForBatClassification"
+    colnames(rfClasses)[colnames(rfClasses) == "is_used_for_bat_classification"] <- "isUsedForBatClassification"
     availableClasses <- rfClasses[ rfClasses$isUsedForBatClassification == 1, ]
     availableClasses$name <- as.character( availableClasses$name )
     availableClasses$description <- as.character( availableClasses$description )
