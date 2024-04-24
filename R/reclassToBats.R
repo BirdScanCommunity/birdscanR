@@ -64,9 +64,9 @@ reclassToBats = function( echoData = NULL,
     
     echoDataTmp <- merge( echoData, batClassProbabilitiesAndMtrFactors, by = "echo", all.x =TRUE, all.y = FALSE )
     
-    echoData[ !is.na( echoDataTmp$classProb.bat ) & echoDataTmp$classProb.bat > reclassToBatsCutoff, ]$class = "bat"
-    echoData[ !is.na( echoDataTmp$classProb.bat ) & echoDataTmp$classProb.bat > reclassToBatsCutoff, ]$class_probability = echoDataTmp[ !is.na( echoDataTmp$classProb.bat ) & echoDataTmp$classProb.bat > reclassToBatsCutoff, ]$classProb.bat
-    echoData[ !is.na( echoDataTmp$classProb.bat ) & echoDataTmp$classProb.bat > reclassToBatsCutoff, ]$mtr_factor_rf = echoDataTmp[ !is.na( echoDataTmp$classProb.bat ) & echoDataTmp$classProb.bat > reclassToBatsCutoff, ]$MTRFact.bat    
+    echoData[ !is.na( echoDataTmp$classProb.bat ) & echoDataTmp$classProb.bat > reclassToBatCutoff, ]$class = "bat"
+    echoData[ !is.na( echoDataTmp$classProb.bat ) & echoDataTmp$classProb.bat > reclassToBatCutoff, ]$class_probability = echoDataTmp[ !is.na( echoDataTmp$classProb.bat ) & echoDataTmp$classProb.bat > reclassToBatCutoff, ]$classProb.bat
+    echoData[ !is.na( echoDataTmp$classProb.bat ) & echoDataTmp$classProb.bat > reclassToBatCutoff, ]$mtr_factor_rf = echoDataTmp[ !is.na( echoDataTmp$classProb.bat ) & echoDataTmp$classProb.bat > reclassToBatCutoff, ]$MTRFact.bat    
   }  
   return( echoData )
 }
