@@ -382,13 +382,3 @@ plotExploration = function(echoData         = NULL,
     }
   }
 }
-
-plotExplorationTest(echoData         = dbData$echoData, 
-                timeRange        = timeRangePlot, 
-                targetTimeZone   = "Etc/GMT0",
-                manualBlindTimes = cManualBlindTimes, 
-                visibilityData   = dbData$visibilityData, 
-                protocolData     = dbData$protocolData, 
-                sunriseSunset    = dbData$sunriseSunset, 
-                maxAltitude      = maxAltitude.plot, 
-                filePath         = outputDir.plots) 
