@@ -138,6 +138,7 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
           } else{
             blockTime = 60
           }
+          blockTime = blockTime + 5 # add 5 seconds to the standard blocktime to avoid unnecessary splitting of the blindtime registered becasue of protocol change
         
         # If blindTime is longer than 60s, split it after 60s
         # =====================================================================
