@@ -1,7 +1,8 @@
 #### mergeVisibilityAndManualBlindTimes ----------------------------------------
 #' @title mergeVisibilityAndManualBlindTimes
 #' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; 
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch
+#' Baptiste Schmid, \email{baptiste.schmid@@vogelwarte.ch}}
 #' @description Function to merge manual blind times with blind times from 
 #' visibility table. For further processing the radar (visibility) and manual 
 #' blind times have to be merged with the function 
