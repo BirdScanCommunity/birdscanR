@@ -92,8 +92,10 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
   
 # Add column 'type' to visibilityData
 # =============================================================================
-  visibilityDataSorted = data.frame(visibilityDataSorted, type = "visibility")
-  levels(visibilityDataSorted$type) = c("visibility", "protocolChange")
+  visibilityDataSorted[,"type"] = "visibility"
+  # ToRemove
+  # visibilityDataSorted =   data.frame(visibilityDataSorted, type = "visibility")
+  # levels(visibilityDataSorted$type) = c("visibility", "protocolChange")
 
 # If manualBlindTimes are provided, check and prepare manual blind times for merging
 # =============================================================================
