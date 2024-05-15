@@ -73,4 +73,5 @@ blind times with type “protocolChange”.
 \author{
 Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
 Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Baptiste Schmid, \email{baptiste.schmid@vogelwarte.ch}
 }
