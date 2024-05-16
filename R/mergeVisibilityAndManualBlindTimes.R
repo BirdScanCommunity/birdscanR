@@ -109,13 +109,13 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
       t_nrow_before <- nrow(manualBlindTimesSorted)
       manualBlindTimesSorted = manualBlindTimesSorted[manualBlindTimesSorted$start_targetTZ < manualBlindTimesSorted$stop_targetTZ,]
       t_nrow_after <- nrow(manualBlindTimesSorted)
-      if(t_nrow_before > t_nrow_after) warning(paste0("CHECK and correct : ", t_nrow_before - t_nrow_after," rows removed from manualBlindTimes because start_time >= stop_time "))
+      if(t_nrow_before > t_nrow_after) warnings(paste0("CHECK and correct : ", t_nrow_before - t_nrow_after," rows removed from manualBlindTimes because start_time >= stop_time "))
       
     # Make sure manual blind times are not overlapping
     # =========================================================================
       if (nrow(manualBlindTimesSorted) > 1){
         overlaps = manualBlindTimesSorted$start_targetTZ[2:(length(manualBlindTimesSorted[, 1]))] < manualBlindTimesSorted$stop_targetTZ[1:(length(manualBlindTimesSorted[, 1])-1)]
-        if(length(overlaps)>=1) warning(paste0("CHECK and correct : some time periods overlapp in manualBlindTimes"))
+        if(length(overlaps)>=1) warnings(paste0("CHECK and correct : some time periods overlapp in manualBlindTimes"))
         manualBlindTimesSorted$stop_targetTZ[c(overlaps, FALSE)] = manualBlindTimesSorted$start_targetTZ[c(FALSE, overlaps)]
       }
   }
