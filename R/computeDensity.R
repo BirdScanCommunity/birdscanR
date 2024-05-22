@@ -395,7 +395,7 @@ computeDensity = function(dbName,
     
           # calculate the density for each echo - will be summed up in a later step
             # dplyr::mutate("mtr_echo" = mtr_factor_rf / observationTime_h) %>% 
-            dplyr::mutate("density_echo" = mtr_factor_rf / observationTime_h / feature37.speed / altitudeBinSize) %>% 
+            dplyr::mutate("density_echo" = mtr_factor_rf / observationTime_h / (3.6*feature37.speed) / (altitudeBinSize/1000)) %>% 
     
           # group the data with time and height intervals
             dplyr::group_by(timeChunkId, altitudeChunkId) %>% 
@@ -427,7 +427,7 @@ computeDensity = function(dbName,
              dplyr::left_join(x  = ., 
                        y  = density %>% dplyr::distinct(timeChunkId, observationTime_h), 
                        by = "timeChunkId") %>% 
-             dplyr::mutate("density_echo" = mtr_factor_rf / observationTime_h / feature37.speed / altitudeBinSize) %>% 
+             dplyr::mutate("density_echo" = mtr_factor_rf / observationTime_h / (3.6*feature37.speed) / (altitudeBinSize/1000)) %>% 
              dplyr::group_by(timeChunkId, altitudeChunkId, class) %>% 
              dplyr::summarise("nEchoes" = length(mtr_factor_rf),
                               "sumOfMTRFactors" = sum(mtr_factor_rf, na.rm=TRUE),
