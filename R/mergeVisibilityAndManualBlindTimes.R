@@ -200,7 +200,10 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
           }
         }
     
-
+    # Remove rows where start >= stop in manual blind times
+    # =========================================================================
+      manualBlindTimesSorted = manualBlindTimesSorted[manualBlindTimesSorted$start_targetTZ < manualBlindTimesSorted$stop_targetTZ,]
+    
     # Split manual blind times if protocolChange blindtime is inside manual 
     # blind time. Loop over protocolChange blind times
     # =========================================================================
