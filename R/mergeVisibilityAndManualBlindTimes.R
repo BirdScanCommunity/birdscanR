@@ -107,7 +107,7 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
     # Remove rows where start >= stop in manual blind times
     # =========================================================================
       t_nrow_before <- nrow(manualBlindTimesSorted)
-      manualBlindTimesSorted = manualBlindTimesSorted[manualBlindTimesSorted$start_targetTZ < manualBlindTimesSorted$stop_targetTZ,]
+      manualBlindTimesSorted = manualBlindTimesSorted[manualBlindTimesSorted$stop_targetTZ < manualBlindTimesSorted$start_targetTZ,]
       t_nrow_after <- nrow(manualBlindTimesSorted)
       if(t_nrow_before > t_nrow_after) warning(paste0("CHECK and correct : ", t_nrow_before - t_nrow_after," rows removed from manualBlindTimes because start_time >= stop_time "))
       
