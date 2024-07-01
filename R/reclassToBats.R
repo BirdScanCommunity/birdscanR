@@ -41,7 +41,8 @@
 #' # Reclass To Bats
 #' # ===========================================================================
 #'   dbData$echoData = reclassToBats(echoData = dbData$echoData,
-#'                                   batClassProbabilitiesAndMtrFactors = dbData$batClassProbabilitiesAndMtrFactors,
+#'                                   batClassProbabilitiesAndMtrFactors = 
+#'                                       dbData$batClassProbabilitiesAndMtrFactors,
 #'                                   reclassToBatCutoff = 0.5)
 #' }
 reclassToBats = function( echoData = NULL,

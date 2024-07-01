@@ -56,7 +56,8 @@ reclassifies echoes based on bat classification
 # Reclass To Bats
 # ===========================================================================
   dbData$echoData = reclassToBats(echoData = dbData$echoData,
-                                  batClassProbabilitiesAndMtrFactors = dbData$batClassProbabilitiesAndMtrFactors,
+                                  batClassProbabilitiesAndMtrFactors = 
+                                      dbData$batClassProbabilitiesAndMtrFactors,
                                   reclassToBatCutoff = 0.5)
 }
 }
