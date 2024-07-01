@@ -1,4 +1,4 @@
-# birdscanR 0.2.0.9006
+# birdscanR 0.3.0
 
 -   Added functionality: The function 'computeDensity()' was added to calculate the density (expressed as #objects / km3). Note that this function only works for Birdscan MR1 database versions \>= 1.7.0.4 as the variable feature37.speed is required for the density calculation ([#40](https://github.com/BirdScanCommunity/birdscanR/issues/40){.uri}).
 -   Added functionality: The function 'getBatClassification()' was added to get the data from the MR1 SQL tables 'bat_classification' and 'bat_class_probability'. The function 'extractDbData()' was updated to also extract the bat classification results using the prior function ([#36](https://github.com/BirdScanCommunity/birdscanR/issues/36){.uri}).
