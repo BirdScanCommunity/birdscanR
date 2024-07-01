@@ -395,7 +395,7 @@ computeDensity = function(dbName,
     
           # calculate the density for each echo - will be summed up in a later step
             # dplyr::mutate("mtr_echo" = mtr_factor_rf / observationTime_h) %>% 
-            dplyr::mutate("density_echo" = mtr_factor_rf / observationTime_h / (3.6*feature37.speed) / (altitudeBinSize/1000)) %>% 
+            dplyr::mutate("density_echo" = mtr_factor_rf / observationTime_h / (3.6*(.data$feature37.speed)) / (altitudeBinSize/1000)) %>% 
     
           # group the data with time and height intervals
             dplyr::group_by(timeChunkId, altitudeChunkId) %>% 
@@ -407,7 +407,7 @@ computeDensity = function(dbName,
                 "sumOfMTRFactors" = sum(mtr_factor_rf, na.rm = TRUE),
               # sum the density of all echoes per timeXheight interval
                 # "mtr" = sum(mtr_echo, na.rm = TRUE)) %>% 
-                "density" = sum(density_echo, na.rm = TRUE)) %>% 
+                "density" = sum((.data$density_echo), na.rm = TRUE)) %>% 
     
           # add the class denomination to merge with the per-class density dataset
             tibble::add_column(class = "allClasses") %>% 
@@ -427,11 +427,11 @@ computeDensity = function(dbName,
              dplyr::left_join(x  = ., 
                        y  = density %>% dplyr::distinct(timeChunkId, observationTime_h), 
                        by = "timeChunkId") %>% 
-             dplyr::mutate("density_echo" = mtr_factor_rf / observationTime_h / (3.6*feature37.speed) / (altitudeBinSize/1000)) %>% 
+             dplyr::mutate("density_echo" = mtr_factor_rf / observationTime_h / (3.6*(.data$feature37.speed)) / (altitudeBinSize/1000)) %>% 
              dplyr::group_by(timeChunkId, altitudeChunkId, class) %>% 
              dplyr::summarise("nEchoes" = length(mtr_factor_rf),
                               "sumOfMTRFactors" = sum(mtr_factor_rf, na.rm=TRUE),
-                              "density" = sum(density_echo, na.rm = TRUE)) %>% 
+                              "density" = sum((.data$density_echo), na.rm = TRUE)) %>% 
              dplyr::select(timeChunkId, altitudeChunkId, class, nEchoes, sumOfMTRFactors, density) %>% 
              tidyr::pivot_wider(names_from  =  class, 
                                 values_from = c(nEchoes, sumOfMTRFactors, density), 
