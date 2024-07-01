@@ -52,14 +52,13 @@ reclassifies echoes based on bat classification
                          siteLocation                   = siteLocation, 
                          sunOrCivil                   = sunOrCivil,
                          crepuscule                     = "nauticalSolar")
-}
-
+#' 
 # Reclass To Bats
 # ===========================================================================
-dbData$echoData <- reclassToBats( echoData = dbData$echoData,
+  dbData$echoData = reclassToBats(echoData = dbData$echoData,
                                   batClassProbabilitiesAndMtrFactors = dbData$batClassProbabilitiesAndMtrFactors,
-                                  reclassToBatCutoff = 0.5 )
-
+                                  reclassToBatCutoff = 0.5)
+}
 }
 \author{
 Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}
