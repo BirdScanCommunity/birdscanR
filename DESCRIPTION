@@ -32,6 +32,7 @@ Imports:
   reshape2,
   RODBC,
   RPostgreSQL,
+  rlang,
   rstudioapi,
   sp,
   stats,

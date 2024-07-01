@@ -74,6 +74,7 @@
 #'
 #' @return Density
 #' @importFrom magrittr %>%
+#' @importFrom rlang .data 
 #' @export
 #'
 #' @examples
