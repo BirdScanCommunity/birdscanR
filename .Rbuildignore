@@ -15,3 +15,4 @@
 ^CITATION\.cff$
 ^codecov\.yml$
 ^LICENSE\.md$
+^README\.Rmd$
