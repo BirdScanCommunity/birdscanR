@@ -1,5 +1,15 @@
+# Ignore R project file
 ^.*\.Rproj$
 ^\.Rproj\.user$
+
+# Ignore lintr configuration
+^\.lintr$
+# Ignore Git configuration and metadata
+^\.git$
+^\.github$
+# Ignore macOS Finder metadata
+^\.DS_Store$
+# Ignore CRAN file
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
-^\.github$
+^CITATION\.cff$
