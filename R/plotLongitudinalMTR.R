@@ -150,9 +150,7 @@ plotLongitudinalMTR <- function(mtr,
   # =============================================================================
   if (plotClass == "allClasses") {
     classSelection <- names(mtr)[grepl("mtr.", names(mtr), fixed = TRUE) &
-      (!grepl("allClasses", names(mtr),
-        fixed = TRUE
-      ))]
+      (!grepl("allClasses", names(mtr), fixed = TRUE))]
   } else {
     classSelection <- names(mtr)[grepl("mtr.", names(mtr), fixed = TRUE) &
       grepl(plotClass, names(mtr), fixed = TRUE)]
@@ -224,7 +222,8 @@ plotLongitudinalMTR <- function(mtr,
           mtrPlot$obs[mtrPlot$proportionalTimeObserved < propObsTimeCutoff | is.na(mtrPlot$mtr)] <- maxMTR * (-0.015)
           yScale <- c(maxMTR * -0.07, maxMTR)
         } else {
-          mtrPlot$obs[mtrPlot$proportionalTimeObserved < propObsTimeCutoff | is.na(mtrPlot$mtr)] <- max(mtrPlot$mtrThirdQuartile) * (-0.015)
+          mtrPlot$obs[mtrPlot$proportionalTimeObserved < propObsTimeCutoff | is.na(mtrPlot$mtr)] <-
+            max(mtrPlot$mtrThirdQuartile) * (-0.015)
           maxScale <- max(c(max(mtrPlot$mtrThirdQuartile), max(mtrPlot$mtr)), na.rm = TRUE)
           yScale <- c(maxScale * (-0.07), maxScale)
         }

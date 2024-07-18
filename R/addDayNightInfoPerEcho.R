@@ -81,15 +81,18 @@ addDayNightInfoPerEcho <- function(echoData,
   # Check whether echoData contains any data
   # ===========================================================================
   if (nrow(echoData) == 0) {
-    stop(paste0(
-      "No echoData, can't add day/night information ",
-      "(function: addDayNightInfoPerEcho)"
-    ))
+    stop(
+      paste0(
+        "No echoData, can't add day/night information ",
+        "(function: addDayNightInfoPerEcho)"
+      )
+    )
   }
 
   # Add the columns 'dayOrNight', 'dayOrCrepOrNight' and 'dateSunset' to echoData
   # ===========================================================================
-  echoData <- data.frame(echoData,
+  echoData <- data.frame(
+    echoData,
     dayOrNight       = NA_character_,
     dayOrCrepOrNight = NA_character_,
     dateSunset       = as.POSIXct(NA)
@@ -119,16 +122,20 @@ addDayNightInfoPerEcho <- function(echoData,
 
   # Set echoes during day
   # ===========================================================================
-  for (i in 1:length(days[, 1])) {
-    echoData$dayOrNight[echoData$time_stamp_targetTZ >= days$start[i] & echoData$time_stamp_targetTZ < days$stop[i]] <- "day"
-    echoData$dateSunset[echoData$time_stamp_targetTZ >= days$start[i] & echoData$time_stamp_targetTZ < days$stop[i]] <- days$stop[i]
+  for (i in seq_along(days[, 1])) {
+    echoData$dayOrNight[echoData$time_stamp_targetTZ >= days$start[i] &
+      echoData$time_stamp_targetTZ < days$stop[i]] <- "day"
+    echoData$dateSunset[echoData$time_stamp_targetTZ >= days$start[i] &
+      echoData$time_stamp_targetTZ < days$stop[i]] <- days$stop[i]
   }
 
   # Set echoes during night
   # ===========================================================================
-  for (i in 1:length(nights[, 1])) {
-    echoData$dayOrNight[echoData$time_stamp_targetTZ >= nights$start[i] & echoData$time_stamp_targetTZ < nights$stop[i]] <- "night"
-    echoData$dateSunset[echoData$time_stamp_targetTZ >= nights$start[i] & echoData$time_stamp_targetTZ < nights$stop[i]] <- nights$start[i]
+  for (i in seq_along(nights[, 1])) {
+    echoData$dayOrNight[echoData$time_stamp_targetTZ >= nights$start[i] &
+      echoData$time_stamp_targetTZ < nights$stop[i]] <- "night"
+    echoData$dateSunset[echoData$time_stamp_targetTZ >= nights$start[i] &
+      echoData$time_stamp_targetTZ < nights$stop[i]] <- nights$start[i]
   }
 
   # Get day, crepuscular, and night periods
@@ -167,7 +174,8 @@ addDayNightInfoPerEcho <- function(echoData,
       start = sunriseSunset$nauticalStart[sunriseSunset$is_night == 1],
       stop = sunriseSunset$nauticalStop[sunriseSunset$is_night == 1]
     )
-  } else { # default 'nauticalSolar' option
+  } else {
+    # default 'nauticalSolar' option
     days <- data.frame(
       start = sunriseSunset$sunStart[sunriseSunset$is_night == 0],
       stop = sunriseSunset$sunStop[sunriseSunset$is_night == 0]
@@ -188,23 +196,27 @@ addDayNightInfoPerEcho <- function(echoData,
 
   # Set echoes during day
   # ===========================================================================
-  for (i in 1:length(days[, 1])) {
-    echoData$dayOrCrepOrNight[echoData$time_stamp_targetTZ >= days$start[i] & echoData$time_stamp_targetTZ < days$stop[i]] <- "day"
+  for (i in seq_along(days[, 1])) {
+    echoData$dayOrCrepOrNight[echoData$time_stamp_targetTZ >= days$start[i] &
+      echoData$time_stamp_targetTZ < days$stop[i]] <- "day"
   }
 
   # Set echoes during crepuscular
   # ===========================================================================
-  for (i in 1:length(crepusculeMorning[, 1])) {
-    echoData$dayOrCrepOrNight[echoData$time_stamp_targetTZ >= crepusculeMorning$start[i] & echoData$time_stamp_targetTZ < crepusculeMorning$stop[i]] <- "crepusculeMorning"
+  for (i in seq_along(crepusculeMorning[, 1])) {
+    echoData$dayOrCrepOrNight[echoData$time_stamp_targetTZ >= crepusculeMorning$start[i] &
+      echoData$time_stamp_targetTZ < crepusculeMorning$stop[i]] <- "crepusculeMorning"
   }
-  for (i in 1:length(crepusculeEvening[, 1])) {
-    echoData$dayOrCrepOrNight[echoData$time_stamp_targetTZ >= crepusculeEvening$start[i] & echoData$time_stamp_targetTZ < crepusculeEvening$stop[i]] <- "crepusculeEvening"
+  for (i in seq_along(crepusculeEvening[, 1])) {
+    echoData$dayOrCrepOrNight[echoData$time_stamp_targetTZ >= crepusculeEvening$start[i] &
+      echoData$time_stamp_targetTZ < crepusculeEvening$stop[i]] <- "crepusculeEvening"
   }
 
   # set echoes during night
   # ===========================================================================
-  for (i in 1:length(nights[, 1])) {
-    echoData$dayOrCrepOrNight[echoData$time_stamp_targetTZ >= nights$start[i] & echoData$time_stamp_targetTZ < nights$stop[i]] <- "night"
+  for (i in seq_along(nights[, 1])) {
+    echoData$dayOrCrepOrNight[echoData$time_stamp_targetTZ >= nights$start[i] &
+      echoData$time_stamp_targetTZ < nights$stop[i]] <- "night"
   }
 
   # return the output

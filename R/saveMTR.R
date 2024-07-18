@@ -180,7 +180,8 @@ saveMTR <- function(mtr,
 
     # classes
     # =======================================================================
-    classSelection <- names(mtr)[grepl("mtr.", names(mtr), fixed = TRUE) & !grepl("allClasses", names(mtr), fixed = TRUE)]
+    classSelection <- names(mtr)[grepl("mtr.", names(mtr), fixed = TRUE) &
+      !grepl("allClasses", names(mtr), fixed = TRUE)]
     classSelection <- gsub("mtr.", "", classSelection)
     classes <- paste(classAbbreviations$abbr[match(classSelection, classAbbreviations$class)], collapse = "")
 

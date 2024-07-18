@@ -92,7 +92,7 @@ extractDbData <- function(dbDriverChar = "SQL Server",
   if (is.null(targetTimeZone)) {
     stop("targetTimeZone is not defined. Please check your input!")
   }
-  if ((saveDbToFile == TRUE) & is.null(dbDataDir)) {
+  if ((saveDbToFile == TRUE) && is.null(dbDataDir)) {
     stop("saveDbToFile is set to TRUE, but no dbDataDir path to save it to has
          been provided. Please check your input!")
   }
@@ -104,7 +104,7 @@ extractDbData <- function(dbDriverChar = "SQL Server",
   if (dbDriverChar == "SQL Server") {
     # CASE: Username and Password are provided
     # =======================================================================
-    if (!is.null(dbUser) | !is.null(dbPwd)) {
+    if (!is.null(dbUser) || !is.null(dbPwd)) {
       dsn <- paste0(
         "driver=", dbDriverChar, ";server=", dbServer,
         ";database=", dbName,
@@ -131,7 +131,7 @@ extractDbData <- function(dbDriverChar = "SQL Server",
   } else if (dbDriverChar == "PostgreSQL") {
     # CASE: Username and Password are provided
     # =======================================================================
-    if (!is.null(dbUser) | !is.null(dbPwd)) {
+    if (!is.null(dbUser) || !is.null(dbPwd)) {
       dbConnection <- DBI::dbConnect("PostgreSQL",
         host     = "cloud.birdradar.com",
         dbname   = dbName,
@@ -329,11 +329,11 @@ extractDbData <- function(dbDriverChar = "SQL Server",
     # Get time zone saved in the database table 'dbo.site'
     tz_shift <- as.numeric(siteData$timeShift)
 
-    if (is.na(tz_shift) | is.null(tz_shift)) {
+    if (is.na(tz_shift) || is.null(tz_shift)) {
       stop("set a radarTimeZone, or update the timeshift column in the dbo-site
            table")
     }
-    if (tz_shift >= 0 | tz_shift < 0) {
+    if (tz_shift >= 0 || tz_shift < 0) {
       radarTimeZone <- paste0(
         "Etc/GMT", ifelse(tz_shift >= 0, "-", "+"),
         abs(tz_shift)

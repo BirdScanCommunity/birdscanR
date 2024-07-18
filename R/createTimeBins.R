@@ -49,7 +49,7 @@ createTimeBins <- function(timeRange,
   if (timeBinDuration_sec <= 0) {
     timeBinDuration_sec <- 60 * 60
   }
-  if (dnBins & crepBins) {
+  if (dnBins && crepBins) {
     stop(paste0(
       "Please set only one of the options 'dnBins' or ",
       "'crepBins' to TRUE, and rerun createTimeBins()."
@@ -318,7 +318,7 @@ createTimeBins <- function(timeRange,
   # Make sure all timebins are sequentially timed
   # =============================================================================
   if (dnBins) {
-    for (i in 1:nrow(timeBins)) {
+    for (i in seq_len(nrow(timeBins))) {
       # adjust stop times
       # =======================================================================
       if (i < nrow(timeBins)) {
@@ -328,7 +328,7 @@ createTimeBins <- function(timeRange,
       }
     }
   } else if (crepBins) {
-    for (i in 1:nrow(timeBins)) {
+    for (i in seq_len(nrow(timeBins))) {
       # adjust stop times
       # =======================================================================
       if (i < nrow(timeBins)) {
@@ -520,7 +520,7 @@ createTimeBins <- function(timeRange,
     } else {
       dateSunset <- min(timeBins$dateSunset, na.rm = TRUE) - (60 * 60 * 24)
     }
-    for (i in 1:nrow(timeBins)) {
+    for (i in seq_len(nrow(timeBins))) {
       # set 'dateSunset'
       # =========================================================================
       if (!is.na(timeBins$dateSunset[i])) {
@@ -535,7 +535,7 @@ createTimeBins <- function(timeRange,
     } else {
       dateSunset <- min(timeBins$dateSunset, na.rm = TRUE) - (60 * 60 * 24)
     }
-    for (i in 1:nrow(timeBins)) {
+    for (i in seq_len(nrow(timeBins))) {
       # set 'dateSunset'
       # =========================================================================
       if (!is.na(timeBins$dateSunset[i])) {

@@ -176,10 +176,12 @@ computeDensity <- function(dbName,
   #  computePerDayNight has been chosen
   # =============================================================================
   if (computePerDayNight && computePerDayCrepusculeNight) {
-    stop(paste0(
-      "Please set only one of the options 'computePerDayNight' or ",
-      "'computePerDayCrepusculeNight' to TRUE, and rerun computeDensity()."
-    ))
+    stop(
+      paste0(
+        "Please set only one of the options 'computePerDayNight' or ",
+        "'computePerDayCrepusculeNight' to TRUE, and rerun computeDensity()."
+      )
+    )
   }
 
   # Create altitudeBins
@@ -198,10 +200,7 @@ computeDensity <- function(dbName,
 
   # Convert the timebin time range input to a POSIXct object
   # =============================================================================
-  timeRange <- as.POSIXct(timeRange,
-    format = "%Y-%m-%d %H:%M",
-    tz     = timeZone
-  )
+  timeRange <- as.POSIXct(timeRange, format = "%Y-%m-%d %H:%M", tz = timeZone)
 
   # Set variables based on input to determine which kind of time bins to calculate
   # =============================================================================
@@ -219,7 +218,7 @@ computeDensity <- function(dbName,
   # Create Timebins
   # =============================================================================
   message("Creating time bins..")
-  timeBins <- createTimeBins(
+  timeBins <- birdscanR::createTimeBins(
     timeRange = timeRange,
     timeBinDuration_sec = timeBinDuration_sec,
     timeZone = timeZone,
@@ -233,7 +232,7 @@ computeDensity <- function(dbName,
   # compute blindtimes
   # =====================================================================
   message("Calculating blind times..")
-  blindTimes <- mergeVisibilityAndManualBlindTimes(
+  blindTimes <- birdscanR::mergeVisibilityAndManualBlindTimes(
     visibilityData = visibilityData,
     manualBlindTimes = manualBlindTimes,
     protocolData = protocolData
@@ -251,7 +250,7 @@ computeDensity <- function(dbName,
   # Compute observation time for each timebin
   # =============================================================================
   message("Computing observation times for each timebin..")
-  timeBins <- computeObservationTime(
+  timeBins <- birdscanR::computeObservationTime(
     timeBins = timeBins,
     protocolData = protocolData,
     blindTimes = blindTimes,
@@ -263,7 +262,13 @@ computeDensity <- function(dbName,
   if (any(is.na(echoes$mtr_factor_rf))) {
     n <- length(is.na(echoes$mtr_factor_rf))
     echoes <- echoes[!is.na(echoes$mtr_factor_rf), ]
-    message(paste0("Missing MTR-factors for ", n, " echoes, thus excluded from the Density calculation."))
+    message(
+      paste0(
+        "Missing MTR-factors for ",
+        n,
+        " echoes, thus excluded from the Density calculation."
+      )
+    )
   }
 
   # Remove echoes outside the heigth range
@@ -272,7 +277,12 @@ computeDensity <- function(dbName,
     index <- which(echoes$feature1.altitude_AGL > max(altitudeBins$end))
     n <- length(index)
     echoes <- echoes[-index, ]
-    message(paste0(n, " echoes above the defined altitude range, thus excldued from the Density calculation."))
+    message(
+      paste0(
+        n,
+        " echoes above the defined altitude range, thus excldued from the Density calculation."
+      )
+    )
   }
 
   # abort if no echoes present
@@ -285,7 +295,7 @@ computeDensity <- function(dbName,
   # combine time bins split by day/night,
   #  if neither computePerDayNight or computePerDayCrepusculeNight were requested
   # =============================================================================
-  if ((!computePerDayNight) & (!computePerDayCrepusculeNight)) {
+  if ((!computePerDayNight) && (!computePerDayCrepusculeNight)) {
     for (i in 2:nrow(timeBins)) {
       if (timeBins$id[i] == -1) {
         timeBins$stop[i - 1] <- timeBins$stop[i]
@@ -299,8 +309,11 @@ computeDensity <- function(dbName,
         timeBins$blindTime_sec[i - 1] <- timeBins$blindTime_sec[i - 1] + timeBins$blindTime_sec[i]
         timeBins$observationTime_h[i - 1] <- timeBins$observationTime_h[i - 1] + timeBins$observationTime_h[i]
         timeBins$observationTime_sec[i - 1] <- timeBins$observationTime_sec[i - 1] + timeBins$observationTime_sec[i]
-        timeBins$proportionalTimeObserved[i - 1] <- ifelse(timeBins$duration_sec[i - 1] > 0,
-          (timeBins$observationTime_sec[i - 1] / timeBins$duration_sec[i - 1]),
+        timeBins$proportionalTimeObserved[i - 1] <- ifelse(
+          timeBins$duration_sec[i - 1] > 0,
+          (
+            timeBins$observationTime_sec[i - 1] / timeBins$duration_sec[i - 1]
+          ),
           0
         )
       } else if ((timeBins$id[i - 1] != -1) &&
@@ -329,7 +342,8 @@ computeDensity <- function(dbName,
   # add features to time and altitude chunk IDs
   # =============================================================================
   if (computePerDayCrepusculeNight) {
-    density <- merge(timeAndAltitudeCombinations,
+    density <- merge(
+      timeAndAltitudeCombinations,
       data.frame(
         timeChunkId = timeBins$id,
         timeChunkDate = timeBins$date,
@@ -348,7 +362,8 @@ computeDensity <- function(dbName,
     )
     levels(density$dielPhase) <- c("crepusculeMorning", "day", "crepusculeEvening", "night")
   } else {
-    density <- merge(timeAndAltitudeCombinations,
+    density <- merge(
+      timeAndAltitudeCombinations,
       data.frame(
         timeChunkId = timeBins$id,
         timeChunkDate = timeBins$date,
@@ -367,7 +382,8 @@ computeDensity <- function(dbName,
     )
     levels(density$dayOrNight) <- names(table(timeBins$dayOrNight))
   }
-  density <- merge(density,
+  density <- merge(
+    density,
     data.frame(
       altitudeChunkId = altitudeBins$id,
       altitudeChunkBegin = altitudeBins$begin,
@@ -384,21 +400,43 @@ computeDensity <- function(dbName,
   # =============================================================================
   if (computePerDayCrepusculeNight) {
     density <- density[, c(
-      "timeChunkId", "timeChunkDate", "timeChunkBegin",
-      "timeChunkEnd", "timeChunkDateSunset", "timeChunkDuration_sec",
-      "observationTime_sec", "observationTime_h", "operationTime_sec",
-      "blindTime_sec", "proportionalTimeObserved", "dielPhase",
-      "altitudeChunkId", "altitudeChunkBegin", "altitudeChunkEnd",
-      "altitudeChunkSize", "altitudeChunkAvgAltitude"
+      "timeChunkId",
+      "timeChunkDate",
+      "timeChunkBegin",
+      "timeChunkEnd",
+      "timeChunkDateSunset",
+      "timeChunkDuration_sec",
+      "observationTime_sec",
+      "observationTime_h",
+      "operationTime_sec",
+      "blindTime_sec",
+      "proportionalTimeObserved",
+      "dielPhase",
+      "altitudeChunkId",
+      "altitudeChunkBegin",
+      "altitudeChunkEnd",
+      "altitudeChunkSize",
+      "altitudeChunkAvgAltitude"
     )]
   } else {
     density <- density[, c(
-      "timeChunkId", "timeChunkDate", "timeChunkBegin",
-      "timeChunkEnd", "timeChunkDateSunset", "timeChunkDuration_sec",
-      "observationTime_sec", "observationTime_h", "operationTime_sec",
-      "blindTime_sec", "proportionalTimeObserved", "dayOrNight",
-      "altitudeChunkId", "altitudeChunkBegin", "altitudeChunkEnd",
-      "altitudeChunkSize", "altitudeChunkAvgAltitude"
+      "timeChunkId",
+      "timeChunkDate",
+      "timeChunkBegin",
+      "timeChunkEnd",
+      "timeChunkDateSunset",
+      "timeChunkDuration_sec",
+      "observationTime_sec",
+      "observationTime_h",
+      "operationTime_sec",
+      "blindTime_sec",
+      "proportionalTimeObserved",
+      "dayOrNight",
+      "altitudeChunkId",
+      "altitudeChunkBegin",
+      "altitudeChunkEnd",
+      "altitudeChunkSize",
+      "altitudeChunkAvgAltitude"
     )]
   }
 
@@ -413,19 +451,15 @@ computeDensity <- function(dbName,
 
   # ----------------------- DENSITY ---------------------------#
   # =============================================================================
-  echoes$altitudeChunkId <- as.integer(as.character(cut(echoes[, "feature1.altitude_AGL"],
-    breaks = c(
-      altitudeBins$begin,
-      altitudeBins$end[nrow(altitudeBins)]
-    ),
+  echoes$altitudeChunkId <- as.integer(as.character(cut(
+    echoes[, "feature1.altitude_AGL"],
+    breaks = c(altitudeBins$begin, altitudeBins$end[nrow(altitudeBins)]),
     label = altitudeBins$id,
     right = FALSE
   )))
-  echoes$timeChunkId <- as.integer(as.character(cut(echoes[, "time_stamp_targetTZ"],
-    breaks = c(
-      timeBins$start,
-      timeBins$stop[nrow(timeBins)]
-    ),
+  echoes$timeChunkId <- as.integer(as.character(cut(
+    echoes[, "time_stamp_targetTZ"],
+    breaks = c(timeBins$start, timeBins$stop[nrow(timeBins)]),
     label = timeBins$id,
     right = FALSE
   )))
@@ -454,7 +488,14 @@ computeDensity <- function(dbName,
     tibble::add_column(class = "allClasses") %>%
     # select and reorder the columns of interest
     # dplyr::select(timeChunkId, altitudeChunkId, class, nEchoes, sumOfMTRFactors, mtr) %>%
-    dplyr::select(timeChunkId, altitudeChunkId, class, nEchoes, sumOfMTRFactors, density) %>%
+    dplyr::select(
+      timeChunkId,
+      altitudeChunkId,
+      class,
+      nEchoes,
+      sumOfMTRFactors,
+      density
+    ) %>%
     # use wide-format to match @fabian's original format
     tidyr::pivot_wider(
       names_from = class,
@@ -477,7 +518,14 @@ computeDensity <- function(dbName,
       "sumOfMTRFactors" = sum(mtr_factor_rf, na.rm = TRUE),
       "density" = sum((.data$density_echo), na.rm = TRUE)
     ) %>%
-    dplyr::select(timeChunkId, altitudeChunkId, class, nEchoes, sumOfMTRFactors, density) %>%
+    dplyr::select(
+      timeChunkId,
+      altitudeChunkId,
+      class,
+      nEchoes,
+      sumOfMTRFactors,
+      density
+    ) %>%
     tidyr::pivot_wider(
       names_from = class,
       values_from = c(nEchoes, sumOfMTRFactors, density),
@@ -490,7 +538,8 @@ computeDensity <- function(dbName,
 
   # replace NA as ZERO for nEchoes, sumMTRfactors, density, if "proportionalTimeObserved"] != 0
   # =============================================================================
-  for (i in 0:length(classSelection)) { # i = 0
+  for (i in 0:length(classSelection)) {
+    # i = 0
     i_class <- ifelse(i == 0, "allClasses", classSelection[i])
     # if...
     i_index <- which((density[, paste("nEchoes", i_class, sep = ".")] %in% NA) &
@@ -505,8 +554,9 @@ computeDensity <- function(dbName,
   if (computePerDayNight == TRUE) {
     #  Combine all time bins of one day (grouped by timeChunkDateSunset) to one
     # =========================================================================
-    if ("timeChunkDateSunset" %in% colnames(density) && !all(is.na(density$timeChunkDateSunset))) {
-      for (k in 1:length(unique(density$altitudeChunkId))) {
+    if ("timeChunkDateSunset" %in% colnames(density) &&
+      !all(is.na(density$timeChunkDateSunset))) {
+      for (k in seq_along(unique(density$altitudeChunkId))) {
         # Day density ----
         # =====================================================================
         # combine all time bins with the same value in 'timeChunkDateSunset',
@@ -535,22 +585,26 @@ computeDensity <- function(dbName,
           dplyr::summarise(x = max(timeChunkDateSunset))
         timeChunkDateSunset <- timeChunkDateSunset[!is.na(timeChunkDateSunset$x) &
           !is.na(timeChunkDateSunset$timeChunkDateSunset), ]
-        operationTime_sec <- stats::aggregate(densityTmp$operationTime_sec,
+        operationTime_sec <- stats::aggregate(
+          densityTmp$operationTime_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        blindTime_sec <- stats::aggregate(densityTmp$blindTime_sec,
+        blindTime_sec <- stats::aggregate(
+          densityTmp$blindTime_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        observationTime_sec <- stats::aggregate(densityTmp$observationTime_sec,
+        observationTime_sec <- stats::aggregate(
+          densityTmp$observationTime_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        timeChunkDuration_sec <- stats::aggregate(densityTmp$timeChunkDuration_sec,
+        timeChunkDuration_sec <- stats::aggregate(
+          densityTmp$timeChunkDuration_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
@@ -577,13 +631,14 @@ computeDensity <- function(dbName,
 
         # nEchoes
         # ====================================================================
-        nEchoes <- stats::aggregate(densityTmp$nEchoes.allClasses,
+        nEchoes <- stats::aggregate(
+          densityTmp$nEchoes.allClasses,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
         densityDay <- data.frame(densityDay, nEchoes.allClasses = nEchoes$x)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           nEchoes <- stats::aggregate(densityTmp[, paste("nEchoes", classSelection[i], sep = ".")],
             list(densityTmp$timeChunkDateSunset),
             sum,
@@ -594,18 +649,15 @@ computeDensity <- function(dbName,
 
         # sum of mtr factors
         # ====================================================================
-        sumOfMTRFactors <- stats::aggregate(densityTmp$sumOfMTRFactors.allClasses,
+        sumOfMTRFactors <- stats::aggregate(
+          densityTmp$sumOfMTRFactors.allClasses,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
         densityDay <- data.frame(densityDay, sumOfMTRFactors.allClasses = sumOfMTRFactors$x)
-        for (i in 1:length(classSelection)) {
-          sumOfMTRFactors <- stats::aggregate(
-            densityTmp[, paste("sumOfMTRFactors",
-              classSelection[i],
-              sep = "."
-            )],
+        for (i in seq_along(classSelection)) {
+          sumOfMTRFactors <- stats::aggregate(densityTmp[, paste("sumOfMTRFactors", classSelection[i], sep = ".")],
             list(densityTmp$timeChunkDateSunset),
             sum,
             na.rm = TRUE
@@ -616,18 +668,17 @@ computeDensity <- function(dbName,
         # density
         # ====================================================================
         # densityDay = data.frame(densityDay, density.allClasses = NA)
-        # for (i in 1:length(classSelection)){
+        # for (i in seq_along(classSelection)){
         #   densityDay[, paste("density", classSelection[i], sep = ".")] = NA
         # }
-        densityAllClasses <- stats::aggregate(densityTmp$density.allClasses,
+        densityAllClasses <- stats::aggregate(
+          densityTmp$density.allClasses,
           list(densityTmp$timeChunkDateSunset),
           mean,
           na.rm = TRUE
         )
-        densityDay <- data.frame(densityDay,
-          density.allClasses = densityAllClasses$x
-        )
-        for (i in 1:length(classSelection)) {
+        densityDay <- data.frame(densityDay, density.allClasses = densityAllClasses$x)
+        for (i in seq_along(classSelection)) {
           meanDensity <- stats::aggregate(densityTmp[, paste("density", classSelection[i], sep = ".")],
             list(densityTmp$timeChunkDateSunset),
             mean,
@@ -638,57 +689,65 @@ computeDensity <- function(dbName,
 
         # first quartiles
         # ====================================================================
-        densityFirstQuartile <- suppressWarnings(
-          stats::aggregate(list(densityFirstQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+        densityFirstQuartile <- suppressWarnings(stats::aggregate(
+          list(
+            densityFirstQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]
+          ),
+          list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+          FUN = function(x) {
+            stats::quantile(x, prob = 0.25)
+          }
+        ))
+        densityDay <- merge(densityDay,
+          densityFirstQuartile,
+          by = "timeChunkDateSunset",
+          all = TRUE
+        )
+        for (i in seq_along(classSelection)) {
+          densityFirstQuartile <- suppressWarnings(stats::aggregate(
+            densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
             list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-            FUN = function(x) stats::quantile(x, prob = 0.25)
-          )
-        )
-        densityDay <- merge(densityDay, densityFirstQuartile,
-          by = "timeChunkDateSunset", all = TRUE
-        )
-        for (i in 1:length(classSelection)) {
-          densityFirstQuartile <- suppressWarnings(
-            stats::aggregate(
-              densityTmp[
-                densityTmp$proportionalTimeObserved > propObsTimeCutoff,
-                paste("density", classSelection[i], sep = ".")
-              ],
-              list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-              FUN = function(x) stats::quantile(x, prob = 0.25)
-            )
-          )
+            FUN = function(x) {
+              stats::quantile(x, prob = 0.25)
+            }
+          ))
           names(densityFirstQuartile)[2] <- paste("densityFirstQuartile", classSelection[i], sep = ".")
-          densityDay <- merge(densityDay, densityFirstQuartile,
-            by = "timeChunkDateSunset", all = TRUE
+          densityDay <- merge(densityDay,
+            densityFirstQuartile,
+            by = "timeChunkDateSunset",
+            all = TRUE
           )
         }
 
         # third quartiles
         # ====================================================================
-        densityThirdQuartile <- suppressWarnings(
-          stats::aggregate(list(densityThirdQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+        densityThirdQuartile <- suppressWarnings(stats::aggregate(
+          list(
+            densityThirdQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]
+          ),
+          list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+          FUN = function(x) {
+            stats::quantile(x, prob = 0.75)
+          }
+        ))
+        densityDay <- merge(densityDay,
+          densityThirdQuartile,
+          by = "timeChunkDateSunset",
+          all = TRUE
+        )
+        for (i in seq_along(classSelection)) {
+          densityThirdQuartile <- suppressWarnings(stats::aggregate(
+            densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
             list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-            FUN = function(x) stats::quantile(x, prob = 0.75)
-          )
-        )
-        densityDay <- merge(densityDay, densityThirdQuartile,
-          by = "timeChunkDateSunset", all = TRUE
-        )
-        for (i in 1:length(classSelection)) {
-          densityThirdQuartile <- suppressWarnings(
-            stats::aggregate(
-              densityTmp[
-                densityTmp$proportionalTimeObserved > propObsTimeCutoff,
-                paste("density", classSelection[i], sep = ".")
-              ],
-              list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-              FUN = function(x) stats::quantile(x, prob = 0.75)
-            )
-          )
+            FUN = function(x) {
+              stats::quantile(x, prob = 0.75)
+            }
+          ))
           names(densityThirdQuartile)[2] <- paste("densityThirdQuartile", classSelection[i], sep = ".")
-          densityDay <- merge(densityDay, densityThirdQuartile,
-            by = "timeChunkDateSunset", all = TRUE
+          densityDay <- merge(densityDay,
+            densityThirdQuartile,
+            by = "timeChunkDateSunset",
+            all = TRUE
           )
         }
 
@@ -720,22 +779,26 @@ computeDensity <- function(dbName,
           dplyr::summarise(x = max(timeChunkDateSunset))
         timeChunkDateSunset <- timeChunkDateSunset[!is.na(timeChunkDateSunset$x) &
           !is.na(timeChunkDateSunset$timeChunkDateSunset), ]
-        operationTime_sec <- stats::aggregate(densityTmp$operationTime_sec,
+        operationTime_sec <- stats::aggregate(
+          densityTmp$operationTime_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        blindTime_sec <- stats::aggregate(densityTmp$blindTime_sec,
+        blindTime_sec <- stats::aggregate(
+          densityTmp$blindTime_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        observationTime_sec <- stats::aggregate(densityTmp$observationTime_sec,
+        observationTime_sec <- stats::aggregate(
+          densityTmp$observationTime_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        timeChunkDuration_sec <- stats::aggregate(densityTmp$timeChunkDuration_sec,
+        timeChunkDuration_sec <- stats::aggregate(
+          densityTmp$timeChunkDuration_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
@@ -762,13 +825,14 @@ computeDensity <- function(dbName,
 
         # nEchoes
         # ===================================================================
-        nEchoes <- stats::aggregate(densityTmp$nEchoes.allClasses,
+        nEchoes <- stats::aggregate(
+          densityTmp$nEchoes.allClasses,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
         densityNight <- data.frame(densityNight, nEchoes.allClasses = nEchoes$x)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           nEchoes <- stats::aggregate(densityTmp[, paste("nEchoes", classSelection[i], sep = ".")],
             list(densityTmp$timeChunkDateSunset),
             sum,
@@ -779,15 +843,14 @@ computeDensity <- function(dbName,
 
         # sum of MTR factors
         # ===================================================================
-        sumOfMTRFactors <- stats::aggregate(densityTmp$sumOfMTRFactors.allClasses,
+        sumOfMTRFactors <- stats::aggregate(
+          densityTmp$sumOfMTRFactors.allClasses,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        densityNight <- data.frame(densityNight,
-          sumOfMTRFactors.allClasses = sumOfMTRFactors$x
-        )
-        for (i in 1:length(classSelection)) {
+        densityNight <- data.frame(densityNight, sumOfMTRFactors.allClasses = sumOfMTRFactors$x)
+        for (i in seq_along(classSelection)) {
           sumOfMTRFactors <- stats::aggregate(densityTmp[, paste("sumOfMTRFactors", classSelection[i], sep = ".")],
             list(densityTmp$timeChunkDateSunset),
             sum,
@@ -799,18 +862,17 @@ computeDensity <- function(dbName,
         # density
         # ===================================================================
         # densityNight = data.frame(densityNight, density.allClasses = NA)
-        # for (i in 1:length(classSelection)){
+        # for (i in seq_along(classSelection)){
         #   densityNight[, paste("density", classSelection[i], sep = ".")] = NA
         # }
-        densityAllClasses <- stats::aggregate(densityTmp$density.allClasses,
+        densityAllClasses <- stats::aggregate(
+          densityTmp$density.allClasses,
           list(densityTmp$timeChunkDateSunset),
           mean,
           na.rm = TRUE
         )
-        densityNight <- data.frame(densityNight,
-          density.allClasses = densityAllClasses$x
-        )
-        for (i in 1:length(classSelection)) {
+        densityNight <- data.frame(densityNight, density.allClasses = densityAllClasses$x)
+        for (i in seq_along(classSelection)) {
           meanDensity <- stats::aggregate(densityTmp[, paste("density", classSelection[i], sep = ".")],
             list(densityTmp$timeChunkDateSunset),
             mean,
@@ -821,62 +883,75 @@ computeDensity <- function(dbName,
 
         # first quartiles
         # ===================================================================
-        densityFirstQuartile <- suppressWarnings(
-          stats::aggregate(list(densityFirstQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+        densityFirstQuartile <- suppressWarnings(stats::aggregate(
+          list(
+            densityFirstQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]
+          ),
+          list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+          FUN = function(x) {
+            stats::quantile(x, prob = 0.25)
+          }
+        ))
+        densityNight <- merge(densityNight,
+          densityFirstQuartile,
+          by = "timeChunkDateSunset",
+          all = TRUE
+        )
+        for (i in seq_along(classSelection)) {
+          densityFirstQuartile <- suppressWarnings(stats::aggregate(
+            densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
             list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-            FUN = function(x) stats::quantile(x, prob = 0.25)
-          )
-        )
-        densityNight <- merge(densityNight, densityFirstQuartile,
-          by = "timeChunkDateSunset", all = TRUE
-        )
-        for (i in 1:length(classSelection)) {
-          densityFirstQuartile <- suppressWarnings(
-            stats::aggregate(densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
-              list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-              FUN = function(x) stats::quantile(x, prob = 0.25)
-            )
-          )
-          names(densityFirstQuartile)[2] <- paste("densityFirstQuartile",
-            classSelection[i],
-            sep = "."
-          )
-          densityNight <- merge(densityNight, densityFirstQuartile,
-            by = "timeChunkDateSunset", all = TRUE
+            FUN = function(x) {
+              stats::quantile(x, prob = 0.25)
+            }
+          ))
+          names(densityFirstQuartile)[2] <- paste("densityFirstQuartile", classSelection[i], sep = ".")
+          densityNight <- merge(densityNight,
+            densityFirstQuartile,
+            by = "timeChunkDateSunset",
+            all = TRUE
           )
         }
 
         # third quartiles
         # ===================================================================
-        densityThirdQuartile <- suppressWarnings(
-          stats::aggregate(list(densityThirdQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+        densityThirdQuartile <- suppressWarnings(stats::aggregate(
+          list(
+            densityThirdQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]
+          ),
+          list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+          FUN = function(x) {
+            stats::quantile(x, prob = 0.75)
+          }
+        ))
+        densityNight <- merge(densityNight,
+          densityThirdQuartile,
+          by = "timeChunkDateSunset",
+          all = TRUE
+        )
+        for (i in seq_along(classSelection)) {
+          densityThirdQuartile <- suppressWarnings(stats::aggregate(
+            densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
             list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-            FUN = function(x) stats::quantile(x, prob = 0.75)
-          )
-        )
-        densityNight <- merge(densityNight, densityThirdQuartile,
-          by = "timeChunkDateSunset", all = TRUE
-        )
-        for (i in 1:length(classSelection)) {
-          densityThirdQuartile <- suppressWarnings(
-            stats::aggregate(densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
-              list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-              FUN = function(x) stats::quantile(x, prob = 0.75)
-            )
-          )
-          names(densityThirdQuartile)[2] <- paste("densityThirdQuartile",
-            classSelection[i],
-            sep = "."
-          )
-          densityNight <- merge(densityNight, densityThirdQuartile,
-            by = "timeChunkDateSunset", all = TRUE
+            FUN = function(x) {
+              stats::quantile(x, prob = 0.75)
+            }
+          ))
+          names(densityThirdQuartile)[2] <- paste("densityThirdQuartile", classSelection[i], sep = ".")
+          densityNight <- merge(densityNight,
+            densityThirdQuartile,
+            by = "timeChunkDateSunset",
+            all = TRUE
           )
         }
 
 
         # Add day night densities for current altitude chunk to overview density data
         # =====================================================================
-        if (exists("densityDayNight", envir = environment(), inherits = FALSE)) {
+        if (exists("densityDayNight",
+          envir = environment(),
+          inherits = FALSE
+        )) {
           densityDayNight <- rbind(densityDayNight, densityDay, densityNight)
         } else {
           densityDayNight <- rbind(densityDay, densityNight)
@@ -895,7 +970,7 @@ computeDensity <- function(dbName,
       # # =======================================================================
       #   density$density.allClasses[density$observationTime_h > 0] = density$sumOfMTRFactors.allClasses[density$observationTime_h > 0] /
       #                                                     density$observationTime_h[density$observationTime_h > 0]
-      #   for (i in 1:length(classSelection)){
+      #   for (i in seq_along(classSelection)){
       #     density[density$observationTime_h > 0 , paste("density", classSelection[i], sep = ".")] = density[density$observationTime_h > 0,
       #                                                                                       paste("sumOfMTRFactors", classSelection[i], sep = ".")] /
       #                                                                                   density$observationTime_h[density$observationTime_h > 0]
@@ -906,7 +981,9 @@ computeDensity <- function(dbName,
       density <- density[order(density$timeChunkBegin), ]
       timeChunks <- data.frame(
         timeChunkBegin = unique(density$timeChunkBegin),
-        timeChunkId = seq(1, length(unique(density$timeChunkBegin)))
+        timeChunkId = seq(1, length(unique(
+          density$timeChunkBegin
+        )))
       )
       timeChunks <- merge(timeChunks,
         data.frame(timeChunkBegin = density$timeChunkBegin),
@@ -915,13 +992,15 @@ computeDensity <- function(dbName,
       timeChunks <- timeChunks[order(timeChunks$timeChunkBegin), ]
       density <- data.frame(timeChunkId = timeChunks$timeChunkId, density)
     } else {
-      warning(paste0(
-        "Compute density per day/night not possible. Set parameter ",
-        "'computePerDayNight' to FALSE when calling the function ",
-        "'computeDensity' or create the timeBins using the function ",
-        "'createTimeBins' and set the parameter 'dnBins' ",
-        "to TRUE."
-      ))
+      warning(
+        paste0(
+          "Compute density per day/night not possible. Set parameter ",
+          "'computePerDayNight' to FALSE when calling the function ",
+          "'computeDensity' or create the timeBins using the function ",
+          "'createTimeBins' and set the parameter 'dnBins' ",
+          "to TRUE."
+        )
+      )
     }
   }
 
@@ -930,8 +1009,9 @@ computeDensity <- function(dbName,
   if (computePerDayCrepusculeNight == TRUE) {
     #  Combine all time bins of one day (grouped by timeChunkDateSunset) to one
     # =========================================================================
-    if ("timeChunkDateSunset" %in% colnames(density) && !all(is.na(density$timeChunkDateSunset))) {
-      for (k in 1:length(unique(density$altitudeChunkId))) {
+    if ("timeChunkDateSunset" %in% colnames(density) &&
+      !all(is.na(density$timeChunkDateSunset))) {
+      for (k in seq_along(unique(density$altitudeChunkId))) {
         # Day density ----
         # =====================================================================
         # combine all time bins with the same value in 'timeChunkDateSunset',
@@ -960,22 +1040,26 @@ computeDensity <- function(dbName,
           dplyr::summarise(x = max(timeChunkDateSunset))
         timeChunkDateSunset <- timeChunkDateSunset[!is.na(timeChunkDateSunset$x) &
           !is.na(timeChunkDateSunset$timeChunkDateSunset), ]
-        operationTime_sec <- stats::aggregate(densityTmp$operationTime_sec,
+        operationTime_sec <- stats::aggregate(
+          densityTmp$operationTime_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        blindTime_sec <- stats::aggregate(densityTmp$blindTime_sec,
+        blindTime_sec <- stats::aggregate(
+          densityTmp$blindTime_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        observationTime_sec <- stats::aggregate(densityTmp$observationTime_sec,
+        observationTime_sec <- stats::aggregate(
+          densityTmp$observationTime_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        timeChunkDuration_sec <- stats::aggregate(densityTmp$timeChunkDuration_sec,
+        timeChunkDuration_sec <- stats::aggregate(
+          densityTmp$timeChunkDuration_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
@@ -1002,13 +1086,14 @@ computeDensity <- function(dbName,
 
         # nEchoes
         # ====================================================================
-        nEchoes <- stats::aggregate(densityTmp$nEchoes.allClasses,
+        nEchoes <- stats::aggregate(
+          densityTmp$nEchoes.allClasses,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
         densityDay <- data.frame(densityDay, nEchoes.allClasses = nEchoes$x)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           nEchoes <- stats::aggregate(densityTmp[, paste("nEchoes", classSelection[i], sep = ".")],
             list(densityTmp$timeChunkDateSunset),
             sum,
@@ -1019,18 +1104,15 @@ computeDensity <- function(dbName,
 
         # sum of mtr factors
         # ====================================================================
-        sumOfMTRFactors <- stats::aggregate(densityTmp$sumOfMTRFactors.allClasses,
+        sumOfMTRFactors <- stats::aggregate(
+          densityTmp$sumOfMTRFactors.allClasses,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
         densityDay <- data.frame(densityDay, sumOfMTRFactors.allClasses = sumOfMTRFactors$x)
-        for (i in 1:length(classSelection)) {
-          sumOfMTRFactors <- stats::aggregate(
-            densityTmp[, paste("sumOfMTRFactors",
-              classSelection[i],
-              sep = "."
-            )],
+        for (i in seq_along(classSelection)) {
+          sumOfMTRFactors <- stats::aggregate(densityTmp[, paste("sumOfMTRFactors", classSelection[i], sep = ".")],
             list(densityTmp$timeChunkDateSunset),
             sum,
             na.rm = TRUE
@@ -1041,18 +1123,17 @@ computeDensity <- function(dbName,
         # density
         # ====================================================================
         # densityDay = data.frame(densityDay, density.allClasses = NA)
-        # for (i in 1:length(classSelection)){
+        # for (i in seq_along(classSelection)){
         #   densityDay[, paste("density", classSelection[i], sep = ".")] = NA
         # }
-        densityAllClasses <- stats::aggregate(densityTmp$density.allClasses,
+        densityAllClasses <- stats::aggregate(
+          densityTmp$density.allClasses,
           list(densityTmp$timeChunkDateSunset),
           mean,
           na.rm = TRUE
         )
-        densityDay <- data.frame(densityDay,
-          density.allClasses = densityAllClasses$x
-        )
-        for (i in 1:length(classSelection)) {
+        densityDay <- data.frame(densityDay, density.allClasses = densityAllClasses$x)
+        for (i in seq_along(classSelection)) {
           meanDensity <- stats::aggregate(densityTmp[, paste("density", classSelection[i], sep = ".")],
             list(densityTmp$timeChunkDateSunset),
             mean,
@@ -1063,57 +1144,65 @@ computeDensity <- function(dbName,
 
         # first quartiles
         # ====================================================================
-        densityFirstQuartile <- suppressWarnings(
-          stats::aggregate(list(densityFirstQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+        densityFirstQuartile <- suppressWarnings(stats::aggregate(
+          list(
+            densityFirstQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]
+          ),
+          list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+          FUN = function(x) {
+            stats::quantile(x, prob = 0.25)
+          }
+        ))
+        densityDay <- merge(densityDay,
+          densityFirstQuartile,
+          by = "timeChunkDateSunset",
+          all = TRUE
+        )
+        for (i in seq_along(classSelection)) {
+          densityFirstQuartile <- suppressWarnings(stats::aggregate(
+            densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
             list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-            FUN = function(x) stats::quantile(x, prob = 0.25)
-          )
-        )
-        densityDay <- merge(densityDay, densityFirstQuartile,
-          by = "timeChunkDateSunset", all = TRUE
-        )
-        for (i in 1:length(classSelection)) {
-          densityFirstQuartile <- suppressWarnings(
-            stats::aggregate(
-              densityTmp[
-                densityTmp$proportionalTimeObserved > propObsTimeCutoff,
-                paste("density", classSelection[i], sep = ".")
-              ],
-              list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-              FUN = function(x) stats::quantile(x, prob = 0.25)
-            )
-          )
+            FUN = function(x) {
+              stats::quantile(x, prob = 0.25)
+            }
+          ))
           names(densityFirstQuartile)[2] <- paste("densityFirstQuartile", classSelection[i], sep = ".")
-          densityDay <- merge(densityDay, densityFirstQuartile,
-            by = "timeChunkDateSunset", all = TRUE
+          densityDay <- merge(densityDay,
+            densityFirstQuartile,
+            by = "timeChunkDateSunset",
+            all = TRUE
           )
         }
 
         # third quartiles
         # ====================================================================
-        densityThirdQuartile <- suppressWarnings(
-          stats::aggregate(list(densityThirdQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+        densityThirdQuartile <- suppressWarnings(stats::aggregate(
+          list(
+            densityThirdQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]
+          ),
+          list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+          FUN = function(x) {
+            stats::quantile(x, prob = 0.75)
+          }
+        ))
+        densityDay <- merge(densityDay,
+          densityThirdQuartile,
+          by = "timeChunkDateSunset",
+          all = TRUE
+        )
+        for (i in seq_along(classSelection)) {
+          densityThirdQuartile <- suppressWarnings(stats::aggregate(
+            densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
             list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-            FUN = function(x) stats::quantile(x, prob = 0.75)
-          )
-        )
-        densityDay <- merge(densityDay, densityThirdQuartile,
-          by = "timeChunkDateSunset", all = TRUE
-        )
-        for (i in 1:length(classSelection)) {
-          densityThirdQuartile <- suppressWarnings(
-            stats::aggregate(
-              densityTmp[
-                densityTmp$proportionalTimeObserved > propObsTimeCutoff,
-                paste("density", classSelection[i], sep = ".")
-              ],
-              list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-              FUN = function(x) stats::quantile(x, prob = 0.75)
-            )
-          )
+            FUN = function(x) {
+              stats::quantile(x, prob = 0.75)
+            }
+          ))
           names(densityThirdQuartile)[2] <- paste("densityThirdQuartile", classSelection[i], sep = ".")
-          densityDay <- merge(densityDay, densityThirdQuartile,
-            by = "timeChunkDateSunset", all = TRUE
+          densityDay <- merge(densityDay,
+            densityThirdQuartile,
+            by = "timeChunkDateSunset",
+            all = TRUE
           )
         }
 
@@ -1145,22 +1234,26 @@ computeDensity <- function(dbName,
           dplyr::summarise(x = max(timeChunkDateSunset))
         timeChunkDateSunset <- timeChunkDateSunset[!is.na(timeChunkDateSunset$x) &
           !is.na(timeChunkDateSunset$timeChunkDateSunset), ]
-        operationTime_sec <- stats::aggregate(densityTmp$operationTime_sec,
+        operationTime_sec <- stats::aggregate(
+          densityTmp$operationTime_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        blindTime_sec <- stats::aggregate(densityTmp$blindTime_sec,
+        blindTime_sec <- stats::aggregate(
+          densityTmp$blindTime_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        observationTime_sec <- stats::aggregate(densityTmp$observationTime_sec,
+        observationTime_sec <- stats::aggregate(
+          densityTmp$observationTime_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        timeChunkDuration_sec <- stats::aggregate(densityTmp$timeChunkDuration_sec,
+        timeChunkDuration_sec <- stats::aggregate(
+          densityTmp$timeChunkDuration_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
@@ -1187,13 +1280,14 @@ computeDensity <- function(dbName,
 
         # nEchoes
         # ===================================================================
-        nEchoes <- stats::aggregate(densityTmp$nEchoes.allClasses,
+        nEchoes <- stats::aggregate(
+          densityTmp$nEchoes.allClasses,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
         densityNight <- data.frame(densityNight, nEchoes.allClasses = nEchoes$x)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           nEchoes <- stats::aggregate(densityTmp[, paste("nEchoes", classSelection[i], sep = ".")],
             list(densityTmp$timeChunkDateSunset),
             sum,
@@ -1204,15 +1298,14 @@ computeDensity <- function(dbName,
 
         # sum of MTR factors
         # ===================================================================
-        sumOfMTRFactors <- stats::aggregate(densityTmp$sumOfMTRFactors.allClasses,
+        sumOfMTRFactors <- stats::aggregate(
+          densityTmp$sumOfMTRFactors.allClasses,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        densityNight <- data.frame(densityNight,
-          sumOfMTRFactors.allClasses = sumOfMTRFactors$x
-        )
-        for (i in 1:length(classSelection)) {
+        densityNight <- data.frame(densityNight, sumOfMTRFactors.allClasses = sumOfMTRFactors$x)
+        for (i in seq_along(classSelection)) {
           sumOfMTRFactors <- stats::aggregate(densityTmp[, paste("sumOfMTRFactors", classSelection[i], sep = ".")],
             list(densityTmp$timeChunkDateSunset),
             sum,
@@ -1224,18 +1317,17 @@ computeDensity <- function(dbName,
         # density
         # ===================================================================
         # densityNight = data.frame(densityNight, density.allClasses = NA)
-        # for (i in 1:length(classSelection)){
+        # for (i in seq_along(classSelection)){
         #   densityNight[, paste("density", classSelection[i], sep = ".")] = NA
         # }
-        densityAllClasses <- stats::aggregate(densityTmp$density.allClasses,
+        densityAllClasses <- stats::aggregate(
+          densityTmp$density.allClasses,
           list(densityTmp$timeChunkDateSunset),
           mean,
           na.rm = TRUE
         )
-        densityNight <- data.frame(densityNight,
-          density.allClasses = densityAllClasses$x
-        )
-        for (i in 1:length(classSelection)) {
+        densityNight <- data.frame(densityNight, density.allClasses = densityAllClasses$x)
+        for (i in seq_along(classSelection)) {
           meanDensity <- stats::aggregate(densityTmp[, paste("density", classSelection[i], sep = ".")],
             list(densityTmp$timeChunkDateSunset),
             mean,
@@ -1246,55 +1338,65 @@ computeDensity <- function(dbName,
 
         # first quartiles
         # ===================================================================
-        densityFirstQuartile <- suppressWarnings(
-          stats::aggregate(list(densityFirstQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+        densityFirstQuartile <- suppressWarnings(stats::aggregate(
+          list(
+            densityFirstQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]
+          ),
+          list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+          FUN = function(x) {
+            stats::quantile(x, prob = 0.25)
+          }
+        ))
+        densityNight <- merge(densityNight,
+          densityFirstQuartile,
+          by = "timeChunkDateSunset",
+          all = TRUE
+        )
+        for (i in seq_along(classSelection)) {
+          densityFirstQuartile <- suppressWarnings(stats::aggregate(
+            densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
             list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-            FUN = function(x) stats::quantile(x, prob = 0.25)
-          )
-        )
-        densityNight <- merge(densityNight, densityFirstQuartile,
-          by = "timeChunkDateSunset", all = TRUE
-        )
-        for (i in 1:length(classSelection)) {
-          densityFirstQuartile <- suppressWarnings(
-            stats::aggregate(densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
-              list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-              FUN = function(x) stats::quantile(x, prob = 0.25)
-            )
-          )
-          names(densityFirstQuartile)[2] <- paste("densityFirstQuartile",
-            classSelection[i],
-            sep = "."
-          )
-          densityNight <- merge(densityNight, densityFirstQuartile,
-            by = "timeChunkDateSunset", all = TRUE
+            FUN = function(x) {
+              stats::quantile(x, prob = 0.25)
+            }
+          ))
+          names(densityFirstQuartile)[2] <- paste("densityFirstQuartile", classSelection[i], sep = ".")
+          densityNight <- merge(densityNight,
+            densityFirstQuartile,
+            by = "timeChunkDateSunset",
+            all = TRUE
           )
         }
 
         # third quartiles
         # ===================================================================
-        densityThirdQuartile <- suppressWarnings(
-          stats::aggregate(list(densityThirdQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+        densityThirdQuartile <- suppressWarnings(stats::aggregate(
+          list(
+            densityThirdQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]
+          ),
+          list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+          FUN = function(x) {
+            stats::quantile(x, prob = 0.75)
+          }
+        ))
+        densityNight <- merge(densityNight,
+          densityThirdQuartile,
+          by = "timeChunkDateSunset",
+          all = TRUE
+        )
+        for (i in seq_along(classSelection)) {
+          densityThirdQuartile <- suppressWarnings(stats::aggregate(
+            densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
             list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-            FUN = function(x) stats::quantile(x, prob = 0.75)
-          )
-        )
-        densityNight <- merge(densityNight, densityThirdQuartile,
-          by = "timeChunkDateSunset", all = TRUE
-        )
-        for (i in 1:length(classSelection)) {
-          densityThirdQuartile <- suppressWarnings(
-            stats::aggregate(densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
-              list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-              FUN = function(x) stats::quantile(x, prob = 0.75)
-            )
-          )
-          names(densityThirdQuartile)[2] <- paste("densityThirdQuartile",
-            classSelection[i],
-            sep = "."
-          )
-          densityNight <- merge(densityNight, densityThirdQuartile,
-            by = "timeChunkDateSunset", all = TRUE
+            FUN = function(x) {
+              stats::quantile(x, prob = 0.75)
+            }
+          ))
+          names(densityThirdQuartile)[2] <- paste("densityThirdQuartile", classSelection[i], sep = ".")
+          densityNight <- merge(densityNight,
+            densityThirdQuartile,
+            by = "timeChunkDateSunset",
+            all = TRUE
           )
         }
 
@@ -1326,22 +1428,26 @@ computeDensity <- function(dbName,
           dplyr::summarise(x = max(timeChunkDateSunset))
         timeChunkDateSunset <- timeChunkDateSunset[!is.na(timeChunkDateSunset$x) &
           !is.na(timeChunkDateSunset$timeChunkDateSunset), ]
-        operationTime_sec <- stats::aggregate(densityTmp$operationTime_sec,
+        operationTime_sec <- stats::aggregate(
+          densityTmp$operationTime_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        blindTime_sec <- stats::aggregate(densityTmp$blindTime_sec,
+        blindTime_sec <- stats::aggregate(
+          densityTmp$blindTime_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        observationTime_sec <- stats::aggregate(densityTmp$observationTime_sec,
+        observationTime_sec <- stats::aggregate(
+          densityTmp$observationTime_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        timeChunkDuration_sec <- stats::aggregate(densityTmp$timeChunkDuration_sec,
+        timeChunkDuration_sec <- stats::aggregate(
+          densityTmp$timeChunkDuration_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
@@ -1368,13 +1474,14 @@ computeDensity <- function(dbName,
 
         # nEchoes
         # ===================================================================
-        nEchoes <- stats::aggregate(densityTmp$nEchoes.allClasses,
+        nEchoes <- stats::aggregate(
+          densityTmp$nEchoes.allClasses,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
         densityCrepMorn <- data.frame(densityCrepMorn, nEchoes.allClasses = nEchoes$x)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           nEchoes <- stats::aggregate(densityTmp[, paste("nEchoes", classSelection[i], sep = ".")],
             list(densityTmp$timeChunkDateSunset),
             sum,
@@ -1385,15 +1492,14 @@ computeDensity <- function(dbName,
 
         # sum of MTR factors
         # ===================================================================
-        sumOfMTRFactors <- stats::aggregate(densityTmp$sumOfMTRFactors.allClasses,
+        sumOfMTRFactors <- stats::aggregate(
+          densityTmp$sumOfMTRFactors.allClasses,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        densityCrepMorn <- data.frame(densityCrepMorn,
-          sumOfMTRFactors.allClasses = sumOfMTRFactors$x
-        )
-        for (i in 1:length(classSelection)) {
+        densityCrepMorn <- data.frame(densityCrepMorn, sumOfMTRFactors.allClasses = sumOfMTRFactors$x)
+        for (i in seq_along(classSelection)) {
           sumOfMTRFactors <- stats::aggregate(densityTmp[, paste("sumOfMTRFactors", classSelection[i], sep = ".")],
             list(densityTmp$timeChunkDateSunset),
             sum,
@@ -1405,18 +1511,17 @@ computeDensity <- function(dbName,
         # density
         # ===================================================================
         # densityCrepMorn = data.frame(densityCrepMorn, density.allClasses = NA)
-        # for (i in 1:length(classSelection)){
+        # for (i in seq_along(classSelection)){
         #   densityCrepMorn[, paste("density", classSelection[i], sep = ".")] = NA
         # }
-        densityAllClasses <- stats::aggregate(densityTmp$density.allClasses,
+        densityAllClasses <- stats::aggregate(
+          densityTmp$density.allClasses,
           list(densityTmp$timeChunkDateSunset),
           mean,
           na.rm = TRUE
         )
-        densityCrepMorn <- data.frame(densityCrepMorn,
-          density.allClasses = densityAllClasses$x
-        )
-        for (i in 1:length(classSelection)) {
+        densityCrepMorn <- data.frame(densityCrepMorn, density.allClasses = densityAllClasses$x)
+        for (i in seq_along(classSelection)) {
           meanDensity <- stats::aggregate(densityTmp[, paste("density", classSelection[i], sep = ".")],
             list(densityTmp$timeChunkDateSunset),
             mean,
@@ -1427,55 +1532,65 @@ computeDensity <- function(dbName,
 
         # first quartiles
         # ===================================================================
-        densityFirstQuartile <- suppressWarnings(
-          stats::aggregate(list(densityFirstQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+        densityFirstQuartile <- suppressWarnings(stats::aggregate(
+          list(
+            densityFirstQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]
+          ),
+          list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+          FUN = function(x) {
+            stats::quantile(x, prob = 0.25)
+          }
+        ))
+        densityCrepMorn <- merge(densityCrepMorn,
+          densityFirstQuartile,
+          by = "timeChunkDateSunset",
+          all = TRUE
+        )
+        for (i in seq_along(classSelection)) {
+          densityFirstQuartile <- suppressWarnings(stats::aggregate(
+            densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
             list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-            FUN = function(x) stats::quantile(x, prob = 0.25)
-          )
-        )
-        densityCrepMorn <- merge(densityCrepMorn, densityFirstQuartile,
-          by = "timeChunkDateSunset", all = TRUE
-        )
-        for (i in 1:length(classSelection)) {
-          densityFirstQuartile <- suppressWarnings(
-            stats::aggregate(densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
-              list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-              FUN = function(x) stats::quantile(x, prob = 0.25)
-            )
-          )
-          names(densityFirstQuartile)[2] <- paste("densityFirstQuartile",
-            classSelection[i],
-            sep = "."
-          )
-          densityCrepMorn <- merge(densityCrepMorn, densityFirstQuartile,
-            by = "timeChunkDateSunset", all = TRUE
+            FUN = function(x) {
+              stats::quantile(x, prob = 0.25)
+            }
+          ))
+          names(densityFirstQuartile)[2] <- paste("densityFirstQuartile", classSelection[i], sep = ".")
+          densityCrepMorn <- merge(densityCrepMorn,
+            densityFirstQuartile,
+            by = "timeChunkDateSunset",
+            all = TRUE
           )
         }
 
         # third quartiles
         # ===================================================================
-        densityThirdQuartile <- suppressWarnings(
-          stats::aggregate(list(densityThirdQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+        densityThirdQuartile <- suppressWarnings(stats::aggregate(
+          list(
+            densityThirdQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]
+          ),
+          list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+          FUN = function(x) {
+            stats::quantile(x, prob = 0.75)
+          }
+        ))
+        densityCrepMorn <- merge(densityCrepMorn,
+          densityThirdQuartile,
+          by = "timeChunkDateSunset",
+          all = TRUE
+        )
+        for (i in seq_along(classSelection)) {
+          densityThirdQuartile <- suppressWarnings(stats::aggregate(
+            densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
             list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-            FUN = function(x) stats::quantile(x, prob = 0.75)
-          )
-        )
-        densityCrepMorn <- merge(densityCrepMorn, densityThirdQuartile,
-          by = "timeChunkDateSunset", all = TRUE
-        )
-        for (i in 1:length(classSelection)) {
-          densityThirdQuartile <- suppressWarnings(
-            stats::aggregate(densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
-              list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-              FUN = function(x) stats::quantile(x, prob = 0.75)
-            )
-          )
-          names(densityThirdQuartile)[2] <- paste("densityThirdQuartile",
-            classSelection[i],
-            sep = "."
-          )
-          densityCrepMorn <- merge(densityCrepMorn, densityThirdQuartile,
-            by = "timeChunkDateSunset", all = TRUE
+            FUN = function(x) {
+              stats::quantile(x, prob = 0.75)
+            }
+          ))
+          names(densityThirdQuartile)[2] <- paste("densityThirdQuartile", classSelection[i], sep = ".")
+          densityCrepMorn <- merge(densityCrepMorn,
+            densityThirdQuartile,
+            by = "timeChunkDateSunset",
+            all = TRUE
           )
         }
 
@@ -1507,22 +1622,26 @@ computeDensity <- function(dbName,
           dplyr::summarise(x = max(timeChunkDateSunset))
         timeChunkDateSunset <- timeChunkDateSunset[!is.na(timeChunkDateSunset$x) &
           !is.na(timeChunkDateSunset$timeChunkDateSunset), ]
-        operationTime_sec <- stats::aggregate(densityTmp$operationTime_sec,
+        operationTime_sec <- stats::aggregate(
+          densityTmp$operationTime_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        blindTime_sec <- stats::aggregate(densityTmp$blindTime_sec,
+        blindTime_sec <- stats::aggregate(
+          densityTmp$blindTime_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        observationTime_sec <- stats::aggregate(densityTmp$observationTime_sec,
+        observationTime_sec <- stats::aggregate(
+          densityTmp$observationTime_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        timeChunkDuration_sec <- stats::aggregate(densityTmp$timeChunkDuration_sec,
+        timeChunkDuration_sec <- stats::aggregate(
+          densityTmp$timeChunkDuration_sec,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
@@ -1549,13 +1668,14 @@ computeDensity <- function(dbName,
 
         # nEchoes
         # ===================================================================
-        nEchoes <- stats::aggregate(densityTmp$nEchoes.allClasses,
+        nEchoes <- stats::aggregate(
+          densityTmp$nEchoes.allClasses,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
         densityCrepEve <- data.frame(densityCrepEve, nEchoes.allClasses = nEchoes$x)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           nEchoes <- stats::aggregate(densityTmp[, paste("nEchoes", classSelection[i], sep = ".")],
             list(densityTmp$timeChunkDateSunset),
             sum,
@@ -1566,15 +1686,14 @@ computeDensity <- function(dbName,
 
         # sum of MTR factors
         # ===================================================================
-        sumOfMTRFactors <- stats::aggregate(densityTmp$sumOfMTRFactors.allClasses,
+        sumOfMTRFactors <- stats::aggregate(
+          densityTmp$sumOfMTRFactors.allClasses,
           list(densityTmp$timeChunkDateSunset),
           sum,
           na.rm = TRUE
         )
-        densityCrepEve <- data.frame(densityCrepEve,
-          sumOfMTRFactors.allClasses = sumOfMTRFactors$x
-        )
-        for (i in 1:length(classSelection)) {
+        densityCrepEve <- data.frame(densityCrepEve, sumOfMTRFactors.allClasses = sumOfMTRFactors$x)
+        for (i in seq_along(classSelection)) {
           sumOfMTRFactors <- stats::aggregate(densityTmp[, paste("sumOfMTRFactors", classSelection[i], sep = ".")],
             list(densityTmp$timeChunkDateSunset),
             sum,
@@ -1586,18 +1705,17 @@ computeDensity <- function(dbName,
         # density
         # ===================================================================
         # densityCrepEve = data.frame(densityCrepEve, density.allClasses = NA)
-        # for (i in 1:length(classSelection)){
+        # for (i in seq_along(classSelection)){
         #   densityCrepEve[, paste("density", classSelection[i], sep = ".")] = NA
         # }
-        densityAllClasses <- stats::aggregate(densityTmp$density.allClasses,
+        densityAllClasses <- stats::aggregate(
+          densityTmp$density.allClasses,
           list(densityTmp$timeChunkDateSunset),
           mean,
           na.rm = TRUE
         )
-        densityCrepEve <- data.frame(densityCrepEve,
-          density.allClasses = densityAllClasses$x
-        )
-        for (i in 1:length(classSelection)) {
+        densityCrepEve <- data.frame(densityCrepEve, density.allClasses = densityAllClasses$x)
+        for (i in seq_along(classSelection)) {
           meanDensity <- stats::aggregate(densityTmp[, paste("density", classSelection[i], sep = ".")],
             list(densityTmp$timeChunkDateSunset),
             mean,
@@ -1608,64 +1726,85 @@ computeDensity <- function(dbName,
 
         # first quartiles
         # ===================================================================
-        densityFirstQuartile <- suppressWarnings(
-          stats::aggregate(list(densityFirstQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+        densityFirstQuartile <- suppressWarnings(stats::aggregate(
+          list(
+            densityFirstQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]
+          ),
+          list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+          FUN = function(x) {
+            stats::quantile(x, prob = 0.25)
+          }
+        ))
+        densityCrepEve <- merge(densityCrepEve,
+          densityFirstQuartile,
+          by = "timeChunkDateSunset",
+          all = TRUE
+        )
+        for (i in seq_along(classSelection)) {
+          densityFirstQuartile <- suppressWarnings(stats::aggregate(
+            densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
             list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-            FUN = function(x) stats::quantile(x, prob = 0.25)
-          )
-        )
-        densityCrepEve <- merge(densityCrepEve, densityFirstQuartile,
-          by = "timeChunkDateSunset", all = TRUE
-        )
-        for (i in 1:length(classSelection)) {
-          densityFirstQuartile <- suppressWarnings(
-            stats::aggregate(densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
-              list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-              FUN = function(x) stats::quantile(x, prob = 0.25)
-            )
-          )
-          names(densityFirstQuartile)[2] <- paste("densityFirstQuartile",
-            classSelection[i],
-            sep = "."
-          )
-          densityCrepEve <- merge(densityCrepEve, densityFirstQuartile,
-            by = "timeChunkDateSunset", all = TRUE
+            FUN = function(x) {
+              stats::quantile(x, prob = 0.25)
+            }
+          ))
+          names(densityFirstQuartile)[2] <- paste("densityFirstQuartile", classSelection[i], sep = ".")
+          densityCrepEve <- merge(densityCrepEve,
+            densityFirstQuartile,
+            by = "timeChunkDateSunset",
+            all = TRUE
           )
         }
 
         # third quartiles
         # ===================================================================
-        densityThirdQuartile <- suppressWarnings(
-          stats::aggregate(list(densityThirdQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+        densityThirdQuartile <- suppressWarnings(stats::aggregate(
+          list(
+            densityThirdQuartile.allClasses = densityTmp$density.allClasses[densityTmp$proportionalTimeObserved > propObsTimeCutoff]
+          ),
+          list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
+          FUN = function(x) {
+            stats::quantile(x, prob = 0.75)
+          }
+        ))
+        densityCrepEve <- merge(densityCrepEve,
+          densityThirdQuartile,
+          by = "timeChunkDateSunset",
+          all = TRUE
+        )
+        for (i in seq_along(classSelection)) {
+          densityThirdQuartile <- suppressWarnings(stats::aggregate(
+            densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
             list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-            FUN = function(x) stats::quantile(x, prob = 0.75)
-          )
-        )
-        densityCrepEve <- merge(densityCrepEve, densityThirdQuartile,
-          by = "timeChunkDateSunset", all = TRUE
-        )
-        for (i in 1:length(classSelection)) {
-          densityThirdQuartile <- suppressWarnings(
-            stats::aggregate(densityTmp[densityTmp$proportionalTimeObserved > propObsTimeCutoff, paste("density", classSelection[i], sep = ".")],
-              list(timeChunkDateSunset = densityTmp$timeChunkDateSunset[densityTmp$proportionalTimeObserved > propObsTimeCutoff]),
-              FUN = function(x) stats::quantile(x, prob = 0.75)
-            )
-          )
-          names(densityThirdQuartile)[2] <- paste("densityThirdQuartile",
-            classSelection[i],
-            sep = "."
-          )
-          densityCrepEve <- merge(densityCrepEve, densityThirdQuartile,
-            by = "timeChunkDateSunset", all = TRUE
+            FUN = function(x) {
+              stats::quantile(x, prob = 0.75)
+            }
+          ))
+          names(densityThirdQuartile)[2] <- paste("densityThirdQuartile", classSelection[i], sep = ".")
+          densityCrepEve <- merge(densityCrepEve,
+            densityThirdQuartile,
+            by = "timeChunkDateSunset",
+            all = TRUE
           )
         }
 
         # Add day night densities for current altitude chunk to overview density data
         # =====================================================================
         if (exists("densityCrepuscular")) {
-          densityCrepuscular <- rbind(densityCrepuscular, densityDay, densityNight, densityCrepMorn, densityCrepEve)
+          densityCrepuscular <- rbind(
+            densityCrepuscular,
+            densityDay,
+            densityNight,
+            densityCrepMorn,
+            densityCrepEve
+          )
         } else {
-          densityCrepuscular <- rbind(densityDay, densityNight, densityCrepMorn, densityCrepEve)
+          densityCrepuscular <- rbind(
+            densityDay,
+            densityNight,
+            densityCrepMorn,
+            densityCrepEve
+          )
         }
       }
 
@@ -1681,7 +1820,7 @@ computeDensity <- function(dbName,
       # =======================================================================
       # density$density.allClasses[density$observationTime_h > 0] = density$sumOfMTRFactors.allClasses[density$observationTime_h > 0] /
       #                                                   density$observationTime_h[density$observationTime_h > 0]
-      # for (i in 1:length(classSelection)){
+      # for (i in seq_along(classSelection)){
       #   density[density$observationTime_h > 0 , paste("density", classSelection[i], sep = ".")] = density[density$observationTime_h > 0,
       #                                                                                     paste("sumOfMTRFactors", classSelection[i], sep = ".")] /
       #                                                                                 density$observationTime_h[density$observationTime_h > 0]
@@ -1692,7 +1831,9 @@ computeDensity <- function(dbName,
       density <- density[order(density$timeChunkBegin), ]
       timeChunks <- data.frame(
         timeChunkBegin = unique(density$timeChunkBegin),
-        timeChunkId = seq(1, length(unique(density$timeChunkBegin)))
+        timeChunkId = seq(1, length(unique(
+          density$timeChunkBegin
+        )))
       )
       timeChunks <- merge(timeChunks,
         data.frame(timeChunkBegin = density$timeChunkBegin),
@@ -1701,13 +1842,15 @@ computeDensity <- function(dbName,
       timeChunks <- timeChunks[order(timeChunks$timeChunkBegin), ]
       density <- data.frame(timeChunkId = timeChunks$timeChunkId, density)
     } else {
-      warning(paste0(
-        "Compute density crepuscular not possible. Set parameter ",
-        "'computePerDayCrepusculeNight' to FALSE when calling the function ",
-        "'computeDensity' or create the timeBins using the function ",
-        "'createTimeBins' and set the parameter 'crepBins' ",
-        "to TRUE."
-      ))
+      warning(
+        paste0(
+          "Compute density crepuscular not possible. Set parameter ",
+          "'computePerDayCrepusculeNight' to FALSE when calling the function ",
+          "'computeDensity' or create the timeBins using the function ",
+          "'createTimeBins' and set the parameter 'crepBins' ",
+          "to TRUE."
+        )
+      )
     }
   }
 
@@ -1737,24 +1880,18 @@ computeDensity <- function(dbName,
       density[, paste("altitudeQuantile_0.75", classLabel, sep = ".")] <- 0
       density[, paste("altitudeQuantile_0.95", classLabel, sep = ".")] <- 0
 
-      for (k in 1:nrow(density)) {
+      for (k in seq_len(nrow(density))) {
         if (i == 0) {
-          echoesInTimeAndAltitudeBin <- echoes[
-            echoes$feature1.altitude_AGL >= density$altitudeChunkBegin[k] &
-              echoes$feature1.altitude_AGL < density$altitudeChunkEnd[k] &
-              echoes$time_stamp_targetTZ >= density$timeChunkBegin[k] &
-              echoes$time_stamp_targetTZ < density$timeChunkEnd[k],
-            names(echoes) %in% c("feature1.altitude_AGL", "mtr_factor_rf")
-          ]
+          echoesInTimeAndAltitudeBin <- echoes[echoes$feature1.altitude_AGL >= density$altitudeChunkBegin[k] &
+            echoes$feature1.altitude_AGL < density$altitudeChunkEnd[k] &
+            echoes$time_stamp_targetTZ >= density$timeChunkBegin[k] &
+            echoes$time_stamp_targetTZ < density$timeChunkEnd[k], names(echoes) %in% c("feature1.altitude_AGL", "mtr_factor_rf")]
         } else {
-          echoesInTimeAndAltitudeBin <- echoes[
-            echoes$class == classSelection[i] &
-              echoes$feature1.altitude_AGL >= density$altitudeChunkBegin[k] &
-              echoes$feature1.altitude_AGL < density$altitudeChunkEnd[k] &
-              echoes$time_stamp_targetTZ >= density$timeChunkBegin[k] &
-              echoes$time_stamp_targetTZ < density$timeChunkEnd[k],
-            names(echoes) %in% c("feature1.altitude_AGL", "mtr_factor_rf")
-          ]
+          echoesInTimeAndAltitudeBin <- echoes[echoes$class == classSelection[i] &
+            echoes$feature1.altitude_AGL >= density$altitudeChunkBegin[k] &
+            echoes$feature1.altitude_AGL < density$altitudeChunkEnd[k] &
+            echoes$time_stamp_targetTZ >= density$timeChunkBegin[k] &
+            echoes$time_stamp_targetTZ < density$timeChunkEnd[k], names(echoes) %in% c("feature1.altitude_AGL", "mtr_factor_rf")]
         }
 
         if (density$observationTime_h[k] <= 0) {

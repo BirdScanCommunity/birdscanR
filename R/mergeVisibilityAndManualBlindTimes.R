@@ -175,7 +175,7 @@ mergeVisibilityAndManualBlindTimes <- function(visibilityData,
     # Loop over manual blind times, and adjust start or stop of blind time in
     # case of overlap with protocolChange blind time
     # =========================================================================
-    for (i in 1:length(manualBlindTimesSorted[, 1])) {
+    for (i in seq_along(manualBlindTimesSorted[, 1])) {
       # if manual blindtime ends inside protocolChange blindtime, set end of
       # manual blindtime to start of protocolChange blindtime
       # =====================================================================
@@ -206,7 +206,7 @@ mergeVisibilityAndManualBlindTimes <- function(visibilityData,
     # Split manual blind times if protocolChange blindtime is inside manual
     # blind time. Loop over protocolChange blind times
     # =========================================================================
-    for (i in 1:length(protChangeBT[, 1])) {
+    for (i in seq_along(protChangeBT[, 1])) {
       manBTWithProtChangeBTInside <- (manualBlindTimesSorted$start_targetTZ < protChangeBT$blind_from_targetTZ[i]) &
         (manualBlindTimesSorted$stop_targetTZ > protChangeBT$blind_to_targetTZ[i])
 
@@ -234,7 +234,7 @@ mergeVisibilityAndManualBlindTimes <- function(visibilityData,
     # -- Priorise manual blind times over visibility blind times --------------
     # Loop over visibility blind times
     # =========================================================================
-    for (i in 1:length(visibilityDataSorted[, 1])) {
+    for (i in seq_along(visibilityDataSorted[, 1])) {
       if (visibilityDataSorted$type[i] != "protocolChange") {
         # if visibility blindtime ends inside manual blindtime, set end of
         # visibility blindtime to start of manual blindtime
@@ -267,7 +267,7 @@ mergeVisibilityAndManualBlindTimes <- function(visibilityData,
     # Split visibility blind times if manual blindtime is inside visibility
     # blind time. Loop over manual blind times
     # =========================================================================
-    for (i in 1:length(manualBlindTimesSorted[, 1])) {
+    for (i in seq_along(manualBlindTimesSorted[, 1])) {
       visBTWithManualBTInside <- (visibilityDataSorted$blind_from_targetTZ < manualBlindTimesSorted$start_targetTZ[i]) &
         (visibilityDataSorted$blind_to_targetTZ > manualBlindTimesSorted$stop_targetTZ[i])
 

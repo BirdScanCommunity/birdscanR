@@ -63,11 +63,24 @@ reclassToBats <- function(echoData = NULL,
       stop("no bat class probabilities, check database and settings")
     }
 
-    echoDataTmp <- merge(echoData, batClassProbabilitiesAndMtrFactors, by = "echo", all.x = TRUE, all.y = FALSE)
+    echoDataTmp <- merge(
+      echoData,
+      batClassProbabilitiesAndMtrFactors,
+      by = "echo",
+      all.x = TRUE,
+      all.y = FALSE
+    )
 
-    echoData[!is.na(echoDataTmp$classProb.bat) & echoDataTmp$classProb.bat > reclassToBatCutoff, ]$class <- "bat"
-    echoData[!is.na(echoDataTmp$classProb.bat) & echoDataTmp$classProb.bat > reclassToBatCutoff, ]$class_probability <- echoDataTmp[!is.na(echoDataTmp$classProb.bat) & echoDataTmp$classProb.bat > reclassToBatCutoff, ]$classProb.bat
-    echoData[!is.na(echoDataTmp$classProb.bat) & echoDataTmp$classProb.bat > reclassToBatCutoff, ]$mtr_factor_rf <- echoDataTmp[!is.na(echoDataTmp$classProb.bat) & echoDataTmp$classProb.bat > reclassToBatCutoff, ]$MTRFact.bat
+    echoData[!is.na(echoDataTmp$classProb.bat) &
+      echoDataTmp$classProb.bat > reclassToBatCutoff, ]$class <- "bat"
+    echoData[!is.na(echoDataTmp$classProb.bat) &
+      echoDataTmp$classProb.bat > reclassToBatCutoff, ]$class_probability <-
+      echoDataTmp[!is.na(echoDataTmp$classProb.bat) &
+        echoDataTmp$classProb.bat > reclassToBatCutoff, ]$classProb.bat
+    echoData[!is.na(echoDataTmp$classProb.bat) &
+      echoDataTmp$classProb.bat > reclassToBatCutoff, ]$mtr_factor_rf <-
+      echoDataTmp[!is.na(echoDataTmp$classProb.bat) &
+        echoDataTmp$classProb.bat > reclassToBatCutoff, ]$MTRFact.bat
   }
   return(echoData)
 }

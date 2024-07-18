@@ -171,7 +171,7 @@ filterEchoData <- function(echoData = NULL,
     (methods::is(manualBlindTimes$start_targetTZ, "POSIXct")) &&
     (methods::is(manualBlindTimes$stop_targetTZ, "POSIXct"))) {
     echoDataInBlindTime <- rep(FALSE, length(echoData[, 1]))
-    for (i in 1:length(manualBlindTimes[, 1])) {
+    for (i in seq_along(manualBlindTimes[, 1])) {
       echoDataInBlindTime <- echoDataInBlindTime |
         ((echoData$time_stamp_targetTZ >= manualBlindTimes$start_targetTZ[i]) &
           (echoData$time_stamp_targetTZ <= manualBlindTimes$stop_targetTZ[i]))

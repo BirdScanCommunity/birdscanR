@@ -49,7 +49,7 @@ computeObservationTime <- function(timeBins,
 
   # Split protocol entries if expanding over one or more timeBin starts
   # =============================================================================
-  for (i in 1:length(timeBins[, 1])) {
+  for (i in seq_along(timeBins[, 1])) {
     # Find protocol entry at start of timeBin
     # =========================================================================
     protAtTimeBinStart <- (protocolData$startTime_targetTZ < timeBins$start[i]) &
@@ -126,7 +126,7 @@ computeObservationTime <- function(timeBins,
   # =============================================================================
   # split blindTimes if expanding over start/end of a protocol
   # =============================================================================
-  for (i in 1:length(protocolData[, 1])) {
+  for (i in seq_along(protocolData[, 1])) {
     # find blindTime at start of protocol
     # =========================================================================
     blindTimeAtProtocolStart <- (blindTimes$start_targetTZ < protocolData$startTime_targetTZ[i]) &
@@ -197,7 +197,7 @@ computeObservationTime <- function(timeBins,
 
   # loop over time bins
   # ===========================================================================
-  for (i in 1:length(timeBins[, 1])) {
+  for (i in seq_along(timeBins[, 1])) {
     # protocol durations in time bins (operationtime)
     # =========================================================================
     timeBins$operationTime_sec[i] <- sum(protocolData[protocolData$timeBinId == timeBins[i, ]$id, ]$duration_sec)

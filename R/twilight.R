@@ -118,7 +118,7 @@ twilight <- function(timeRange,
   # Update daily 'sunStart', 'sunStop', civilStart', 'civilStop', 'nauticalStart', and
   #  'nauticalStop' values in the output twilight dataframe
   # ===========================================================================
-  for (i in 1:length(dateSeq)) {
+  for (i in seq_along(dateSeq)) {
     # Get the current date
     # =======================================================================
     # i.date = unique(dateSeq)[i]

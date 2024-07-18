@@ -173,7 +173,7 @@ computeMTR <- function(dbName,
   # Check whether only one of the options of computePerDayCrepusculeNight and
   #  computePerDayNight has been chosen
   # =============================================================================
-  if (computePerDayNight & computePerDayCrepusculeNight) {
+  if (computePerDayNight && computePerDayCrepusculeNight) {
     stop(paste0(
       "Please set only one of the options 'computePerDayNight' or ",
       "'computePerDayCrepusculeNight' to TRUE, and rerun computeMTR()."
@@ -283,7 +283,7 @@ computeMTR <- function(dbName,
   # combine time bins split by day/night,
   #  if neither computePerDayNight or computePerDayCrepusculeNight were requested
   # =============================================================================
-  if ((!computePerDayNight) & (!computePerDayCrepusculeNight)) {
+  if ((!computePerDayNight) && (!computePerDayCrepusculeNight)) {
     for (i in 2:nrow(timeBins)) {
       if (timeBins$id[i] == -1) {
         timeBins$stop[i - 1] <- timeBins$stop[i]
@@ -496,7 +496,7 @@ computeMTR <- function(dbName,
     #  Combine all time bins of one day (grouped by timeChunkDateSunset) to one
     # =========================================================================
     if ("timeChunkDateSunset" %in% colnames(mtr) && !all(is.na(mtr$timeChunkDateSunset))) {
-      for (k in 1:length(unique(mtr$altitudeChunkId))) {
+      for (k in seq_along(unique(mtr$altitudeChunkId))) {
         # Day MTR ----
         # =====================================================================
         # combine all time bins with the same value in 'timeChunkDateSunset',
@@ -573,7 +573,7 @@ computeMTR <- function(dbName,
           na.rm = TRUE
         )
         mtrDay <- data.frame(mtrDay, nEchoes.allClasses = nEchoes$x)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           nEchoes <- stats::aggregate(mtrTmp[, paste("nEchoes", classSelection[i], sep = ".")],
             list(mtrTmp$timeChunkDateSunset),
             sum,
@@ -590,7 +590,7 @@ computeMTR <- function(dbName,
           na.rm = TRUE
         )
         mtrDay <- data.frame(mtrDay, sumOfMTRFactors.allClasses = sumOfMTRFactors$x)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           sumOfMTRFactors <- stats::aggregate(
             mtrTmp[, paste("sumOfMTRFactors",
               classSelection[i],
@@ -606,7 +606,7 @@ computeMTR <- function(dbName,
         # MTR
         # ====================================================================
         mtrDay <- data.frame(mtrDay, mtr.allClasses = NA)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           mtrDay[, paste("mtr", classSelection[i], sep = ".")] <- NA
         }
 
@@ -621,7 +621,7 @@ computeMTR <- function(dbName,
         mtrDay <- merge(mtrDay, mtrFirstQuartile,
           by = "timeChunkDateSunset", all = TRUE
         )
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           mtrFirstQuartile <- suppressWarnings(
             stats::aggregate(
               mtrTmp[
@@ -649,7 +649,7 @@ computeMTR <- function(dbName,
         mtrDay <- merge(mtrDay, mtrThirdQuartile,
           by = "timeChunkDateSunset", all = TRUE
         )
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           mtrThirdQuartile <- suppressWarnings(
             stats::aggregate(
               mtrTmp[
@@ -742,7 +742,7 @@ computeMTR <- function(dbName,
           na.rm = TRUE
         )
         mtrNight <- data.frame(mtrNight, nEchoes.allClasses = nEchoes$x)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           nEchoes <- stats::aggregate(mtrTmp[, paste("nEchoes", classSelection[i], sep = ".")],
             list(mtrTmp$timeChunkDateSunset),
             sum,
@@ -761,7 +761,7 @@ computeMTR <- function(dbName,
         mtrNight <- data.frame(mtrNight,
           sumOfMTRFactors.allClasses = sumOfMTRFactors$x
         )
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           sumOfMTRFactors <- stats::aggregate(mtrTmp[, paste("sumOfMTRFactors", classSelection[i], sep = ".")],
             list(mtrTmp$timeChunkDateSunset),
             sum,
@@ -773,7 +773,7 @@ computeMTR <- function(dbName,
         # MTR
         # ===================================================================
         mtrNight <- data.frame(mtrNight, mtr.allClasses = NA)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           mtrNight[, paste("mtr", classSelection[i], sep = ".")] <- NA
         }
 
@@ -788,7 +788,7 @@ computeMTR <- function(dbName,
         mtrNight <- merge(mtrNight, mtrFirstQuartile,
           by = "timeChunkDateSunset", all = TRUE
         )
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           mtrFirstQuartile <- suppressWarnings(
             stats::aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")],
               list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]),
@@ -815,7 +815,7 @@ computeMTR <- function(dbName,
         mtrNight <- merge(mtrNight, mtrThirdQuartile,
           by = "timeChunkDateSunset", all = TRUE
         )
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           mtrThirdQuartile <- suppressWarnings(
             stats::aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")],
               list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]),
@@ -853,7 +853,7 @@ computeMTR <- function(dbName,
       # =======================================================================
       mtr$mtr.allClasses[mtr$observationTime_h > 0] <- mtr$sumOfMTRFactors.allClasses[mtr$observationTime_h > 0] /
         mtr$observationTime_h[mtr$observationTime_h > 0]
-      for (i in 1:length(classSelection)) {
+      for (i in seq_along(classSelection)) {
         mtr[mtr$observationTime_h > 0, paste("mtr", classSelection[i], sep = ".")] <- mtr[
           mtr$observationTime_h > 0,
           paste("sumOfMTRFactors", classSelection[i], sep = ".")
@@ -891,7 +891,7 @@ computeMTR <- function(dbName,
     #  Combine all time bins of one day (grouped by timeChunkDateSunset) to one
     # =========================================================================
     if ("timeChunkDateSunset" %in% colnames(mtr) && !all(is.na(mtr$timeChunkDateSunset))) {
-      for (k in 1:length(unique(mtr$altitudeChunkId))) {
+      for (k in seq_along(unique(mtr$altitudeChunkId))) {
         # Day MTR ----
         # =====================================================================
         # combine all time bins with the same value in 'timeChunkDateSunset',
@@ -968,7 +968,7 @@ computeMTR <- function(dbName,
           na.rm = TRUE
         )
         mtrDay <- data.frame(mtrDay, nEchoes.allClasses = nEchoes$x)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           nEchoes <- stats::aggregate(mtrTmp[, paste("nEchoes", classSelection[i], sep = ".")],
             list(mtrTmp$timeChunkDateSunset),
             sum,
@@ -985,7 +985,7 @@ computeMTR <- function(dbName,
           na.rm = TRUE
         )
         mtrDay <- data.frame(mtrDay, sumOfMTRFactors.allClasses = sumOfMTRFactors$x)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           sumOfMTRFactors <- stats::aggregate(
             mtrTmp[, paste("sumOfMTRFactors",
               classSelection[i],
@@ -1001,7 +1001,7 @@ computeMTR <- function(dbName,
         # MTR
         # ====================================================================
         mtrDay <- data.frame(mtrDay, mtr.allClasses = NA)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           mtrDay[, paste("mtr", classSelection[i], sep = ".")] <- NA
         }
 
@@ -1016,7 +1016,7 @@ computeMTR <- function(dbName,
         mtrDay <- merge(mtrDay, mtrFirstQuartile,
           by = "timeChunkDateSunset", all = TRUE
         )
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           mtrFirstQuartile <- suppressWarnings(
             stats::aggregate(
               mtrTmp[
@@ -1044,7 +1044,7 @@ computeMTR <- function(dbName,
         mtrDay <- merge(mtrDay, mtrThirdQuartile,
           by = "timeChunkDateSunset", all = TRUE
         )
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           mtrThirdQuartile <- suppressWarnings(
             stats::aggregate(
               mtrTmp[
@@ -1137,7 +1137,7 @@ computeMTR <- function(dbName,
           na.rm = TRUE
         )
         mtrNight <- data.frame(mtrNight, nEchoes.allClasses = nEchoes$x)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           nEchoes <- stats::aggregate(mtrTmp[, paste("nEchoes", classSelection[i], sep = ".")],
             list(mtrTmp$timeChunkDateSunset),
             sum,
@@ -1156,7 +1156,7 @@ computeMTR <- function(dbName,
         mtrNight <- data.frame(mtrNight,
           sumOfMTRFactors.allClasses = sumOfMTRFactors$x
         )
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           sumOfMTRFactors <- stats::aggregate(mtrTmp[, paste("sumOfMTRFactors", classSelection[i], sep = ".")],
             list(mtrTmp$timeChunkDateSunset),
             sum,
@@ -1168,7 +1168,7 @@ computeMTR <- function(dbName,
         # MTR
         # ===================================================================
         mtrNight <- data.frame(mtrNight, mtr.allClasses = NA)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           mtrNight[, paste("mtr", classSelection[i], sep = ".")] <- NA
         }
 
@@ -1183,7 +1183,7 @@ computeMTR <- function(dbName,
         mtrNight <- merge(mtrNight, mtrFirstQuartile,
           by = "timeChunkDateSunset", all = TRUE
         )
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           mtrFirstQuartile <- suppressWarnings(
             stats::aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")],
               list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]),
@@ -1210,7 +1210,7 @@ computeMTR <- function(dbName,
         mtrNight <- merge(mtrNight, mtrThirdQuartile,
           by = "timeChunkDateSunset", all = TRUE
         )
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           mtrThirdQuartile <- suppressWarnings(
             stats::aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")],
               list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]),
@@ -1302,7 +1302,7 @@ computeMTR <- function(dbName,
           na.rm = TRUE
         )
         mtrCrepMorn <- data.frame(mtrCrepMorn, nEchoes.allClasses = nEchoes$x)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           nEchoes <- stats::aggregate(mtrTmp[, paste("nEchoes", classSelection[i], sep = ".")],
             list(mtrTmp$timeChunkDateSunset),
             sum,
@@ -1321,7 +1321,7 @@ computeMTR <- function(dbName,
         mtrCrepMorn <- data.frame(mtrCrepMorn,
           sumOfMTRFactors.allClasses = sumOfMTRFactors$x
         )
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           sumOfMTRFactors <- stats::aggregate(mtrTmp[, paste("sumOfMTRFactors", classSelection[i], sep = ".")],
             list(mtrTmp$timeChunkDateSunset),
             sum,
@@ -1333,7 +1333,7 @@ computeMTR <- function(dbName,
         # MTR
         # ===================================================================
         mtrCrepMorn <- data.frame(mtrCrepMorn, mtr.allClasses = NA)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           mtrCrepMorn[, paste("mtr", classSelection[i], sep = ".")] <- NA
         }
 
@@ -1348,7 +1348,7 @@ computeMTR <- function(dbName,
         mtrCrepMorn <- merge(mtrCrepMorn, mtrFirstQuartile,
           by = "timeChunkDateSunset", all = TRUE
         )
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           mtrFirstQuartile <- suppressWarnings(
             stats::aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")],
               list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]),
@@ -1375,7 +1375,7 @@ computeMTR <- function(dbName,
         mtrCrepMorn <- merge(mtrCrepMorn, mtrThirdQuartile,
           by = "timeChunkDateSunset", all = TRUE
         )
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           mtrThirdQuartile <- suppressWarnings(
             stats::aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")],
               list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]),
@@ -1467,7 +1467,7 @@ computeMTR <- function(dbName,
           na.rm = TRUE
         )
         mtrCrepEve <- data.frame(mtrCrepEve, nEchoes.allClasses = nEchoes$x)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           nEchoes <- stats::aggregate(mtrTmp[, paste("nEchoes", classSelection[i], sep = ".")],
             list(mtrTmp$timeChunkDateSunset),
             sum,
@@ -1486,7 +1486,7 @@ computeMTR <- function(dbName,
         mtrCrepEve <- data.frame(mtrCrepEve,
           sumOfMTRFactors.allClasses = sumOfMTRFactors$x
         )
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           sumOfMTRFactors <- stats::aggregate(mtrTmp[, paste("sumOfMTRFactors", classSelection[i], sep = ".")],
             list(mtrTmp$timeChunkDateSunset),
             sum,
@@ -1498,7 +1498,7 @@ computeMTR <- function(dbName,
         # MTR
         # ===================================================================
         mtrCrepEve <- data.frame(mtrCrepEve, mtr.allClasses = NA)
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           mtrCrepEve[, paste("mtr", classSelection[i], sep = ".")] <- NA
         }
 
@@ -1513,7 +1513,7 @@ computeMTR <- function(dbName,
         mtrCrepEve <- merge(mtrCrepEve, mtrFirstQuartile,
           by = "timeChunkDateSunset", all = TRUE
         )
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           mtrFirstQuartile <- suppressWarnings(
             stats::aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")],
               list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]),
@@ -1540,7 +1540,7 @@ computeMTR <- function(dbName,
         mtrCrepEve <- merge(mtrCrepEve, mtrThirdQuartile,
           by = "timeChunkDateSunset", all = TRUE
         )
-        for (i in 1:length(classSelection)) {
+        for (i in seq_along(classSelection)) {
           mtrThirdQuartile <- suppressWarnings(
             stats::aggregate(mtrTmp[mtrTmp$proportionalTimeObserved > propObsTimeCutoff, paste("mtr", classSelection[i], sep = ".")],
               list(timeChunkDateSunset = mtrTmp$timeChunkDateSunset[mtrTmp$proportionalTimeObserved > propObsTimeCutoff]),
@@ -1577,7 +1577,7 @@ computeMTR <- function(dbName,
       # =======================================================================
       mtr$mtr.allClasses[mtr$observationTime_h > 0] <- mtr$sumOfMTRFactors.allClasses[mtr$observationTime_h > 0] /
         mtr$observationTime_h[mtr$observationTime_h > 0]
-      for (i in 1:length(classSelection)) {
+      for (i in seq_along(classSelection)) {
         mtr[mtr$observationTime_h > 0, paste("mtr", classSelection[i], sep = ".")] <- mtr[
           mtr$observationTime_h > 0,
           paste("sumOfMTRFactors", classSelection[i], sep = ".")
@@ -1635,7 +1635,7 @@ computeMTR <- function(dbName,
       mtr[, paste("altitudeQuantile_0.75", classLabel, sep = ".")] <- 0
       mtr[, paste("altitudeQuantile_0.95", classLabel, sep = ".")] <- 0
 
-      for (k in 1:nrow(mtr)) {
+      for (k in seq_len(nrow(mtr))) {
         if (i == 0) {
           echoesInTimeAndAltitudeBin <- echoes[
             echoes$feature1.altitude_AGL >= mtr$altitudeChunkBegin[k] &

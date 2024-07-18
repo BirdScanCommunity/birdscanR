@@ -104,7 +104,8 @@ getCollectionTable <- function(dbConnection, dbDriverChar) {
     collectionTable <- QUERY(
       dbConnection,
       dbDriverChar,
-      paste0("Select *, time_stamp::character varying ts From collection order by row asc")
+      paste0("Select *, time_stamp::character varying ts From collection order
+             by row asc")
     )
     collectionTable$time_stamp <- collectionTable$ts
     collectionTable$ts <- NULL

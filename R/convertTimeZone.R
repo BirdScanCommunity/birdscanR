@@ -60,7 +60,7 @@ convertTimeZone <- function(data = NULL,
                             originTZ = "Etc/GMT0",
                             targetTZ = "Etc/GMT0") {
   if (!is.null(data)) {
-    for (i in 1:length(colNames)) {
+    for (i in seq_along(colNames)) {
       # new column names
       originTzColName <- paste(colNames[i], "originTZ", sep = "_")
       targetTzColName <- paste(colNames[i], "targetTZ", sep = "_")
