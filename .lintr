@@ -1,0 +1,7 @@
+linters: linters_with_defaults(
+  indentation_linter = NULL, # https://github.com/r-lib/lintr/issues/2007, https://github.com/r-lib/styler/issues/1065
+  line_length_linter = NULL, # Need to define a limit? 80-120?
+  object_length_linter = NULL, # Rename variable to 30 char. max?
+  commented_code_linter = NULL, # Can we delete all comments?
+  object_name_linter = NULL # Rename all variables to snake_case
+  )
