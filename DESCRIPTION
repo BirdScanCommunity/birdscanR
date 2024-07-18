@@ -9,7 +9,7 @@ Authors@R: c(person("Birgen", "Haest", email = "birgen.haest@vogelwarte.ch", rol
              person("Felix", "Liechti", email = "felix.liechti@swiss-birdradar.com", role = c("ctb")))
 Description: Extract data from 'Birdscan MR1' 'SQL' vertical-looking radar databases, filter, and process them to Migration Traffic Rates (#objects per hour and km) or density (#objects per km3) of, for example birds, and insects. Object classifications in the 'Birdscan MR1' databases are based on the dataset of Haest et al. (2021) <doi:10.5281/zenodo.5734960>). Migration Traffic Rates and densities can be calculated separately for different height bins (with a height resolution of choice) as well as over time periods of choice (e.g., 1/2 hour, 1 hour, 1 day, day/night, the full time period of observation, and anything in between). Two plotting functions are also included to explore the data in the 'SQL' databases and the resulting Migration Traffic Rate results. For details on the Migration Traffic Rate calculation procedures, see Schmid et al. (2019) <doi:10.1111/ecog.04025>.
 Type: Package
-License: GPL-3
+License: GPL (>= 3)
 Language: en-GB
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

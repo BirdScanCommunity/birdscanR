@@ -14,3 +14,4 @@
 ^CRAN-SUBMISSION$
 ^CITATION\.cff$
 ^codecov\.yml$
+^LICENSE\.md$
