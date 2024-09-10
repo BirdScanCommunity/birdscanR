@@ -331,6 +331,7 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
     #-------------------------------------
     # select TechBlind time
     i_BlindTimeindex <- which(overallBlindTimes$start_targetTZ < i_tstop & overallBlindTimes$stop_targetTZ > i_tstart)
+    overallBlindTimes[i_BlindTimeindex, 'protocolID'] = i_protID   
   }
 
   # sort overall blind times chronological
