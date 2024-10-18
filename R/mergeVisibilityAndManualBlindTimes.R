@@ -2,6 +2,7 @@
 #' @title mergeVisibilityAndManualBlindTimes
 #' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; 
 #' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' Baptiste Schmid, \email{baptiste.schmid@@vogelwarte.ch}
 #' @description Function to merge manual blind times with blind times from 
 #' visibility table. For further processing the radar (visibility) and manual 
 #' blind times have to be merged with the function 
@@ -103,12 +104,16 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
     
     # Remove rows where start >= stop in manual blind times
     # =========================================================================
+      t_nrow_before <- nrow(manualBlindTimesSorted)
       manualBlindTimesSorted = manualBlindTimesSorted[manualBlindTimesSorted$start_targetTZ < manualBlindTimesSorted$stop_targetTZ,]
-    
+      t_nrow_after <- nrow(manualBlindTimesSorted)
+      if(t_nrow_before > t_nrow_after) warning(paste0("CHECK and correct : ", t_nrow_before - t_nrow_after," rows removed from manualBlindTimes because start_time >= stop_time "))
+      
     # Make sure manual blind times are not overlapping
     # =========================================================================
       if (nrow(manualBlindTimesSorted) > 1){
         overlaps = manualBlindTimesSorted$start_targetTZ[2:(length(manualBlindTimesSorted[, 1]))] < manualBlindTimesSorted$stop_targetTZ[1:(length(manualBlindTimesSorted[, 1])-1)]
+        if(length(overlaps)>=1) warning(paste0("CHECK and correct : some time periods overlapp in manualBlindTimes"))
         manualBlindTimesSorted$stop_targetTZ[c(overlaps, FALSE)] = manualBlindTimesSorted$start_targetTZ[c(FALSE, overlaps)]
       }
   }
@@ -133,6 +138,7 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
           } else{
             blockTime = 60
           }
+          blockTime = blockTime + 5 # add 5 seconds to the standard blocktime to avoid unnecessary splitting of the blindtime registered becasue of protocol change
         
         # If blindTime is longer than 60s, split it after 60s
         # =====================================================================
@@ -312,11 +318,27 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
                                    type           = visibilityDataSorted$type)
   }
 
-# sort overall blind times chronological
-# =============================================================================
-  overallBlindTimes   = overallBlindTimes[order(overallBlindTimes$start_targetTZ),]
+  # Add protocolID to the blindTimes
+  # =============================================================================
+  overallBlindTimes['protocolID']   = '-1' # will remain -1 if manual blindTime extend over effective operation time of the radar (e.g. if radar shut down for a while during persistant rain, or that this time has been recorded as technical manual blind time)
+  for(i in 1:nrow(protocolData)){ # i <- 4   
+    
+    # data from the i-th protocol
+    i_protID = protocolData[i, 'protocolID']
+    i_tstart = protocolData[i, "startTime_targetTZ"]
+    i_tstop = protocolData[i, "stopTime_targetTZ"]
+    
+    #-------------------------------------
+    # select TechBlind time
+    i_BlindTimeindex <- which(overallBlindTimes$start_targetTZ < i_tstop & overallBlindTimes$stop_targetTZ > i_tstart)
+    overallBlindTimes[i_BlindTimeindex, 'protocolID'] = i_protID   
+  }
 
-# Return merged blind times
-# =============================================================================
+  # sort overall blind times chronological
+  # =============================================================================
+  overallBlindTimes   = overallBlindTimes[order(overallBlindTimes$start_targetTZ),]
+   
+  # Return merged blind times
+  # =============================================================================
   return(overallBlindTimes)
 }
