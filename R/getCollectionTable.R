@@ -2,12 +2,13 @@
 #' @title  Get BirdScan collection table
 #' @description load collection from 'Birdscan MR1' 'SQL' database
 #' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch};
+#' Bart Kranstauber, \email{b.kranstauber@@uva.nl}
 #' @param dbConnection a valid  database connection
 #' @param dbDriverChar the name of the driver. If different from 'PostgreSQL'
 #' it connects to cloud.birdradar.com
 #' @param timeInterval An optional vector of timestamps (either as `Date` or `POSIXct`)
-#' to limit the the data retrieved from the collections table
+#' to limit the data retrieved from the collections table
 #'
 #' @return A dataframe with the collection table
 #' @export

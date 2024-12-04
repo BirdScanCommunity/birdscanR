@@ -13,7 +13,7 @@ getCollectionTable(dbConnection, dbDriverChar, timeInterval)
 it connects to cloud.birdradar.com}
 
 \item{timeInterval}{An optional vector of timestamps (either as \code{Date} or \code{POSIXct})
-to limit the the data retrieved from the collections table}
+to limit the data retrieved from the collections table}
 }
 \value{
 A dataframe with the collection table
@@ -43,5 +43,6 @@ collectionTable = getCollectionTable(dbConnection, dbDriverChar)
 }
 \author{
 Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Birgen Haest, \email{birgen.haest@vogelwarte.ch};
+Bart Kranstauber, \email{b.kranstauber@uva.nl}
 }

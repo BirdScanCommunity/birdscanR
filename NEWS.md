@@ -1,3 +1,9 @@
+# birdscanR 0.3.0.9005
+
+-   Added functionality: The function 'compileData()' was added to compile a standardized MR1 dataset for publication to a data repository and allow easier interoperability ([#44](https://github.com/BirdScanCommunity/birdscanR/issues/44){.uri}).
+
+-   Added functionality: The function 'getCollection()' now includes an additional optional parameter 'timeInterval' for when you want to limit the data being retrieved from the collections table ([#49](https://github.com/BirdScanCommunity/birdscanR/issues/49){.uri}).
+
 # birdscanR 0.3.0
 
 -   Added functionality: The function 'computeDensity()' was added to calculate the density (expressed as #objects / km3). Note that this function only works for Birdscan MR1 database versions \>= 1.7.0.4 as the variable feature37.speed is required for the density calculation ([#40](https://github.com/BirdScanCommunity/birdscanR/issues/40){.uri}).
