@@ -4,13 +4,16 @@
 \alias{getCollectionTable}
 \title{Get BirdScan collection table}
 \usage{
-getCollectionTable(dbConnection, dbDriverChar)
+getCollectionTable(dbConnection, dbDriverChar, timeInterval)
 }
 \arguments{
 \item{dbConnection}{a valid  database connection}
 
 \item{dbDriverChar}{the name of the driver. If different from 'PostgreSQL'
 it connects to cloud.birdradar.com}
+
+\item{timeInterval}{An optional vector of timestamps (either as \code{Date} or \code{POSIXct})
+to limit the the data retrieved from the collections table}
 }
 \value{
 A dataframe with the collection table
