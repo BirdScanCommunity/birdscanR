@@ -1,8 +1,10 @@
-# birdscanR 0.3.0.9005
+# birdscanR 0.3.0.9006
 
 -   Added functionality: The function 'compileData()' was added to compile a standardized MR1 dataset for publication to a data repository and allow easier interoperability ([#44](https://github.com/BirdScanCommunity/birdscanR/issues/44){.uri}).
 
 -   Added functionality: The function 'getCollection()' now includes an additional optional parameter 'timeInterval' for when you want to limit the data being retrieved from the collections table ([#49](https://github.com/BirdScanCommunity/birdscanR/issues/49){.uri}).
+
+-   Added functionality: The function 'extractDBData()' now includes an additional optional parameter 'dbHost' to set your postgreSQL database host site.  ([#54](https://github.com/BirdScanCommunity/birdscanR/pull/54){.uri}).
 
 # birdscanR 0.3.0
 
