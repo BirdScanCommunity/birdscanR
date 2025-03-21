@@ -10,6 +10,7 @@
 #' @param dbName NULL The name of the Database
 #' @param dbUser NULL The USER name of the Server
 #' @param dbPwd NULL The password for the user name
+#' @param dbHost "cloud.birdradar.com" The host of the database
 #' @param saveDbToFile FALSE Set to TRUE if you want to save the extracted 
 #' database data to an rds file. The output filename is automatically set to 
 #' dbName_DataExtract.rds 
@@ -71,6 +72,7 @@ extractDbData = function(dbDriverChar              = "SQL Server",
                          dbName                    = NULL,  
                          dbUser                    = NULL, 
                          dbPwd                     = NULL,
+                         dbHost                    = "cloud.birdradar.com",
                          saveDbToFile              = FALSE,
                          dbDataDir                 = NULL,
                          radarTimeZone             = NULL, 
@@ -125,7 +127,7 @@ extractDbData = function(dbDriverChar              = "SQL Server",
       # =======================================================================
         if (!is.null(dbUser) | !is.null(dbPwd)){
           dbConnection = DBI::dbConnect("PostgreSQL",
-                                        host     = "cloud.birdradar.com",
+                                        host     = dbHost,
                                         dbname   = dbName,
                                         user     = dbUser,
                                         password = dbPwd)
@@ -135,7 +137,7 @@ extractDbData = function(dbDriverChar              = "SQL Server",
       # =======================================================================
        } else { 
           dbConnection = DBI::dbConnect("PostgreSQL",
-                                         host     = "cloud.birdradar.com",
+                                         host     = dbHost,
                                          dbname   = dbName,
                                          user     = rstudioapi::askForPassword("Database user"),
                                          password = rstudioapi::askForPassword("Database password"))
