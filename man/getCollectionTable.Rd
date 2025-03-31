@@ -12,7 +12,7 @@ getCollectionTable(dbConnection, dbDriverChar, timeInterval = NULL)
 \item{dbDriverChar}{the name of the driver. If different from 'PostgreSQL'
 it connects to cloud.birdradar.com}
 
-\item{timeInterval}{An optional vector of timestamps (either as \code{Date} or \code{POSIXct})
+\item{timeInterval}{Null An optional vector of timestamps (either as \code{Date} or \code{POSIXct})
 to limit the data retrieved from the collections table}
 }
 \value{
