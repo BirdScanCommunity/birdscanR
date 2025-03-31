@@ -10,10 +10,12 @@ extractDbData(
   dbName = NULL,
   dbUser = NULL,
   dbPwd = NULL,
+  dbHost = "cloud.birdradar.com",
   saveDbToFile = FALSE,
   dbDataDir = NULL,
   radarTimeZone = NULL,
   targetTimeZone = "Etc/GMT0",
+  timeInterval = NULL,
   listOfRfFeaturesToExtract = NULL,
   siteLocation = NULL,
   sunOrCivil = "civil",
@@ -33,6 +35,8 @@ cloud.birdradar.com}
 
 \item{dbPwd}{NULL The password for the user name}
 
+\item{dbHost}{"cloud.birdradar.com" The host of the database}
+
 \item{saveDbToFile}{FALSE Set to TRUE if you want to save the extracted
 database data to an rds file. The output filename is automatically set to
 dbName_DataExtract.rds}
@@ -45,6 +49,9 @@ NULL: extract the time zone from the site table of the 'SQL' database.}
 
 \item{targetTimeZone}{"Etc/GMT0" String specifying the target time zone.
 Default is "Etc/GMT0".}
+
+\item{timeInterval}{An optional vector of timestamps (either as \code{Date} or \code{POSIXct})
+to limit the the data retrieved from the collections table. Default = full date range of the database.}
 
 \item{listOfRfFeaturesToExtract}{NULL or a list of feature to extract}
 
@@ -83,7 +90,7 @@ Load the data from the database or file and save it to file
   targetTimeZone = "Etc/GMT0"
   listOfRfFeaturesToExtract = c(167, 168)
   siteLocation   = c(47.494427, 8.716432)
-  sunOrCivil   = "civil"
+  sunOrCivil     = "civil"
  
 # Get data
 # ===========================================================================
@@ -96,7 +103,7 @@ Load the data from the database or file and save it to file
                          targetTimeZone                 = targetTimeZone,
                          listOfRfFeaturesToExtract      = listOfRfFeaturesToExtract,
                          siteLocation                   = siteLocation, 
-                         sunOrCivil                   = sunOrCivil,
+                         sunOrCivil                     = sunOrCivil,
                          crepuscule                     = "nauticalSolar")
 }
 

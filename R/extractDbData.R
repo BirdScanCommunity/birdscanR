@@ -20,6 +20,8 @@
 #' NULL: extract the time zone from the site table of the 'SQL' database.
 #' @param targetTimeZone "Etc/GMT0" String specifying the target time zone. 
 #' Default is "Etc/GMT0".
+#' @param timeInterval An optional vector of timestamps (either as `Date` or `POSIXct`)
+#' to limit the the data retrieved from the collections table. Default = full date range of the database.
 #' @param listOfRfFeaturesToExtract NULL or a list of feature to extract
 #' @param siteLocation Geographic location of the radar measurements in decimal 
 #' format: c(Latitude, Longitude)
@@ -50,7 +52,7 @@
 #'   targetTimeZone = "Etc/GMT0"
 #'   listOfRfFeaturesToExtract = c(167, 168)
 #'   siteLocation   = c(47.494427, 8.716432)
-#'   sunOrCivil   = "civil"
+#'   sunOrCivil     = "civil"
 #'  
 #' # Get data
 #' # ===========================================================================
@@ -63,7 +65,7 @@
 #'                          targetTimeZone                 = targetTimeZone,
 #'                          listOfRfFeaturesToExtract      = listOfRfFeaturesToExtract,
 #'                          siteLocation                   = siteLocation, 
-#'                          sunOrCivil                   = sunOrCivil,
+#'                          sunOrCivil                     = sunOrCivil,
 #'                          crepuscule                     = "nauticalSolar")
 #' }
 #' 
@@ -76,7 +78,8 @@ extractDbData = function(dbDriverChar              = "SQL Server",
                          saveDbToFile              = FALSE,
                          dbDataDir                 = NULL,
                          radarTimeZone             = NULL, 
-                         targetTimeZone            = "Etc/GMT0", 
+                         targetTimeZone            = "Etc/GMT0",
+                         timeInterval              = NULL,
                          listOfRfFeaturesToExtract = NULL, 
                          siteLocation              = NULL, 
                          sunOrCivil              = "civil",
@@ -160,7 +163,7 @@ extractDbData = function(dbDriverChar              = "SQL Server",
 # load collection table
 # =============================================================================
   message("Extracting collection table from DB...")
-  collectionTable = getCollectionTable(dbConnection, dbDriverChar)
+  collectionTable = getCollectionTable(dbConnection, dbDriverChar, timeInterval)
  
 # load protocol from local MS-SQL DB
 # =============================================================================

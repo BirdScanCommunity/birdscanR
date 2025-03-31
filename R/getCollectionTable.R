@@ -31,7 +31,7 @@
 #' collectionTable = getCollectionTable(dbConnection, dbDriverChar)
 #' }
 #'
-getCollectionTable = function(dbConnection , dbDriverChar, timeInterval){
+getCollectionTable = function(dbConnection , dbDriverChar, timeInterval = NULL){
   if(missing(dbDriverChar))
   {
     dbDriverChar<-switch(class(dbConnection),
@@ -88,11 +88,11 @@ getCollectionTable = function(dbConnection , dbDriverChar, timeInterval){
 
    # load collection from 'MS-SQL' database
    # ===========================================================================
-   whereClause<-""
-   if(!missing(timeInterval)){
-     whereClause<- paste0("WHERE time_stamp BETWEEN '",
-            format(min(timeInterval), usetz = T, tz="UTC"),"' and '",
-            format(max(timeInterval), usetz = T, tz="UTC"),"' ")
+   whereClause = ""
+   if(!is.null(timeInterval)){
+     whereClause = paste0("WHERE time_stamp BETWEEN '",
+                          format(min(timeInterval), usetz = T, tz="UTC"),"' and '",
+                          format(max(timeInterval), usetz = T, tz="UTC"),"' ")
    }
    if (dbDriverChar != 'PostgreSQL'){
       collectionTable            = QUERY(dbConnection,

@@ -4,7 +4,7 @@
 \alias{getCollectionTable}
 \title{Get BirdScan collection table}
 \usage{
-getCollectionTable(dbConnection, dbDriverChar, timeInterval)
+getCollectionTable(dbConnection, dbDriverChar, timeInterval = NULL)
 }
 \arguments{
 \item{dbConnection}{a valid  database connection}
