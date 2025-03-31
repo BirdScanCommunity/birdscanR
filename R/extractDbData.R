@@ -20,8 +20,9 @@
 #' NULL: extract the time zone from the site table of the 'SQL' database.
 #' @param targetTimeZone "Etc/GMT0" String specifying the target time zone. 
 #' Default is "Etc/GMT0".
-#' @param timeInterval An optional vector of timestamps (either as `Date` or `POSIXct`)
-#' to limit the the data retrieved from the collections table. Default = full date range of the database.
+#' @param timeInterval Null An optional vector of timestamps (either as `Date` or `POSIXct`)
+#' to limit the the data retrieved from the collections table. The filtering is done 
+#' based on the original radar timezone.
 #' @param listOfRfFeaturesToExtract NULL or a list of feature to extract
 #' @param siteLocation Geographic location of the radar measurements in decimal 
 #' format: c(Latitude, Longitude)

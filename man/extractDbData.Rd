@@ -50,8 +50,9 @@ NULL: extract the time zone from the site table of the 'SQL' database.}
 \item{targetTimeZone}{"Etc/GMT0" String specifying the target time zone.
 Default is "Etc/GMT0".}
 
-\item{timeInterval}{An optional vector of timestamps (either as \code{Date} or \code{POSIXct})
-to limit the the data retrieved from the collections table. Default = full date range of the database.}
+\item{timeInterval}{Null An optional vector of timestamps (either as \code{Date} or \code{POSIXct})
+to limit the the data retrieved from the collections table. The filtering is done
+based on the original radar timezone.}
 
 \item{listOfRfFeaturesToExtract}{NULL or a list of feature to extract}
 

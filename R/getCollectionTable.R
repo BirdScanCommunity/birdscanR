@@ -8,7 +8,8 @@
 #' @param dbDriverChar the name of the driver. If different from 'PostgreSQL'
 #' it connects to cloud.birdradar.com
 #' @param timeInterval Null An optional vector of timestamps (either as `Date` or `POSIXct`)
-#' to limit the data retrieved from the collections table
+#' to limit the data retrieved from the collections table. The filtering is done 
+#' based on the original radar timezone.
 #'
 #' @return A dataframe with the collection table
 #' @export
@@ -91,8 +92,10 @@ getCollectionTable = function(dbConnection , dbDriverChar, timeInterval = NULL){
      whereClause = ""
      if(!is.null(timeInterval)){
        whereClause = paste0("WHERE time_stamp BETWEEN '",
-                            format(min(timeInterval), usetz = T, tz="UTC"),"' and '",
-                            format(max(timeInterval), usetz = T, tz="UTC"),"' ")
+                            format(min(timeInterval)), 
+                            "' and '",
+                            format(max(timeInterval)),
+                            "' ")
      }  
     
    # load collection from 'MS-SQL' database

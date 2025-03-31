@@ -13,7 +13,8 @@ getCollectionTable(dbConnection, dbDriverChar, timeInterval = NULL)
 it connects to cloud.birdradar.com}
 
 \item{timeInterval}{Null An optional vector of timestamps (either as \code{Date} or \code{POSIXct})
-to limit the data retrieved from the collections table}
+to limit the data retrieved from the collections table. The filtering is done
+based on the original radar timezone.}
 }
 \value{
 A dataframe with the collection table
