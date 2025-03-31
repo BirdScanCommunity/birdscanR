@@ -1,10 +1,12 @@
-# birdscanR 0.3.0.9007
+# birdscanR 0.3.0.9010
 
 -   Added functionality: The function 'compileData()' was added to compile a standardized MR1 dataset for publication to a data repository and allow easier interoperability ([#44](https://github.com/BirdScanCommunity/birdscanR/issues/44){.uri}).
 
 -   Added functionality: The functions 'getCollectionTable()' and 'extractDbData()' now include an additional optional parameter 'timeInterval' for when you want to limit the data being retrieved from the collection table ([#49](https://github.com/BirdScanCommunity/birdscanR/issues/49){.uri}).
 
 -   Added functionality: The function 'extractDBData()' now includes an additional optional parameter 'dbHost' to set your postgreSQL database host site.  ([#54](https://github.com/BirdScanCommunity/birdscanR/pull/54){.uri}).
+
+-   Added functionality: The function 'getEchoFeatures()' now includes an additional optional parameter 'echoSubset' for when you want to limit the data being retrieved from the 'echo_rffeature_map' table to a certain subset of echoes only. In the function 'extractDBData()', the default is now to not extract the full 'echo_rffeature_map' table anymore, but only for the echoes included in the 'collection' table (which can now be subset based on a time interval). This improves performance for very large databases.
 
 # birdscanR 0.3.0
 

@@ -7,6 +7,8 @@
 #' @param dbDriverChar the name of the driver. If different from 'PostgreSQL' 
 #' it connects to cloud.birdradar.com
 #' @param listOfRfFeaturesToExtract a list of feature to extract
+#' @param echoSubset Null. A vector of integers to subset the echo data. Default 
+#' is to extract for all of the echoes.
 #'
 #' @return A list of the features extracted
 #' @export
@@ -38,19 +40,37 @@
 #'                                listOfRfFeaturesToExtract)
 #' }
 #'
-getEchoFeatures = function(dbConnection, dbDriverChar, listOfRfFeaturesToExtract){
-  # load echo 'rfFeatures' table from 'MS-SQL' database
+getEchoFeatures = function(dbConnection, dbDriverChar, 
+                           listOfRfFeaturesToExtract,
+                           echoSubset = NULL){
+  # load 'rfFeatures' table from 'MS-SQL' database
   # ===========================================================================
     rffeaturesTable = QUERY(dbConnection, dbDriverChar, 
-                            "Select * From rffeatures")
+                            "SELECT * FROM rffeatures")
    
-  # load echo_rffeature_map table from 'MS-SQL' database
-  # =============================================================================
+  # load 'echo_rffeature_map' table from 'MS-SQL' database
+  # ===========================================================================
     if(!is.null(listOfRfFeaturesToExtract)){
-      echorffeaturesMapTable = QUERY(dbConnection, 
-                                     dbDriverChar, 
-                                     paste("Select * From echo_rffeature_map where feature in ( ", 
-                                           paste(listOfRfFeaturesToExtract, collapse = ", "), " )"))   
+      # CASE: Load features for all echoes
+      # =======================================================================
+        if (is.null(echoSubset)){
+          echorffeaturesMapTable = QUERY(dbConnection, 
+                                         dbDriverChar, 
+                                         paste("SELECT * FROM echo_rffeature_map WHERE feature IN ( ", 
+                                               paste(listOfRfFeaturesToExtract, collapse = ", "), 
+                                               " )")) 
+      # CASE: Load features for a subset of echoes
+      # =======================================================================
+        } else {
+          echorffeaturesMapTable = QUERY(dbConnection, 
+                                         dbDriverChar, 
+                                         paste("SELECT * FROM echo_rffeature_map WHERE feature IN ( ", 
+                                               paste(listOfRfFeaturesToExtract, collapse = ", "), 
+                                               " ) AND echo IN ( ", 
+                                               paste(echoSubset, collapse = ", "), 
+                                               " )")) 
+        }
+        
       
       featurelist                    = echorffeaturesMapTable$feature
       echorffeaturesMapTable$feature = rffeaturesTable$name[match(featurelist, rffeaturesTable$id)]
@@ -61,6 +81,5 @@ getEchoFeatures = function(dbConnection, dbDriverChar, listOfRfFeaturesToExtract
       
       return(list(echoRfFeatureMap = echoRfFeatureMap, rfFeatures = rffeaturesTable))
     }
-    
   return(list(echoRfFeatureMap = NULL, rfFeatures = rffeaturesTable))
 }

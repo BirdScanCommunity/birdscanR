@@ -223,19 +223,19 @@ extractDbData = function(dbDriverChar              = "SQL Server",
                             fun.aggregate = mean)
   rm(list = "weatherTable", "weatherPropertyTable", "weatherPropertyList")
 
-# get all listed rf features
+# Get the requested rf features for the echoes
 # =============================================================================
   message("Extracting rffeatures table from DB...")
   echoRfFeatureMap = getEchoFeatures(dbConnection, dbDriverChar, 
-                                     listOfRfFeaturesToExtract = listOfRfFeaturesToExtract)   
+                                     listOfRfFeaturesToExtract = listOfRfFeaturesToExtract,
+                                     echoSubset = collectionTable$row)   
 
-# load rf classification
+# Load rf classification
 # =============================================================================
   message("Extracting RF classification...")
   rfclassificationTable = getRfClassification(dbConnection, dbDriverChar)
 
-# :::::::::::::::::::::::::::::::::::::::::::::::::::::::
-# load bat classification
+# Load bat classification
   message( "Extracting Bat classification..." )
   batClassificationTable = getBatClassification(dbConnection, dbDriverChar)
   
