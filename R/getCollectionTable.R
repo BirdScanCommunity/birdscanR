@@ -7,7 +7,7 @@
 #' @param dbConnection a valid  database connection
 #' @param dbDriverChar the name of the driver. If different from 'PostgreSQL'
 #' it connects to cloud.birdradar.com
-#' @param timeInterval An optional vector of timestamps (either as `Date` or `POSIXct`)
+#' @param timeInterval Null An optional vector of timestamps (either as `Date` or `POSIXct`)
 #' to limit the data retrieved from the collections table
 #'
 #' @return A dataframe with the collection table
@@ -86,21 +86,26 @@ getCollectionTable = function(dbConnection , dbDriverChar, timeInterval = NULL){
                                                NA, NA, NA, NA, NA, NA,
                                                NA, NA, NA, NA, NA, NA, NA))
 
+   # Set where clause
+   # ===========================================================================
+     whereClause = ""
+     if(!is.null(timeInterval)){
+       whereClause = paste0("WHERE time_stamp BETWEEN '",
+                            format(min(timeInterval), usetz = T, tz="UTC"),"' and '",
+                            format(max(timeInterval), usetz = T, tz="UTC"),"' ")
+     }  
+    
    # load collection from 'MS-SQL' database
    # ===========================================================================
-   whereClause = ""
-   if(!is.null(timeInterval)){
-     whereClause = paste0("WHERE time_stamp BETWEEN '",
-                          format(min(timeInterval), usetz = T, tz="UTC"),"' and '",
-                          format(max(timeInterval), usetz = T, tz="UTC"),"' ")
-   }
    if (dbDriverChar != 'PostgreSQL'){
       collectionTable            = QUERY(dbConnection,
                                          dbDriverChar,
-                                         paste0("Select * From collection ",whereClause," order by row asc limit"))
+                                         paste0("Select * From collection ", 
+                                                whereClause, " order by row asc"))
       collectionTable_time_stamp = QUERY(dbConnection,
                                          dbDriverChar,
-                                         paste0("Select time_stamp From collection ",whereClause," order by row asc"),
+                                         paste0("Select time_stamp From collection ", 
+                                                whereClause, " order by row asc"),
                                          as.is = TRUE)
       collectionTable$time_stamp = collectionTable_time_stamp$time_stamp
    # load collection from 'PostgreSQL' database
@@ -109,7 +114,7 @@ getCollectionTable = function(dbConnection , dbDriverChar, timeInterval = NULL){
       collectionTable            = QUERY(dbConnection,
                                          dbDriverChar,
                                          paste0("Select *, time_stamp::character varying ts From collection ",
-                                                whereClause," order by row asc limit 10"))
+                                                whereClause," order by row asc"))
       collectionTable$time_stamp = collectionTable$ts
       collectionTable$ts         =  NULL
       #colnames(collectionTable)[colnames(collectionTable) == "ts"] = "time_stamp"
