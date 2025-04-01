@@ -53,7 +53,7 @@ getEchoFeatures = function(dbConnection, dbDriverChar,
     if(!is.null(listOfRfFeaturesToExtract)){
       # CASE: Load features for all echoes
       # =======================================================================
-        if (is.null(echoSubset)){
+        if (is.null(echoIDRange)){
           echorffeaturesMapTable = QUERY(dbConnection, 
                                          dbDriverChar, 
                                          paste("SELECT * FROM echo_rffeature_map WHERE feature IN ( ", 
