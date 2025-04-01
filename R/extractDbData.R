@@ -228,7 +228,8 @@ extractDbData = function(dbDriverChar              = "SQL Server",
   message("Extracting rffeatures table from DB...")
   echoRfFeatureMap = getEchoFeatures(dbConnection, dbDriverChar, 
                                      listOfRfFeaturesToExtract = listOfRfFeaturesToExtract,
-                                     echoSubset = collectionTable$row)   
+                                     echoIDRange = c(min(collectionTable$row), 
+                                                     max(collectionTable$row)))   
 
 # Load rf classification
 # =============================================================================

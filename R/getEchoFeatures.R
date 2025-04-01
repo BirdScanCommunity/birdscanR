@@ -7,8 +7,8 @@
 #' @param dbDriverChar the name of the driver. If different from 'PostgreSQL' 
 #' it connects to cloud.birdradar.com
 #' @param listOfRfFeaturesToExtract a list of feature to extract
-#' @param echoSubset Null. A vector of integers to subset the echo data. Default 
-#' is to extract for all of the echoes.
+#' @param echoIDRange NULL A two-element vector of integers to subset the rf 
+#' feature extraction to a range of echoIDs. Default is to extract for all echoes.
 #'
 #' @return A list of the features extracted
 #' @export
@@ -42,7 +42,7 @@
 #'
 getEchoFeatures = function(dbConnection, dbDriverChar, 
                            listOfRfFeaturesToExtract,
-                           echoSubset = NULL){
+                           echoIDRange = NULL){
   # load 'rfFeatures' table from 'MS-SQL' database
   # ===========================================================================
     rffeaturesTable = QUERY(dbConnection, dbDriverChar, 
@@ -66,9 +66,8 @@ getEchoFeatures = function(dbConnection, dbDriverChar,
                                          dbDriverChar, 
                                          paste("SELECT * FROM echo_rffeature_map WHERE feature IN ( ", 
                                                paste(listOfRfFeaturesToExtract, collapse = ", "), 
-                                               " ) AND echo IN ( ", 
-                                               paste(echoSubset, collapse = ", "), 
-                                               " )")) 
+                                               " ) AND echo BETWEEN ", 
+                                               min(echoIDRange), " AND ", max(echoIDRange))) 
         }
         
       
