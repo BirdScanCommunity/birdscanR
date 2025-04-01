@@ -34,11 +34,11 @@ getTimeBinsTable = function(dbConnection, dbDriverChar){
   # ============================================================================
     if (dbDriverChar != 'PostgreSQL'){
       timeBinsTable            = QUERY(dbConnection, dbDriverChar, 
-                                       "Select * From time_bins order by id asc")
+                                       "SELECT * FROM time_bins order by id asc")
       timeBinsTable_times      = QUERY(dbConnection, 
                                        dbDriverChar, 
-                                       paste0("Select time_start, time_stop ", 
-                                              "From time_bins order by id asc"), 
+                                       paste0("SELECT time_start, time_stop ", 
+                                              "FROM time_bins order by id asc"), 
                                        as.is = TRUE)
       timeBinsTable$time_start = timeBinsTable_times$time_start
       timeBinsTable$time_stop  = timeBinsTable_times$time_stop
@@ -48,7 +48,7 @@ getTimeBinsTable = function(dbConnection, dbDriverChar){
     } else {
       timeBinsTable            = QUERY(dbConnection, 
                                        dbDriverChar, 
-                                       paste0("Select *,time_start::character ", 
+                                       paste0("SELECT *,time_start::character ", 
                                               "varying as ",
                                               "start,time_stop::character ", 
                                               "varying as stop FROM time_bins ", 

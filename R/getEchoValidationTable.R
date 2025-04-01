@@ -31,11 +31,11 @@
 getEchoValidationTable = function(dbConnection, dbDriverChar){
   echovalidationTypesTable = QUERY(dbConnection, 
                                    dbDriverChar, 
-                                   "Select * From echo_validation_type")
+                                   "SELECT * FROM echo_validation_type")
    
   echovalidationTable = QUERY(dbConnection, 
                               dbDriverChar, 
-                              "Select * From echo_validation order by echo_id asc")
+                              "SELECT * FROM echo_validation order by echo_id asc")
    
   echoValidationList       = echovalidationTable$type
   echovalidationTable$type = echovalidationTypesTable$name[match(echoValidationList, echovalidationTypesTable$id)]

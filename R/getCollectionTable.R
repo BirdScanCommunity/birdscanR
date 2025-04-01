@@ -93,47 +93,51 @@ getCollectionTable = function(dbConnection , dbDriverChar, timeInterval = NULL){
      if(!is.null(timeInterval)){
        whereClause = paste0("WHERE time_stamp BETWEEN '",
                             format(min(timeInterval)), 
-                            "' and '",
+                            "' AND '",
                             format(max(timeInterval)),
                             "' ")
      }  
     
    # load collection from 'MS-SQL' database
    # ===========================================================================
-   if (dbDriverChar != 'PostgreSQL'){
-      collectionTable            = QUERY(dbConnection,
-                                         dbDriverChar,
-                                         paste0("Select * From collection ", 
-                                                whereClause, " order by row asc"))
-      collectionTable_time_stamp = QUERY(dbConnection,
-                                         dbDriverChar,
-                                         paste0("Select time_stamp From collection ", 
-                                                whereClause, " order by row asc"),
-                                         as.is = TRUE)
-      collectionTable$time_stamp = collectionTable_time_stamp$time_stamp
+     if (dbDriverChar != 'PostgreSQL'){
+        collectionTable            = QUERY(dbConnection,
+                                           dbDriverChar,
+                                           paste0("SELECT * FROM collection ", 
+                                                  whereClause, " order by row asc"))
+        collectionTable_time_stamp = QUERY(dbConnection,
+                                           dbDriverChar,
+                                           paste0("SELECT time_stamp FROM collection ", 
+                                                  whereClause, " order by row asc"),
+                                           as.is = TRUE)
+        collectionTable$time_stamp = collectionTable_time_stamp$time_stamp
+      
    # load collection from 'PostgreSQL' database
    # ===========================================================================
-   } else {
-      collectionTable            = QUERY(dbConnection,
-                                         dbDriverChar,
-                                         paste0("Select *, time_stamp::character varying ts From collection ",
-                                                whereClause," order by row asc"))
-      collectionTable$time_stamp = collectionTable$ts
-      collectionTable$ts         =  NULL
-      #colnames(collectionTable)[colnames(collectionTable) == "ts"] = "time_stamp"
-   }
-   colnames(collectionTable)[colnames(collectionTable) == "echoid"] = "echoID"
-   colnames(collectionTable)[colnames(collectionTable) == "protocolid"] = "protocolID"
+     } else {
+        collectionTable            = QUERY(dbConnection,
+                                           dbDriverChar,
+                                           paste0("SELECT *, time_stamp::character varying ts FROM collection ",
+                                                  whereClause," order by row asc"))
+        collectionTable$time_stamp = collectionTable$ts
+        collectionTable$ts         =  NULL
+        #colnames(collectionTable)[colnames(collectionTable) == "ts"] = "time_stamp"
+     }
+     colnames(collectionTable)[colnames(collectionTable) == "echoid"] = "echoID"
+     colnames(collectionTable)[colnames(collectionTable) == "protocolid"] = "protocolID"
 
    # rename "old" features and remove unused feature columns in collectionTable
-   featureCols                                 = match(names(collectionTable), featureNames$feature)
-   colNames                                    = paste(featureNames$feature, featureNames$featureNames, sep = ".")
-   colNames[is.na(featureNames$featureNames) ] = NA
-   names(collectionTable)[!is.na(featureCols)] = colNames [stats::na.omit(featureCols)]
-   collectionTable                             = collectionTable[!is.na(names(collectionTable))]
+   # ===========================================================================
+     featureCols                                 = match(names(collectionTable), featureNames$feature)
+     colNames                                    = paste(featureNames$feature, featureNames$featureNames, sep = ".")
+     colNames[is.na(featureNames$featureNames) ] = NA
+     names(collectionTable)[!is.na(featureCols)] = colNames [stats::na.omit(featureCols)]
+     collectionTable                             = collectionTable[!is.na(names(collectionTable))]
+  
+     names(collectionTable)[names(collectionTable) == "mtr_fact" ]                   = "mtr_factor_old"
+     names(collectionTable)[names(collectionTable) == "statistical_classification" ] = "statistical_classification_old"
 
-   names(collectionTable)[names(collectionTable) == "mtr_fact" ]                   = "mtr_factor_old"
-   names(collectionTable)[names(collectionTable) == "statistical_classification" ] = "statistical_classification_old"
-
-   return(collectionTable)
+   # Return collection table
+   # ===========================================================================
+     return(collectionTable)
 }

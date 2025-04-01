@@ -35,10 +35,10 @@ getManualVisibilityTable = function(dbConnection, dbDriverChar){
   if (dbDriverChar == 'SQL Server'){
     manualVisibilityTable = QUERY(dbConnection, 
                                   dbDriverChar, 
-                                  "Select * From visibility_manual order by blind_from asc")
+                                  "SELECT * FROM visibility_manual order by blind_from asc")
     
   } else if (dbDriverChar == 'PostgreSQL'){
-    message("fetching manual visibility table from PostgrSQL not yet implemented")
+    message("Fetching manual visibility table from PostgrSQL not yet implemented.")
   }
  
   return(manualVisibilityTable)

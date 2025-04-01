@@ -38,7 +38,7 @@ getRfClassification = function(dbConnection, dbDriverChar){
   # load 'rfClasses' table from MS-SQL DB
   # ============================================================================
     rfClasses = QUERY(dbConnection, dbDriverChar, 
-                     "Select * From rfclasses")
+                     "SELECT * FROM rfclasses")
     colnames(rfClasses)[colnames(rfClasses) == "is_protected"]               = "isProtected"
     colnames(rfClasses)[colnames(rfClasses) == "sphere_dia_cm"]              = "sphereDiaCm"
     colnames(rfClasses)[colnames(rfClasses) == "is_used_for_classification"] = "isUsedForClassification"
@@ -50,9 +50,9 @@ getRfClassification = function(dbConnection, dbDriverChar){
   # ============================================================================
     rfclassificationTable = QUERY(dbConnection, 
                                   dbDriverChar, 
-                                 paste0("select * from rf_classification where ", 
+                                 paste0("SELECT * FROM rf_classification where ", 
                                         "rf_classification.class is not null", 
-                                        " and rf_classification.mtr_factor is ", 
+                                        " AND rf_classification.mtr_factor is ", 
                                         "not null order by echo asc"))
     rfClassificationList        = rfclassificationTable$class
     rfclassificationTable$class = availableClasses$name[match(rfClassificationList, 
@@ -61,8 +61,8 @@ getRfClassification = function(dbConnection, dbDriverChar){
   # load rfclassification probabilities from local MS-SQL DB
   # ============================================================================
     rfclassProbabilityTable = QUERY(dbConnection, dbDriverChar, 
-                                    paste0("Select * From rf_class_probability", 
-                                           " where rf_class_probability.class", 
+                                    paste0("SELECT * FROM rf_class_probability", 
+                                           " WHERE rf_class_probability.class", 
                                            " is not null order by echo asc, ", 
                                            "class asc"))
     rfClassList                   = rfclassProbabilityTable$class

@@ -34,7 +34,7 @@ getSiteTable = function(dbConnection, dbDriverChar){
 # ==============================================================================
   siteTable = QUERY(dbConnection, 
                     dbDriverChar, 
-                    "Select * From site order by row asc")
+                    "SELECT * FROM site order by row asc")
   colnames(siteTable)[colnames(siteTable) == "siteid"]           = "siteID"
   colnames(siteTable)[colnames(siteTable) == "sitecode"]         = "siteCode"
   colnames(siteTable)[colnames(siteTable) == "radarid"]          = "radarID"
@@ -47,7 +47,7 @@ getSiteTable = function(dbConnection, dbDriverChar){
   colnames(siteTable)[colnames(siteTable) == "ftpupload"]        = "ftpUpload"
   colnames(siteTable)[colnames(siteTable) == "automode"]         = "autoMode"
   siteTable_times = QUERY(dbConnection, dbDriverChar, 
-                          "Select projectStart, projectEnd From site order by row asc", 
+                          "SELECT projectStart, projectEnd FROM site order by row asc", 
                           as.is = TRUE)
   colnames(siteTable_times)[colnames(siteTable_times) == "projectstart"] = "projectStart"
   colnames(siteTable_times)[colnames(siteTable_times) == "projectend"]   = "projectEnd"

@@ -62,9 +62,9 @@ getBatClassification = function(dbConnection, dbDriverChar){
     # load batClassification from DB
     batClassificationTable = QUERY(dbConnection,
                                    dbDriverChar, 
-                                   paste0("select * from bat_classification where ",
+                                   paste0("SELECT * FROM bat_classification WHERE ",
                                           "bat_classification.class is not null ",
-                                          "and bat_classification.mtr_factor is ",
+                                          "AND bat_classification.mtr_factor is ",
                                           "not null order by echo asc"))
     
     batClassificationList <- batClassificationTable$class
@@ -75,8 +75,8 @@ getBatClassification = function(dbConnection, dbDriverChar){
     # load bat classification probabilities from DB
     batClassProbabilityTable = QUERY(dbConnection,
                                      dbDriverChar, 
-                                     paste0("Select * From bat_class_probability ",
-                                            "where bat_class_probability.class ",
+                                     paste0("SELECT * FROM bat_class_probability ",
+                                            "WHERE bat_class_probability.class ",
                                             "is not null order by echo asc, ",
                                             "class asc"))
     

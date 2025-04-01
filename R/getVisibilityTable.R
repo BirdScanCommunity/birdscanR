@@ -36,12 +36,12 @@ getVisibilityTable = function(dbConnection, dbDriverChar){
     if (dbDriverChar != 'PostgreSQL'){
       visibilityTable            = QUERY(dbConnection, 
                                          dbDriverChar, 
-                                         paste0("Select * From visibility ", 
+                                         paste0("SELECT * FROM visibility ", 
                                                 "order by visibilityLogID asc"))
       visibilityTable_times      = QUERY(dbConnection, 
                                          dbDriverChar, 
-                                         paste0("Select blind_from, blind_to ", 
-                                                "From visibility order by ", 
+                                         paste0("SELECT blind_from, blind_to ", 
+                                                "FROM visibility order by ", 
                                                 "visibilityLogID asc"), 
                                          as.is = TRUE)
       visibilityTable$blind_from = visibilityTable_times$blind_from
@@ -52,10 +52,10 @@ getVisibilityTable = function(dbConnection, dbDriverChar){
     } else {
       visibilityTable            = QUERY(dbConnection, 
                                          dbDriverChar, 
-                                         paste0("Select *,blind_from::character", 
+                                         paste0("SELECT *,blind_from::character", 
                                                 " varying as ", 
                                                 "blindfrom,blind_to::character", 
-                                                " varying as blindto From ", 
+                                                " varying as blindto FROM ", 
                                                 "visibility order by ", 
                                                 "visibilitylogid asc"))
       visibilityTable$blind_from = visibilityTable$blindfrom 

@@ -29,7 +29,7 @@
 #' }
 #'
 getRadarTable = function(dbConnection, dbDriverChar){
-  radarTable = QUERY(dbConnection, dbDriverChar, "Select * From radar")
+  radarTable = QUERY(dbConnection, dbDriverChar, "SELECT * FROM radar")
    
   colnames(radarTable)[colnames(radarTable) == "radarid"]              = "radarID"
   colnames(radarTable)[colnames(radarTable) == "serialno"]             = "serialNo"
