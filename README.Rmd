@@ -38,12 +38,11 @@ Or the development version from [GitHub](https://github.com/BirdScanCommunity/bi
 devtools::install_github("BirdScanCommunity/birdscanR")
 ```
 
-## Usage
 
-...
+<!-- Add Usage section here once a reproducible example is possible -->
 
 ## Meta
 
-...
 - We welcome [contributions](https://BirdScanCommunity.github.io/birdscanR/CONTRIBUTING.html) including bug reports.
+- Get [citation information](https://BirdScanCommunity.github.io/birdscanR/authors.html#citation) for birdscanR in R doing `citation("birdscanR")`.
 - Please note that this project is released with a [Contributor Code of Conduct](https://BirdScanCommunity.github.io/birdscanR/CODE_OF_CONDUCT.html). By participating in this project you agree to abide by its terms.

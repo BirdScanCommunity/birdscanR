@@ -44,16 +44,15 @@ Or the development version from
 devtools::install_github("BirdScanCommunity/birdscanR")
 ```
 
-## Usage
-
-…
 
 ## Meta
 
-…
 - We welcome
   [contributions](https://BirdScanCommunity.github.io/birdscanR/CONTRIBUTING.html)
   including bug reports. <!-- - License: MIT -->
+- Get [citation
+  information](https://BirdScanCommunity.github.io/birdscanR/authors.html#citation)
+  for birdscanR in R doing `citation("birdscanR")`.
 - Please note that this project is released with a [Contributor Code of
   Conduct](https://BirdScanCommunity.github.io/birdscanR/CODE_OF_CONDUCT.html).
   By participating in this project you agree to abide by its terms.
