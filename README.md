@@ -51,6 +51,9 @@ devtools::install_github("BirdScanCommunity/birdscanR")
 ## Meta
 
 …
+- We welcome
+  [contributions](https://BirdScanCommunity.github.io/birdscanR/CONTRIBUTING.html)
+  including bug reports. <!-- - License: MIT -->
 - Please note that this project is released with a [Contributor Code of
   Conduct](https://BirdScanCommunity.github.io/birdscanR/CODE_OF_CONDUCT.html).
   By participating in this project you agree to abide by its terms.
