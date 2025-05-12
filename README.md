@@ -4,6 +4,13 @@
 # birdscanR
 
 <!-- badges: start -->
+
+[![CRAN
+status](https://www.r-pkg.org/badges/version/birdscanR)](https://CRAN.R-project.org/package=birdscanR)
+[![CRAN
+checks](https://badges.cranchecks.info/worst/birdscanR.svg)](https://cran.r-project.org/web/checks/check_results_birdscanR.html)
+[![repo
+status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 <!-- badges: end -->
 
 BirdscanR is an R package to extract data from Birdscan MR1 SQL
