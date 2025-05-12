@@ -1,6 +1,8 @@
 #### compileData -----------------------------------------------------------
 #' @title compileData
-#' @author Baptiste Schmid, \email{baptiste.schmid@@vogelwarte.ch}
+#' @author Baptiste Schmid, \email{baptiste.schmid@@vogelwarte.ch};
+#' Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; 
+#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
 #' @description The function \code{compileData} aim to filter database-extracts and 
 #' save metadata used to compute MTR \code{computeMTR}. The function \code{compileData} 
 #' is a list of filtered data and parameters. It takes the output from \code{extractDbData} 
