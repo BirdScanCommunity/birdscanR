@@ -207,14 +207,19 @@ createTimeBins = function(timeRange,
         }
   }
   
-# Limit timeBins to timeRange
+# Limit timeBins to timeRange and remove NA
 # =============================================================================
   if (dnBins){
     timeBinsDN = timeBinsDN[(timeBinsDN$start >= timeRange[1]) &
                             (timeBinsDN$start <= timeRange[2]),]
+    # remove NA
+    timeBinsDN = na.omit(timeBinsDN)
   } else if (crepBins){
     timeBinsCrep = timeBinsCrep[(timeBinsCrep$start >= timeRange[1]) &
                                 (timeBinsCrep$start <= timeRange[2]),]
+    # remove NA
+    timeBinsCrep = na.omit(timeBinsCrep)
+    
   }
   
 
@@ -321,10 +326,12 @@ createTimeBins = function(timeRange,
     isNight = vapply(timeBinsMean, 
                      function(x) {x >= nightTimes$start & x < nightTimes$stop}, 
                      logical(length(nightTimes[, 1])))
+    if(is.vector(isNight)) {isNight = matrix(isNight, nrow = 1)}
     isNight = colSums(isNight)
     isDay   = vapply(timeBinsMean, 
                      function(x) {x >= dayTimes$start & x < dayTimes$stop}, 
                      logical(length(dayTimes[, 1]))) 
+    if(is.vector(isDay)) {isDay = matrix(isDay, nrow = 1)}
     isDay   = colSums(isDay)
     timeBins$dayOrNight[as.logical(isNight)] = "night"
     timeBins$dayOrNight[as.logical(isDay)]   = "day"
