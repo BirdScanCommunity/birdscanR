@@ -44,12 +44,14 @@ Or the development version from
 devtools::install_github("BirdScanCommunity/birdscanR")
 ```
 
+<!-- Add Usage section here once a reproducible example is possible -->
 
 ## Meta
 
 - We welcome
   [contributions](https://BirdScanCommunity.github.io/birdscanR/CONTRIBUTING.html)
-  including bug reports. <!-- - License: MIT -->
+  including bug reports.
+- License: GPL-3
 - Get [citation
   information](https://BirdScanCommunity.github.io/birdscanR/authors.html#citation)
   for birdscanR in R doing `citation("birdscanR")`.
