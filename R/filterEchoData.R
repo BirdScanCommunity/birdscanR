@@ -122,6 +122,9 @@ filterEchoData = function(echoData          = NULL,
     echoData = echoData[(echoData$time_stamp_targetTZ > timeRangeTargetTZ[1]) & 
                         (echoData$time_stamp_targetTZ < timeRangeTargetTZ[2]),]
   }
+  if(nrow(echoData) == 0){
+    stop(paste0("No echo remaining after time range filter."))
+  }
 
 # Filter by protocols
 # =============================================================================
@@ -130,6 +133,10 @@ filterEchoData = function(echoData          = NULL,
       (c("protocolID") %in% names(protocolData))){
     echoData = echoData[echoData$protocolID %in% protocolData$protocolID,]
   }
+  if(nrow(echoData) == 0){
+    stop(paste0("No echo remaining after filter by protocols (i.e. pulseType and rotation)."))
+  }
+  
 
 # Filter by classes
 # =============================================================================
@@ -137,6 +144,10 @@ filterEchoData = function(echoData          = NULL,
       (is.character(classSelection))){
     echoData = echoData[echoData$class %in% classSelection,]
   }
+  if(nrow(echoData) == 0){
+    stop(paste0("No echo remaining after filter by 'classSelection'."))
+  }
+  
 
 # Filter by classprobability
 # =============================================================================
@@ -144,6 +155,10 @@ filterEchoData = function(echoData          = NULL,
       (is.numeric(classProbCutOff))){
     echoData = echoData[echoData$class_probability > classProbCutOff,]
   }
+  if(nrow(echoData) == 0){
+    stop(paste0("No echo remaining after 'classProbCutOff' filter."))
+  }
+  
 
 # Filter by altitudeRange
 # =============================================================================
@@ -153,7 +168,10 @@ filterEchoData = function(echoData          = NULL,
     echoData = echoData[(echoData$feature1.altitude_AGL > altitudeRange_AGL[1]) & 
                         (echoData$feature1.altitude_AGL < altitudeRange_AGL[2]),]
   }
-
+  if(nrow(echoData) == 0){
+    stop(paste0("No echo remaining after altitudeRange filter."))
+  }
+  
 # Filter by manualBlindTimes
 # =============================================================================
   if ((!is.null(manualBlindTimes)) && 
@@ -168,13 +186,20 @@ filterEchoData = function(echoData          = NULL,
     }
     echoData = echoData[!echoDataInBlindTime,]
   }
+  if(nrow(echoData) == 0){
+    stop(paste0("No echo remaining after manualBlindTimes filter."))
+  }
+  
 
 # Filter by echovalidator
 # =============================================================================
-if (echoValidator == TRUE){
-  echoData = echoData[(echoData$echoValidationType == "bio scatterer") | 
-                      (is.na(echoData$echoValidationType)),]
-}
+  if (echoValidator == TRUE){
+    echoData = echoData[(echoData$echoValidationType == "bio scatterer") | 
+                        (is.na(echoData$echoValidationType)),]
+  }
+  if(nrow(echoData) == 0){
+    stop(paste0("No echo remaining after echovalidator filter."))
+  }
   
 # Return echo data
 # =============================================================================
