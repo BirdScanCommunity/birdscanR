@@ -9,6 +9,7 @@
 status](https://www.r-pkg.org/badges/version/birdscanR)](https://CRAN.R-project.org/package=birdscanR)
 [![CRAN
 checks](https://badges.cranchecks.info/worst/birdscanR.svg)](https://cran.r-project.org/web/checks/check_results_birdscanR.html)
+[![R-CMD-check](https://github.com/BirdScanCommunity/birdscanR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BirdScanCommunity/birdscanR/actions/workflows/R-CMD-check.yaml)
 [![repo
 status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7326820.svg)](https://doi.org/10.5281/zenodo.7326820)
