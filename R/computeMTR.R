@@ -164,6 +164,11 @@ computeMTR = function(dbName,
                       computePerDayNight           = FALSE, 
                       computePerDayCrepusculeNight = FALSE,
                       computeAltitudeDistribution  = TRUE){
+# Check if there is at least one echo echoes-dataset
+  if(nrow(echoes) == 0){
+    stop(paste0("The echo dataset should at least include one echo."))
+  }
+  
 # Check whether only one of the options of computePerDayCrepusculeNight and 
 #  computePerDayNight has been chosen
 # =============================================================================
@@ -218,9 +223,15 @@ computeMTR = function(dbName,
 # compute blindtimes
 # =====================================================================
   message("Calculating blind times..")
-  blindTimes = mergeVisibilityAndManualBlindTimes(visibilityData   = visibilityData, 
-                                                  manualBlindTimes = manualBlindTimes, 
-                                                  protocolData     = protocolData)
+  if(any(names(visibilityData) %in% c("start_targetTZ", "stop_targetTZ")) ){
+    # the function 'mergeVisibilityAnd ManualBlindTime has already been used upstream
+    blindTimes = visibilityData
+  } else {
+    message("Merge Visibility and Manual blind times..")
+    blindTimes = mergeVisibilityAndManualBlindTimes(visibilityData   = visibilityData, 
+                                                    manualBlindTimes = manualBlindTimes, 
+                                                    protocolData     = protocolData)
+  }
   
 # Save blind times to file, if requested
 # =============================================================================
