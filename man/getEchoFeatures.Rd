@@ -4,7 +4,12 @@
 \alias{getEchoFeatures}
 \title{Get BirdScan echo features}
 \usage{
-getEchoFeatures(dbConnection, dbDriverChar, listOfRfFeaturesToExtract)
+getEchoFeatures(
+  dbConnection,
+  dbDriverChar,
+  listOfRfFeaturesToExtract,
+  echoIDRange = NULL
+)
 }
 \arguments{
 \item{dbConnection}{a valid  database connection}
@@ -13,6 +18,9 @@ getEchoFeatures(dbConnection, dbDriverChar, listOfRfFeaturesToExtract)
 it connects to cloud.birdradar.com}
 
 \item{listOfRfFeaturesToExtract}{a list of feature to extract}
+
+\item{echoIDRange}{NULL A two-element vector of integers to subset the rf
+feature extraction to a range of echoIDs. Default is to extract for all echoes.}
 }
 \value{
 A list of the features extracted
