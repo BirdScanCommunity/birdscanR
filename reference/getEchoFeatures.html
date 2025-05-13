@@ -53,12 +53,11 @@
 
 
 <dl><dt id="arg-dbconnection">dbConnection<a class="anchor" aria-label="anchor" href="#arg-dbconnection"></a></dt>
-<dd><p>a valid  database connection</p></dd>
+<dd><p>a valid database connection</p></dd>
 
 
 <dt id="arg-dbdriverchar">dbDriverChar<a class="anchor" aria-label="anchor" href="#arg-dbdriverchar"></a></dt>
-<dd><p>the name of the driver. If different from 'PostgreSQL'
-it connects to cloud.birdradar.com</p></dd>
+<dd><p>This was the name of the driver, and is now automatically detected, therefore it should be omitted into the future.</p></dd>
 
 
 <dt id="arg-listofrffeaturestoextract">listOfRfFeaturesToExtract<a class="anchor" aria-label="anchor" href="#arg-listofrffeaturestoextract"></a></dt>
@@ -108,7 +107,7 @@ Birgen Haest, <a href="mailto:birgen.haest@vogelwarte.ch">birgen.haest@vogelwart
 <span class="r-in"><span><span class="va">listOfRfFeaturesToExtract</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">167</span>, <span class="fl">168</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">echoFeatures</span> <span class="op">=</span> <span class="fu">getEchoFeatures</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">dbConnection</span>, <span class="va">dbDriverChar</span>,</span></span>
+<span class="r-in"><span>  <span class="va">dbConnection</span>,</span></span>
 <span class="r-in"><span>  <span class="va">listOfRfFeaturesToExtract</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
