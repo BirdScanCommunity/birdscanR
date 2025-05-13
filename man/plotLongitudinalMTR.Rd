@@ -16,7 +16,7 @@ plotLongitudinalMTR(
 )
 }
 \arguments{
-\item{mtr}{data frame with MTR values created by the function ‘computeMTR’.}
+\item{mtr}{data frame with MTR values created by \code{\link[=computeMTR]{computeMTR()}}.}
 
 \item{maxMTR}{optional numeric variable, fixes the maximum value of the
 y-Scale of the plot to the given value. If negative or not set, the y-Scale
@@ -42,7 +42,7 @@ computed for each time bin, the parameter is ignored.}
 should be plotted.}
 
 \item{filePath}{character string, path of the directory where the plot
-should be saved. The function ‘savePlotToFile’ is used to save the plots as
+should be saved. \code{\link[=savePlotToFile]{savePlotToFile()}} is used to save the plots as
 png files with an auto-generated filename.}
 }
 \value{

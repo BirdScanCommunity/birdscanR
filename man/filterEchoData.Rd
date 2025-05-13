@@ -18,7 +18,7 @@ filterEchoData(
 }
 \arguments{
 \item{echoData}{\code{data.frame} with the echo data from the data list created by
-the function \code{\link[=extractDbData]{extractDbData()}}.}
+\code{\link[=extractDbData]{extractDbData()}}.}
 
 \item{timeRangeTargetTZ}{Character vector of length 2, with start and end of
 time range, formatted as "\%Y-\%m-\%d \%H:\%M". Echoes outside the time range will
@@ -28,8 +28,8 @@ be excluded.}
 Default is "Etc/GMT0".}
 
 \item{protocolData}{\code{data.frame} with the protocol data from the data list
-created by the function \code{\link[=extractDbData]{extractDbData()}} or a subset of it created by
-the function \code{\link[=filterProtocolData]{filterProtocolData()}}. Echoes not detected during the listed
+created by \code{\link[=extractDbData]{extractDbData()}} or a subset of it created by
+\code{\link[=filterProtocolData]{filterProtocolData()}}. Echoes not detected during the listed
 protocols will be excluded.}
 
 \item{classSelection}{character string vector with the classes that should
@@ -53,7 +53,7 @@ returns the filtered echo data in the same format as provided in the
 parameter \code{echoData}.
 }
 \description{
-With the function \code{\link[=filterEchoData]{filterEchoData()}} the echo data can be
+With \code{\link[=filterEchoData]{filterEchoData()}} the echo data can be
 filtered by several parameters. The function returns the filtered echo data.
 }
 \examples{

@@ -25,20 +25,20 @@ compileData(
 )
 }
 \arguments{
-\item{echoData}{dataframe with the echo data from the data list created by
-the function \code{\link[=extractDbData]{extractDbData()}}.}
+\item{echoData}{dataframe with the echo data from the data list created with
+\code{\link[=extractDbData]{extractDbData()}}.}
 
-\item{protocolData}{dataframe with the protocol data from the data list created by
-the function \code{\link[=extractDbData]{extractDbData()}}. Echoes not detected during the listed protocols
+\item{protocolData}{dataframe with the protocol data from the data list created
+with \code{\link[=extractDbData]{extractDbData()}}. Echoes not detected during the listed protocols
 will be excluded.}
 
 \item{blindTimesData}{dataframe with the manual blind times created by
-the function \code{\link[=loadManualBlindTimes]{loadManualBlindTimes()}}.
+\code{\link[=loadManualBlindTimes]{loadManualBlindTimes()}}.
 It include the automated blind times induced by changes in measurement protocol,
 and blind time added manually to remove periods of incoherent data collection.}
 
 \item{sunriseSunsetData}{dataframe with sunrise/sunset, and civil and
-nautical dawn/dusk. Computed with the function 'twilight'.}
+nautical dawn/dusk. Computed with \code{\link[=twilight]{twilight()}}.}
 
 \item{radarSiteData}{dataframe/vector with the database site table.}
 
@@ -83,10 +83,10 @@ Returns filtered data table - echo, protocol, blindTimes, sunriseSunset,
 radarSite - and necessary parameters as input for \code{\link[=computeMTR]{computeMTR()}}.
 }
 \description{
-The function \code{\link[=compileData]{compileData()}} aim to filter database-extracts and
-save metadata used to compute MTR \code{\link[=computeMTR]{computeMTR()}}. The function \code{\link[=compileData]{compileData()}}
-is a list of filtered data and parameters. It takes the output from \code{\link[=extractDbData]{extractDbData()}}
-and trunk the needed dataset to the restricted settings, e.g. time frame, pulse type.
+\code{\link[=compileData]{compileData()}} filters database-extracts and
+save metadata used to compute MTR \code{\link[=computeMTR]{computeMTR()}}. It takes the output from
+\code{\link[=extractDbData]{extractDbData()}} and trunks the needed dataset to the restricted settings,
+e.g. time frame, pulse type.
 }
 \seealso{
 Other write file functions: 

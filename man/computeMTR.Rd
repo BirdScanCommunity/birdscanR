@@ -32,9 +32,9 @@ computeMTR(
 \item{dbName}{Character string, containing the name of the database you are
 processing}
 
-\item{echoes}{dataframe with the echo data from the data list created by the
-function \code{\link[=extractDbData]{extractDbData()}} or a subset of it created by the function
-\code{filterEchoData}.}
+\item{echoes}{dataframe with the echo data from the data list created by
+\code{\link[=extractDbData]{extractDbData()}} or a subset of it created with
+\code{\link[=filterEchoData]{filterEchoData()}}.}
 
 \item{classSelection}{character string vector with all classes which should
 be used to calculate the MTR. The MTR and number of Echoes will be calculated
@@ -55,7 +55,7 @@ values <= 0 a duration of 1 hour will be set}
 e.g. "Etc/GMT0"}
 
 \item{sunriseSunset}{dataframe with sunrise/sunset, and civil and nautical
-dawn/dusk. Computed with the function 'twilight'.}
+dawn/dusk. Computed with \code{\link[=twilight]{twilight()}}.}
 
 \item{sunOrCivil}{sunrise/sunset or civil dawn/dusk used to split day and
 night. Supported values: "sun" or "civil". Default: "civil"}
@@ -68,8 +68,7 @@ the time between civil dusk/dawn and sunrise/sunset times to define the
 crepuscular period. Default is "nauticalSolar".}
 
 \item{protocolData}{\code{data.frame} with the protocol data from the data list
-created by the function \code{\link[=extractDbData]{extractDbData()}} or a subset of it created by the
-function \code{\link[=filterProtocolData]{filterProtocolData()}}.}
+created by \code{\link[=extractDbData]{extractDbData()}} or a subset of it created with \code{\link[=filterProtocolData]{filterProtocolData()}}.}
 
 \item{visibilityData}{dataframe with the visibility data from the data list
 created by \code{\link[=extractDbData]{extractDbData()}}.}

@@ -12,11 +12,11 @@ addDayNightInfoPerEcho(
 )
 }
 \arguments{
-\item{echoData}{dataframe with the echo data from the data list created by
-the function \code{\link[=extractDbData]{extractDbData()}}.}
+\item{echoData}{dataframe with the echo data from the data list created with
+\code{\link[=extractDbData]{extractDbData()}}.}
 
 \item{sunriseSunset}{dataframe with sunrise/sunset and civil twilight times
-created by the function ‘twilight’}
+created with \code{\link[=twilight]{twilight()}}}
 
 \item{sunOrCivil}{optional character variable, Set to “sun” to use
 sunrise/sunset times or to “civil” to use civil twilight times to group echoes
@@ -34,7 +34,7 @@ data frame with thre columns added, i.e. 'dayOrNight', 'dayOrCrepOrNight',
 and 'dateSunset'.
 }
 \description{
-The function ‘addDayNightInfoPerEcho’ adds three columns
+\code{\link[=addDayNightInfoPerEcho]{addDayNightInfoPerEcho()}} adds three columns
 ‘dayOrNight’, ''dayOrCrepOrNight' and ‘dateSunset’ to the echo data. This
 allows the user to filter echo data easily by “day” and “night”, or "day",
 "crepuscular", and "night".

@@ -12,13 +12,13 @@ mergeVisibilityAndManualBlindTimes(
 }
 \arguments{
 \item{visibilityData}{dataframe with the visibility data from the data list
-created by the function \code{\link[=extractDbData]{extractDbData()}}.}
+created by \code{\link[=extractDbData]{extractDbData()}}.}
 
 \item{manualBlindTimes}{dataframe with the manual blind times created by the
 function ‘loadManualBlindTimes’.}
 
 \item{protocolData}{dataframe with the protocol data from the data list
-created by the function \code{\link[=extractDbData]{extractDbData()}} or a subset of it created by the
+created by \code{\link[=extractDbData]{extractDbData()}} or a subset of it created by the
 function \code{\link[=filterProtocolData]{filterProtocolData()}}.}
 }
 \value{
@@ -27,8 +27,8 @@ dataframe with overall blind times
 \description{
 Function to merge manual blind times with blind times from
 visibility table. For further processing the radar (visibility) and manual
-blind times have to be merged with the function
-‘mergeVisibilityAndManualBlindTimes’. This function will add a blind time
+blind times have to be merged with
+\code{\link[=mergeVisibilityAndManualBlindTimes]{mergeVisibilityAndManualBlindTimes()}}. This function will add a blind time
 type to the radar/visibility blind times. Blind times during the block time
 (usually 60s) at the beginning of each protocol are given the type
 'protocolChange', the rest of the radar blind times are given the type

@@ -18,7 +18,7 @@ plotExploration(
 }
 \arguments{
 \item{echoData}{dataframe with the echo data from the data list created by
-the function \code{\link[=extractDbData]{extractDbData()}} or a subset of it created by the function
+\code{\link[=extractDbData]{extractDbData()}} or a subset of it created by the function
 ‘filterEchoData’}
 
 \item{timeRange}{optional list of string vectors length 2, start and end
@@ -31,20 +31,20 @@ large and the function can’t allocate the file.}
 Default is "Etc/GMT0".}
 
 \item{manualBlindTimes}{optional dataframe with the manual blind times
-created by the function ‘loadManualBlindTimes’. If not set, manual blind
+created by \code{\link[=loadManualBlindTimes]{loadManualBlindTimes()}}. If not set, manual blind
 times are not shown in the plot.}
 
 \item{visibilityData}{optional dataframe with the visibility data created by
-the function \code{\link[=extractDbData]{extractDbData()}}. If not set, visibility data are not shown in
+\code{\link[=extractDbData]{extractDbData()}}. If not set, visibility data are not shown in
 the plot.}
 
 \item{protocolData}{optional dataframe with the protocol data used to filter
-the echoes, created by the function \code{\link[=extractDbData]{extractDbData()}} or a subset of it created
-by the function ‘filterProtocolData’. If not set, periods without a protocol
+the echoes, created by \code{\link[=extractDbData]{extractDbData()}} or a subset of it created
+by \code{\link[=filterProtocolData]{filterProtocolData()}}. If not set, periods without a protocol
 are not shown in the plot.}
 
 \item{sunriseSunset}{optional dataframe with sunrise/sunset, civil, and nautical
-twilight times created by the function ‘twilight’. If not set, day/night
+twilight times created by \code{\link[=twilight]{twilight()}}. If not set, day/night
 times are not shown in the plot.}
 
 \item{maxAltitude}{optional numeric, fixes the maximum value of the y-Scale
@@ -52,7 +52,7 @@ of the plot to the given value. If negative or not set, the y-Scale is
 auto-scaled.}
 
 \item{filePath}{character string, path of the directory where the plot
-should be saved. The function ‘savePlotToFile’ is used to save the plots as
+should be saved. \code{\link[=savePlotToFile]{savePlotToFile()}} is used to save the plots as
 png files with an auto-generated filename.}
 }
 \value{
