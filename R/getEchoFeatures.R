@@ -1,14 +1,13 @@
-#### getEchoFeatures -----------------------------------------------------------
-#' @title  Get BirdScan echo features
-#' @description load echo rffeature map from 'Birdscan MR1' 'SQL' database
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @title Get BirdScan echo features
+#' @author Fabian Hertner, Birgen Haest
+#' @description Load echo rffeature map from 'Birdscan MR1' 'SQL' database.
 #' @inheritParams QUERY
 #' @param listOfRfFeaturesToExtract a list of feature to extract
 #' @param echoIDRange NULL A two-element vector of integers to subset the rf
 #' feature extraction to a range of echoIDs. Default is to extract for all echoes.
 #'
 #' @return A list of the features extracted
+#' @family read SQL database functions
 #' @export
 #' @examples
 #' \dontrun{
@@ -51,8 +50,9 @@ getEchoFeatures = function(dbConnection, dbDriverChar,
   # load 'rfFeatures' table from 'MS-SQL' database
   # ===========================================================================
   rffeaturesTable = QUERY(
-    dbConnection,query=
-    "SELECT * FROM rffeatures"
+    dbConnection,
+    query =
+      "SELECT * FROM rffeatures"
   )
 
   # load 'echo_rffeature_map' table from 'MS-SQL' database
@@ -63,25 +63,25 @@ getEchoFeatures = function(dbConnection, dbDriverChar,
     if (is.null(echoIDRange)) {
       echorffeaturesMapTable = QUERY(
         dbConnection,
-        query=
-        paste(
-          "SELECT * FROM echo_rffeature_map WHERE feature IN ( ",
-          paste(listOfRfFeaturesToExtract, collapse = ", "),
-          " )"
-        )
+        query =
+          paste(
+            "SELECT * FROM echo_rffeature_map WHERE feature IN ( ",
+            paste(listOfRfFeaturesToExtract, collapse = ", "),
+            " )"
+          )
       )
       # CASE: Load features for a subset of echoes
       # =======================================================================
     } else {
       echorffeaturesMapTable = QUERY(
         dbConnection,
-        query=
-        paste(
-          "SELECT * FROM echo_rffeature_map WHERE feature IN ( ",
-          paste(listOfRfFeaturesToExtract, collapse = ", "),
-          " ) AND echo BETWEEN ",
-          min(echoIDRange), " AND ", max(echoIDRange)
-        )
+        query =
+          paste(
+            "SELECT * FROM echo_rffeature_map WHERE feature IN ( ",
+            paste(listOfRfFeaturesToExtract, collapse = ", "),
+            " ) AND echo BETWEEN ",
+            min(echoIDRange), " AND ", max(echoIDRange)
+          )
       )
     }
 

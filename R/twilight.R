@@ -1,8 +1,6 @@
-#### twilight -----------------------------------------------------------------
 #' @title Get the nautical, civil, and solar dawn and dusk for a given timerange
 #' and locations.
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @author Fabian Hertner, Birgen Haest
 #' @description Get the time of nautical (sun at 12 degrees below horizon), civil
 #' (sun at 6 degrees below horizon) and solar (sun at 0 degrees below horizon)
 #' dawn and dusk for each day over a given time range.
@@ -15,6 +13,7 @@
 #' @param timeZone The time zone of the area of interest
 #'
 #' @return A data frame with the results
+#' @family manipulation functions
 #' @export
 #' @examples
 #' \dontrun{

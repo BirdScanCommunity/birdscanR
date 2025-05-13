@@ -17,4 +17,10 @@ To create your own manual blind times file, just copy this file, and adjust.
 \examples{
 data(manualBlindTimes)
 }
+\seealso{
+Other sample data: 
+\code{\link{classAbbreviations}},
+\code{\link{loadManualBlindTimes}()}
+}
+\concept{sample data}
 \keyword{datasets}

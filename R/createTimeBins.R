@@ -1,7 +1,5 @@
-#### createTimeBins ------------------------------------------------------
 #' @title createTimeBins
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @author Fabian Hertner, Birgen Haest
 #' @description Create time bins with a given duration. Time bins expanding over
 #' a day/night change will be split in two time bins.
 #'
@@ -28,7 +26,8 @@
 #' is "nauticalSolar".
 #'
 #' @return returns a dataframe with the time bins information
-#'
+#' @family helper functions
+#' @noRd
 createTimeBins = function(timeRange,
                           timeBinDuration_sec,
                           timeZone,

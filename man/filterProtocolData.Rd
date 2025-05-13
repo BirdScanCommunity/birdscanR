@@ -76,7 +76,12 @@ filteredProtocolData = filterProtocolData(
 }
 
 }
-\author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+\seealso{
+Other filter functions: 
+\code{\link{filterData}()},
+\code{\link{filterEchoData}()}
 }
+\author{
+Fabian Hertner, Birgen Haest
+}
+\concept{filter functions}

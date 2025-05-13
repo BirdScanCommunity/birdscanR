@@ -190,8 +190,16 @@ feature37.speed is required for the density calculation.
 }
 
 }
-\author{
-Birgen Haest, \email{birgen.haest@vogelwarte.ch};
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Baptiste Schmid, \email{baptiste.schmid@vogelwarte.ch};
+\seealso{
+Other manipulation functions: 
+\code{\link{addDayNightInfoPerEcho}()},
+\code{\link{computeMTR}()},
+\code{\link{convertTimeZone}()},
+\code{\link{mergeVisibilityAndManualBlindTimes}()},
+\code{\link{reclassToBats}()},
+\code{\link{twilight}()}
 }
+\author{
+Birgen Haest, Fabian Hertner, Baptiste Schmid
+}
+\concept{manipulation functions}

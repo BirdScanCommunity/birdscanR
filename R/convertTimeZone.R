@@ -1,7 +1,5 @@
-#### convertTimeZone ----------------------------------------------------------------
 #' @title Converts timestamps from radar time zone to an user-defined time zone
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @author Fabian Hertner, Birgen Haest
 #' @description Converts timestamps from radar time zone to an user-defined time
 #' zone
 #' @param data a data frame containing BirdScan data
@@ -14,6 +12,7 @@
 #'
 #' @return a data frame identical to `data`, any columns declared in `colNames`
 #' will have their name changed with a suffix (`_originTZ` or `_targetTZ`) added.
+#' @family manipulation functions
 #' @export
 #'
 #' @examples

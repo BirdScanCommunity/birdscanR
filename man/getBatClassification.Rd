@@ -7,7 +7,7 @@
 getBatClassification(dbConnection, dbDriverChar)
 }
 \arguments{
-\item{dbConnection}{a valid database connection}
+\item{dbConnection}{A valid database connection.}
 
 \item{dbDriverChar}{This was the name of the driver, and is now automatically detected, therefore it should be omitted into the future.}
 }
@@ -19,7 +19,7 @@ each object; and (3) availableClasses: the classes used for the
 classification of the objects.
 }
 \description{
-gets  the 'rfClasses' table from a 'Birdscan MR1' 'SQL'
+Gets the 'rfClasses' table from a 'Birdscan MR1' 'SQL'
 database
 }
 \examples{
@@ -44,7 +44,21 @@ rfClassification = getBatClassification(dbConnection)
 }
 
 }
-\author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+\seealso{
+Other read SQL database functions: 
+\code{\link{QUERY}()},
+\code{\link{extractDbData}()},
+\code{\link{getCollectionTable}()},
+\code{\link{getEchoFeatures}()},
+\code{\link{getEchoValidationTable}()},
+\code{\link{getProtocolTable}()},
+\code{\link{getRadarTable}()},
+\code{\link{getRfClassification}()},
+\code{\link{getSiteTable}()},
+\code{\link{getTimeBinsTable}()},
+\code{\link{getVisibilityTable}()}
 }
+\author{
+Fabian Hertner, Birgen Haest
+}
+\concept{read SQL database functions}

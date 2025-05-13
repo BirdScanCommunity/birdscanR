@@ -88,8 +88,12 @@ save metadata used to compute MTR \code{\link[=computeMTR]{computeMTR()}}. The f
 is a list of filtered data and parameters. It takes the output from \code{\link[=extractDbData]{extractDbData()}}
 and trunk the needed dataset to the restricted settings, e.g. time frame, pulse type.
 }
-\author{
-Baptiste Schmid, \email{baptiste.schmid@vogelwarte.ch};
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+\seealso{
+Other write file functions: 
+\code{\link{saveMTR}()},
+\code{\link{savePlotToFile}()}
 }
+\author{
+Baptiste Schmid, Fabian Hertner, Birgen Haest
+}
+\concept{write file functions}

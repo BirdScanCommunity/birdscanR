@@ -1,12 +1,11 @@
-#### getManualVisibilityTable -------------------------------------------------
-#' @title  Get manual visibility table
-#' @description load visibility table from an already connected 'Birdscan MR1'
-#' 'SQL' database
-#' @author Baptiste Schmid \email{baptiste.schmid@@vogelwarte.ch}; Birgen Haest
-#' \email{birgen.haest@@vogelwarte.ch}
+#' @title Get manual visibility table
+#' @author Baptiste Schmid, Birgen Haest
+#' @description Load visibility table from an already connected 'Birdscan MR1'
+#' 'SQL' database.
 #' @inheritParams QUERY
 #'
-#' @return A `data.frame` with the manual visibility table
+#' @return A `data.frame` with the manual visibility table.
+#' @family read file functions
 #' @export
 #' @examples
 #' \dontrun{
@@ -38,8 +37,8 @@ getManualVisibilityTable = function(dbConnection, dbDriverChar) {
   if (class(dbConnection) %in% "RODBC") {
     manualVisibilityTable = QUERY(
       dbConnection,
-      query=
-      "SELECT * FROM visibility_manual order by blind_from asc"
+      query =
+        "SELECT * FROM visibility_manual order by blind_from asc"
     )
   } else if (class(dbConnection) %in% "PqConnection") {
     message("Fetching manual visibility table from PostgrSQL not yet implemented.")

@@ -10,6 +10,7 @@
 #' @format An object of class `data.frame`.
 #'
 #' @keywords datasets
+#' @family sample data
 #'
 #' @examples
 #' data(classAbbreviations)

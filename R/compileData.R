@@ -1,8 +1,5 @@
-#### compileData -----------------------------------------------------------
 #' @title compileData
-#' @author Baptiste Schmid, \email{baptiste.schmid@@vogelwarte.ch};
-#' Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @author Baptiste Schmid, Fabian Hertner, Birgen Haest
 #' @description The function [compileData()] aim to filter database-extracts and
 #' save metadata used to compute MTR [computeMTR()]. The function [compileData()]
 #' is a list of filtered data and parameters. It takes the output from [extractDbData()]
@@ -46,6 +43,7 @@
 #'
 #' @return Returns filtered data table - echo, protocol, blindTimes, sunriseSunset,
 #' radarSite - and necessary parameters as input for [computeMTR()].
+#' @family write file functions
 #' @export
 compileData = function(echoData = NULL,
                        protocolData = NULL,

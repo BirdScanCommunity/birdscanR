@@ -1,12 +1,10 @@
-#### getTimeBinsTable ----------------------------------------------------------
-#' @title  Get BirdScan time bins table
-#' @description load time bins table from an already connected 'Birdscan MR1'
-#' 'SQL' database
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @title Get BirdScan time bins table
+#' @author Fabian Hertner, Birgen Haest
+#' @description Load time bins table from an already connected 'Birdscan MR1'
+#' 'SQL' database.
 #' @inheritParams QUERY
-#'
 #' @return A dataframe with the time bins table
+#' @family read SQL database functions
 #' @export
 #' @examples
 #' \dontrun{
@@ -37,15 +35,16 @@ getTimeBinsTable = function(dbConnection, dbDriverChar) {
   # ============================================================================
   if (class(dbConnection) %in% "PqConnection") {
     timeBinsTable = QUERY(
-      dbConnection, query =
-      "SELECT * FROM time_bins order by id asc"
+      dbConnection,
+      query =
+        "SELECT * FROM time_bins order by id asc"
     )
     timeBinsTable_times = QUERY(dbConnection,
       query =
-      paste0(
-        "SELECT time_start, time_stop ",
-        "FROM time_bins order by id asc"
-      ),
+        paste0(
+          "SELECT time_start, time_stop ",
+          "FROM time_bins order by id asc"
+        ),
       as.is = TRUE
     )
     timeBinsTable$time_start = timeBinsTable_times$time_start
@@ -56,7 +55,7 @@ getTimeBinsTable = function(dbConnection, dbDriverChar) {
   } else {
     timeBinsTable = QUERY(
       dbConnection,
-query=      paste0(
+      query = paste0(
         "SELECT *,time_start::character ",
         "varying as ",
         "start,time_stop::character ",

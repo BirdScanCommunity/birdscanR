@@ -1,4 +1,21 @@
 url: https://birdscancommunity.github.io/birdscanR/
 template:
   bootstrap: 5
-
+reference:
+- title: Read SQL database functions
+  contents:
+  - has_concept("read SQL database functions")
+- title: Read and write file functions
+  contents:
+  - has_concept("read file functions")
+  - has_concept("write file functions")
+- title: Filter and manipulation functions
+  contents:
+  - has_concept("filter functions")
+  - has_concept("manipulation functions")
+- title: Plot functions
+  contents:
+  - has_concept("plot functions")
+- title: Sample data
+  contents:
+  - has_concept("sample data")

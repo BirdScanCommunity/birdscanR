@@ -1,9 +1,7 @@
-#### getRfClassification -------------------------------------------------------
-#' @title  Get a BirdScan 'rfClassification' table
-#' @description  gets  the 'rfClasses' table from a 'Birdscan MR1' 'SQL'
-#' database
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @title Get a BirdScan 'rfClassification' table
+#' @author Fabian Hertner, Birgen Haest
+#' @description Gets the 'rfClasses' table from a 'Birdscan MR1' 'SQL'
+#' database.
 #' @inheritParams QUERY
 #'
 #' @return A list containing three variables: (1) rfclassificationTable: The
@@ -11,6 +9,7 @@
 #' dataframe containing the classification probabilities for all classes for
 #' each object; and (3) availableClasses: the classes used for the
 #' classification of the objects.
+#' @family read SQL database functions
 #' @export
 #' @examples
 #' \dontrun{
@@ -40,8 +39,9 @@ getRfClassification = function(dbConnection, dbDriverChar) {
   # load 'rfClasses' table from MS-SQL DB
   # ============================================================================
   rfClasses = QUERY(
-    dbConnection, query=
-    "SELECT * FROM rfclasses"
+    dbConnection,
+    query =
+      "SELECT * FROM rfclasses"
   )
   colnames(rfClasses)[colnames(rfClasses) == "is_protected"] = "isProtected"
   colnames(rfClasses)[colnames(rfClasses) == "sphere_dia_cm"] = "sphereDiaCm"
@@ -54,7 +54,7 @@ getRfClassification = function(dbConnection, dbDriverChar) {
   # ============================================================================
   rfclassificationTable = QUERY(
     dbConnection,
-query=    paste0(
+    query = paste0(
       "SELECT * FROM rf_classification where ",
       "rf_classification.class is not null",
       " AND rf_classification.mtr_factor is ",
@@ -70,13 +70,14 @@ query=    paste0(
   # load rfclassification probabilities from local MS-SQL DB
   # ============================================================================
   rfclassProbabilityTable = QUERY(
-    dbConnection,query=
-    paste0(
-      "SELECT * FROM rf_class_probability",
-      " WHERE rf_class_probability.class",
-      " is not null order by echo asc, ",
-      "class asc"
-    )
+    dbConnection,
+    query =
+      paste0(
+        "SELECT * FROM rf_class_probability",
+        " WHERE rf_class_probability.class",
+        " is not null order by echo asc, ",
+        "class asc"
+      )
   )
   rfClassList = rfclassProbabilityTable$class
   rfclassProbabilityTable$class = availableClasses$name[match(

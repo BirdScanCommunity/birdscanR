@@ -1,8 +1,5 @@
-#### computeDensity ------------------------------------------------------
 #' @title computeDensity
-#' @author Birgen Haest, \email{birgen.haest@@vogelwarte.ch};
-#' Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Baptiste Schmid, \email{baptiste.schmid@@vogelwarte.ch};
+#' @author Birgen Haest, Fabian Hertner, Baptiste Schmid
 #' @description This function will estimate the density (expressed as #objects / km3)
 #' based on the observations in your database. Note that this function only works
 #' properly on Birdscan MR1 database versions >= 1.7.0.4 as the variable
@@ -72,6 +69,7 @@
 #' 0.75, 0.95
 #'
 #' @return Density
+#' @family manipulation functions
 #' @export
 #'
 #' @examples

@@ -1,8 +1,5 @@
-#### plotExploration ------------------------------------------------------
 #' @title plotExploration
-#'
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @author Fabian Hertner, Birgen Haest
 #' @description This function creates a time series plot showing all of the
 #' observed echoes at their respective altitudes. These plots are helpful to
 #' roughly visually explore your data (and for example spot oddities).
@@ -37,6 +34,7 @@
 #' png files with an auto-generated filename.
 #'
 #' @return png files stored in the directory specified in 'filePath'
+#' @family plot functions
 #' @export
 #'
 #' @examples

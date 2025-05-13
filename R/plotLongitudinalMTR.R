@@ -1,8 +1,5 @@
-#### plotLongitudinalMTR ------------------------------------------------------
 #' @title plotLongitudinalMTR
-#'
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @author Fabian Hertner, Birgen Haest
 #' @description Plots a time series of MTR values as a bar plot. For each bar
 #' the spread (first and third Quartile) is shown as error bars as well as the
 #' numbers of echoes. Periods with no observation are indicated with grey,
@@ -31,6 +28,7 @@
 #' png files with an auto-generated filename.
 #'
 #' @return png files stored in the directory specified with 'filePath'
+#' @family plot functions
 #' @export
 #'
 #' @examples

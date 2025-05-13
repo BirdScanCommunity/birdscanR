@@ -1,8 +1,6 @@
-#### saveMTR ------------------------------------------------------
 #' @title saveMTR
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
-#' @description saves MTR data to a .rds file in the directory `filepath`.
+#' @author Fabian Hertner, Birgen Haest
+#' @description Saves MTR data to a .rds file in the directory `filepath`.
 #' If the directory is not existing it will be created if possible.
 #'
 #' @param mtr dataframe with MTR values created by the function [computeMTR()]
@@ -33,6 +31,7 @@
 #' 'fileName' is not provided.
 #'
 #' @return No return value, used to save MTR to file.
+#' @family write file functions
 #' @export
 #'
 #' @examples

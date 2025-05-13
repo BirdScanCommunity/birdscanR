@@ -1,9 +1,7 @@
-#### getBatClassification -------------------------------------------------------
-#' @title  Get a BirdScan 'batClassification' table
-#' @description  gets  the 'rfClasses' table from a 'Birdscan MR1' 'SQL'
+#' @title Get a BirdScan 'batClassification' table
+#' @author Fabian Hertner, Birgen Haest
+#' @description Gets the 'rfClasses' table from a 'Birdscan MR1' 'SQL'
 #' database
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
 #' @inheritParams QUERY
 #'
 #' @return A list containing three variables: (1) batClassificationTable: The
@@ -11,6 +9,7 @@
 #' dataframe containing the classification probabilities for all classes for
 #' each object; and (3) availableClasses: the classes used for the
 #' classification of the objects.
+#' @family read SQL database functions
 #' @export
 #' @examples
 #' \dontrun{
@@ -51,8 +50,9 @@ getBatClassification = function(dbConnection, dbDriverChar) {
     # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
     # load rfclasses from DB
     rfClasses = QUERY(
-      dbConnection, query=
-      "Select * From rfclasses"
+      dbConnection,
+      query =
+        "Select * From rfclasses"
     )
     colnames(rfClasses)[colnames(rfClasses) == "is_protected"] <- "isProtected"
     colnames(rfClasses)[colnames(rfClasses) == "sphere_dia_cm"] <- "sphereDiaCm"
@@ -65,13 +65,13 @@ getBatClassification = function(dbConnection, dbDriverChar) {
     # load batClassification from DB
     batClassificationTable = QUERY(
       dbConnection,
-     query=
-      paste0(
-        "SELECT * FROM bat_classification WHERE ",
-        "bat_classification.class is not null ",
-        "AND bat_classification.mtr_factor is ",
-        "not null order by echo asc"
-      )
+      query =
+        paste0(
+          "SELECT * FROM bat_classification WHERE ",
+          "bat_classification.class is not null ",
+          "AND bat_classification.mtr_factor is ",
+          "not null order by echo asc"
+        )
     )
 
     batClassificationList <- batClassificationTable$class
@@ -84,13 +84,13 @@ getBatClassification = function(dbConnection, dbDriverChar) {
     # load bat classification probabilities from DB
     batClassProbabilityTable = QUERY(
       dbConnection,
-      query=
-      paste0(
-        "SELECT * FROM bat_class_probability ",
-        "WHERE bat_class_probability.class ",
-        "is not null order by echo asc, ",
-        "class asc"
-      )
+      query =
+        paste0(
+          "SELECT * FROM bat_class_probability ",
+          "WHERE bat_class_probability.class ",
+          "is not null order by echo asc, ",
+          "class asc"
+        )
     )
 
     batClassList <- batClassProbabilityTable$class

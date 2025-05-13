@@ -1,15 +1,13 @@
-#### getCollectionTable ------------------------------------------------------------
-#' @title  Get BirdScan collection table
-#' @description load collection from 'Birdscan MR1' 'SQL' database
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch};
-#' Bart Kranstauber, \email{b.kranstauber@@uva.nl}
+#' @title Get BirdScan collection table
+#' @author Fabian Hertner, Birgen Haest, Bart Kranstauber
+#' @description Load collection from 'Birdscan MR1' 'SQL' database.
 #' @inheritParams QUERY
 #' @param timeInterval Null An optional vector of timestamps (either as `Date` or `POSIXct`)
 #' to limit the data retrieved from the collections table. The filtering is done
 #' based on the original radar timezone.
 #'
 #' @return A dataframe with the collection table
+#' @family read SQL database functions
 #' @export
 #' @examples
 #' \dontrun{
@@ -104,21 +102,21 @@ getCollectionTable = function(dbConnection, dbDriverChar, timeInterval = NULL) {
 
   # load collection from 'MS-SQL' database
   # ===========================================================================
-  if (class(dbConnection)!= "PqConnection") {
+  if (class(dbConnection) != "PqConnection") {
     collectionTable = QUERY(
       dbConnection,
-      query=
+      query =
         paste0(
-        "SELECT * FROM collection ",
-        whereClause, " order by row asc"
-      )
+          "SELECT * FROM collection ",
+          whereClause, " order by row asc"
+        )
     )
     collectionTable_time_stamp = QUERY(dbConnection,
-                                       query=
-                                         paste0(
-        "SELECT time_stamp FROM collection ",
-        whereClause, " order by row asc"
-      ),
+      query =
+        paste0(
+          "SELECT time_stamp FROM collection ",
+          whereClause, " order by row asc"
+        ),
       as.is = TRUE
     )
     collectionTable$time_stamp = collectionTable_time_stamp$time_stamp
@@ -128,11 +126,11 @@ getCollectionTable = function(dbConnection, dbDriverChar, timeInterval = NULL) {
   } else {
     collectionTable = QUERY(
       dbConnection,
-     query=
-      paste0(
-        "SELECT *, time_stamp::character varying ts FROM collection ",
-        whereClause, " order by row asc"
-      )
+      query =
+        paste0(
+          "SELECT *, time_stamp::character varying ts FROM collection ",
+          whereClause, " order by row asc"
+        )
     )
     collectionTable$time_stamp = collectionTable$ts
     collectionTable$ts = NULL

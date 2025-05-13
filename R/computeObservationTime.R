@@ -1,7 +1,5 @@
-#### computeObservationTime ---------------------------------------------------
 #' @title computeObservationTime
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @author Fabian Hertner, Birgen Haest
 #' @description Compute blind times and observation times during time bins based
 #'  on protocol data and blind times
 #'
@@ -17,7 +15,8 @@
 #'
 #' @return returns a dataframe with the time bins completed with the observation
 #' times of each time bin.
-#'
+#' @family helper functions
+#' @noRd
 computeObservationTime = function(timeBins,
                                   protocolData,
                                   blindTimes,

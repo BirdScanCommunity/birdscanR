@@ -1,14 +1,13 @@
-#### QUERY ------------------------------------------------------------
 #' @title  Query 'SQL' database
-#' @description  Run an 'SQL' query on an already connected database
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
-#' @param dbConnection a valid database connection
+#' @author Fabian Hertner, Birgen Haest
+#' @description Run an 'SQL' query on an already connected database.
+#' @param dbConnection A valid database connection.
 #' @param dbDriverChar This was the name of the driver, and is now automatically detected, therefore it should be omitted into the future.
 #' @param query an 'SQL' string with your query
 #' @param as.is If TRUE, leaves data as it is
 #'
 #' @return the result of the query
+#' @family read SQL database functions
 #' @export
 #'
 #' @examples

@@ -117,7 +117,11 @@ plotExploration(
 }
 
 }
-\author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+\seealso{
+Other plot functions: 
+\code{\link{plotLongitudinalMTR}()}
 }
+\author{
+Fabian Hertner, Birgen Haest
+}
+\concept{plot functions}

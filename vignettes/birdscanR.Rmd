@@ -1,11 +1,11 @@
 ---
-title: "How to calculate Activity/Migration Traffic Rates"
-author: Birgen Haest, birgen.haest@vogelwarte.ch; Fabian Hertner, fabian.hertner@swiss-birdradar.com
+title: "Introduction to birdscanR"
+author: Birgen Haest, Fabian Hertner
 output: rmarkdown::html_vignette
 description: > 
   Which functions do I need to call to get out migration traffic rates from a Birdscan database? This vignette describes the main workflow to do so.
 vignette: >
-  %\VignetteIndexEntry{birdscanR}
+  %\VignetteIndexEntry{Introduction to birdscanR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

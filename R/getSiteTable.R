@@ -1,12 +1,10 @@
-#### getSiteTable ------------------------------------------------------------
-#' @title  Get BirdScan site table
-#' @description load site table from an already connected 'Birdscan MR1' 'SQL'
-#' database
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @title Get BirdScan site table
+#' @author Fabian Hertner, Birgen Haest
+#' @description Load site table from an already connected 'Birdscan MR1' 'SQL'
+#' database.
 #' @inheritParams QUERY
-#'
 #' @return A `data.frame` with the site table
+#' @family read SQL database functions
 #' @export
 #' @examples
 #' \dontrun{

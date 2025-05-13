@@ -55,7 +55,7 @@ the package; See data(classAbbreviations).}
 No return value, used to save plots to file.
 }
 \description{
-saves created plots as .png.
+Saves created plots as .png.
 }
 \examples{
 \dontrun{
@@ -121,7 +121,12 @@ savePlotToFile(
 }
 
 }
-\author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+\seealso{
+Other write file functions: 
+\code{\link{compileData}()},
+\code{\link{saveMTR}()}
 }
+\author{
+Fabian Hertner, Birgen Haest
+}
+\concept{write file functions}

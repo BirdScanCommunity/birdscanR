@@ -1,11 +1,10 @@
-#### getEchoValidationTable ----------------------------------------------------
-#' @title  Get a BirdScan echo validation table
-#' @description  gets the echoValidationTable from an already connected database
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @title Get a BirdScan echo validation table
+#' @author Fabian Hertner, Birgen Haest
+#' @description Gets the echoValidationTable from an already connected database.
 #' @inheritParams QUERY
 #'
 #' @return A dataframe called echovalidationTable
+#' @family read SQL database functions
 #' @export
 #' @examples
 #' \dontrun{
@@ -34,12 +33,12 @@ getEchoValidationTable = function(dbConnection, dbDriverChar) {
   }
   echovalidationTypesTable = QUERY(
     dbConnection,
-query=    "SELECT * FROM echo_validation_type"
+    query = "SELECT * FROM echo_validation_type"
   )
 
   echovalidationTable = QUERY(
     dbConnection,
-    query=    "SELECT * FROM echo_validation order by echo_id asc"
+    query = "SELECT * FROM echo_validation order by echo_id asc"
   )
 
   echoValidationList = echovalidationTable$type

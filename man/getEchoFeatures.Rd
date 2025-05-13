@@ -12,7 +12,7 @@ getEchoFeatures(
 )
 }
 \arguments{
-\item{dbConnection}{a valid database connection}
+\item{dbConnection}{A valid database connection.}
 
 \item{dbDriverChar}{This was the name of the driver, and is now automatically detected, therefore it should be omitted into the future.}
 
@@ -25,7 +25,7 @@ feature extraction to a range of echoIDs. Default is to extract for all echoes.}
 A list of the features extracted
 }
 \description{
-load echo rffeature map from 'Birdscan MR1' 'SQL' database
+Load echo rffeature map from 'Birdscan MR1' 'SQL' database.
 }
 \examples{
 \dontrun{
@@ -60,7 +60,21 @@ echoFeatures = getEchoFeatures(
 }
 
 }
-\author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+\seealso{
+Other read SQL database functions: 
+\code{\link{QUERY}()},
+\code{\link{extractDbData}()},
+\code{\link{getBatClassification}()},
+\code{\link{getCollectionTable}()},
+\code{\link{getEchoValidationTable}()},
+\code{\link{getProtocolTable}()},
+\code{\link{getRadarTable}()},
+\code{\link{getRfClassification}()},
+\code{\link{getSiteTable}()},
+\code{\link{getTimeBinsTable}()},
+\code{\link{getVisibilityTable}()}
 }
+\author{
+Fabian Hertner, Birgen Haest
+}
+\concept{read SQL database functions}

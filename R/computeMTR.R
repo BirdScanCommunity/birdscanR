@@ -1,8 +1,5 @@
-#### computeMTR ------------------------------------------------------
 #' @title computeMTR
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Baptiste Schmid, \email{baptiste.schmid@@vogelwarte.ch};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @author Fabian Hertner, Baptiste Schmid, Birgen Haest
 #' @description This function will estimate the Activity / Migration Traffic
 #' Rates (MTR, expressed as #objects / km / hour) based on the observations in
 #' your database.
@@ -72,6 +69,7 @@
 #' 0.75, 0.95
 #'
 #' @return Migration Traffic Rates
+#' @family manipulation functions
 #' @export
 #'
 #' @examples

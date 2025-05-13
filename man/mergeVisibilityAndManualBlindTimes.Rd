@@ -74,8 +74,16 @@ blindTimes = mergeVisibilityAndManualBlindTimes(
 }
 
 }
-\author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch}
-Baptiste Schmid, \email{baptiste.schmid@vogelwarte.ch}
+\seealso{
+Other manipulation functions: 
+\code{\link{addDayNightInfoPerEcho}()},
+\code{\link{computeDensity}()},
+\code{\link{computeMTR}()},
+\code{\link{convertTimeZone}()},
+\code{\link{reclassToBats}()},
+\code{\link{twilight}()}
 }
+\author{
+Fabian Hertner, Birgen Haest, Baptiste Schmid
+}
+\concept{manipulation functions}

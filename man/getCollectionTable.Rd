@@ -7,7 +7,7 @@
 getCollectionTable(dbConnection, dbDriverChar, timeInterval = NULL)
 }
 \arguments{
-\item{dbConnection}{a valid database connection}
+\item{dbConnection}{A valid database connection.}
 
 \item{dbDriverChar}{This was the name of the driver, and is now automatically detected, therefore it should be omitted into the future.}
 
@@ -19,7 +19,7 @@ based on the original radar timezone.}
 A dataframe with the collection table
 }
 \description{
-load collection from 'Birdscan MR1' 'SQL' database
+Load collection from 'Birdscan MR1' 'SQL' database.
 }
 \examples{
 \dontrun{
@@ -43,8 +43,21 @@ collectionTable = getCollectionTable(dbConnection)
 }
 
 }
-\author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch};
-Bart Kranstauber, \email{b.kranstauber@uva.nl}
+\seealso{
+Other read SQL database functions: 
+\code{\link{QUERY}()},
+\code{\link{extractDbData}()},
+\code{\link{getBatClassification}()},
+\code{\link{getEchoFeatures}()},
+\code{\link{getEchoValidationTable}()},
+\code{\link{getProtocolTable}()},
+\code{\link{getRadarTable}()},
+\code{\link{getRfClassification}()},
+\code{\link{getSiteTable}()},
+\code{\link{getTimeBinsTable}()},
+\code{\link{getVisibilityTable}()}
 }
+\author{
+Fabian Hertner, Birgen Haest, Bart Kranstauber
+}
+\concept{read SQL database functions}

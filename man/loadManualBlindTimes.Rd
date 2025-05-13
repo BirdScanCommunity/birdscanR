@@ -62,7 +62,12 @@ manualBlindTimes.new = loadManualBlindTimes(
 }
 
 }
-\author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+\seealso{
+Other sample data: 
+\code{\link{classAbbreviations}},
+\code{\link{manualBlindTimes}}
 }
+\author{
+Fabian Hertner, Birgen Haest
+}
+\concept{sample data}

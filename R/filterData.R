@@ -1,6 +1,5 @@
-#### filterData -----------------------------------------------------------
 #' @title filterData
-#' @author Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @author Birgen Haest
 #' @description With the function [filterData()] both the echo and protocol data can be filtered by several parameters. The function returns the filtered echo and protocol data.
 #'
 #' @param pulseTypeSelection character vector with the pulse types which should be included in the subset. Options: “S”, “M”, “L” (short-, medium-, long-pulse). Default is NULL: no filtering applied based on pulseType.
@@ -26,6 +25,7 @@
 #'
 #' @return returns the filtered echo and protocol data in the same format as
 #' provided in the parameters `echoData` and `protocolData`.
+#' @family filter functions
 #' @export
 #' @examples
 #' \dontrun{
