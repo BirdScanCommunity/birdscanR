@@ -256,8 +256,7 @@ computeDensity = function(dbName,
 # abort if no echoes present
 # =============================================================================
   if (length(echoes[,]) == 0){
-    warning("no echoes to compute density (function: computeDensity)")
-    return()
+    stop("There are no echoes to compute the density on. Check your input settings.")
   }
 
 # combine time bins split by day/night,
