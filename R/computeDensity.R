@@ -10,8 +10,7 @@
 #' @param dbName Character string, containing the name of the database you are
 #' processing
 #' @param echoes dataframe with the echo data from the data list created by the
-#' function ‘extractDBData’ or a subset of it created by the function
-#' ‘filterEchoData’.
+#' function [extractDbData()] or a subset of it created by the function
 #' @param classSelection character string vector with all classes which should
 #' be used to calculate the density. The density and number of Echoes will be calculated
 #' for each class as well as for all classes together.

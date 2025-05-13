@@ -8,7 +8,7 @@
 #' used to filter the echoes based on the operation mode/protocol
 #'
 #' @param protocolData `data.frame` with the protocol data from the data list
-#' created by the function [extractDBData()]
+#' created by the function [extractDbData()]
 #' @param pulseTypeSelection character vector with the pulse types which should
 #' be included in the subset. Options: “S”, “M”, “L” (short-, medium-,
 #' long-pulse). Default is NULL: no filtering applied based on pulseType.

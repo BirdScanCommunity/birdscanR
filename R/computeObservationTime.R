@@ -8,8 +8,8 @@
 #' @param timeBins dataframe with the time bins created by the function
 #' [createTimeBins()].
 #' @param protocolData dataframe with the protocol data from the data list
-#' created by the function [extractDBData()] or a subset of it created by the
-#' function [filterProtocolData()].
+#' created by the function [extractDbData()] or a subset of it created by the
+#' function `filterProtocolData`.
 #' @param blindTimes dataframe containing the blind times created by the
 #' function [mergeVisibilityAndManualBlindTimes()].
 #' @param blindTimeAsMtrZero character string vector with the blind time types
