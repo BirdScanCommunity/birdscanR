@@ -9,7 +9,7 @@
 #' based on the original radar timezone.
 #'
 #' @return A dataframe with the collection table
-#' @family read sql database functions
+#' @family read SQL database functions
 #' @export
 #' @examples
 #' \dontrun{

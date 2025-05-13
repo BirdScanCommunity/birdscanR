@@ -41,7 +41,7 @@ echovalidationTable = getEchoValidationTable(dbConnection, dbDriverChar)
 
 }
 \seealso{
-Other read sql database functions: 
+Other read SQL database functions: 
 \code{\link{QUERY}()},
 \code{\link{extractDbData}()},
 \code{\link{getBatClassification}()},
@@ -57,4 +57,4 @@ Other read sql database functions:
 \author{
 Fabian Hertner, Birgen Haest
 }
-\concept{read sql database functions}
+\concept{read SQL database functions}

@@ -7,7 +7,7 @@
 #' it connects to cloud.birdradar.com
 #'
 #' @return A dataframe with the time bins table
-#' @family read sql database functions
+#' @family read SQL database functions
 #' @export
 #' @examples
 #' \dontrun{

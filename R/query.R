@@ -7,7 +7,7 @@
 #' @param as.is If TRUE, leaves data as it is
 #'
 #' @return the result of the query
-#' @family read sql database functions
+#' @family read SQL database functions
 #' @export
 #'
 #' @examples

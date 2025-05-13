@@ -12,7 +12,7 @@
 #' dataframe containing the classification probabilities for all classes for
 #' each object; and (3) availableClasses: the classes used for the
 #' classification of the objects.
-#' @family read sql database functions
+#' @family read SQL database functions
 #' @export
 #' @examples
 #' \dontrun{

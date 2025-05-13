@@ -38,7 +38,7 @@
 #' 'protocolData', 'siteData', 'visibilityData', 'timeBinData', 'rfFeatures',
 #' 'availableClasses', 'availableBatClasses', 'classProbabilitiesAndMtrFactors',
 #' 'batProbabilitiesAndMtrFactors'
-#' @family read sql database functions
+#' @family read SQL database functions
 #' @export
 #' @examples
 #' \dontrun{

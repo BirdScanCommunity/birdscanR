@@ -9,7 +9,7 @@
 #' feature extraction to a range of echoIDs. Default is to extract for all echoes.
 #'
 #' @return A list of the features extracted
-#' @family read sql database functions
+#' @family read SQL database functions
 #' @export
 #' @examples
 #' \dontrun{
