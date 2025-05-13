@@ -53,7 +53,8 @@ Imports:
   suntools,
   tibble,
   tidyr,
-  utils
+  utils,
+  yaml
 Suggests:
   knitr,
   rmarkdown
