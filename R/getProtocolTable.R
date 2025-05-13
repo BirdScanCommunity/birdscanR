@@ -34,11 +34,11 @@ getProtocolTable = function(dbConnection, dbDriverChar) {
   # load protocol table from MS-SQL DB
   # ============================================================================
   if (class(dbConnection) %in% "PqConnection") {
-    protocolTable = QUERY(dbConnection, query =  "SELECT * FROM protocol order by protocolID asc")
+    protocolTable = QUERY(dbConnection, query = "SELECT * FROM protocol order by protocolID asc")
     colnames(protocolTable)[colnames(protocolTable) == "starttime"] = "startTime"
     colnames(protocolTable)[colnames(protocolTable) == "stoptime"] = "stopTime"
 
-    protocolTable_times = QUERY(dbConnection, query="SELECT startTime, stopTime FROM protocol order by protocolID asc", as.is = TRUE)
+    protocolTable_times = QUERY(dbConnection, query = "SELECT startTime, stopTime FROM protocol order by protocolID asc", as.is = TRUE)
     colnames(protocolTable_times)[colnames(protocolTable_times) == "starttime"] = "startTime"
     colnames(protocolTable_times)[colnames(protocolTable_times) == "stoptime"] = "stopTime"
     protocolTable$startTime = protocolTable_times$startTime
@@ -49,7 +49,7 @@ getProtocolTable = function(dbConnection, dbDriverChar) {
   } else {
     protocolTable = QUERY(
       dbConnection,
-query=      "SELECT *,starttime::character varying as start,stoptime::character varying as stop FROM protocol order by protocolid asc"
+      query = "SELECT *,starttime::character varying as start,stoptime::character varying as stop FROM protocol order by protocolid asc"
     )
     protocolTable$starttime = protocolTable$start
     protocolTable$stoptime = protocolTable$stop

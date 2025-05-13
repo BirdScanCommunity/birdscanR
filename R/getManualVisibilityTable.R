@@ -37,8 +37,8 @@ getManualVisibilityTable = function(dbConnection, dbDriverChar) {
   if (class(dbConnection) %in% "RODBC") {
     manualVisibilityTable = QUERY(
       dbConnection,
-      query=
-      "SELECT * FROM visibility_manual order by blind_from asc"
+      query =
+        "SELECT * FROM visibility_manual order by blind_from asc"
     )
   } else if (class(dbConnection) %in% "PqConnection") {
     message("Fetching manual visibility table from PostgrSQL not yet implemented.")

@@ -102,21 +102,21 @@ getCollectionTable = function(dbConnection, dbDriverChar, timeInterval = NULL) {
 
   # load collection from 'MS-SQL' database
   # ===========================================================================
-  if (class(dbConnection)!= "PqConnection") {
+  if (class(dbConnection) != "PqConnection") {
     collectionTable = QUERY(
       dbConnection,
-      query=
+      query =
         paste0(
-        "SELECT * FROM collection ",
-        whereClause, " order by row asc"
-      )
+          "SELECT * FROM collection ",
+          whereClause, " order by row asc"
+        )
     )
     collectionTable_time_stamp = QUERY(dbConnection,
-                                       query=
-                                         paste0(
-        "SELECT time_stamp FROM collection ",
-        whereClause, " order by row asc"
-      ),
+      query =
+        paste0(
+          "SELECT time_stamp FROM collection ",
+          whereClause, " order by row asc"
+        ),
       as.is = TRUE
     )
     collectionTable$time_stamp = collectionTable_time_stamp$time_stamp
@@ -126,11 +126,11 @@ getCollectionTable = function(dbConnection, dbDriverChar, timeInterval = NULL) {
   } else {
     collectionTable = QUERY(
       dbConnection,
-     query=
-      paste0(
-        "SELECT *, time_stamp::character varying ts FROM collection ",
-        whereClause, " order by row asc"
-      )
+      query =
+        paste0(
+          "SELECT *, time_stamp::character varying ts FROM collection ",
+          whereClause, " order by row asc"
+        )
     )
     collectionTable$time_stamp = collectionTable$ts
     collectionTable$ts = NULL

@@ -220,14 +220,15 @@ extractDbData = function(dbDriverChar = "SQL Server",
   # load weather from local MS-SQL DB
   # =============================================================================
   message("Extracting weather table from DB...")
-  weatherTable = QUERY(dbConnection, query= "Select * From weather")
+  weatherTable = QUERY(dbConnection, query = "Select * From weather")
 
   # load weather properties from local MS-SQL DB
   # =============================================================================
   message("Extracting weather_property table from DB...")
   weatherPropertyTable = QUERY(
-    dbConnection,query=
-    "Select * From weather_property"
+    dbConnection,
+    query =
+      "Select * From weather_property"
   )
   weatherPropertyList = weatherTable$weather_property
   weatherTable$weather_property = weatherPropertyTable$property_name[match(

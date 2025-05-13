@@ -50,8 +50,9 @@ getEchoFeatures = function(dbConnection, dbDriverChar,
   # load 'rfFeatures' table from 'MS-SQL' database
   # ===========================================================================
   rffeaturesTable = QUERY(
-    dbConnection,query=
-    "SELECT * FROM rffeatures"
+    dbConnection,
+    query =
+      "SELECT * FROM rffeatures"
   )
 
   # load 'echo_rffeature_map' table from 'MS-SQL' database
@@ -62,25 +63,25 @@ getEchoFeatures = function(dbConnection, dbDriverChar,
     if (is.null(echoIDRange)) {
       echorffeaturesMapTable = QUERY(
         dbConnection,
-        query=
-        paste(
-          "SELECT * FROM echo_rffeature_map WHERE feature IN ( ",
-          paste(listOfRfFeaturesToExtract, collapse = ", "),
-          " )"
-        )
+        query =
+          paste(
+            "SELECT * FROM echo_rffeature_map WHERE feature IN ( ",
+            paste(listOfRfFeaturesToExtract, collapse = ", "),
+            " )"
+          )
       )
       # CASE: Load features for a subset of echoes
       # =======================================================================
     } else {
       echorffeaturesMapTable = QUERY(
         dbConnection,
-        query=
-        paste(
-          "SELECT * FROM echo_rffeature_map WHERE feature IN ( ",
-          paste(listOfRfFeaturesToExtract, collapse = ", "),
-          " ) AND echo BETWEEN ",
-          min(echoIDRange), " AND ", max(echoIDRange)
-        )
+        query =
+          paste(
+            "SELECT * FROM echo_rffeature_map WHERE feature IN ( ",
+            paste(listOfRfFeaturesToExtract, collapse = ", "),
+            " ) AND echo BETWEEN ",
+            min(echoIDRange), " AND ", max(echoIDRange)
+          )
       )
     }
 
