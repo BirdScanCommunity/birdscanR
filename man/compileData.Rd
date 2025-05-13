@@ -26,23 +26,26 @@ compileData(
 }
 \arguments{
 \item{echoData}{dataframe with the echo data from the data list created by
-the function \code{extractDBData}.}
+the function \code{\link[=extractDbData]{extractDbData()}}.}
 
 \item{protocolData}{dataframe with the protocol data from the data list created by
-the function \code{extractDBData}. Echoes not detected during the listed protocols
+the function \code{\link[=extractDbData]{extractDbData()}}. Echoes not detected during the listed protocols
 will be excluded.}
 
 \item{blindTimesData}{dataframe with the manual blind times created by
-the function \code{loadManualBlindTimes}.
-It include the automated blind times induced by changes in measurment protocol,
+the function \code{\link[=loadManualBlindTimes]{loadManualBlindTimes()}}.
+It include the automated blind times induced by changes in measurement protocol,
 and blind time added manually to remove periods of incoherent data collection.}
 
-\item{radarSiteData}{dataframe/vector with the database site table}
+\item{sunriseSunsetData}{dataframe with sunrise/sunset, and civil and
+nautical dawn/dusk. Computed with the function 'twilight'.}
+
+\item{radarSiteData}{dataframe/vector with the database site table.}
 
 \item{dbName}{Name of the database. Can be a useful meta data.}
 
 \item{pulseTypeSelection}{character vector with the pulse types which should
-be included in the subset. Options: “S”, “M”, “L”, i.e. short-, medium-, long-pulse, respectively.
+be included in the subset. Options: \code{S}, \code{M}, \code{L}, i.e. short-, medium-, long-pulse, respectively.
 Default is NULL: no filtering applied based on pulseType.}
 
 \item{rotationSelection}{numeric vector to select the operation modes with and/or without
@@ -66,34 +69,27 @@ with a lower class probability will be excluded.}
 altitude range. Echoes outside the altitude range will be excluded.}
 
 \item{echoValidator}{logical, If set to FALSE - default -, no additional filters
-is applied; if set to TRUE, echoes labelled by the echo validator as “non-bio scatterer”
+is applied; if set to TRUE, echoes labelled by the echo validator as "non-bio scatterer"
 will be excluded.}
 
 \item{filePath}{If given, the data-list is saved as RDS.}
 
-\item{tagOutputFile}{Vector of two elements for prefix & suffix to file name, given 'filePath' is not NULL.}
+\item{tagOutputFile}{Vector of two elements for prefix & suffix to file name, given \code{filePath} is not NULL.}
 
-\item{saveCSV}{if true, save tables as CSV in a folder nested in 'filePath'.}
+\item{saveCSV}{if true, save tables as CSV in a folder nested in \code{filePath}.}
 }
 \value{
 Returns filtered data table - echo, protocol, blindTimes, sunriseSunset,
-radarSite - and necessary parameters as input for \code{computeMTR}.
+radarSite - and necessary parameters as input for \code{\link[=computeMTR]{computeMTR()}}.
 }
 \description{
-The function \code{compileData} creates a standardized Birdscan
-MR1 data product, including metadata, that can be used to publish the
-dataset in a standardized manner. This results in improved accessibility
-across datasets and owners. The function uses the output from
-\code{extractDbData} and allows for specific filtering of the dataset,
-e.g., by time range, pulse type, and class.
-}
-\examples{
-\dontrun{
-  
-}
-
+The function \code{\link[=compileData]{compileData()}} aim to filter database-extracts and
+save metadata used to compute MTR \code{\link[=computeMTR]{computeMTR()}}. The function \code{\link[=compileData]{compileData()}}
+is a list of filtered data and parameters. It takes the output from \code{\link[=extractDbData]{extractDbData()}}
+and trunk the needed dataset to the restricted settings, e.g. time frame, pulse type.
 }
 \author{
 Baptiste Schmid, \email{baptiste.schmid@vogelwarte.ch};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch};
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
+Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }

@@ -33,20 +33,18 @@ Description: Extract data from 'Birdscan MR1' 'SQL' vertical-looking radar
     Migration Traffic Rate results. For details on the Migration Traffic Rate 
     calculation procedures, see Schmid et al. (2019) <doi:10.1111/ecog.04025>.
 License: GPL (>= 3)
-URL: https://github.com/BirdScanCommunity/birdscanR
+URL: https://github.com/BirdScanCommunity/birdscanR, https://birdscancommunity.github.io/birdscanR/
 BugReports: https://github.com/BirdScanCommunity/birdscanR/issues
 Depends:
-  R (>= 3.5.0)
+  R (>= 4.1.0)
 Imports: 
   DBI,
   dplyr,
   ggplot2,
   grDevices,
-  magrittr,
   methods,
   modi,
   reshape2,
-  rlang,
   RODBC,
   RPostgreSQL,
   rstudioapi,
@@ -55,7 +53,8 @@ Imports:
   suntools,
   tibble,
   tidyr,
-  utils
+  utils,
+  yaml
 Suggests:
   knitr,
   rmarkdown
