@@ -58,7 +58,10 @@ jobs:
             ${{ runner.os }}-
 
       - name: Style
-        run: styler::style_pkg()
+        run: |
+          transformers <- styler::tidyverse_style()
+          transformers$token$force_assignment_op <- NULL
+          styler::style_pkg(transformers = transformers)
         shell: Rscript {0}
 
       - name: Commit and push changes
