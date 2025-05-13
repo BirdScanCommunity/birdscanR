@@ -7,6 +7,8 @@ Authors@R: c(
     person("Fabian", "Hertner", , "fabian.hertner@swiss-birdradar.com", role = c("aut")),
     person("Baptiste", "Schmid", , "baptiste.schmid@vogelwarte.ch", role = c("ctb"),
            comment = c(ORCID = "0000-0002-7736-7527")),
+    person("Peter", "Desmet", , "peter.desmet@inbo.be", role = c("ctb"),
+           comment = c(ORCID = "0000-0002-8442-8025")),
     person("Damiano", "Preatoni", , "damiano.preatoni@uninsubria.it", role = c("ctb"),
            comment = c(ORCID = "0000-0001-8760-1316")),
     person("Johannes", "De Groeve", , "j.degroeve@uva.nl", role = c("ctb"),
