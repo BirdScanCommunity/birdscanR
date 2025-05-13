@@ -43,10 +43,8 @@
 #' blind times to. Default: 'your-working-directory'
 #' @param blindTimeAsMtrZero character string vector with the blind time types
 #' which should be treated as observation time with MTR zero.
-#' @param propObsTimeCutoff numeric between 0 and 1. If the density is computed per
-#' day and night, time bins with a proportional observation time smaller than
-#' propObsTimeCutoff are ignored when combining the time bins. If the density is
-#' computed for each time bin, the parameter is ignored.
+#' @param propObsTimeCutoff numeric between 0 and 1. Time bins with a proportional
+#' observation time smaller than `propObsTimeCutoff` are set to NA.
 #' @param computePerDayNight logical, TRUE: density is computed per day and night.
 #' The time bins of each day and night will be combined and the mean density is
 #' computed for each day and night. The spread (first and third Quartile) for
