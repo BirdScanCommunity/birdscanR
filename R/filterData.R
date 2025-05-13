@@ -24,6 +24,7 @@
 #' echoes are included.
 #'
 #' @return returns the filtered echo and protocol data in the same format as
+#' provided in the parameters `echoData` and `protocolData`.
 #' @family filter functions
 #' @export
 #' @examples

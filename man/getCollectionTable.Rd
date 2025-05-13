@@ -7,7 +7,7 @@
 getCollectionTable(dbConnection, dbDriverChar, timeInterval = NULL)
 }
 \arguments{
-\item{dbConnection}{a valid database connection}
+\item{dbConnection}{A valid database connection.}
 
 \item{dbDriverChar}{This was the name of the driver, and is now automatically detected, therefore it should be omitted into the future.}
 
@@ -19,7 +19,7 @@ based on the original radar timezone.}
 A dataframe with the collection table
 }
 \description{
-load collection from 'Birdscan MR1' 'SQL' database.
+Load collection from 'Birdscan MR1' 'SQL' database.
 }
 \examples{
 \dontrun{
