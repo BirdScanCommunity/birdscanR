@@ -15,7 +15,8 @@
 #'
 #' @return returns a dataframe with the time bins completed with the observation
 #' times of each time bin.
-#'
+#' @family manipulation functions
+#' @export
 computeObservationTime = function(timeBins,
                                   protocolData,
                                   blindTimes,

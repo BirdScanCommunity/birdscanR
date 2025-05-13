@@ -20,6 +20,7 @@
 #'
 #' @return data frame with thre columns added, i.e. 'dayOrNight', 'dayOrCrepOrNight',
 #'  and 'dateSunset'.
+#' @family manipulation functions
 #' @export
 #'
 #' @examples

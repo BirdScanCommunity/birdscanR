@@ -20,6 +20,7 @@
 #' function ‘filterProtocolData’.
 #'
 #' @return dataframe with overall blind times
+#' @family manipulation functions
 #' @export
 #'
 #' @examples

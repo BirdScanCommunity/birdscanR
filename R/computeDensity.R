@@ -70,6 +70,7 @@
 #' 0.75, 0.95
 #'
 #' @return Density
+#' @family manipulation functions
 #' @export
 #'
 #' @examples

@@ -12,6 +12,7 @@
 #'
 #' @return a data frame identical to `data`, any columns declared in `colNames`
 #' will have their name changed with a suffix (`_originTZ` or `_targetTZ`) added.
+#' @family manipulation functions
 #' @export
 #'
 #' @examples

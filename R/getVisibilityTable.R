@@ -7,6 +7,7 @@
 #' it connects to cloud.birdradar.com
 #'
 #' @return A dataframe with the visibility table
+#' @family read sql database functions
 #' @export
 #'
 #' @examples

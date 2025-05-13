@@ -25,6 +25,7 @@
 #'
 #' @return returns the filtered echo and protocol data in the same format as
 #' provided in the parameters \code{echoData} and \code{protocolData}.
+#' @family filter functions
 #' @export
 #' @examples
 #' \dontrun{

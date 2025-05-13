@@ -34,6 +34,7 @@
 #' png files with an auto-generated filename.
 #'
 #' @return png files stored in the directory specified in 'filePath'
+#' @family plot functions
 #' @export
 #'
 #' @examples

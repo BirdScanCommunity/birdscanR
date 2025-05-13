@@ -6,6 +6,7 @@
 #' be either 'SQL Server' or 'PostgreSQL'. If 'PostgreSQL', it connects to cloud.birdradar.com
 #'
 #' @return A dataframe called echovalidationTable
+#' @family read sql database functions
 #' @export
 #' @examples
 #' \dontrun{

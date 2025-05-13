@@ -13,6 +13,7 @@
 #' @param timeZone The time zone of the area of interest
 #'
 #' @return A data frame with the results
+#' @family manipulation functions
 #' @export
 #' @examples
 #' \dontrun{

@@ -28,6 +28,7 @@
 #'
 #' @return returns the filtered echo data in the same format as provided in the
 #' parameter \code{echoData}.
+#' @family filter functions
 #' @export
 #' @examples
 #' \dontrun{

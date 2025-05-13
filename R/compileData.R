@@ -43,6 +43,7 @@
 #'
 #' @return Returns filtered data table - echo, protocol, blindTimes, sunriseSunset,
 #' radarSite - and necessary parameters as input for [computeMTR()].
+#' @family write file functions
 #' @export
 compileData = function(echoData = NULL,
                        protocolData = NULL,

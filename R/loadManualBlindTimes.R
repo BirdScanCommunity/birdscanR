@@ -31,6 +31,7 @@
 #' @param blindTimesTZ time zone of the blind times
 #' @param targetTZ target time zone of the blind times
 #' @return A dataframe with the manual blind times
+#' @family sample data
 #' @export
 #' @examples
 #' \dontrun{

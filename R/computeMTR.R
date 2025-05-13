@@ -69,6 +69,7 @@
 #' 0.75, 0.95
 #'
 #' @return Migration Traffic Rates
+#' @family manipulation functions
 #' @export
 #'
 #' @examples

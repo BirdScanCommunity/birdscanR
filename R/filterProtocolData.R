@@ -16,6 +16,7 @@
 #'
 #' @return returns the filtered protocol data in the same format as provided in
 #' the parameter \code{protocolData}.
+#' @family filter functions
 #' @export
 #' @examples
 #' \dontrun{

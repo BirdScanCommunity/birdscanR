@@ -31,6 +31,7 @@
 #' 'fileName' is not provided.
 #'
 #' @return No return value, used to save MTR to file.
+#' @family write file functions
 #' @export
 #'
 #' @examples

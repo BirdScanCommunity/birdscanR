@@ -7,6 +7,7 @@
 #' it connects to cloud.birdradar.com
 #'
 #' @return A dataframe with the manual visibility table
+#' @family read file functions
 #' @export
 #' @examples
 #' \dontrun{

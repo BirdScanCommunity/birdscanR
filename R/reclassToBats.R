@@ -8,6 +8,7 @@
 #' bat probability higher than reclassToBatCutoff will be set to 'bat'
 #'
 #' @return echoData dataframe
+#' @family manipulation functions
 #' @export
 #' @examples
 #' \dontrun{
