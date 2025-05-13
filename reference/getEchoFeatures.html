@@ -40,7 +40,12 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getEchoFeatures</span><span class="op">(</span><span class="va">dbConnection</span>, <span class="va">dbDriverChar</span>, <span class="va">listOfRfFeaturesToExtract</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getEchoFeatures</span><span class="op">(</span></span>
+<span>  <span class="va">dbConnection</span>,</span>
+<span>  <span class="va">dbDriverChar</span>,</span>
+<span>  <span class="va">listOfRfFeaturesToExtract</span>,</span>
+<span>  echoIDRange <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -58,6 +63,11 @@ it connects to cloud.birdradar.com</p></dd>
 
 <dt id="arg-listofrffeaturestoextract">listOfRfFeaturesToExtract<a class="anchor" aria-label="anchor" href="#arg-listofrffeaturestoextract"></a></dt>
 <dd><p>a list of feature to extract</p></dd>
+
+
+<dt id="arg-echoidrange">echoIDRange<a class="anchor" aria-label="anchor" href="#arg-echoidrange"></a></dt>
+<dd><p>NULL A two-element vector of integers to subset the rf
+feature extraction to a range of echoIDs. Default is to extract for all echoes.</p></dd>
 
 </dl></div>
     <div class="section level2">
