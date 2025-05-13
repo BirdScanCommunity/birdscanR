@@ -1,7 +1,7 @@
 #' Default class abbreviations table of the birdscanR package
 #'
 #' Table to allow for easy abbreviations of the standard classes of the Birdscan
-#' MR1. 
+#' MR1.
 #'
 #' @docType data
 #'

@@ -47,32 +47,29 @@
 #' @return Returns filtered data table - echo, protocol, blindTimes, sunriseSunset,
 #' radarSite - and necessary parameters as input for [computeMTR()].
 #' @export
-compileData = function(
-                      echoData           = NULL,
-                      protocolData       = NULL,
-                      blindTimesData     = NULL,
-                      sunriseSunsetData  = NULL,
-                      radarSiteData      = NULL,
-                      dbName             = NULL,
-                      pulseTypeSelection = NULL,
-                      rotationSelection  = NULL,
-                      timeRangeTargetTZ  = NULL,
-                      targetTimeZone     = "Etc/GMT0",
-                      classSelection     = NULL,
-                      classProbCutOff    = NULL,
-                      altitudeRange_AGL  = NULL,
-                      echoValidator      = FALSE,
-                      filePath           = NULL,
-                      tagOutputFile      = c(NULL, NULL),
-                      saveCSV            = FALSE
-                      ){
-
+compileData = function(echoData = NULL,
+                       protocolData = NULL,
+                       blindTimesData = NULL,
+                       sunriseSunsetData = NULL,
+                       radarSiteData = NULL,
+                       dbName = NULL,
+                       pulseTypeSelection = NULL,
+                       rotationSelection = NULL,
+                       timeRangeTargetTZ = NULL,
+                       targetTimeZone = "Etc/GMT0",
+                       classSelection = NULL,
+                       classProbCutOff = NULL,
+                       altitudeRange_AGL = NULL,
+                       echoValidator = FALSE,
+                       filePath = NULL,
+                       tagOutputFile = c(NULL, NULL),
+                       saveCSV = FALSE) {
   # set the time window
-  if(!is.Date(timeRangeTargetTZ) | !is.POSIXt(timeRangeTargetTZ)){
+  if (!is.Date(timeRangeTargetTZ) | !is.POSIXt(timeRangeTargetTZ)) {
     timeRangeTargetTZ = as.POSIXct(timeRangeTargetTZ, tz = targetTimeZone)
   }
   startTime = timeRangeTargetTZ[1]
-  stopTime  = timeRangeTargetTZ[2]
+  stopTime = timeRangeTargetTZ[2]
 
   # Filter parameters
   # =============================================================================
@@ -89,105 +86,110 @@ compileData = function(
   #-----------------------------------------------------------------------------
   # meta data
   metaFilters <- data.frame(
-    "colname" = c('timeRangeTargetTZ',
-                  'pulseTypeSelection',
-                  'rotationSelection',
-                  'classSelection',
-                  'classProbCutOff',
-                  'altitudeRange_AGL',
-                  'echoValidator'
+    "colname" = c(
+      "timeRangeTargetTZ",
+      "pulseTypeSelection",
+      "rotationSelection",
+      "classSelection",
+      "classProbCutOff",
+      "altitudeRange_AGL",
+      "echoValidator"
     ),
-    "type" = c('POSIXct',
-               'char',
-               'integer',
-               'char',
-               'num',
-               'num',
-               'logical'
+    "type" = c(
+      "POSIXct",
+      "char",
+      "integer",
+      "char",
+      "num",
+      "num",
+      "logical"
     ),
-    "description" = c('Time range (from beginning to end) of the filter period, in the time zone used for analyses.',
-                      'Pulse type is either "S" for Short-pulse, "M" for Medium pulse, or "L" for Long-pulse. See radar table for pulse duration',
-                      'Rotation is either "0"when the antenna is static, or "1" if the antena is rotating on its vertical axis. Flight speed and direction available only if the anteanna is rotating',
-                      'List of class - can be a subset of all avaialble classes',
-                      'PostHoc filter on classification. if "0", all echoes are used, if e.g. 0.4, only echoes with a class probability >= 0.4 are kept.',
-                      'Altitude range (agl) from the lowest to the highest.',
-                      'If set to FALSE (default), no additional filters is applied; if set to TRUE, echoes labelled by the echo validator as "non-bio scatterer" will be excluded.'
+    "description" = c(
+      "Time range (from beginning to end) of the filter period, in the time zone used for analyses.",
+      'Pulse type is either "S" for Short-pulse, "M" for Medium pulse, or "L" for Long-pulse. See radar table for pulse duration',
+      'Rotation is either "0"when the antenna is static, or "1" if the antena is rotating on its vertical axis. Flight speed and direction available only if the anteanna is rotating',
+      "List of class - can be a subset of all avaialble classes",
+      'PostHoc filter on classification. if "0", all echoes are used, if e.g. 0.4, only echoes with a class probability >= 0.4 are kept.',
+      "Altitude range (agl) from the lowest to the highest.",
+      'If set to FALSE (default), no additional filters is applied; if set to TRUE, echoes labelled by the echo validator as "non-bio scatterer" will be excluded.'
     )
   )
 
   # Filter protocol data
   # =============================================================================
-  protocolDataSubset = filterProtocolData(protocolData       = protocolData,
-                                          pulseTypeSelection = pulseTypeSelection,
-                                          rotationSelection  = rotationSelection)
+  protocolDataSubset = filterProtocolData(
+    protocolData = protocolData,
+    pulseTypeSelection = pulseTypeSelection,
+    rotationSelection = rotationSelection
+  )
   TimesInd = (protocolDataSubset$startTime_targetTZ < stopTime) &
     (protocolDataSubset$stopTime_targetTZ > startTime)
-  protocolDataSubset =  protocolDataSubset[TimesInd, ]
+  protocolDataSubset = protocolDataSubset[TimesInd, ]
   #-----------------------------------------------------------------------------
   # meta data for ProtocolData
   metaProtocol <- data.frame(
-    "colname" = c("protocolID", "siteID",
-                  "startTime_originTZ", "startTime_targetTZ", "stopTime_originTZ", "stopTime_targetTZ",
-                  "pulseType", "rotate", "stc", "threshold",
-                  "softwareVersion"
-
+    "colname" = c(
+      "protocolID", "siteID",
+      "startTime_originTZ", "startTime_targetTZ", "stopTime_originTZ", "stopTime_targetTZ",
+      "pulseType", "rotate", "stc", "threshold",
+      "softwareVersion"
     ),
-    "type" = c('int', 'int',
-               'POSIXct','POSIXct','POSIXct','POSIXct',
-               'char', 'int', 'num', 'num',
-               'logi' # obviously missing information!?
-
+    "type" = c(
+      "int", "int",
+      "POSIXct", "POSIXct", "POSIXct", "POSIXct",
+      "char", "int", "num", "num",
+      "logi" # obviously missing information!?
     ),
-    "description" = c('Incremental ID of measurement periods - linked to EchoData and BlindTimes.',
-                      'Site ID - linked to the site & radar data.',
-                      'Timestamp upon the start of the measurement period. TimeZone as given in DB',
-                      'Timestamp upon the start of the measurement period. TimeZone defined by the user, since 2020 usually UTC',
-                      'Timestamp upon the end of the measurement period. TimeZone as given in DB',
-                      'Timestamp upon the end of the measurement period. TimeZone defined by the user, since 2020 usually UTC',
-                      'Either "S" for Short-pulse, "M" for Medium pulse, "L" for Long-pulse. See radar table for pulse duration',
-                      '"0"when the antenna is static, "1" if the antena is rotating on its vertical axis. Flight speed and direction available only if the anteanna is rotating',
-                      'Sensitivity Time Control in meter. Bascially a distance to set the minial detected object size. Key feature to calcualte the MTR-factor of the echo.',
-                      'Detection threshold in DBm. Key feature to calcualte the MTR-factor of the echo.',
-                      'not Available. Software version updon detection. Can differ from the classifier versions'
+    "description" = c(
+      "Incremental ID of measurement periods - linked to EchoData and BlindTimes.",
+      "Site ID - linked to the site & radar data.",
+      "Timestamp upon the start of the measurement period. TimeZone as given in DB",
+      "Timestamp upon the start of the measurement period. TimeZone defined by the user, since 2020 usually UTC",
+      "Timestamp upon the end of the measurement period. TimeZone as given in DB",
+      "Timestamp upon the end of the measurement period. TimeZone defined by the user, since 2020 usually UTC",
+      'Either "S" for Short-pulse, "M" for Medium pulse, "L" for Long-pulse. See radar table for pulse duration',
+      '"0"when the antenna is static, "1" if the antena is rotating on its vertical axis. Flight speed and direction available only if the anteanna is rotating',
+      "Sensitivity Time Control in meter. Bascially a distance to set the minial detected object size. Key feature to calcualte the MTR-factor of the echo.",
+      "Detection threshold in DBm. Key feature to calcualte the MTR-factor of the echo.",
+      "not Available. Software version updon detection. Can differ from the classifier versions"
     )
   )
 
-  protocolDataSubset =  protocolDataSubset[, metaProtocol$colname]
+  protocolDataSubset = protocolDataSubset[, metaProtocol$colname]
 
   # Filter Site & Radar data
   # =============================================================================
   radarSiteData$targetTimeZone = targetTimeZone
 
-  mycols_site <- c("radarID", "siteID", "siteCode", "siteName", "siteDesc",
+  mycols_site <- c(
+    "radarID", "siteID", "siteCode", "siteName", "siteDesc",
     "targetTimeZone", # "originTimeZone",
     "projectStart_originTZ", "projectStart_targetTZ", "projectEnd_originTZ", "projectEnd_targetTZ",
     "longitude", "latitude", "altitude",
     "customer"
   )
   # Select according to Pulse Type
-  mycols_radar<- c("type", "serialNo", "northOffset", "delta", "tiltAngle",
-                   "transmitPower","antennaGainInDBi", "waveGuideAttenuation"
-                   )
+  mycols_radar <- c(
+    "type", "serialNo", "northOffset", "delta", "tiltAngle",
+    "transmitPower", "antennaGainInDBi", "waveGuideAttenuation"
+  )
 
-  if(pulseTypeSelection == 'S')
-  {
+  if (pulseTypeSelection == "S") {
     mycols_radar <- c(
       mycols_radar,
       c("short0V", "shortSatLower", "shortSteepness", "shortSatUpper", "pulseLengthShort")
     )
   }
-  if(pulseTypeSelection == 'M')
-  {
+  if (pulseTypeSelection == "M") {
     mycols_radar <- c(
       mycols_radar,
       c("medium0V", "mediumSatLower", "mediumSteepness", "mediumSatUpper", "pulseLengthMedium")
     )
   }
-  if(pulseTypeSelection == 'L')
-  {
+  if (pulseTypeSelection == "L") {
     mycols_radar <- c(
       mycols_radar,
-      c("long0V", "longSatLower", "longSteepness", "longSatUpper","pulseLengthLong")
+      c("long0V", "longSatLower", "longSteepness", "longSatUpper", "pulseLengthLong")
     )
   }
   # filter variables
@@ -197,72 +199,73 @@ compileData = function(
   #-----------------------------------------------------------------------------
   # meta data
   metaRadarSiteData <- data.frame(
-    "colname" = c("radarID", "siteID", "siteCode", "siteName", "siteDesc",
-                  "timeZone_targetTZ", # "timeZone_originTZ",
-                  "projectStart_originTZ", "projectStart_targetTZ", "projectEnd_originTZ", "projectEnd_targetTZ",
-                  "longitude", "latitude", "altitude",
-                  "customer",
-                  "type", "serialNo", "northOffset", "delta", "tiltAngle",
-                  "transmitPower","antennaGainInDBi", "waveGuideAttenuation",
-                  "xxx0V", "xxxSatLower", "xxxSteepness", "xxxSatUpper", "pulseLengthXxx"
+    "colname" = c(
+      "radarID", "siteID", "siteCode", "siteName", "siteDesc",
+      "timeZone_targetTZ", # "timeZone_originTZ",
+      "projectStart_originTZ", "projectStart_targetTZ", "projectEnd_originTZ", "projectEnd_targetTZ",
+      "longitude", "latitude", "altitude",
+      "customer",
+      "type", "serialNo", "northOffset", "delta", "tiltAngle",
+      "transmitPower", "antennaGainInDBi", "waveGuideAttenuation",
+      "xxx0V", "xxxSatLower", "xxxSteepness", "xxxSatUpper", "pulseLengthXxx"
     ),
-    "type" = c('int',
-               'int',
-               'char',
-               'char',
-               'char',
-               'char',
-               'POSIXct',
-               'POSIXct',
-               'POSIXct',
-               'POSIXct',
-               'num',
-               'num',
-               'int',
-               'char',
-               'char',
-               'int',
-               'num',
-               'num',
-               'num',
-               'num',
-               'num',
-               'num',
-               'num',
-               'num',
-               'num',
-               'num',
-               'num'
-
+    "type" = c(
+      "int",
+      "int",
+      "char",
+      "char",
+      "char",
+      "char",
+      "POSIXct",
+      "POSIXct",
+      "POSIXct",
+      "POSIXct",
+      "num",
+      "num",
+      "int",
+      "char",
+      "char",
+      "int",
+      "num",
+      "num",
+      "num",
+      "num",
+      "num",
+      "num",
+      "num",
+      "num",
+      "num",
+      "num",
+      "num"
     ),
-    "description" = c('Serial number of radar unit - abrevaited.',
-                      'Radar location: Site ID (integer) given by radar operator.',
-                      'Radar location: Site code (three letters) given by radar operator.',
-                      'Radar location: full name.',
-                      'Radar location: optional further description',
-                      'Time Zone used for analyses, usually UTC',
-                      'Beginning of the data collection, using the time zone set on radar.',
-                      'Beginning of the data collection, using the time zone set for the analyses - see variable "timeZone_targetTZ".',
-                      'End of the data collection, using the time zone set on radar.',
-                      'End of the data collection, using the time zone set for the analyses - see variable "timeZone_targetTZ".',
-                      'Radar location: Longitude', # toDo: specify format
-                      'Radar location: Latitude',
-                      'Radar location: altitude above sea level',
-                      'Radar operator',
-                      'Model of radar unit, e.r. "BirdScan MR1" from Swiss Birdradar Solution.',
-                      'Serial number of radar unit - full',
-                      'Radar parameter: northOffset',
-                      'Radar parameter: delta',
-                      'Radar parameter: titltAngle - a contstant for BirdScan MR1.',
-                      'Radar parameter: transmitted power [W] - can vary between years because of exchange of the magnetron.',
-                      'Radar parameter: Antenna gain [dBi] is given by the antenna - a contstant for BirdScan MR1.',
-                      'Radar parameter: Wave Guide attenuation []is given by the antenna - a contstant for BirdScan MR1.',
-                      'Pulse type parameter: xxx0V - Calibration. ',
-                      'Pulse type  parameter: xxxSatLower - Calibration.',
-                      'Pulse type  parameter: xxxSteepness - Calibration.',
-                      'Pulse type  parameter: xxxSatUpper - Calibration.',
-                      'Pulse type  parameter: pulseLengthXxx - Calibration - duration of the pulse length. This value ultimately define the range resolution.'
-
+    "description" = c(
+      "Serial number of radar unit - abrevaited.",
+      "Radar location: Site ID (integer) given by radar operator.",
+      "Radar location: Site code (three letters) given by radar operator.",
+      "Radar location: full name.",
+      "Radar location: optional further description",
+      "Time Zone used for analyses, usually UTC",
+      "Beginning of the data collection, using the time zone set on radar.",
+      'Beginning of the data collection, using the time zone set for the analyses - see variable "timeZone_targetTZ".',
+      "End of the data collection, using the time zone set on radar.",
+      'End of the data collection, using the time zone set for the analyses - see variable "timeZone_targetTZ".',
+      "Radar location: Longitude", # toDo: specify format
+      "Radar location: Latitude",
+      "Radar location: altitude above sea level",
+      "Radar operator",
+      'Model of radar unit, e.r. "BirdScan MR1" from Swiss Birdradar Solution.',
+      "Serial number of radar unit - full",
+      "Radar parameter: northOffset",
+      "Radar parameter: delta",
+      "Radar parameter: titltAngle - a contstant for BirdScan MR1.",
+      "Radar parameter: transmitted power [W] - can vary between years because of exchange of the magnetron.",
+      "Radar parameter: Antenna gain [dBi] is given by the antenna - a contstant for BirdScan MR1.",
+      "Radar parameter: Wave Guide attenuation []is given by the antenna - a contstant for BirdScan MR1.",
+      "Pulse type parameter: xxx0V - Calibration. ",
+      "Pulse type  parameter: xxxSatLower - Calibration.",
+      "Pulse type  parameter: xxxSteepness - Calibration.",
+      "Pulse type  parameter: xxxSatUpper - Calibration.",
+      "Pulse type  parameter: pulseLengthXxx - Calibration - duration of the pulse length. This value ultimately define the range resolution."
     )
   )
 
@@ -270,34 +273,36 @@ compileData = function(
   # Filter blindTimes data
   # =============================================================================
   # restrict the time range
-  if(!any( names(blindTimesData) == 'type') ) warning("The 'type' column is missing in the dataset 'blindTimesData'. Use the output of the function 'mergeVisibilityAnd ManualBlinfTime'.")
+  if (!any(names(blindTimesData) == "type")) warning("The 'type' column is missing in the dataset 'blindTimesData'. Use the output of the function 'mergeVisibilityAnd ManualBlinfTime'.")
   TimesInd = (blindTimesData$start_targetTZ < stopTime) &
     (blindTimesData$stop_targetTZ > startTime)
-  blindTimesDataSubset =  blindTimesData[TimesInd, ]
+  blindTimesDataSubset = blindTimesData[TimesInd, ]
 
   #-----------------------------------------------------------------------------
   # meta data
   metaBlindTimes <- data.frame(
-    "colname" = c('type',
-                  'start_targetTZ',
-                  'stop_targetTZ',
-                  'protocolID'
+    "colname" = c(
+      "type",
+      "start_targetTZ",
+      "stop_targetTZ",
+      "protocolID"
     ),
-    "type" = c('char',
-               'POSIXct',
-               'POSIXct',
-               'char'
+    "type" = c(
+      "char",
+      "POSIXct",
+      "POSIXct",
+      "char"
     ),
-    "description" = c('Type of BlindTime.
+    "description" = c(
+      'Type of BlindTime.
                           Blindtime is used to calcualte the effective duration of measurements during a teporal bin of the MTR table.
                           Common denominations are:
                           "protocolChange" that include the blindtime subsequent to the start of a new measrurement period (protocolID),
                           "technical" denote periods with technical misfunction of the radar,
                           "rain" denote periods of precipitation.',
-                      'Beginning of the blind period',
-                      'End of the blind period',
-                      'ID of measurement periods - linked to protocol table'
-
+      "Beginning of the blind period",
+      "End of the blind period",
+      "ID of measurement periods - linked to protocol table"
     )
   )
 
@@ -316,45 +321,47 @@ compileData = function(
   #-----------------------------------------------------------------------------
   # meta data
   metaSunriseSunset <- data.frame(
-    "colname" = c("is_night", "date",
-                  "sunStart", "sunStop",
-                  "civilStart",  "civilStop",
-                  "nauticalStart", "nauticalStop"
-
+    "colname" = c(
+      "is_night", "date",
+      "sunStart", "sunStop",
+      "civilStart", "civilStop",
+      "nauticalStart", "nauticalStop"
     ),
-    "type" = c('int', 'POSIXct',
-               'POSIXct','POSIXct',
-               'POSIXct','POSIXct',
-               'POSIXct','POSIXct'
-
+    "type" = c(
+      "int", "POSIXct",
+      "POSIXct", "POSIXct",
+      "POSIXct", "POSIXct",
+      "POSIXct", "POSIXct"
     ),
-    "description" = c('"0" if daytime, "1" if nighttime,',
-                      "Date of event (in UTC)",
-                      "Time of sunrise in UTC - see site table for location",
-                      "Time of sunset in UTC - see site table for location",
-                      "Time of dawn (civil-twilight, 6\u00b0 below horizon) in UTC - see site table for location",
-                      "Time of dusk (civil-twilight, 6\u00b0 below horizon) in UTC - see site table for location",
-                      "Time of dawn (nautical-twilight, 9\u00b0 below horizon) in UTC - see site table for location",
-                      "Time of dusk (nautical-twilight, 9\u00b0 below horizon) in UTC - see site table for location"
-
+    "description" = c(
+      '"0" if daytime, "1" if nighttime,',
+      "Date of event (in UTC)",
+      "Time of sunrise in UTC - see site table for location",
+      "Time of sunset in UTC - see site table for location",
+      "Time of dawn (civil-twilight, 6\u00b0 below horizon) in UTC - see site table for location",
+      "Time of dusk (civil-twilight, 6\u00b0 below horizon) in UTC - see site table for location",
+      "Time of dawn (nautical-twilight, 9\u00b0 below horizon) in UTC - see site table for location",
+      "Time of dusk (nautical-twilight, 9\u00b0 below horizon) in UTC - see site table for location"
     )
   )
 
-  sunriseSunsetDataSubset =  sunriseSunsetDataSubset[, metaSunriseSunset$colname]
+  sunriseSunsetDataSubset = sunriseSunsetDataSubset[, metaSunriseSunset$colname]
 
 
   # Filter echo data
   # =============================================================================
-  echoDataSubset = filterEchoData(echoData          = echoData,
-                                  timeRangeTargetTZ = timeRangeTargetTZ,
-                                  targetTimeZone    = targetTimeZone,
-                                  protocolData      = protocolDataSubset,
-                                  classSelection    = classSelection,
-                                  classProbCutOff   = classProbCutOff,
-                                  altitudeRange_AGL = altitudeRange_AGL,
-                                  manualBlindTimes  = blindTimesDataSubset, #blindTimesDataSubset[which(blindTimesDataSubset$type != "protocolChange"), ],
-                                  echoValidator     = echoValidator)
-  if(nrow(echoDataSubset) == 0) {
+  echoDataSubset = filterEchoData(
+    echoData = echoData,
+    timeRangeTargetTZ = timeRangeTargetTZ,
+    targetTimeZone = targetTimeZone,
+    protocolData = protocolDataSubset,
+    classSelection = classSelection,
+    classProbCutOff = classProbCutOff,
+    altitudeRange_AGL = altitudeRange_AGL,
+    manualBlindTimes = blindTimesDataSubset, # blindTimesDataSubset[which(blindTimesDataSubset$type != "protocolChange"), ],
+    echoValidator = echoValidator
+  )
+  if (nrow(echoDataSubset) == 0) {
     warning(paste0("No echo remaining in the filtered data. Check 'TimeRange' and 'manualBlindTimes', or other filters such as 'pulse-type', 'classSelection', 'altitudeRange'"))
   }
 
@@ -373,9 +380,9 @@ compileData = function(
   #   )
   # )
 
-  if(!is.null(metaEcho)){
+  if (!is.null(metaEcho)) {
     # subset to target columns
-     echoDataSubset =  echoDataSubset[, metaEcho$colname]
+    echoDataSubset = echoDataSubset[, metaEcho$colname]
   }
 
 
@@ -409,7 +416,7 @@ compileData = function(
 
 
   # save output
-  if( !is.null(filePath) && length(filePath) == 1){
+  if (!is.null(filePath) && length(filePath) == 1) {
     # =============================================================================
     # create filename to save plot
     # =========================================================================
@@ -417,20 +424,20 @@ compileData = function(
 
     # Add prefix from tagOutputFile to fileName
     # =========================================================================
-    if (!is.null(tagOutputFile[1])){
+    if (!is.null(tagOutputFile[1])) {
       prefix = tagOutputFile[1]
       fileName = paste(prefix, fileName, sep = "_")
     }
 
     # dbName for fileName
     # =========================================================================
-    if (!is.null(dbName) && length(dbName) == 1){
-        fileName = paste(fileName, dbName, sep = "_")
+    if (!is.null(dbName) && length(dbName) == 1) {
+      fileName = paste(fileName, dbName, sep = "_")
     }
 
     # time range for fileName
     # =========================================================================
-    if (!is.null(timeRangeTargetTZ) && length(timeRangeTargetTZ) == 2){
+    if (!is.null(timeRangeTargetTZ) && length(timeRangeTargetTZ) == 2) {
       startTime = format(startTime, "%Y%m%d")
       stopTime = format(stopTime, "%Y%m%d")
       time = paste("time", startTime, "to", stopTime, sep = "")
@@ -439,7 +446,7 @@ compileData = function(
 
     # altitude range for fileName
     # =========================================================================
-    if (!is.null(altitudeRange_AGL) && length(altitudeRange_AGL) == 2){
+    if (!is.null(altitudeRange_AGL) && length(altitudeRange_AGL) == 2) {
       altitudeRangeStart = altitudeRange_AGL[1]
       altitudeRangeStop = paste0(altitudeRange_AGL[2], "m")
       altitude = paste("alt", altitudeRangeStart, "to", altitudeRangeStop, sep = "")
@@ -448,28 +455,30 @@ compileData = function(
 
     # pulseTypeSelection for fileName
     # =========================================================================
-    if (!is.null(pulseTypeSelection) && length(pulseTypeSelection) == 1){
-      pulseTypeSelection_char = paste( sort(pulseTypeSelection), collapse = "")
-      pulseTypeSelection_char = paste0('pulse', pulseTypeSelection_char, sep ="")
+    if (!is.null(pulseTypeSelection) && length(pulseTypeSelection) == 1) {
+      pulseTypeSelection_char = paste(sort(pulseTypeSelection), collapse = "")
+      pulseTypeSelection_char = paste0("pulse", pulseTypeSelection_char, sep = "")
       fileName = paste(fileName, pulseTypeSelection_char, sep = "_")
     }
 
     # rotationSelection for fileName
     # =========================================================================
-    if ( !is.null(rotationSelection) && any(rotationSelection %in% c(1, 0)) ){
-      rotationSelection_char = paste( sort(rotationSelection), collapse = "")
-      rotationSelection_char = paste0('rotation', rotationSelection_char, sep ="")
+    if (!is.null(rotationSelection) && any(rotationSelection %in% c(1, 0))) {
+      rotationSelection_char = paste(sort(rotationSelection), collapse = "")
+      rotationSelection_char = paste0("rotation", rotationSelection_char, sep = "")
       fileName = paste(fileName, rotationSelection_char, sep = "_")
     }
 
     # classSelection for fileName
     # =========================================================================
-    if (!is.null(classSelection)){
+    if (!is.null(classSelection)) {
       classAbbreviations$class <- trimws(classAbbreviations$class, which = "right")
       classAbbreviations$abbr <- trimws(classAbbreviations$abbr, which = "right")
-      classes = paste(classAbbreviations$abbr[which(classAbbreviations$class %in%
-                                                      classSelection)],
-                      collapse = "")
+      classes = paste(
+        classAbbreviations$abbr[which(classAbbreviations$class %in%
+          classSelection)],
+        collapse = ""
+      )
       fileName = paste(fileName, classes, sep = "_")
     } else {
       fileName = paste(fileName, "allClasses", sep = "_")
@@ -477,22 +486,22 @@ compileData = function(
 
     # classProbCutOff for fileName
     # =========================================================================
-    if (!is.null(classProbCutOff) && length(classProbCutOff) == 1){
+    if (!is.null(classProbCutOff) && length(classProbCutOff) == 1) {
       classProbCutOff_char <- substr(classProbCutOff, 3, 4)
-      classProbCutOff_char = paste0('classProbCutOff.', classProbCutOff_char, sep ="")
+      classProbCutOff_char = paste0("classProbCutOff.", classProbCutOff_char, sep = "")
       fileName = paste(fileName, classProbCutOff_char, sep = "_")
     }
 
     # echoValidator for fileName
     # =========================================================================
-    if (echoValidator && length(echoValidator) == 1){
-      echoValidator_char = paste0('echoValidator', echoValidator, sep ="")
+    if (echoValidator && length(echoValidator) == 1) {
+      echoValidator_char = paste0("echoValidator", echoValidator, sep = "")
       fileName = paste(fileName, echoValidator_char, sep = "_")
     }
 
     # Add suffix from tagOutputFile to fileName
     # =========================================================================
-    if (!is.null(tagOutputFile[2])){
+    if (!is.null(tagOutputFile[2])) {
       suffix = tagOutputFile[2]
       fileName = paste(fileName, suffix, sep = "_")
     }
@@ -502,13 +511,13 @@ compileData = function(
     rdsFileName = paste0(fileName, ".rds")
 
     # add output folder 'filePath'
-    rdsFilePathName <- file.path(filePath, rdsFileName)# ; print(filePathName)
+    rdsFilePathName <- file.path(filePath, rdsFileName) # ; print(filePathName)
 
     saveRDS(compiledData, file = rdsFilePathName)
 
     # Save CSV
     # =========================================================================
-    if(saveCSV  && length(filePath) == 1){
+    if (saveCSV && length(filePath) == 1) {
       csvDirPath = file.path(filePath, fileName)
 
       # Create a directory to store the CSV files (optional)
@@ -527,9 +536,7 @@ compileData = function(
           write.csv(compiledData[[name]], file = file_path, row.names = FALSE)
         }
       }
-
     }
-
   } # end of if( !is.null(filePath) && length(filePath) == 1){
 
   return(compiledData)
