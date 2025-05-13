@@ -36,7 +36,7 @@ License: GPL (>= 3)
 URL: https://github.com/BirdScanCommunity/birdscanR, https://birdscancommunity.github.io/birdscanR/
 BugReports: https://github.com/BirdScanCommunity/birdscanR/issues
 Depends:
-  R (>= 4.0.0)
+  R (>= 4.1.0)
 Imports: 
   DBI,
   dplyr,
