@@ -166,10 +166,8 @@ which should be treated as observation time with MTR zero.</p></dd>
 
 
 <dt id="arg-propobstimecutoff">propObsTimeCutoff<a class="anchor" aria-label="anchor" href="#arg-propobstimecutoff"></a></dt>
-<dd><p>numeric between 0 and 1. If the MTR is computed per
-day and night, time bins with a proportional observation time smaller than
-propObsTimeCutoff are ignored when combining the time bins. If the MTR is
-computed for each time bin, the parameter is ignored.</p></dd>
+<dd><p>numeric between 0 and 1. Time bins with a proportional
+observation time smaller than <code>propObsTimeCutoff</code> are set to NA.</p></dd>
 
 
 <dt id="arg-computeperdaynight">computePerDayNight<a class="anchor" aria-label="anchor" href="#arg-computeperdaynight"></a></dt>
