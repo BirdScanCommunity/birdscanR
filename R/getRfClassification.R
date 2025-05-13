@@ -4,10 +4,7 @@
 #' database
 #' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
 #' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
-#' @param dbConnection a valid  database connection
-#' @param dbDriverChar dbDriverChar 'SQL Server' The name of the driver. Should
-#' be either 'SQL Server' or 'PostgreSQL'. If 'PostgreSQL', it connects to
-#' cloud.birdradar.com
+#' @inheritParams QUERY
 #'
 #' @return A list containing three variables: (1) rfclassificationTable: The
 #' 'rfClassification' database table; (2) classProbabilitiesAndMtrFactors: A
@@ -33,14 +30,17 @@
 #' )
 #' dbConnection = RODBC::odbcDriverConnect(dsn)
 #'
-#' rfClassification = getRfClassification(dbConnection, dbDriverChar)
+#' rfClassification = getRfClassification(dbConnection)
 #' }
 #'
 getRfClassification = function(dbConnection, dbDriverChar) {
+  if (!missing(dbDriverChar)) {
+    lifecycle::deprecate_warn("0.4.0", "getRfClassification(dbDriverChar)")
+  }
   # load 'rfClasses' table from MS-SQL DB
   # ============================================================================
   rfClasses = QUERY(
-    dbConnection, dbDriverChar,
+    dbConnection, query=
     "SELECT * FROM rfclasses"
   )
   colnames(rfClasses)[colnames(rfClasses) == "is_protected"] = "isProtected"
@@ -54,8 +54,7 @@ getRfClassification = function(dbConnection, dbDriverChar) {
   # ============================================================================
   rfclassificationTable = QUERY(
     dbConnection,
-    dbDriverChar,
-    paste0(
+query=    paste0(
       "SELECT * FROM rf_classification where ",
       "rf_classification.class is not null",
       " AND rf_classification.mtr_factor is ",
@@ -71,7 +70,7 @@ getRfClassification = function(dbConnection, dbDriverChar) {
   # load rfclassification probabilities from local MS-SQL DB
   # ============================================================================
   rfclassProbabilityTable = QUERY(
-    dbConnection, dbDriverChar,
+    dbConnection,query=
     paste0(
       "SELECT * FROM rf_class_probability",
       " WHERE rf_class_probability.class",

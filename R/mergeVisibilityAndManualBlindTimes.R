@@ -45,7 +45,7 @@
 #'
 #' # Get visibility table
 #' # ===========================================================================
-#' visibilityTable = getVisibilityTable(dbConnection, dbDriverChar)
+#' visibilityTable = getVisibilityTable(dbConnection)
 #'
 #' # Get manual blind times
 #' # ===========================================================================
