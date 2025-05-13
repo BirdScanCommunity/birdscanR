@@ -16,8 +16,8 @@ computeObservationTime(
 \code{\link[=createTimeBins]{createTimeBins()}}.}
 
 \item{protocolData}{dataframe with the protocol data from the data list
-created by the function \code{\link[=extractDBData]{extractDBData()}} or a subset of it created by the
-function \code{\link[=filterProtocolData]{filterProtocolData()}}.}
+created by the function \code{\link[=extractDbData]{extractDbData()}} or a subset of it created by the
+function \code{filterProtocolData}.}
 
 \item{blindTimes}{dataframe containing the blind times created by the
 function \code{\link[=mergeVisibilityAndManualBlindTimes]{mergeVisibilityAndManualBlindTimes()}}.}

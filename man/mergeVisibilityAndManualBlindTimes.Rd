@@ -12,14 +12,14 @@ mergeVisibilityAndManualBlindTimes(
 }
 \arguments{
 \item{visibilityData}{dataframe with the visibility data from the data list
-created by the function ‘extractDBData’.}
+created by the function \code{\link[=extractDdData]{extractDdData()}}.}
 
 \item{manualBlindTimes}{dataframe with the manual blind times created by the
 function ‘loadManualBlindTimes’.}
 
 \item{protocolData}{dataframe with the protocol data from the data list
-created by the function ‘extractDBData’ or a subset of it created by the
-function ‘filterProtocolData’.}
+created by the function \code{\link[=extractDbData]{extractDbData()}} or a subset of it created by the
+function \code{\link[=filterProtocolData]{filterProtocolData()}}.}
 }
 \value{
 dataframe with overall blind times

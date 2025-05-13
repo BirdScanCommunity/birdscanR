@@ -13,7 +13,7 @@ addDayNightInfoPerEcho(
 }
 \arguments{
 \item{echoData}{dataframe with the echo data from the data list created by
-the function ‘extractDBData’}
+the function \code{\link[=extractDbData]{extractDbData()}}.}
 
 \item{sunriseSunset}{dataframe with sunrise/sunset and civil twilight times
 created by the function ‘twilight’}

@@ -19,9 +19,9 @@ filterData(
 )
 }
 \arguments{
-\item{echoData}{\code{data.frame} with the echo data from the data list created by the function \code{\link[=extractDBData]{extractDBData()}}.}
+\item{echoData}{\code{data.frame} with the echo data from the data list created by the function \code{\link[=extractDbData]{extractDbData()}}.}
 
-\item{protocolData}{\code{data.frame} with the protocol data from the data list created by the function \code{\link[=extractDBData]{extractDBData()}} or a subset of it created by the function \code{\link[=filterProtocolData]{filterProtocolData()}}. Echoes not detected during the listed protocols will be excluded.}
+\item{protocolData}{\code{data.frame} with the protocol data from the data list created by the function \code{\link[=extractDbData]{extractDbData()}} or a subset of it created by \code{\link[=filterProtocolData]{filterProtocolData()}}. Echoes not detected during the listed protocols will be excluded.}
 
 \item{pulseTypeSelection}{character vector with the pulse types which should be included in the subset. Options: “S”, “M”, “L” (short-, medium-, long-pulse). Default is NULL: no filtering applied based on pulseType.}
 

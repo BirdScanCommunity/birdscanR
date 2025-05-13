@@ -33,8 +33,8 @@ computeMTR(
 processing}
 
 \item{echoes}{dataframe with the echo data from the data list created by the
-function ‘extractDBData’ or a subset of it created by the function
-‘filterEchoData’.}
+function \code{\link[=extractDbData]{extractDbData()}} or a subset of it created by the function
+\code{filterEchoData}.}
 
 \item{classSelection}{character string vector with all classes which should
 be used to calculate the MTR. The MTR and number of Echoes will be calculated
@@ -68,11 +68,11 @@ the time between civil dusk/dawn and sunrise/sunset times to define the
 crepuscular period. Default is "nauticalSolar".}
 
 \item{protocolData}{\code{data.frame} with the protocol data from the data list
-created by the function \code{\link[=extractDBData]{extractDBData()}} or a subset of it created by the
+created by the function \code{\link[=extractDbData]{extractDbData()}} or a subset of it created by the
 function \code{\link[=filterProtocolData]{filterProtocolData()}}.}
 
 \item{visibilityData}{dataframe with the visibility data from the data list
-created by the function \code{\link[=extractDBData]{extractDBData()}}.}
+created by \code{\link[=extractDbData]{extractDbData()}}.}
 
 \item{manualBlindTimes}{dataframe with the manual blind times created by the
 function \code{\link[=loadManualBlindTimes]{loadManualBlindTimes()}}.}

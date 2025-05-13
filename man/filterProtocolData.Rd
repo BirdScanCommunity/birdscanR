@@ -12,7 +12,7 @@ filterProtocolData(
 }
 \arguments{
 \item{protocolData}{\code{data.frame} with the protocol data from the data list
-created by the function \code{\link[=extractDBData]{extractDBData()}}}
+created by the function \code{\link[=extractDbData]{extractDbData()}}}
 
 \item{pulseTypeSelection}{character vector with the pulse types which should
 be included in the subset. Options: “S”, “M”, “L” (short-, medium-,

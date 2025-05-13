@@ -18,7 +18,7 @@ filterEchoData(
 }
 \arguments{
 \item{echoData}{\code{data.frame} with the echo data from the data list created by
-the function \code{\link[=extractDBData]{extractDBData()}}.}
+the function \code{\link[=extractDbData]{extractDbData()}}.}
 
 \item{timeRangeTargetTZ}{Character vector of length 2, with start and end of
 time range, formatted as "\%Y-\%m-\%d \%H:\%M". Echoes outside the time range will
@@ -28,7 +28,7 @@ be excluded.}
 Default is "Etc/GMT0".}
 
 \item{protocolData}{\code{data.frame} with the protocol data from the data list
-created by the function \code{\link[=extractDBData]{extractDBData()}} or a subset of it created by
+created by the function \code{\link[=extractDbData]{extractDbData()}} or a subset of it created by
 the function \code{\link[=filterProtocolData]{filterProtocolData()}}. Echoes not detected during the listed
 protocols will be excluded.}
 
