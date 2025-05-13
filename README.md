@@ -9,6 +9,7 @@
 status](https://www.r-pkg.org/badges/version/birdscanR)](https://CRAN.R-project.org/package=birdscanR)
 [![CRAN
 checks](https://badges.cranchecks.info/worst/birdscanR.svg)](https://cran.r-project.org/web/checks/check_results_birdscanR.html)
+[![R-CMD-check](https://github.com/BirdScanCommunity/birdscanR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BirdScanCommunity/birdscanR/actions/workflows/R-CMD-check.yaml)
 [![repo
 status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7326820.svg)](https://doi.org/10.5281/zenodo.7326820)
@@ -16,9 +17,9 @@ status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repost
 
 BirdscanR is an R package to extract data from Birdscan MR1 SQL
 vertical-looking radar databases, filter, and process them to Migration
-Traffic Rates (objects per hour and km) or density (objects per km3) of,
-for example birds, and insects. Object classifications in the ‘Birdscan
-MR1’ databases are based on the dataset of [Haest et
+Traffic Rates (# objects per hour and km) or density (# objects per km3)
+of, for example birds, and insects. Object classifications in the
+‘Birdscan MR1’ databases are based on the dataset of [Haest et
 al. (2021)](https://doi.org10.5281/zenodo.5734960). Migration Traffic
 Rates and densities can be calculated separately for different height
 bins (with a height resolution of choice) as well as over time periods
