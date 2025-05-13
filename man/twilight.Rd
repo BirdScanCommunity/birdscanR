@@ -44,9 +44,7 @@ Other manipulation functions:
 \code{\link{addDayNightInfoPerEcho}()},
 \code{\link{computeDensity}()},
 \code{\link{computeMTR}()},
-\code{\link{computeObservationTime}()},
 \code{\link{convertTimeZone}()},
-\code{\link{createTimeBins}()},
 \code{\link{mergeVisibilityAndManualBlindTimes}()},
 \code{\link{reclassToBats}()}
 }

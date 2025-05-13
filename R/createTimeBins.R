@@ -26,8 +26,8 @@
 #' is "nauticalSolar".
 #'
 #' @return returns a dataframe with the time bins information
-#' @family manipulation functions
-#' @export
+#' @family helper functions
+#' @noRd
 createTimeBins = function(timeRange,
                           timeBinDuration_sec,
                           timeZone,

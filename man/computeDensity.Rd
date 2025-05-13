@@ -194,9 +194,7 @@ feature37.speed is required for the density calculation.
 Other manipulation functions: 
 \code{\link{addDayNightInfoPerEcho}()},
 \code{\link{computeMTR}()},
-\code{\link{computeObservationTime}()},
 \code{\link{convertTimeZone}()},
-\code{\link{createTimeBins}()},
 \code{\link{mergeVisibilityAndManualBlindTimes}()},
 \code{\link{reclassToBats}()},
 \code{\link{twilight}()}
