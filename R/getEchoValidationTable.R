@@ -33,12 +33,12 @@ getEchoValidationTable = function(dbConnection, dbDriverChar) {
   }
   echovalidationTypesTable = QUERY(
     dbConnection,
-query=    "SELECT * FROM echo_validation_type"
+    query = "SELECT * FROM echo_validation_type"
   )
 
   echovalidationTable = QUERY(
     dbConnection,
-    query=    "SELECT * FROM echo_validation order by echo_id asc"
+    query = "SELECT * FROM echo_validation order by echo_id asc"
   )
 
   echoValidationList = echovalidationTable$type
