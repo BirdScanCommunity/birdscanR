@@ -7,10 +7,9 @@
 getProtocolTable(dbConnection, dbDriverChar)
 }
 \arguments{
-\item{dbConnection}{a valid  database connection}
+\item{dbConnection}{a valid database connection}
 
-\item{dbDriverChar}{the name of the driver. If different from 'PostgreSQL'
-it connects to cloud.birdradar.com}
+\item{dbDriverChar}{This was the name of the driver, and is now automatically detected, therefore it should be omitted into the future.}
 }
 \value{
 A dataframe with the protocol table
@@ -36,7 +35,7 @@ dsn = paste0(
 )
 dbConnection = RODBC::odbcDriverConnect(dsn)
 
-protocolTable = getProtocolTable(dbConnection, dbDriverChar)
+protocolTable = getProtocolTable(dbConnection)
 }
 
 }

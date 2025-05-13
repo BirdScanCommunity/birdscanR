@@ -6,8 +6,8 @@
 #' @param dbName Character string, containing the name of the database you are
 #' processing
 #' @param echoes dataframe with the echo data from the data list created by the
-#' function ‘extractDBData’ or a subset of it created by the function
-#' ‘filterEchoData’.
+#' function [extractDbData()] or a subset of it created by the function
+#' `filterEchoData`.
 #' @param classSelection character string vector with all classes which should
 #' be used to calculate the MTR. The MTR and number of Echoes will be calculated
 #' for each class as well as for all classes together.
@@ -30,13 +30,13 @@
 #' and civil dusk/dawn to define the crepuscular period, or to "civilSolar" to use
 #' the time between civil dusk/dawn and sunrise/sunset times to define the
 #' crepuscular period. Default is "nauticalSolar".
-#' @param protocolData dataframe with the protocol data from the data list
-#' created by the function \code{extractDBData} or a subset of it created by the
-#' function \code{filterProtocolData}.
+#' @param protocolData `data.frame` with the protocol data from the data list
+#' created by the function [extractDbData()] or a subset of it created by the
+#' function [filterProtocolData()].
 #' @param visibilityData dataframe with the visibility data from the data list
-#' created by the function ‘extractDBData’.
+#' created by [extractDbData()].
 #' @param manualBlindTimes dataframe with the manual blind times created by the
-#' function \code{loadManualBlindTimes}.
+#' function [loadManualBlindTimes()].
 #' @param saveBlindTimes Logical, determines whether to save the blind times to
 #' a file. Default: False.
 #' @param blindTimesOutputDir Character string containing the path to save the

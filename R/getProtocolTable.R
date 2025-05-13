@@ -1,9 +1,7 @@
 #' @title Get BirdScan protocol table
 #' @author Fabian Hertner, Birgen Haest
 #' @description Load protocol table from an already connected 'Birdscan MR1' 'SQL' database.
-#' @param dbConnection a valid  database connection
-#' @param dbDriverChar the name of the driver. If different from 'PostgreSQL'
-#' it connects to cloud.birdradar.com
+#' @inheritParams QUERY
 #'
 #' @return A dataframe with the protocol table
 #' @family read SQL database functions
@@ -26,18 +24,21 @@
 #' )
 #' dbConnection = RODBC::odbcDriverConnect(dsn)
 #'
-#' protocolTable = getProtocolTable(dbConnection, dbDriverChar)
+#' protocolTable = getProtocolTable(dbConnection)
 #' }
 #'
 getProtocolTable = function(dbConnection, dbDriverChar) {
+  if (!missing(dbDriverChar)) {
+    lifecycle::deprecate_warn("0.4.0", "getProtocolTable(dbDriverChar)")
+  }
   # load protocol table from MS-SQL DB
   # ============================================================================
-  if (dbDriverChar != "PostgreSQL") {
-    protocolTable = QUERY(dbConnection, dbDriverChar, "SELECT * FROM protocol order by protocolID asc")
+  if (class(dbConnection) %in% "PqConnection") {
+    protocolTable = QUERY(dbConnection, query =  "SELECT * FROM protocol order by protocolID asc")
     colnames(protocolTable)[colnames(protocolTable) == "starttime"] = "startTime"
     colnames(protocolTable)[colnames(protocolTable) == "stoptime"] = "stopTime"
 
-    protocolTable_times = QUERY(dbConnection, dbDriverChar, "SELECT startTime, stopTime FROM protocol order by protocolID asc", as.is = TRUE)
+    protocolTable_times = QUERY(dbConnection, query="SELECT startTime, stopTime FROM protocol order by protocolID asc", as.is = TRUE)
     colnames(protocolTable_times)[colnames(protocolTable_times) == "starttime"] = "startTime"
     colnames(protocolTable_times)[colnames(protocolTable_times) == "stoptime"] = "stopTime"
     protocolTable$startTime = protocolTable_times$startTime
@@ -48,8 +49,7 @@ getProtocolTable = function(dbConnection, dbDriverChar) {
   } else {
     protocolTable = QUERY(
       dbConnection,
-      dbDriverChar,
-      "SELECT *,starttime::character varying as start,stoptime::character varying as stop FROM protocol order by protocolid asc"
+query=      "SELECT *,starttime::character varying as start,stoptime::character varying as stop FROM protocol order by protocolid asc"
     )
     protocolTable$starttime = protocolTable$start
     protocolTable$stoptime = protocolTable$stop

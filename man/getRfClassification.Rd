@@ -7,11 +7,9 @@
 getRfClassification(dbConnection, dbDriverChar)
 }
 \arguments{
-\item{dbConnection}{a valid  database connection}
+\item{dbConnection}{a valid database connection}
 
-\item{dbDriverChar}{dbDriverChar 'SQL Server' The name of the driver. Should
-be either 'SQL Server' or 'PostgreSQL'. If 'PostgreSQL', it connects to
-cloud.birdradar.com}
+\item{dbDriverChar}{This was the name of the driver, and is now automatically detected, therefore it should be omitted into the future.}
 }
 \value{
 A list containing three variables: (1) rfclassificationTable: The
@@ -42,7 +40,7 @@ dsn = paste0(
 )
 dbConnection = RODBC::odbcDriverConnect(dsn)
 
-rfClassification = getRfClassification(dbConnection, dbDriverChar)
+rfClassification = getRfClassification(dbConnection)
 }
 
 }

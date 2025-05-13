@@ -19,9 +19,9 @@ filterData(
 )
 }
 \arguments{
-\item{echoData}{dataframe with the echo data from the data list created by the function \code{extractDBData}.}
+\item{echoData}{\code{data.frame} with the echo data from the data list created by the function \code{\link[=extractDbData]{extractDbData()}}.}
 
-\item{protocolData}{dataframe with the protocol data from the data list created by the function \code{extractDBData} or a subset of it created by the function \code{filterProtocolData}. Echoes not detected during the listed protocols will be excluded.}
+\item{protocolData}{\code{data.frame} with the protocol data from the data list created by the function \code{\link[=extractDbData]{extractDbData()}} or a subset of it created by \code{\link[=filterProtocolData]{filterProtocolData()}}. Echoes not detected during the listed protocols will be excluded.}
 
 \item{pulseTypeSelection}{character vector with the pulse types which should be included in the subset. Options: “S”, “M”, “L” (short-, medium-, long-pulse). Default is NULL: no filtering applied based on pulseType.}
 
@@ -44,7 +44,7 @@ with a lower class probability will be excluded.}
 altitude range. Echoes outside the altitude range will be excluded.}
 
 \item{manualBlindTimes}{dataframe with the manual blind times created by the
-function \code{loadManualBlindTimes}.}
+function \code{\link[=loadManualBlindTimes]{loadManualBlindTimes()}}.}
 
 \item{echoValidator}{logical, if set to TRUE, echoes labelled by the echo
 validator as “non-bio scatterer” will be excluded. If set to FALSE, all
@@ -55,7 +55,7 @@ returns the filtered echo and protocol data in the same format as
 provided in the parameters \code{echoData} and \code{protocolData}.
 }
 \description{
-With the function \code{filterData} both the echo and protocol data can be filtered by several parameters. The function returns the filtered echo and protocol data.
+With the function \code{\link[=filterData]{filterData()}} both the echo and protocol data can be filtered by several parameters. The function returns the filtered echo and protocol data.
 }
 \examples{
 \dontrun{

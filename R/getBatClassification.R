@@ -2,10 +2,7 @@
 #' @author Fabian Hertner, Birgen Haest
 #' @description Gets the 'rfClasses' table from a 'Birdscan MR1' 'SQL'
 #' database
-#' @param dbConnection a valid  database connection
-#' @param dbDriverChar dbDriverChar 'SQL Server' The name of the driver. Should
-#' be either 'SQL Server' or 'PostgreSQL'. If 'PostgreSQL', it connects to
-#' cloud.birdradar.com
+#' @inheritParams QUERY
 #'
 #' @return A list containing three variables: (1) batClassificationTable: The
 #' 'batClassification' database table; (2) classProbabilitiesAndMtrFactors: A
@@ -32,13 +29,16 @@
 #' )
 #' dbConnection = RODBC::odbcDriverConnect(dsn)
 #'
-#' rfClassification = getBatClassification(dbConnection, dbDriverChar)
+#' rfClassification = getBatClassification(dbConnection)
 #' }
 #'
 getBatClassification = function(dbConnection, dbDriverChar) {
+  if (!missing(dbDriverChar)) {
+    lifecycle::deprecate_warn("0.4.0", "getBatClassification(dbDriverChar)")
+  }
   # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
   # check if batClassification table exists
-  if (dbDriverChar == "PostgreSQL") {
+  if (class(dbConnection) %in% "PqConnection") {
     batClassificationTableExists <- DBI::dbExistsTable(dbConnection, "bat_classification")
     batProbabilityTableExists <- DBI::dbExistsTable(dbConnection, "bat_class_probability")
   } else {
@@ -50,7 +50,7 @@ getBatClassification = function(dbConnection, dbDriverChar) {
     # :::::::::::::::::::::::::::::::::::::::::::::::::::::::
     # load rfclasses from DB
     rfClasses = QUERY(
-      dbConnection, dbDriverChar,
+      dbConnection, query=
       "Select * From rfclasses"
     )
     colnames(rfClasses)[colnames(rfClasses) == "is_protected"] <- "isProtected"
@@ -64,7 +64,7 @@ getBatClassification = function(dbConnection, dbDriverChar) {
     # load batClassification from DB
     batClassificationTable = QUERY(
       dbConnection,
-      dbDriverChar,
+     query=
       paste0(
         "SELECT * FROM bat_classification WHERE ",
         "bat_classification.class is not null ",
@@ -83,7 +83,7 @@ getBatClassification = function(dbConnection, dbDriverChar) {
     # load bat classification probabilities from DB
     batClassProbabilityTable = QUERY(
       dbConnection,
-      dbDriverChar,
+      query=
       paste0(
         "SELECT * FROM bat_class_probability ",
         "WHERE bat_class_probability.class ",

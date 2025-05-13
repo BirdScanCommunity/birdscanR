@@ -5,7 +5,7 @@
 #' allows the user to filter echo data easily by “day” and “night”, or "day",
 #' "crepuscular", and "night".
 #' @param echoData dataframe with the echo data from the data list created by
-#' the function ‘extractDBData’
+#' the function [extractDbData()].
 #' @param sunriseSunset dataframe with sunrise/sunset and civil twilight times
 #' created by the function ‘twilight’
 #' @param sunOrCivil optional character variable, Set to “sun” to use

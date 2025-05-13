@@ -2,8 +2,7 @@
 #' @author Fabian Hertner, Birgen Haest
 #' @description Get the Radar table from  an already connected DB and rename
 #' the columns appropriately.
-#' @param dbConnection a valid  database connection
-#' @param dbDriverChar the name of the driver.
+#' @inheritParams QUERY
 #'
 #' @return the radar table  as a data frame
 #' @family read SQL database functions
@@ -26,11 +25,15 @@
 #' )
 #' dbConnection = RODBC::odbcDriverConnect(dsn)
 #'
-#' radarTable = getRadarTable(dbConnection, dbDriverChar)
+#' radarTable = getRadarTable(dbConnection)
 #' }
 #'
 getRadarTable = function(dbConnection, dbDriverChar) {
-  radarTable = QUERY(dbConnection, dbDriverChar, "SELECT * FROM radar")
+  if (!missing(dbDriverChar)) {
+    lifecycle::deprecate_warn("0.4.0", "getRadarTable(dbDriverChar)")
+  }
+
+  radarTable = QUERY(dbConnection, query = "SELECT * FROM radar")
 
   colnames(radarTable)[colnames(radarTable) == "radarid"] = "radarID"
   colnames(radarTable)[colnames(radarTable) == "serialno"] = "serialNo"
@@ -51,6 +54,5 @@ getRadarTable = function(dbConnection, dbDriverChar) {
   colnames(radarTable)[colnames(radarTable) == "pulselengthlong"] = "pulseLengthLong"
   colnames(radarTable)[colnames(radarTable) == "tiltangle"] = "tiltAngle"
   colnames(radarTable)[colnames(radarTable) == "transmitpower"] = "transmitPower"
-
   return(radarTable)
 }

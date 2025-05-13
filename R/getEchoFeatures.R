@@ -1,9 +1,7 @@
 #' @title Get BirdScan echo features
 #' @author Fabian Hertner, Birgen Haest
 #' @description Load echo rffeature map from 'Birdscan MR1' 'SQL' database.
-#' @param dbConnection a valid  database connection
-#' @param dbDriverChar the name of the driver. If different from 'PostgreSQL'
-#' it connects to cloud.birdradar.com
+#' @inheritParams QUERY
 #' @param listOfRfFeaturesToExtract a list of feature to extract
 #' @param echoIDRange NULL A two-element vector of integers to subset the rf
 #' feature extraction to a range of echoIDs. Default is to extract for all echoes.
@@ -38,7 +36,7 @@
 #' listOfRfFeaturesToExtract = c(167, 168)
 #'
 #' echoFeatures = getEchoFeatures(
-#'   dbConnection, dbDriverChar,
+#'   dbConnection,
 #'   listOfRfFeaturesToExtract
 #' )
 #' }
@@ -46,10 +44,13 @@
 getEchoFeatures = function(dbConnection, dbDriverChar,
                            listOfRfFeaturesToExtract,
                            echoIDRange = NULL) {
+  if (!missing(dbDriverChar)) {
+    lifecycle::deprecate_warn("0.4.0", "getEchoFeatures(dbDriverChar)")
+  }
   # load 'rfFeatures' table from 'MS-SQL' database
   # ===========================================================================
   rffeaturesTable = QUERY(
-    dbConnection, dbDriverChar,
+    dbConnection,query=
     "SELECT * FROM rffeatures"
   )
 
@@ -61,7 +62,7 @@ getEchoFeatures = function(dbConnection, dbDriverChar,
     if (is.null(echoIDRange)) {
       echorffeaturesMapTable = QUERY(
         dbConnection,
-        dbDriverChar,
+        query=
         paste(
           "SELECT * FROM echo_rffeature_map WHERE feature IN ( ",
           paste(listOfRfFeaturesToExtract, collapse = ", "),
@@ -73,7 +74,7 @@ getEchoFeatures = function(dbConnection, dbDriverChar,
     } else {
       echorffeaturesMapTable = QUERY(
         dbConnection,
-        dbDriverChar,
+        query=
         paste(
           "SELECT * FROM echo_rffeature_map WHERE feature IN ( ",
           paste(listOfRfFeaturesToExtract, collapse = ", "),

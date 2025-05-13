@@ -7,9 +7,9 @@
 QUERY(dbConnection, dbDriverChar, query, as.is = FALSE)
 }
 \arguments{
-\item{dbConnection}{a valid  database connection}
+\item{dbConnection}{a valid database connection}
 
-\item{dbDriverChar}{the name of the driver}
+\item{dbDriverChar}{This was the name of the driver, and is now automatically detected, therefore it should be omitted into the future.}
 
 \item{query}{an 'SQL' string with your query}
 
@@ -41,7 +41,6 @@ dbConnection = RODBC::odbcDriverConnect(dsn)
 
 QUERY(
   dbConnection = dbConnection,
-  dbDriverChar = dbDriverChar,
   query = "Select * From collection order by row asc"
 )
 }

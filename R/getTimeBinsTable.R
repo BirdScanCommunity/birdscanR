@@ -2,10 +2,7 @@
 #' @author Fabian Hertner, Birgen Haest
 #' @description Load time bins table from an already connected 'Birdscan MR1'
 #' 'SQL' database.
-#' @param dbConnection a valid database connection
-#' @param dbDriverChar the name of the driver. If different from 'PostgreSQL'
-#' it connects to cloud.birdradar.com
-#'
+#' @inheritParams QUERY
 #' @return A dataframe with the time bins table
 #' @family read SQL database functions
 #' @export
@@ -27,19 +24,22 @@
 #' )
 #' dbConnection = RODBC::odbcDriverConnect(dsn)
 #'
-#' timeBinsTable = getTimeBinsTable(dbConnection, dbDriverChar)
+#' timeBinsTable = getTimeBinsTable(dbConnection)
 #' }
 #'
 getTimeBinsTable = function(dbConnection, dbDriverChar) {
+  if (!missing(dbDriverChar)) {
+    lifecycle::deprecate_warn("0.4.0", "getTimeBinsTable(dbDriverChar)")
+  }
   # load protocol table from local MS-SQL DB
   # ============================================================================
-  if (dbDriverChar != "PostgreSQL") {
+  if (class(dbConnection) %in% "PqConnection") {
     timeBinsTable = QUERY(
-      dbConnection, dbDriverChar,
+      dbConnection, query =
       "SELECT * FROM time_bins order by id asc"
     )
     timeBinsTable_times = QUERY(dbConnection,
-      dbDriverChar,
+      query =
       paste0(
         "SELECT time_start, time_stop ",
         "FROM time_bins order by id asc"
@@ -54,8 +54,7 @@ getTimeBinsTable = function(dbConnection, dbDriverChar) {
   } else {
     timeBinsTable = QUERY(
       dbConnection,
-      dbDriverChar,
-      paste0(
+query=      paste0(
         "SELECT *,time_start::character ",
         "varying as ",
         "start,time_stop::character ",

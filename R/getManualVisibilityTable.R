@@ -2,11 +2,9 @@
 #' @author Baptiste Schmid, Birgen Haest
 #' @description Load visibility table from an already connected 'Birdscan MR1'
 #' 'SQL' database.
-#' @param dbConnection a valid  database connection
-#' @param dbDriverChar the name of the driver. If different from 'PostgreSQL'
-#' it connects to cloud.birdradar.com
+#' @inheritParams QUERY
 #'
-#' @return A dataframe with the manual visibility table
+#' @return A `data.frame` with the manual visibility table.
 #' @family read file functions
 #' @export
 #' @examples
@@ -27,19 +25,22 @@
 #' )
 #' dbConnection = RODBC::odbcDriverConnect(dsn)
 #'
-#' manualVisibilityTable = getManualVisibilityTable(dbConnection, dbDriverChar)
+#' manualVisibilityTable = getManualVisibilityTable(dbConnection)
 #' }
 #'
 getManualVisibilityTable = function(dbConnection, dbDriverChar) {
+  if (!missing(dbDriverChar)) {
+    lifecycle::deprecate_warn("0.4.0", "getManualVisibilityTable(dbDriverChar)")
+  }
   # load protocol table from local MS-SQL DB
   # ===========================================================================
-  if (dbDriverChar == "SQL Server") {
+  if (class(dbConnection) %in% "RODBC") {
     manualVisibilityTable = QUERY(
       dbConnection,
-      dbDriverChar,
+      query=
       "SELECT * FROM visibility_manual order by blind_from asc"
     )
-  } else if (dbDriverChar == "PostgreSQL") {
+  } else if (class(dbConnection) %in% "PqConnection") {
     message("Fetching manual visibility table from PostgrSQL not yet implemented.")
   }
 

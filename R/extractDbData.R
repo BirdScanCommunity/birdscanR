@@ -215,18 +215,18 @@ extractDbData = function(dbDriverChar = "SQL Server",
   # load time bins from local MS-SQL DB
   # =============================================================================
   message("Extracting time_bins table from DB...")
-  timeBinsTable = getTimeBinsTable(dbConnection, dbDriverChar)
+  timeBinsTable = getTimeBinsTable(dbConnection)
 
   # load weather from local MS-SQL DB
   # =============================================================================
   message("Extracting weather table from DB...")
-  weatherTable = QUERY(dbConnection, dbDriverChar, "Select * From weather")
+  weatherTable = QUERY(dbConnection, query= "Select * From weather")
 
   # load weather properties from local MS-SQL DB
   # =============================================================================
   message("Extracting weather_property table from DB...")
   weatherPropertyTable = QUERY(
-    dbConnection, dbDriverChar,
+    dbConnection,query=
     "Select * From weather_property"
   )
   weatherPropertyList = weatherTable$weather_property
@@ -244,7 +244,7 @@ extractDbData = function(dbDriverChar = "SQL Server",
   # Get the requested rf features for the echoes
   # =============================================================================
   message("Extracting rffeatures table from DB...")
-  echoRfFeatureMap = getEchoFeatures(dbConnection, dbDriverChar,
+  echoRfFeatureMap = getEchoFeatures(dbConnection,
     listOfRfFeaturesToExtract = listOfRfFeaturesToExtract,
     echoIDRange = c(
       min(collectionTable$row),
@@ -255,16 +255,16 @@ extractDbData = function(dbDriverChar = "SQL Server",
   # Load rf classification
   # =============================================================================
   message("Extracting RF classification...")
-  rfclassificationTable = getRfClassification(dbConnection, dbDriverChar)
+  rfclassificationTable = getRfClassification(dbConnection)
 
   # Load bat classification
   message("Extracting Bat classification...")
-  batClassificationTable = getBatClassification(dbConnection, dbDriverChar)
+  batClassificationTable = getBatClassification(dbConnection)
 
   # load echo validation from local MS-SQL DB
   # =============================================================================
   message("Extracting echo_validation table from DB...")
-  echovalidationTable = getEchoValidationTable(dbConnection, dbDriverChar)
+  echovalidationTable = getEchoValidationTable(dbConnection)
 
   # Merge echo Data
   # =============================================================================

@@ -7,10 +7,9 @@
 getCollectionTable(dbConnection, dbDriverChar, timeInterval = NULL)
 }
 \arguments{
-\item{dbConnection}{a valid  database connection}
+\item{dbConnection}{a valid database connection}
 
-\item{dbDriverChar}{the name of the driver. If different from 'PostgreSQL'
-it connects to cloud.birdradar.com}
+\item{dbDriverChar}{This was the name of the driver, and is now automatically detected, therefore it should be omitted into the future.}
 
 \item{timeInterval}{Null An optional vector of timestamps (either as \code{Date} or \code{POSIXct})
 to limit the data retrieved from the collections table. The filtering is done
@@ -40,7 +39,7 @@ dsn = paste0(
 )
 dbConnection = RODBC::odbcDriverConnect(dsn)
 
-collectionTable = getCollectionTable(dbConnection, dbDriverChar)
+collectionTable = getCollectionTable(dbConnection)
 }
 
 }
