@@ -12,7 +12,7 @@ mergeVisibilityAndManualBlindTimes(
 }
 \arguments{
 \item{visibilityData}{dataframe with the visibility data from the data list
-created by the function \code{\link[=extractDdData]{extractDdData()}}.}
+created by the function \code{\link[=extractDbData]{extractDbData()}}.}
 
 \item{manualBlindTimes}{dataframe with the manual blind times created by the
 function ‘loadManualBlindTimes’.}

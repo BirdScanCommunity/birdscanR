@@ -15,7 +15,7 @@
 #' radar blind times with type “visibility” will be overwritten, but not radar
 #' blind times with type “protocolChange”.
 #' @param visibilityData dataframe with the visibility data from the data list
-#' created by the function [extractDdData()].
+#' created by the function [extractDbData()].
 #' @param manualBlindTimes dataframe with the manual blind times created by the
 #' function ‘loadManualBlindTimes’.
 #' @param protocolData dataframe with the protocol data from the data list
