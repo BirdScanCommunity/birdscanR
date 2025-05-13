@@ -34,10 +34,10 @@
 #' the time between civil dusk/dawn and sunrise/sunset times to define the
 #' crepuscular period. Default is "nauticalSolar".
 #' @param protocolData dataframe with the protocol data from the data list
-#' created by the function [extractDBData()] or a subset of it created by the
+#' created by the function [extractDbData()] or a subset of it created by the
 #' function [filterProtocolData()].
 #' @param visibilityData dataframe with the visibility data from the data list
-#' created by the function [extractDBData()].
+#' created by the function [extractDbData()].
 #' @param manualBlindTimes dataframe with the manual blind times created by the
 #' function [loadManualBlindTimes()].
 #' @param saveBlindTimes Logical, determines whether to save the blind times to

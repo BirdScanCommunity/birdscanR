@@ -34,7 +34,7 @@
 #' the time between civil dusk/dawn and sunrise/sunset times to define the
 #' crepuscular period. Default is "nauticalSolar".
 #' @param protocolData `data.frame` with the protocol data from the data list
-#' created by the function [extractDBData()] or a subset of it created by the
+#' created by the function [extractDbData()] or a subset of it created by the
 #' function [filterProtocolData()].
 #' @param visibilityData dataframe with the visibility data from the data list
 #' created by [extractDbData()].
