@@ -44,3 +44,4 @@ manualVisibilityTable = getManualVisibilityTable(dbConnection, dbDriverChar)
 \author{
 Baptiste Schmid, Birgen Haest
 }
+\concept{read file functions}

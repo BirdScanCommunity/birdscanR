@@ -52,6 +52,18 @@ returns a dataframe with the time bins information
 Create time bins with a given duration. Time bins expanding over
 a day/night change will be split in two time bins.
 }
+\seealso{
+Other manipulation functions: 
+\code{\link{addDayNightInfoPerEcho}()},
+\code{\link{computeDensity}()},
+\code{\link{computeMTR}()},
+\code{\link{computeObservationTime}()},
+\code{\link{convertTimeZone}()},
+\code{\link{mergeVisibilityAndManualBlindTimes}()},
+\code{\link{reclassToBats}()},
+\code{\link{twilight}()}
+}
 \author{
 Fabian Hertner, Birgen Haest
 }
+\concept{manipulation functions}

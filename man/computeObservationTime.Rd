@@ -33,6 +33,18 @@ times of each time bin.
 Compute blind times and observation times during time bins based
 on protocol data and blind times
 }
+\seealso{
+Other manipulation functions: 
+\code{\link{addDayNightInfoPerEcho}()},
+\code{\link{computeDensity}()},
+\code{\link{computeMTR}()},
+\code{\link{convertTimeZone}()},
+\code{\link{createTimeBins}()},
+\code{\link{mergeVisibilityAndManualBlindTimes}()},
+\code{\link{reclassToBats}()},
+\code{\link{twilight}()}
+}
 \author{
 Fabian Hertner, Birgen Haest
 }
+\concept{manipulation functions}

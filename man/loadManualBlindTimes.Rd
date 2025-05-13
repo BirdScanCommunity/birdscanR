@@ -62,6 +62,12 @@ manualBlindTimes.new = loadManualBlindTimes(
 }
 
 }
+\seealso{
+Other sample data: 
+\code{\link{classAbbreviations}},
+\code{\link{manualBlindTimes}}
+}
 \author{
 Fabian Hertner, Birgen Haest
 }
+\concept{sample data}

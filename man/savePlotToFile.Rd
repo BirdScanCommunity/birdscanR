@@ -121,6 +121,12 @@ savePlotToFile(
 }
 
 }
+\seealso{
+Other write file functions: 
+\code{\link{compileData}()},
+\code{\link{saveMTR}()}
+}
 \author{
 Fabian Hertner, Birgen Haest
 }
+\concept{write file functions}

@@ -61,6 +61,21 @@ echoFeatures = getEchoFeatures(
 }
 
 }
+\seealso{
+Other read sql database functions: 
+\code{\link{QUERY}()},
+\code{\link{extractDbData}()},
+\code{\link{getBatClassification}()},
+\code{\link{getCollectionTable}()},
+\code{\link{getEchoValidationTable}()},
+\code{\link{getProtocolTable}()},
+\code{\link{getRadarTable}()},
+\code{\link{getRfClassification}()},
+\code{\link{getSiteTable}()},
+\code{\link{getTimeBinsTable}()},
+\code{\link{getVisibilityTable}()}
+}
 \author{
 Fabian Hertner, Birgen Haest
 }
+\concept{read sql database functions}

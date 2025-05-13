@@ -114,6 +114,12 @@ filteredEchoData = filterEchoData(
 }
 
 }
+\seealso{
+Other filter functions: 
+\code{\link{filterData}()},
+\code{\link{filterProtocolData}()}
+}
 \author{
 Fabian Hertner, Birgen Haest
 }
+\concept{filter functions}

@@ -17,4 +17,10 @@ MR1.
 \examples{
 data(classAbbreviations)
 }
+\seealso{
+Other sample data: 
+\code{\link{loadManualBlindTimes}()},
+\code{\link{manualBlindTimes}}
+}
+\concept{sample data}
 \keyword{datasets}

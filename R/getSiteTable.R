@@ -7,6 +7,7 @@
 #' it connects to cloud.birdradar.com
 #'
 #' @return A dataframe with the site table
+#' @family read sql database functions
 #' @export
 #' @examples
 #' \dontrun{

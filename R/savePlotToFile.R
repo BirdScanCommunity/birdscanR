@@ -29,6 +29,7 @@
 #' the package; See data(classAbbreviations).
 #'
 #' @return No return value, used to save plots to file.
+#' @family write file functions
 #' @export
 #'
 #' @examples

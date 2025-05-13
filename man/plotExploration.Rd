@@ -117,6 +117,11 @@ plotExploration(
 }
 
 }
+\seealso{
+Other plot functions: 
+\code{\link{plotLongitudinalMTR}()}
+}
 \author{
 Fabian Hertner, Birgen Haest
 }
+\concept{plot functions}
