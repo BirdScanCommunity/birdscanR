@@ -57,7 +57,8 @@ Imports:
   tidyr,
   utils
 Suggests:
-  knitr
+  knitr,
+  rmarkdown
 VignetteBuilder: knitr
 Encoding: UTF-8
 LazyData: true
