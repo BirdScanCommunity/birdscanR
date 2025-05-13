@@ -33,8 +33,7 @@ computeDensity(
 processing}
 
 \item{echoes}{dataframe with the echo data from the data list created by the
-function ‘extractDBData’ or a subset of it created by the function
-‘filterEchoData’.}
+function \code{\link[=extractDbData]{extractDbData()}} or a subset of it created by the function}
 
 \item{classSelection}{character string vector with all classes which should
 be used to calculate the density. The density and number of Echoes will be calculated
@@ -68,14 +67,14 @@ the time between civil dusk/dawn and sunrise/sunset times to define the
 crepuscular period. Default is "nauticalSolar".}
 
 \item{protocolData}{dataframe with the protocol data from the data list
-created by the function \code{extractDBData} or a subset of it created by the
-function \code{filterProtocolData}.}
+created by the function \code{\link[=extractDbData]{extractDbData()}} or a subset of it created by the
+function \code{\link[=filterProtocolData]{filterProtocolData()}}.}
 
 \item{visibilityData}{dataframe with the visibility data from the data list
-created by the function ‘extractDBData’.}
+created by the function \code{\link[=extractDbData]{extractDbData()}}.}
 
 \item{manualBlindTimes}{dataframe with the manual blind times created by the
-function \code{loadManualBlindTimes}.}
+function \code{\link[=loadManualBlindTimes]{loadManualBlindTimes()}}.}
 
 \item{saveBlindTimes}{Logical, determines whether to save the blind times to
 a file. Default: False.}
@@ -138,27 +137,27 @@ feature37.speed is required for the density calculation.
   sunOrCivil     = "civil"
   crepuscule     = "nauticalSolar"
   timeRangeData  = c("2021-01-15 00:00", "2021-01-31 00:00")
- 
+
 # Get data
 # ===========================================================================
   dbData = extractDbData(dbDriverChar                   = dbDriverChar,
-                         dbServer                       = dbServer, 
-                         dbName                         = dbName, 
+                         dbServer                       = dbServer,
+                         dbName                         = dbName,
                          saveDbToFile                   = TRUE,
                          dbDataDir                      = mainOutputDir,
                          radarTimeZone                  = radarTimeZone,
                          targetTimeZone                 = targetTimeZone,
                          listOfRfFeaturesToExtract      = listOfRfFeaturesToExtract,
-                         siteLocation                   = siteLocation, 
-                         sunOrCivil                     = sunOrCivil, 
+                         siteLocation                   = siteLocation,
+                         sunOrCivil                     = sunOrCivil,
                          crepuscule                     = crepuscule)
-                         
-# Get sunrise/sunset 
+
+# Get sunrise/sunset
 # ===========================================================================
   sunriseSunset = twilight(timeRange = timeRangeData,
                            latLon    = c(47.494427, 8.716432),
                            timeZone  = targetTimeZone)
-                          
+
 # Get manual blind times
 # ===========================================================================
   data(manualBlindTimes)
@@ -167,27 +166,27 @@ feature37.speed is required for the density calculation.
 # Compute migration traffic rate
 # ===========================================================================
   classSelection.density = c("insect")
-  densityData = computeDensity(dbName                       = dbName, 
-                               echoes                       = dbData$echoData, 
-                               classSelection               = classSelection.density, 
+  densityData = computeDensity(dbName                       = dbName,
+                               echoes                       = dbData$echoData,
+                               classSelection               = classSelection.density,
                                altitudeRange                = c(25, 1025),
                                altitudeBinSize              = 50,
-                               timeRange                    = timeRangeData, 
+                               timeRange                    = timeRangeData,
                                timeBinDuration_sec          = 1800,
                                timeZone                     = targetTimeZone,
                                sunriseSunset                = sunriseSunset,
                                sunOrCivil                   = "civil",
                                crepuscule                   = crepuscule,
-                               protocolData                 = dbData$protocolData, 
+                               protocolData                 = dbData$protocolData,
                                visibilityData               = dbData$visibilityData,
                                manualBlindTimes             = cManualBlindTimes,
                                saveBlindTimes               = FALSE,
                                blindTimesOutputDir          = getwd(),
                                blindTimeAsMtrZero           = NULL,
-                               propObsTimeCutoff            = 0, 
+                               propObsTimeCutoff            = 0,
                                computePerDayNight           = FALSE,
-                               computePerDayCrepusculeNight = FALSE 
-                               computeAltitudeDistribution  = TRUE)   
+                               computePerDayCrepusculeNight = FALSE
+                               computeAltitudeDistribution  = TRUE)
 }
 
 }

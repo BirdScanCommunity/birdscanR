@@ -2,13 +2,13 @@
 #' @title filterProtocolData
 #' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
 #' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
-#' @description With the function \code{filterProtocolData} the protocol data
+#' @description With the function [filterProtocolData()] the protocol data
 #' can be filtered by the operation mode (pulse-type and antenna rotation). The
 #' function returns the filtered subset of the protocol data which can later be
 #' used to filter the echoes based on the operation mode/protocol
 #'
-#' @param protocolData dataframe with the protocol data from the data list
-#' created by the function \code{extractDBData}
+#' @param protocolData `data.frame` with the protocol data from the data list
+#' created by the function [extractDbData()]
 #' @param pulseTypeSelection character vector with the pulse types which should
 #' be included in the subset. Options: “S”, “M”, “L” (short-, medium-,
 #' long-pulse). Default is NULL: no filtering applied based on pulseType.
@@ -17,7 +17,7 @@
 #' 1 = rotation). Default is NULL: no filtering applied based on rotation mode.
 #'
 #' @return returns the filtered protocol data in the same format as provided in
-#' the parameter \code{protocolData}.
+#' the parameter `protocolData`.
 #' @export
 #' @examples
 #' \dontrun{

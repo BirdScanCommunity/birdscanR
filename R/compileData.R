@@ -10,8 +10,8 @@
 #' @param echoData dataframe with the echo data from the data list created by
 #' the function [extractDbData()].
 #' @param protocolData dataframe with the protocol data from the data list created by
-#'  the function [extractDbData()]. Echoes not detected during the listed protocols
-#'  will be excluded.
+#' the function [extractDbData()]. Echoes not detected during the listed protocols
+#' will be excluded.
 #' @param blindTimesData dataframe with the manual blind times created by
 #' the function [loadManualBlindTimes()].
 #' It include the automated blind times induced by changes in measurement protocol,

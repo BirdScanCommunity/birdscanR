@@ -4,9 +4,7 @@
 #' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
 #' Birgen Haest, \email{birgen.haest@@vogelwarte.ch};
 #' Bart Kranstauber, \email{b.kranstauber@@uva.nl}
-#' @param dbConnection a valid  database connection
-#' @param dbDriverChar the name of the driver. If different from 'PostgreSQL'
-#' it connects to cloud.birdradar.com
+#' @inheritParams QUERY
 #' @param timeInterval Null An optional vector of timestamps (either as `Date` or `POSIXct`)
 #' to limit the data retrieved from the collections table. The filtering is done
 #' based on the original radar timezone.
@@ -31,16 +29,12 @@
 #' )
 #' dbConnection = RODBC::odbcDriverConnect(dsn)
 #'
-#' collectionTable = getCollectionTable(dbConnection, dbDriverChar)
+#' collectionTable = getCollectionTable(dbConnection)
 #' }
 #'
 getCollectionTable = function(dbConnection, dbDriverChar, timeInterval = NULL) {
-  if (missing(dbDriverChar)) {
-    dbDriverChar <- switch(class(dbConnection),
-      RODBC = "SQL Server",
-      PqConnection = "PostgreSQL",
-      "NonValiddbDriverChar"
-    )
+  if (!missing(dbDriverChar)) {
+    lifecycle::deprecate_warn("0.4.0", "getCollectionTable(dbDriverChar)")
   }
   # Set feature name translations
   # ===========================================================================
@@ -110,18 +104,18 @@ getCollectionTable = function(dbConnection, dbDriverChar, timeInterval = NULL) {
 
   # load collection from 'MS-SQL' database
   # ===========================================================================
-  if (dbDriverChar != "PostgreSQL") {
+  if (class(dbConnection)!= "PqConnection") {
     collectionTable = QUERY(
       dbConnection,
-      dbDriverChar,
-      paste0(
+      query=
+        paste0(
         "SELECT * FROM collection ",
         whereClause, " order by row asc"
       )
     )
     collectionTable_time_stamp = QUERY(dbConnection,
-      dbDriverChar,
-      paste0(
+                                       query=
+                                         paste0(
         "SELECT time_stamp FROM collection ",
         whereClause, " order by row asc"
       ),
@@ -134,7 +128,7 @@ getCollectionTable = function(dbConnection, dbDriverChar, timeInterval = NULL) {
   } else {
     collectionTable = QUERY(
       dbConnection,
-      dbDriverChar,
+     query=
       paste0(
         "SELECT *, time_stamp::character varying ts FROM collection ",
         whereClause, " order by row asc"

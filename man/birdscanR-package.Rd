@@ -29,6 +29,7 @@ Other contributors:
 \itemize{
   \item Baptiste Schmid \email{baptiste.schmid@vogelwarte.ch} (\href{https://orcid.org/0000-0002-7736-7527}{ORCID}) [contributor]
   \item Peter Desmet \email{peter.desmet@inbo.be} (\href{https://orcid.org/0000-0002-8442-8025}{ORCID}) [contributor]
+  \item Bart Kranstauber \email{b.kranstauber@uva.nl} (\href{https://orcid.org/0000-0001-8303-780X}{ORCID}) [contributor]
   \item Damiano Preatoni \email{damiano.preatoni@uninsubria.it} (\href{https://orcid.org/0000-0001-8760-1316}{ORCID}) [contributor]
   \item Johannes De Groeve \email{j.degroeve@uva.nl} (\href{https://orcid.org/0000-0002-1274-3237}{ORCID}) [contributor]
   \item Felix Liechti \email{felix.liechti@swiss-birdradar.com} (\href{https://orcid.org/0000-0001-9473-0837}{ORCID}) [contributor]

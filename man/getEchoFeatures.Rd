@@ -12,10 +12,9 @@ getEchoFeatures(
 )
 }
 \arguments{
-\item{dbConnection}{a valid  database connection}
+\item{dbConnection}{a valid database connection}
 
-\item{dbDriverChar}{the name of the driver. If different from 'PostgreSQL'
-it connects to cloud.birdradar.com}
+\item{dbDriverChar}{This was the name of the driver, and is now automatically detected, therefore it should be omitted into the future.}
 
 \item{listOfRfFeaturesToExtract}{a list of feature to extract}
 
@@ -55,7 +54,7 @@ dbConnection = RODBC::odbcDriverConnect(dsn)
 listOfRfFeaturesToExtract = c(167, 168)
 
 echoFeatures = getEchoFeatures(
-  dbConnection, dbDriverChar,
+  dbConnection,
   listOfRfFeaturesToExtract
 )
 }

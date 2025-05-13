@@ -3,9 +3,7 @@
 #' @description  gets the echoValidationTable from an already connected database
 #' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
 #' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
-#' @param dbConnection a valid  database connection
-#' @param dbDriverChar dbDriverChar 'SQL Server' The name of the driver. Should
-#' be either 'SQL Server' or 'PostgreSQL'. If 'PostgreSQL', it connects to cloud.birdradar.com
+#' @inheritParams QUERY
 #'
 #' @return A dataframe called echovalidationTable
 #' @export
@@ -27,20 +25,21 @@
 #' )
 #' dbConnection = RODBC::odbcDriverConnect(dsn)
 #'
-#' echovalidationTable = getEchoValidationTable(dbConnection, dbDriverChar)
+#' echovalidationTable = getEchoValidationTable(dbConnection)
 #' }
 #'
 getEchoValidationTable = function(dbConnection, dbDriverChar) {
+  if (!missing(dbDriverChar)) {
+    lifecycle::deprecate_warn("0.4.0", "getEchoValidationTable(dbDriverChar)")
+  }
   echovalidationTypesTable = QUERY(
     dbConnection,
-    dbDriverChar,
-    "SELECT * FROM echo_validation_type"
+query=    "SELECT * FROM echo_validation_type"
   )
 
   echovalidationTable = QUERY(
     dbConnection,
-    dbDriverChar,
-    "SELECT * FROM echo_validation order by echo_id asc"
+    query=    "SELECT * FROM echo_validation order by echo_id asc"
   )
 
   echoValidationList = echovalidationTable$type

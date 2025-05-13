@@ -5,7 +5,7 @@
 \alias{classAbbreviations}
 \title{Default class abbreviations table of the birdscanR package}
 \format{
-An object of class \code{"data.frame"}.
+An object of class \code{data.frame}.
 }
 \usage{
 data(classAbbreviations)

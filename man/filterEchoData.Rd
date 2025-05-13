@@ -17,8 +17,8 @@ filterEchoData(
 )
 }
 \arguments{
-\item{echoData}{dataframe with the echo data from the data list created by
-the function \code{extractDBData}.}
+\item{echoData}{\code{data.frame} with the echo data from the data list created by
+the function \code{\link[=extractDbData]{extractDbData()}}.}
 
 \item{timeRangeTargetTZ}{Character vector of length 2, with start and end of
 time range, formatted as "\%Y-\%m-\%d \%H:\%M". Echoes outside the time range will
@@ -27,9 +27,9 @@ be excluded.}
 \item{targetTimeZone}{"Etc/GMT0" String specifying the target time zone.
 Default is "Etc/GMT0".}
 
-\item{protocolData}{dataframe with the protocol data from the data list
-created by the function \code{extractDBData} or a subset of it created by
-the function \code{filterProtocolData}. Echoes not detected during the listed
+\item{protocolData}{\code{data.frame} with the protocol data from the data list
+created by the function \code{\link[=extractDbData]{extractDbData()}} or a subset of it created by
+the function \code{\link[=filterProtocolData]{filterProtocolData()}}. Echoes not detected during the listed
 protocols will be excluded.}
 
 \item{classSelection}{character string vector with the classes that should
@@ -42,7 +42,7 @@ with a lower class probability will be excluded.}
 altitude range. Echoes outside the altitude range will be excluded.}
 
 \item{manualBlindTimes}{dataframe with the manual blind times created by the
-function \code{loadManualBlindTimes}.}
+function \code{\link[=loadManualBlindTimes]{loadManualBlindTimes()}}.}
 
 \item{echoValidator}{logical, if set to TRUE, echoes labelled by the echo
 validator as “non-bio scatterer” will be excluded. If set to FALSE, all
@@ -53,7 +53,7 @@ returns the filtered echo data in the same format as provided in the
 parameter \code{echoData}.
 }
 \description{
-With the function \code{filterEchoData} the echo data can be
+With the function \code{\link[=filterEchoData]{filterEchoData()}} the echo data can be
 filtered by several parameters. The function returns the filtered echo data.
 }
 \examples{

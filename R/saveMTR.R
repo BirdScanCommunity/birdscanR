@@ -2,10 +2,10 @@
 #' @title saveMTR
 #' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
 #' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
-#' @description saves MTR data to a .rds file in the directory \code{filepath}.
+#' @description saves MTR data to a .rds file in the directory `filepath`.
 #' If the directory is not existing it will be created if possible.
 #'
-#' @param mtr dataframe with MTR values created by the function \code{computeMTR}
+#' @param mtr dataframe with MTR values created by the function [computeMTR()]
 #' @param fileName Filename (string) for the file. If not set, the filename
 #' will be built using the input of the variables 'filenamePrefix', 'dbName',
 #' 'classAbbreviations', and other info in the 'mtr' data. If set, overrides

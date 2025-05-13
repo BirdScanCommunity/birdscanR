@@ -7,13 +7,12 @@
 getVisibilityTable(dbConnection, dbDriverChar)
 }
 \arguments{
-\item{dbConnection}{a valid  database connection}
+\item{dbConnection}{a valid database connection}
 
-\item{dbDriverChar}{the name of the driver. If different from 'PostgreSQL'
-it connects to cloud.birdradar.com}
+\item{dbDriverChar}{This was the name of the driver, and is now automatically detected, therefore it should be omitted into the future.}
 }
 \value{
-A dataframe with the visibility table
+A \code{data.frame} with the visibility table
 }
 \description{
 load visibility table from an already connected 'Birdscan MR1'
@@ -37,7 +36,7 @@ dsn = paste0(
 )
 dbConnection = RODBC::odbcDriverConnect(dsn)
 
-visibilityTable = getVisibilityTable(dbConnection, dbDriverChar)
+visibilityTable = getVisibilityTable(dbConnection)
 }
 
 }

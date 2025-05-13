@@ -18,7 +18,7 @@ plotExploration(
 }
 \arguments{
 \item{echoData}{dataframe with the echo data from the data list created by
-the function ‘extractDBData’ or a subset of it created by the function
+the function \code{\link[=extractDbData]{extractDbData()}} or a subset of it created by the function
 ‘filterEchoData’}
 
 \item{timeRange}{optional list of string vectors length 2, start and end
@@ -35,11 +35,11 @@ created by the function ‘loadManualBlindTimes’. If not set, manual blind
 times are not shown in the plot.}
 
 \item{visibilityData}{optional dataframe with the visibility data created by
-the function ‘extractDBData’. If not set, visibility data are not shown in
+the function \code{\link[=extractDbData]{extractDbData()}}. If not set, visibility data are not shown in
 the plot.}
 
 \item{protocolData}{optional dataframe with the protocol data used to filter
-the echoes, created by the function ‘extractDBData’ or a subset of it created
+the echoes, created by the function \code{\link[=extractDbData]{extractDbData()}} or a subset of it created
 by the function ‘filterProtocolData’. If not set, periods without a protocol
 are not shown in the plot.}
 
