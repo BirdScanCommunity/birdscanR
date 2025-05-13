@@ -20,7 +20,7 @@ based on the original radar timezone.}
 A dataframe with the collection table
 }
 \description{
-load collection from 'Birdscan MR1' 'SQL' database
+load collection from 'Birdscan MR1' 'SQL' database.
 }
 \examples{
 \dontrun{
@@ -45,7 +45,5 @@ collectionTable = getCollectionTable(dbConnection, dbDriverChar)
 
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch};
-Bart Kranstauber, \email{b.kranstauber@uva.nl}
+Fabian Hertner, Birgen Haest, Bart Kranstauber
 }

@@ -1,8 +1,6 @@
-#### extractDbData ------------------------------------------------------------
 #' @title Extract DB Data
 #' @description Load the data from the database or file and save it to file
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @author Fabian Hertner, Birgen Haest
 #' @param dbDriverChar 'SQL Server' The name of the driver. Should be either
 #' 'SQL Server' or 'PostgreSQL'. If 'PostgreSQL', it connects to
 #' cloud.birdradar.com

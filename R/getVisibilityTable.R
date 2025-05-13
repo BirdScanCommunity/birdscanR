@@ -1,9 +1,7 @@
-#### getVisibilityTable --------------------------------------------------------
-#' @title  Get BirdScan visibility table
-#' @description load visibility table from an already connected 'Birdscan MR1'
-#' 'SQL' database
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @title Get BirdScan visibility table
+#' @author Fabian Hertner, Birgen Haest
+#' @description Load visibility table from an already connected 'Birdscan MR1'
+#' 'SQL' database.
 #' @param dbConnection a valid  database connection
 #' @param dbDriverChar the name of the driver. If different from 'PostgreSQL'
 #' it connects to cloud.birdradar.com

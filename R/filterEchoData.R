@@ -1,7 +1,5 @@
-#### filterEchoData -----------------------------------------------------------
 #' @title filterEchoData
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @author Fabian Hertner, Birgen Haest
 #' @description With the function \code{filterEchoData} the echo data can be
 #' filtered by several parameters. The function returns the filtered echo data.
 #'

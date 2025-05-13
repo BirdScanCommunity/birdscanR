@@ -26,7 +26,7 @@ feature extraction to a range of echoIDs. Default is to extract for all echoes.}
 A list of the features extracted
 }
 \description{
-load echo rffeature map from 'Birdscan MR1' 'SQL' database
+Load echo rffeature map from 'Birdscan MR1' 'SQL' database.
 }
 \examples{
 \dontrun{
@@ -62,6 +62,5 @@ echoFeatures = getEchoFeatures(
 
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, Birgen Haest
 }

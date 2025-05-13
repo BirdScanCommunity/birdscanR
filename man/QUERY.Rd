@@ -19,7 +19,7 @@ QUERY(dbConnection, dbDriverChar, query, as.is = FALSE)
 the result of the query
 }
 \description{
-Run an 'SQL' query on an already connected database
+Run an 'SQL' query on an already connected database.
 }
 \examples{
 \dontrun{
@@ -48,6 +48,5 @@ QUERY(
 
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, Birgen Haest
 }

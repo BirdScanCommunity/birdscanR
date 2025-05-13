@@ -16,8 +16,8 @@ it connects to cloud.birdradar.com}
 A dataframe with the time bins table
 }
 \description{
-load time bins table from an already connected 'Birdscan MR1'
-'SQL' database
+Load time bins table from an already connected 'Birdscan MR1'
+'SQL' database.
 }
 \examples{
 \dontrun{
@@ -42,6 +42,5 @@ timeBinsTable = getTimeBinsTable(dbConnection, dbDriverChar)
 
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, Birgen Haest
 }

@@ -15,8 +15,8 @@ getRadarTable(dbConnection, dbDriverChar)
 the radar table  as a data frame
 }
 \description{
-get the Radar table from  an already connected DB and rename
-the columns appropriately
+Get the Radar table from  an already connected DB and rename
+the columns appropriately.
 }
 \examples{
 \dontrun{
@@ -41,6 +41,5 @@ radarTable = getRadarTable(dbConnection, dbDriverChar)
 
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, Birgen Haest
 }

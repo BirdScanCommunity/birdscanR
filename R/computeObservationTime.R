@@ -1,7 +1,5 @@
-#### computeObservationTime ---------------------------------------------------
 #' @title computeObservationTime
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @author Fabian Hertner, Birgen Haest
 #' @description Compute blind times and observation times during time bins based
 #'  on protocol data and blind times
 #'

@@ -1,7 +1,6 @@
-#### reclassToBats -------------------------------------------------------
-#' @title  integrate bat classification
-#' @description  reclassifies echoes based on bat classification
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}
+#' @title integrate bat classification
+#' @author Fabian Hertner
+#' @description Reclassifies echoes based on bat classification.
 #' @param echoData echodata dataframe, output from extractDbData
 #' @param batClassProbabilitiesAndMtrFactors probabilities of bat classification,
 #' output from extractDbData'

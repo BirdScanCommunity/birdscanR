@@ -1,8 +1,6 @@
-#### savePlotToFile ------------------------------------------------------
 #' @title savePlotToFile
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
-#' @description saves created plots as .png.
+#' @author Fabian Hertner, Birgen Haest
+#' @description Saves created plots as .png.
 #'
 #' @param plot 'ggplot' plot to be saved
 #' @param filePath character string, path of the directory, e.g.

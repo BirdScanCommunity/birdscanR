@@ -16,7 +16,7 @@ be either 'SQL Server' or 'PostgreSQL'. If 'PostgreSQL', it connects to cloud.bi
 A dataframe called echovalidationTable
 }
 \description{
-gets the echoValidationTable from an already connected database
+Gets the echoValidationTable from an already connected database.
 }
 \examples{
 \dontrun{
@@ -41,6 +41,5 @@ echovalidationTable = getEchoValidationTable(dbConnection, dbDriverChar)
 
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, Birgen Haest
 }

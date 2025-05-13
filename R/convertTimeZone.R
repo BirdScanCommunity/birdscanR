@@ -1,7 +1,5 @@
-#### convertTimeZone ----------------------------------------------------------------
 #' @title Converts timestamps from radar time zone to an user-defined time zone
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @author Fabian Hertner, Birgen Haest
 #' @description Converts timestamps from radar time zone to an user-defined time
 #' zone
 #' @param data a data frame containing BirdScan data

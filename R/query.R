@@ -1,8 +1,6 @@
-#### QUERY ------------------------------------------------------------
 #' @title  Query 'SQL' database
-#' @description  Run an 'SQL' query on an already connected database
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @author Fabian Hertner, Birgen Haest
+#' @description Run an 'SQL' query on an already connected database.
 #' @param dbConnection a valid  database connection
 #' @param dbDriverChar the name of the driver
 #' @param query an 'SQL' string with your query

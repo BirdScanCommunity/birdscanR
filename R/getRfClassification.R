@@ -1,9 +1,7 @@
-#### getRfClassification -------------------------------------------------------
-#' @title  Get a BirdScan 'rfClassification' table
-#' @description  gets  the 'rfClasses' table from a 'Birdscan MR1' 'SQL'
-#' database
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @title Get a BirdScan 'rfClassification' table
+#' @author Fabian Hertner, Birgen Haest
+#' @description Gets the 'rfClasses' table from a 'Birdscan MR1' 'SQL'
+#' database.
 #' @param dbConnection a valid  database connection
 #' @param dbDriverChar dbDriverChar 'SQL Server' The name of the driver. Should
 #' be either 'SQL Server' or 'PostgreSQL'. If 'PostgreSQL', it connects to

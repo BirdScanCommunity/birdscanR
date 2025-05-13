@@ -21,7 +21,7 @@ each object; and (3) availableClasses: the classes used for the
 classification of the objects.
 }
 \description{
-gets  the 'rfClasses' table from a 'Birdscan MR1' 'SQL'
+Gets the 'rfClasses' table from a 'Birdscan MR1' 'SQL'
 database
 }
 \examples{
@@ -47,6 +47,5 @@ rfClassification = getBatClassification(dbConnection, dbDriverChar)
 
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, Birgen Haest
 }

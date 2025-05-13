@@ -1,6 +1,5 @@
-#### filterData -----------------------------------------------------------
 #' @title filterData
-#' @author Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @author Birgen Haest
 #' @description With the function \code{filterData} both the echo and protocol data can be filtered by several parameters. The function returns the filtered echo and protocol data.
 #'
 #' @param echoData dataframe with the echo data from the data list created by the function \code{extractDBData}.

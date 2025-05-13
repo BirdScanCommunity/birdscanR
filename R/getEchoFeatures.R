@@ -1,8 +1,6 @@
-#### getEchoFeatures -----------------------------------------------------------
-#' @title  Get BirdScan echo features
-#' @description load echo rffeature map from 'Birdscan MR1' 'SQL' database
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @title Get BirdScan echo features
+#' @author Fabian Hertner, Birgen Haest
+#' @description Load echo rffeature map from 'Birdscan MR1' 'SQL' database.
 #' @param dbConnection a valid  database connection
 #' @param dbDriverChar the name of the driver. If different from 'PostgreSQL'
 #' it connects to cloud.birdradar.com

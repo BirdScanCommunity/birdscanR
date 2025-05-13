@@ -16,8 +16,8 @@ it connects to cloud.birdradar.com}
 A dataframe with the manual visibility table
 }
 \description{
-load visibility table from an already connected 'Birdscan MR1'
-'SQL' database
+Load visibility table from an already connected 'Birdscan MR1'
+'SQL' database.
 }
 \examples{
 \dontrun{
@@ -42,6 +42,5 @@ manualVisibilityTable = getManualVisibilityTable(dbConnection, dbDriverChar)
 
 }
 \author{
-Baptiste Schmid \email{baptiste.schmid@vogelwarte.ch}; Birgen Haest
-\email{birgen.haest@vogelwarte.ch}
+Baptiste Schmid, Birgen Haest
 }

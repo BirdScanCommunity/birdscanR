@@ -54,7 +54,7 @@ the package; See data(classAbbreviations). Used to create the filename, if
 No return value, used to save MTR to file.
 }
 \description{
-saves MTR data to a .rds file in the directory \code{filepath}.
+Saves MTR data to a .rds file in the directory \code{filepath}.
 If the directory is not existing it will be created if possible.
 }
 \examples{
@@ -133,6 +133,5 @@ saveMTR(
 
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, Birgen Haest
 }

@@ -1,6 +1,6 @@
 ---
 title: "How to calculate Activity/Migration Traffic Rates"
-author: Birgen Haest, birgen.haest@vogelwarte.ch; Fabian Hertner, fabian.hertner@swiss-birdradar.com
+author: Birgen Haest, Fabian Hertner
 output: rmarkdown::html_vignette
 description: > 
   Which functions do I need to call to get out migration traffic rates from a Birdscan database? This vignette describes the main workflow to do so.

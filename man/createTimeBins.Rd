@@ -53,6 +53,5 @@ Create time bins with a given duration. Time bins expanding over
 a day/night change will be split in two time bins.
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Fabian Hertner, Birgen Haest
 }

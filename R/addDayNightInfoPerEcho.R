@@ -1,7 +1,5 @@
-#### addDayNightInfoPerEcho ----------------------------------------------------
 #' @title addDayNightInfoPerEcho
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @author Fabian Hertner, Birgen Haest
 #' @description The function ‘addDayNightInfoPerEcho’ adds three columns
 #' ‘dayOrNight’, ''dayOrCrepOrNight' and ‘dateSunset’ to the echo data. This
 #' allows the user to filter echo data easily by “day” and “night”, or "day",

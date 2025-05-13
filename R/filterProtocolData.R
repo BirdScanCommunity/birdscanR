@@ -1,7 +1,5 @@
-#### filterProtocolData ------------------------------------------------------
 #' @title filterProtocolData
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @author Fabian Hertner, Birgen Haest
 #' @description With the function \code{filterProtocolData} the protocol data
 #' can be filtered by the operation mode (pulse-type and antenna rotation). The
 #' function returns the filtered subset of the protocol data which can later be

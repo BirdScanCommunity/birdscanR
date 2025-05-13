@@ -120,5 +120,5 @@ filteredData = filterData(
 
 }
 \author{
-Birgen Haest, \email{birgen.haest@vogelwarte.ch}
+Birgen Haest
 }

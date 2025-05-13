@@ -23,7 +23,7 @@ bat probability higher than reclassToBatCutoff will be set to 'bat'}
 echoData dataframe
 }
 \description{
-reclassifies echoes based on bat classification
+Reclassifies echoes based on bat classification.
 }
 \examples{
 \dontrun{
@@ -66,5 +66,5 @@ dbData$echoData = reclassToBats(
 }
 }
 \author{
-Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com}
+Fabian Hertner
 }

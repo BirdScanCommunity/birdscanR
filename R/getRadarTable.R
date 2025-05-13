@@ -1,9 +1,7 @@
-#### getRadarTable ------------------------------------------------------------
-#' @title  Get a BirdScan radar table
-#' @description  get the Radar table from  an already connected DB and rename
-#' the columns appropriately
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
-#' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
+#' @title Get a BirdScan radar table
+#' @author Fabian Hertner, Birgen Haest
+#' @description Get the Radar table from  an already connected DB and rename
+#' the columns appropriately.
 #' @param dbConnection a valid  database connection
 #' @param dbDriverChar the name of the driver.
 #'
