@@ -7,9 +7,9 @@
 getRadarTable(dbConnection, dbDriverChar)
 }
 \arguments{
-\item{dbConnection}{a valid  database connection}
+\item{dbConnection}{a valid database connection}
 
-\item{dbDriverChar}{the name of the driver.}
+\item{dbDriverChar}{This was the name of the driver, and is now automatically detected, therefore it should be omitted into the future.}
 }
 \value{
 the radar table  as a data frame
@@ -34,7 +34,7 @@ the columns appropriately
                ";pwd=", rstudioapi::askForPassword("Database password"))
   dbConnection = RODBC::odbcDriverConnect(dsn)
 
-radarTable = getRadarTable(dbConnection, dbDriverChar)
+radarTable = getRadarTable(dbConnection)
 }
 
 }

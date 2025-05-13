@@ -1,14 +1,12 @@
 #### getSiteTable ------------------------------------------------------------
 #' @title  Get BirdScan site table
-#' @description load site table from an already connected 'Birdscan MR1' 'SQL' 
+#' @description load site table from an already connected 'Birdscan MR1' 'SQL'
 #' database
-#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com}; 
+#' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
 #' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
-#' @param dbConnection a valid database connection
-#' @param dbDriverChar the name of the driver. If different from 'PostgreSQL' 
-#' it connects to cloud.birdradar.com
+#' @inheritParams QUERY
 #'
-#' @return A dataframe with the site table
+#' @return A `data.frame` with the site table
 #' @export
 #' @examples
 #' \dontrun{
@@ -26,15 +24,17 @@
 #'                ";pwd=", rstudioapi::askForPassword("Database password"))
 #'   dbConnection = RODBC::odbcDriverConnect(dsn)
 #'
-#' siteTable = getSiteTable(dbConnection, dbDriverChar)
+#' siteTable = getSiteTable(dbConnection)
 #' }
 #'
 getSiteTable = function(dbConnection, dbDriverChar){
+  if (!missing(dbDriverChar)) {
+    lifecycle::deprecate_warn("0.4.0", "getSiteTable(dbDriverChar)")
+  }
 # load protocol table from local MS-SQL DB
 # ==============================================================================
-  siteTable = QUERY(dbConnection, 
-                    dbDriverChar, 
-                    "SELECT * FROM site order by row asc")
+  siteTable = QUERY(dbConnection,
+                  query =   "SELECT * FROM site order by row asc")
   colnames(siteTable)[colnames(siteTable) == "siteid"]           = "siteID"
   colnames(siteTable)[colnames(siteTable) == "sitecode"]         = "siteCode"
   colnames(siteTable)[colnames(siteTable) == "radarid"]          = "radarID"
@@ -46,8 +46,8 @@ getSiteTable = function(dbConnection, dbDriverChar){
   colnames(siteTable)[colnames(siteTable) == "radarorientation"] = "radarOrientation"
   colnames(siteTable)[colnames(siteTable) == "ftpupload"]        = "ftpUpload"
   colnames(siteTable)[colnames(siteTable) == "automode"]         = "autoMode"
-  siteTable_times = QUERY(dbConnection, dbDriverChar, 
-                          "SELECT projectStart, projectEnd FROM site order by row asc", 
+  siteTable_times = QUERY(dbConnection,
+                          query = "SELECT projectStart, projectEnd FROM site order by row asc",
                           as.is = TRUE)
   colnames(siteTable_times)[colnames(siteTable_times) == "projectstart"] = "projectStart"
   colnames(siteTable_times)[colnames(siteTable_times) == "projectend"]   = "projectEnd"

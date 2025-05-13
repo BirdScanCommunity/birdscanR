@@ -38,24 +38,25 @@ BugReports: https://github.com/BirdScanCommunity/birdscanR/issues
 Depends:
   R (>= 3.5.0)
 Imports: 
-  DBI,
-  dplyr,
-  ggplot2,
-  grDevices,
-  magrittr,
-  methods,
-  modi,
-  reshape2,
-  rlang,
-  RODBC,
-  RPostgreSQL,
-  rstudioapi,
-  sp,
-  stats,
-  suntools,
-  tibble,
-  tidyr,
-  utils
+    DBI,
+    dplyr,
+    ggplot2,
+    grDevices,
+    lifecycle,
+    magrittr,
+    methods,
+    modi,
+    reshape2,
+    rlang,
+    RODBC,
+    RPostgreSQL,
+    rstudioapi,
+    sp,
+    stats,
+    suntools,
+    tibble,
+    tidyr,
+    utils
 Suggests:
   knitr,
   rmarkdown
