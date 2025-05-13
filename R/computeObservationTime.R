@@ -3,10 +3,10 @@
 #' @description Compute blind times and observation times during time bins based
 #'  on protocol data and blind times
 #'
-#' @param timeBins dataframe with the time bins created by the function
+#' @param timeBins dataframe with the time bins created with
 #' [createTimeBins()].
 #' @param protocolData dataframe with the protocol data from the data list
-#' created by the function [extractDbData()] or a subset of it created by the
+#' created by [extractDbData()] or a subset of it created by the
 #' function `filterProtocolData`.
 #' @param blindTimes dataframe containing the blind times created by the
 #' function [mergeVisibilityAndManualBlindTimes()].

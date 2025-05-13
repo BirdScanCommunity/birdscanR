@@ -1,12 +1,12 @@
 #' @title filterProtocolData
 #' @author Fabian Hertner, Birgen Haest
-#' @description With the function [filterProtocolData()] the protocol data
+#' @description With [filterProtocolData()] the protocol data
 #' can be filtered by the operation mode (pulse-type and antenna rotation). The
 #' function returns the filtered subset of the protocol data which can later be
 #' used to filter the echoes based on the operation mode/protocol
 #'
 #' @param protocolData `data.frame` with the protocol data from the data list
-#' created by the function [extractDbData()]
+#' created by [extractDbData()]
 #' @param pulseTypeSelection character vector with the pulse types which should
 #' be included in the subset. Options: “S”, “M”, “L” (short-, medium-,
 #' long-pulse). Default is NULL: no filtering applied based on pulseType.

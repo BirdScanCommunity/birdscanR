@@ -2,8 +2,8 @@
 #' @author Fabian Hertner, Birgen Haest, Baptiste Schmid
 #' @description Function to merge manual blind times with blind times from
 #' visibility table. For further processing the radar (visibility) and manual
-#' blind times have to be merged with the function
-#' ‘mergeVisibilityAndManualBlindTimes’. This function will add a blind time
+#' blind times have to be merged with
+#' [mergeVisibilityAndManualBlindTimes()]. This function will add a blind time
 #' type to the radar/visibility blind times. Blind times during the block time
 #' (usually 60s) at the beginning of each protocol are given the type
 #' 'protocolChange', the rest of the radar blind times are given the type
@@ -12,11 +12,11 @@
 #' radar blind times with type “visibility” will be overwritten, but not radar
 #' blind times with type “protocolChange”.
 #' @param visibilityData dataframe with the visibility data from the data list
-#' created by the function [extractDbData()].
+#' created by [extractDbData()].
 #' @param manualBlindTimes dataframe with the manual blind times created by the
 #' function ‘loadManualBlindTimes’.
 #' @param protocolData dataframe with the protocol data from the data list
-#' created by the function [extractDbData()] or a subset of it created by the
+#' created by [extractDbData()] or a subset of it created by the
 #' function [filterProtocolData()].
 #'
 #' @return dataframe with overall blind times

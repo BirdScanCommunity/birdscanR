@@ -6,8 +6,8 @@
 #' feature37.speed is required for the density calculation.
 #' @param dbName Character string, containing the name of the database you are
 #' processing
-#' @param echoes dataframe with the echo data from the data list created by the
-#' function [extractDbData()] or a subset of it created by the function
+#' @param echoes dataframe with the echo data from the data list created with
+#' [extractDbData()] or a subset of it created by the function
 #' @param classSelection character string vector with all classes which should
 #' be used to calculate the density. The density and number of Echoes will be calculated
 #' for each class as well as for all classes together.
@@ -21,7 +21,7 @@
 #' @param timeZone time zone in which the time bins should be created as string,
 #' e.g. "Etc/GMT0"
 #' @param sunriseSunset dataframe with sunrise/sunset, and civil and nautical
-#' dawn/dusk. Computed with the function 'twilight'.
+#' dawn/dusk. Computed with [twilight()].
 #' @param sunOrCivil sunrise/sunset or civil dawn/dusk used to split day and
 #' night. Supported values: "sun" or "civil". Default: "civil"
 #' @param crepuscule optional character variable, Set to “nauticalSolar” to use
@@ -31,10 +31,10 @@
 #' the time between civil dusk/dawn and sunrise/sunset times to define the
 #' crepuscular period. Default is "nauticalSolar".
 #' @param protocolData dataframe with the protocol data from the data list
-#' created by the function [extractDbData()] or a subset of it created by the
+#' created by [extractDbData()] or a subset of it created by the
 #' function [filterProtocolData()].
 #' @param visibilityData dataframe with the visibility data from the data list
-#' created by the function [extractDbData()].
+#' created by [extractDbData()].
 #' @param manualBlindTimes dataframe with the manual blind times created by the
 #' function [loadManualBlindTimes()].
 #' @param saveBlindTimes Logical, determines whether to save the blind times to

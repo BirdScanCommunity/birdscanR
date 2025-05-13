@@ -5,7 +5,7 @@
 #' numbers of echoes. Periods with no observation are indicated with grey,
 #' negative bars.
 #'
-#' @param mtr data frame with MTR values created by the function ‘computeMTR’.
+#' @param mtr data frame with MTR values created by [computeMTR()].
 #' @param maxMTR optional numeric variable, fixes the maximum value of the
 #' y-Scale of the plot to the given value. If negative or not set, the y-Scale
 #' is auto-scaled.
@@ -24,7 +24,7 @@
 #' @param plotSpread logical, choose if the spread (first and third quartile)
 #' should be plotted.
 #' @param filePath character string, path of the directory where the plot
-#' should be saved. The function ‘savePlotToFile’ is used to save the plots as
+#' should be saved. [savePlotToFile()] is used to save the plots as
 #' png files with an auto-generated filename.
 #'
 #' @return png files stored in the directory specified with 'filePath'

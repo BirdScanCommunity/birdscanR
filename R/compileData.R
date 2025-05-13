@@ -1,20 +1,20 @@
 #' @title compileData
 #' @author Baptiste Schmid, Fabian Hertner, Birgen Haest
-#' @description The function [compileData()] aim to filter database-extracts and
-#' save metadata used to compute MTR [computeMTR()]. The function [compileData()]
-#' is a list of filtered data and parameters. It takes the output from [extractDbData()]
-#' and trunk the needed dataset to the restricted settings, e.g. time frame, pulse type.
-#' @param echoData dataframe with the echo data from the data list created by
-#' the function [extractDbData()].
-#' @param protocolData dataframe with the protocol data from the data list created by
-#' the function [extractDbData()]. Echoes not detected during the listed protocols
+#' @description [compileData()] filters database-extracts and
+#' save metadata used to compute MTR [computeMTR()]. It takes the output from
+#' [extractDbData()] and trunks the needed dataset to the restricted settings,
+#' e.g. time frame, pulse type.
+#' @param echoData dataframe with the echo data from the data list created with
+#' [extractDbData()].
+#' @param protocolData dataframe with the protocol data from the data list created
+#' with [extractDbData()]. Echoes not detected during the listed protocols
 #' will be excluded.
 #' @param blindTimesData dataframe with the manual blind times created by
-#' the function [loadManualBlindTimes()].
+#' [loadManualBlindTimes()].
 #' It include the automated blind times induced by changes in measurement protocol,
 #' and blind time added manually to remove periods of incoherent data collection.
 #' @param sunriseSunsetData dataframe with sunrise/sunset, and civil and
-#'   nautical dawn/dusk. Computed with the function 'twilight'.
+#'   nautical dawn/dusk. Computed with [twilight()].
 #' @param radarSiteData dataframe/vector with the database site table.
 #' @param dbName Name of the database. Can be a useful meta data.
 #' @param pulseTypeSelection character vector with the pulse types which should
@@ -271,7 +271,7 @@ compileData = function(echoData = NULL,
   # Filter blindTimes data
   # =============================================================================
   # restrict the time range
-  if (!any(names(blindTimesData) == "type")) warning("The 'type' column is missing in the dataset 'blindTimesData'. Use the output of the function 'mergeVisibilityAnd ManualBlinfTime'.")
+  if (!any(names(blindTimesData) == "type")) warning("The 'type' column is missing in the dataset 'blindTimesData'. Use the output of the function 'mergeVisibilityAnd ManualBlindTime'.")
   TimesInd = (blindTimesData$start_targetTZ < stopTime) &
     (blindTimesData$stop_targetTZ > startTime)
   blindTimesDataSubset = blindTimesData[TimesInd, ]

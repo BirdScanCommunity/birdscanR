@@ -4,7 +4,7 @@
 #' observed echoes at their respective altitudes. These plots are helpful to
 #' roughly visually explore your data (and for example spot oddities).
 #' @param echoData dataframe with the echo data from the data list created by
-#' the function [extractDbData()] or a subset of it created by the function
+#'  [extractDbData()] or a subset of it created by the function
 #' ‘filterEchoData’
 #' @param timeRange optional list of string vectors length 2, start and end
 #' time of the time ranges that should be plotted. The date/time format is
@@ -14,23 +14,23 @@
 #' @param targetTimeZone "Etc/GMT0" String specifying the target time zone.
 #' Default is "Etc/GMT0".
 #' @param manualBlindTimes optional dataframe with the manual blind times
-#' created by the function ‘loadManualBlindTimes’. If not set, manual blind
+#' created by [loadManualBlindTimes()]. If not set, manual blind
 #' times are not shown in the plot.
 #' @param visibilityData optional dataframe with the visibility data created by
-#' the function [extractDbData()]. If not set, visibility data are not shown in
+#' [extractDbData()]. If not set, visibility data are not shown in
 #' the plot.
 #' @param protocolData optional dataframe with the protocol data used to filter
-#' the echoes, created by the function [extractDbData()] or a subset of it created
-#' by the function ‘filterProtocolData’. If not set, periods without a protocol
+#' the echoes, created by [extractDbData()] or a subset of it created
+#' by [filterProtocolData()]. If not set, periods without a protocol
 #' are not shown in the plot.
 #' @param sunriseSunset optional dataframe with sunrise/sunset, civil, and nautical
-#' twilight times created by the function ‘twilight’. If not set, day/night
+#' twilight times created by [twilight()]. If not set, day/night
 #' times are not shown in the plot.
 #' @param maxAltitude optional numeric, fixes the maximum value of the y-Scale
 #' of the plot to the given value. If negative or not set, the y-Scale is
 #' auto-scaled.
 #' @param filePath character string, path of the directory where the plot
-#' should be saved. The function ‘savePlotToFile’ is used to save the plots as
+#' should be saved. [savePlotToFile()] is used to save the plots as
 #' png files with an auto-generated filename.
 #'
 #' @return png files stored in the directory specified in 'filePath'

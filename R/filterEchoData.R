@@ -1,18 +1,18 @@
 #' @title filterEchoData
 #' @author Fabian Hertner, Birgen Haest
-#' @description With the function [filterEchoData()] the echo data can be
+#' @description With [filterEchoData()] the echo data can be
 #' filtered by several parameters. The function returns the filtered echo data.
 #'
 #' @param echoData `data.frame` with the echo data from the data list created by
-#' the function [extractDbData()].
+#' [extractDbData()].
 #' @param timeRangeTargetTZ Character vector of length 2, with start and end of
 #' time range, formatted as "%Y-%m-%d %H:%M". Echoes outside the time range will
 #' be excluded.
 #' @param targetTimeZone "Etc/GMT0" String specifying the target time zone.
 #' Default is "Etc/GMT0".
 #' @param protocolData `data.frame` with the protocol data from the data list
-#' created by the function [extractDbData()] or a subset of it created by
-#' the function [filterProtocolData()]. Echoes not detected during the listed
+#' created by [extractDbData()] or a subset of it created by
+#' [filterProtocolData()]. Echoes not detected during the listed
 #' protocols will be excluded.
 #' @param classSelection character string vector with the classes that should
 #' be included.

@@ -1,13 +1,13 @@
 #' @title addDayNightInfoPerEcho
 #' @author Fabian Hertner, Birgen Haest
-#' @description The function ‘addDayNightInfoPerEcho’ adds three columns
+#' @description [addDayNightInfoPerEcho()] adds three columns
 #' ‘dayOrNight’, ''dayOrCrepOrNight' and ‘dateSunset’ to the echo data. This
 #' allows the user to filter echo data easily by “day” and “night”, or "day",
 #' "crepuscular", and "night".
-#' @param echoData dataframe with the echo data from the data list created by
-#' the function [extractDbData()].
+#' @param echoData dataframe with the echo data from the data list created with
+#' [extractDbData()].
 #' @param sunriseSunset dataframe with sunrise/sunset and civil twilight times
-#' created by the function ‘twilight’
+#' created with [twilight()]
 #' @param sunOrCivil optional character variable, Set to “sun” to use
 #' sunrise/sunset times or to “civil” to use civil twilight times to group echoes
 #' into day/night. Default is "civil".

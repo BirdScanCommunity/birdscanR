@@ -9,8 +9,8 @@
 #' bins duration (5min). To be flexible and not fixed to the 5 min time bins
 #' created by the radar, the visibility table is used in this script. In
 #' addition to the radar blind times, manual blind times can be defined. Manual
-#' blind times have to be defined in a csv file and are loaded with the function
-#' ‘loadManualBlindTimes’. A example dataset is available by running:
+#' blind times have to be defined in a csv file and are loaded with
+#' [loadManualBlindTimes()]. An example dataset is available by running:
 #'  `data(manualBlindTimes)`
 #'  `write.csv(manualBlindTimes, file = 'the output file destination', row.names = F)`
 #' The file path is defined as a global variable ‘manualBlindTimesFile’. A

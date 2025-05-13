@@ -1,11 +1,20 @@
 #' @title filterData
 #' @author Birgen Haest
-#' @description With the function [filterData()] both the echo and protocol data can be filtered by several parameters. The function returns the filtered echo and protocol data.
+#' @description With [filterData()] both the echo and protocol data can be
+#' filtered based on several parameters. The function returns the filtered echo
+#' and protocol data.
 #'
-#' @param pulseTypeSelection character vector with the pulse types which should be included in the subset. Options: “S”, “M”, “L” (short-, medium-, long-pulse). Default is NULL: no filtering applied based on pulseType.
-#' @param echoData `data.frame` with the echo data from the data list created by the function [extractDbData()].
-#' @param protocolData `data.frame` with the protocol data from the data list created by the function [extractDbData()] or a subset of it created by [filterProtocolData()]. Echoes not detected during the listed protocols will be excluded.
-#' @param rotationSelection numeric vector to select the operation modes with and/or without antenna rotation. Options: 0, 1. (0 = no rotation, 1 = rotation). Default is NULL: no filtering applied based on rotation mode.
+#' @param pulseTypeSelection character vector with the pulse types which should
+#' be included in the subset. Options: “S”, “M”, “L” (short-, medium-, long-pulse).
+#' Default is NULL: no filtering applied based on pulseType.
+#' @param echoData `data.frame` with the echo data from the data list created
+#' with [extractDbData()].
+#' @param protocolData `data.frame` with the protocol data from the data list
+#' created with [extractDbData()] or a subset of it created by [filterProtocolData()].
+#' Echoes not detected during the listed protocols will be excluded.
+#' @param rotationSelection numeric vector to select the operation modes with
+#' and/or without antenna rotation. Options: 0, 1. (0 = no rotation, 1 = rotation).
+#' Default is NULL: no filtering applied based on rotation mode.
 #' @param timeRangeTargetTZ Character vector of length 2, with start and end of
 #' time range, formatted as "%Y-%m-%d %H:%M". Echoes outside the time range will
 #'  be excluded.
