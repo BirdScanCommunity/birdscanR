@@ -30,6 +30,15 @@ resulting Migration Traffic Rate results. For details on the Migration
 Traffic Rate calculation procedures, see [Schmid et
 al. (2019)](https://doi.org/10.1111/ecog.04025).
 
+To get started, see:
+
+- [Get
+  started](https://birdscancommunity.github.io/birdscanR/articles/birdscanR.html):
+  an introduction to the package’s main functionalities.
+- [Function
+  reference](https://birdscancommunity.github.io/birdscanR/reference/index.html):
+  overview of all functions.
+
 ## Installation
 
 Install the latest released version from CRAN:
