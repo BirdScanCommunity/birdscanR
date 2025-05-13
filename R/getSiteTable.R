@@ -12,46 +12,50 @@
 #' \dontrun{
 #' # Set server and database settings
 #' # ===========================================================================
-#'   dbServer       = "MACHINE\\SERVERNAME"     # Set the name of your SQL server
-#'   dbName         = "db_Name"                   # Set the name of your database
-#'   dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
+#' dbServer <- "MACHINE\\SERVERNAME" # Set the name of your SQL server
+#' dbName <- "db_Name" # Set the name of your database
+#' dbDriverChar <- "SQL Server" # Set either "SQL Server" or "PostgreSQL"
 #'
 #' # Open the connection with the database
 #' # ===========================================================================
-#'   dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
-#'                ";database=", dbName,
-#'                ";uid=", rstudioapi::askForPassword("Database user"),
-#'                ";pwd=", rstudioapi::askForPassword("Database password"))
-#'   dbConnection = RODBC::odbcDriverConnect(dsn)
+#' dsn <- paste0(
+#'   "driver=", dbDriverChar, ";server=", dbServer,
+#'   ";database=", dbName,
+#'   ";uid=", rstudioapi::askForPassword("Database user"),
+#'   ";pwd=", rstudioapi::askForPassword("Database password")
+#' )
+#' dbConnection <- RODBC::odbcDriverConnect(dsn)
 #'
-#' siteTable = getSiteTable(dbConnection)
+#' siteTable <- getSiteTable(dbConnection)
 #' }
 #'
-getSiteTable = function(dbConnection, dbDriverChar){
+getSiteTable <- function(dbConnection, dbDriverChar) {
   if (!missing(dbDriverChar)) {
     lifecycle::deprecate_warn("0.4.0", "getSiteTable(dbDriverChar)")
   }
-# load protocol table from local MS-SQL DB
-# ==============================================================================
-  siteTable = QUERY(dbConnection,
-                  query =   "SELECT * FROM site order by row asc")
-  colnames(siteTable)[colnames(siteTable) == "siteid"]           = "siteID"
-  colnames(siteTable)[colnames(siteTable) == "sitecode"]         = "siteCode"
-  colnames(siteTable)[colnames(siteTable) == "radarid"]          = "radarID"
-  colnames(siteTable)[colnames(siteTable) == "sitename"]         = "siteName"
-  colnames(siteTable)[colnames(siteTable) == "sitedesc"]         = "siteDesc"
-  colnames(siteTable)[colnames(siteTable) == "projectstart"]     = "projectStart"
-  colnames(siteTable)[colnames(siteTable) == "projectend"]       = "projectEnd"
-  colnames(siteTable)[colnames(siteTable) == "timeshift"]        = "timeShift"
-  colnames(siteTable)[colnames(siteTable) == "radarorientation"] = "radarOrientation"
-  colnames(siteTable)[colnames(siteTable) == "ftpupload"]        = "ftpUpload"
-  colnames(siteTable)[colnames(siteTable) == "automode"]         = "autoMode"
-  siteTable_times = QUERY(dbConnection,
-                          query = "SELECT projectStart, projectEnd FROM site order by row asc",
-                          as.is = TRUE)
-  colnames(siteTable_times)[colnames(siteTable_times) == "projectstart"] = "projectStart"
-  colnames(siteTable_times)[colnames(siteTable_times) == "projectend"]   = "projectEnd"
-  siteTable$projectStart = siteTable_times$projectStart
-  siteTable$projectEnd   = siteTable_times$projectEnd
+  # load protocol table from local MS-SQL DB
+  # ==============================================================================
+  siteTable <- QUERY(dbConnection,
+    query = "SELECT * FROM site order by row asc"
+  )
+  colnames(siteTable)[colnames(siteTable) == "siteid"] <- "siteID"
+  colnames(siteTable)[colnames(siteTable) == "sitecode"] <- "siteCode"
+  colnames(siteTable)[colnames(siteTable) == "radarid"] <- "radarID"
+  colnames(siteTable)[colnames(siteTable) == "sitename"] <- "siteName"
+  colnames(siteTable)[colnames(siteTable) == "sitedesc"] <- "siteDesc"
+  colnames(siteTable)[colnames(siteTable) == "projectstart"] <- "projectStart"
+  colnames(siteTable)[colnames(siteTable) == "projectend"] <- "projectEnd"
+  colnames(siteTable)[colnames(siteTable) == "timeshift"] <- "timeShift"
+  colnames(siteTable)[colnames(siteTable) == "radarorientation"] <- "radarOrientation"
+  colnames(siteTable)[colnames(siteTable) == "ftpupload"] <- "ftpUpload"
+  colnames(siteTable)[colnames(siteTable) == "automode"] <- "autoMode"
+  siteTable_times <- QUERY(dbConnection,
+    query = "SELECT projectStart, projectEnd FROM site order by row asc",
+    as.is = TRUE
+  )
+  colnames(siteTable_times)[colnames(siteTable_times) == "projectstart"] <- "projectStart"
+  colnames(siteTable_times)[colnames(siteTable_times) == "projectend"] <- "projectEnd"
+  siteTable$projectStart <- siteTable_times$projectStart
+  siteTable$projectEnd <- siteTable_times$projectEnd
   return(siteTable)
 }

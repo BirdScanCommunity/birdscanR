@@ -72,7 +72,6 @@
 #' 0.75, 0.95
 #'
 #' @return Migration Traffic Rates
-#' @importFrom magrittr %>%
 #' @export
 #'
 #' @examples

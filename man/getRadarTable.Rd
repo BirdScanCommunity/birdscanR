@@ -22,17 +22,19 @@ the columns appropriately
 \dontrun{
 # Set server and database settings
 # ===========================================================================
-  dbServer       = "MACHINE\\\\SERVERNAME"     # Set the name of your SQL server
-  dbName         = "db_Name"                   # Set the name of your database
-  dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
+dbServer = "MACHINE\\\\SERVERNAME" # Set the name of your SQL server
+dbName = "db_Name" # Set the name of your database
+dbDriverChar = "SQL Server" # Set either "SQL Server" or "PostgreSQL"
 
 # Open the connection with the database
 # ===========================================================================
-  dsn = paste0("driver=", dbDriverChar, ";server=", dbServer,
-               ";database=", dbName,
-               ";uid=", rstudioapi::askForPassword("Database user"),
-               ";pwd=", rstudioapi::askForPassword("Database password"))
-  dbConnection = RODBC::odbcDriverConnect(dsn)
+dsn = paste0(
+  "driver=", dbDriverChar, ";server=", dbServer,
+  ";database=", dbName,
+  ";uid=", rstudioapi::askForPassword("Database user"),
+  ";pwd=", rstudioapi::askForPassword("Database password")
+)
+dbConnection = RODBC::odbcDriverConnect(dsn)
 
 radarTable = getRadarTable(dbConnection)
 }
