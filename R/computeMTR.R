@@ -1341,16 +1341,15 @@ computeMTR = function(dbName,
     }
   }
 
-# MTR set back to NA if...
+# Density set back to NA if the observation time is less than the cutoff time
+# threshold
 # =============================================================================
   if (propObsTimeCutoff > 0){
     i_index = which(mtr[, "proportionalTimeObserved"] < propObsTimeCutoff)
     mtr[i_index , paste("mtr", i_class, sep = ".")] = NA
   }
 
-  # progressStep = (progressTotal - progressCnt) / ((length(classSelection) + 1) * nrow(mtr))
-
-# compute altitude distribution
+# Compute altitude distribution
 # =============================================================================
   if (computeAltitudeDistribution){
     for (i in 0:length(classSelection)){
