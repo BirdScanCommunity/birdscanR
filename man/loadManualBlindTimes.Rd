@@ -48,15 +48,17 @@ times will be computed.
 \examples{
 \dontrun{
 # load manual blind time example data from birdscanR package
-  data(manualBlindTimes)
-  
+data(manualBlindTimes)
+
 # Save example manual blind times to a file
-  write.csv(manualBlindTimes, file = "manualBlindTimes.csv", row.names = F)
-  
+write.csv(manualBlindTimes, file = "manualBlindTimes.csv", row.names = F)
+
 # Read the manual blind times from file
-  manualBlindTimes.new = loadManualBlindTimes(filePath     = "./manualBlindTimes.csv",
-                                              blindTimesTZ = "ETC/GMT", 
-                                              targetTZ     = "ETC/GMT")
+manualBlindTimes.new = loadManualBlindTimes(
+  filePath = "./manualBlindTimes.csv",
+  blindTimesTZ = "ETC/GMT",
+  targetTZ = "ETC/GMT"
+)
 }
 
 }

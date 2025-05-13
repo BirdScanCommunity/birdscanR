@@ -43,42 +43,50 @@ allows the user to filter echo data easily by “day” and “night”, or "day
 \dontrun{
 # Set server, database, and other input settings for data extraction
 # ===========================================================================
-  dbServer       = "MACHINE\\\\SERVERNAME" # Set the name of your SQL server
-  dbName         = "db_Name"               # Set the name of your database
-  dbDriverChar   = "SQL Server"            # Set either "SQL Server" or "PostgreSQL"
-  mainOutputDir  = file.path(".", "results")
-  radarTimeZone  = "Etc/GMT0"
-  targetTimeZone = "Etc/GMT0"
-  listOfRfFeaturesToExtract = c(167, 168)
-  siteLocation   = c(47.494427, 8.716432)
-  sunOrCivil   = "civil"
- 
+dbServer = "MACHINE\\\\SERVERNAME" # Set the name of your SQL server
+dbName = "db_Name" # Set the name of your database
+dbDriverChar = "SQL Server" # Set either "SQL Server" or "PostgreSQL"
+mainOutputDir = file.path(".", "results")
+radarTimeZone = "Etc/GMT0"
+targetTimeZone = "Etc/GMT0"
+listOfRfFeaturesToExtract = c(167, 168)
+siteLocation = c(47.494427, 8.716432)
+sunOrCivil = "civil"
+
 # Get data
 # ===========================================================================
-  dbData = extractDbData(dbDriverChar                   = dbDriverChar,
-                         dbServer                       = dbServer, 
-                         dbName                         = dbName, 
-                         saveDbToFile                   = TRUE,
-                         dbDataDir                      = mainOutputDir,
-                         radarTimeZone                  = radarTimeZone,
-                         targetTimeZone                 = targetTimeZone,
-                         listOfRfFeaturesToExtract      = listOfRfFeaturesToExtract,
-                         siteLocation                   = siteLocation, 
-                         sunOrCivil                   = sunOrCivil, 
-                         crepuscule                     = "nauticalSolar")
-                         
+dbData = extractDbData(
+  dbDriverChar = dbDriverChar,
+  dbServer = dbServer,
+  dbName = dbName,
+  saveDbToFile = TRUE,
+  dbDataDir = mainOutputDir,
+  radarTimeZone = radarTimeZone,
+  targetTimeZone = targetTimeZone,
+  listOfRfFeaturesToExtract = listOfRfFeaturesToExtract,
+  siteLocation = siteLocation,
+  sunOrCivil = sunOrCivil,
+  crepuscule = "nauticalSolar"
+)
+
 # Get sunrise/sunset information
 # ===========================================================================
-  sunrisesunset = twilight(timeRange = c("2021-01-15 00:00", 
-                                         "2021-01-31 00:00"),
-                           latLon    = siteLocation,
-                           timeZone  = targetTimeZone)
+sunrisesunset = twilight(
+  timeRange = c(
+    "2021-01-15 00:00",
+    "2021-01-31 00:00"
+  ),
+  latLon = siteLocation,
+  timeZone = targetTimeZone
+)
 
 # Add day/night info to echo data
 # ===========================================================================
-  echoData = addDayNightInfoPerEcho(echoData      = dbData$echoData,
-                                    sunriseSunset = pulseLengthSelection, 
-                                    sunOrCivil  = "civil")   
+echoData = addDayNightInfoPerEcho(
+  echoData = dbData$echoData,
+  sunriseSunset = pulseLengthSelection,
+  sunOrCivil = "civil"
+)
 }
 
 }
