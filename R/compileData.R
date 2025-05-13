@@ -16,7 +16,7 @@
 #' the function \code{loadManualBlindTimes}. 
 #' It include the automated blind times induced by changes in measurment protocol, 
 #' and blind time added manually to remove periods of incoherent data collection.
-#' @param radarSiteData
+#' @param radarSiteData dataframe/vector with the database site table.
 #' @param dbName Name of the database. Can be a useful meta data.
 #' @param pulseTypeSelection character vector with the pulse types which should 
 #' be included in the subset. Options: “S”, “M”, “L”, i.e. short-, medium-, long-pulse, respectively. 

@@ -37,7 +37,7 @@ the function \code{loadManualBlindTimes}.
 It include the automated blind times induced by changes in measurment protocol,
 and blind time added manually to remove periods of incoherent data collection.}
 
-\item{radarSiteData}{dataframe/vector with the database site table}
+\item{radarSiteData}{dataframe/vector with the database site table.}
 
 \item{dbName}{Name of the database. Can be a useful meta data.}
 
@@ -80,20 +80,19 @@ Returns filtered data table - echo, protocol, blindTimes, sunriseSunset,
 radarSite - and necessary parameters as input for \code{computeMTR}.
 }
 \description{
-The function \code{compileData} creates a standardized Birdscan
-MR1 data product, including metadata, that can be used to publish the
-dataset in a standardized manner. This results in improved accessibility
-across datasets and owners. The function uses the output from
-\code{extractDbData} and allows for specific filtering of the dataset,
-e.g., by time range, pulse type, and class.
+The function \code{compileData} aim to filter database-extracts and
+save metadata used to compute MTR \code{computeMTR}. The function \code{compileData}
+is a list of filtered data and parameters. It takes the output from \code{extractDbData}
+and trunk the needed dataset to the restricted settings, e.g. time frame, pulse type.
 }
 \examples{
 \dontrun{
-  
+
 }
 
 }
 \author{
 Baptiste Schmid, \email{baptiste.schmid@vogelwarte.ch};
-Birgen Haest, \email{birgen.haest@vogelwarte.ch};
+Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
+Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }
