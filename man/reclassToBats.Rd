@@ -29,36 +29,40 @@ reclassifies echoes based on bat classification
 \dontrun{
 # Set server, database, and other input settings
 # ===========================================================================
-  dbServer       = "MACHINE\\\\SERVERNAME"     # Set the name of your SQL server
-  dbName         = "db_Name"                   # Set the name of your database
-  dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
-  mainOutputDir  = file.path(".", "results")
-  radarTimeZone  = "Etc/GMT0"
-  targetTimeZone = "Etc/GMT0"
-  listOfRfFeaturesToExtract = c(167, 168)
-  siteLocation   = c(47.494427, 8.716432)
-  sunOrCivil   = "civil"
- 
+dbServer = "MACHINE\\\\SERVERNAME" # Set the name of your SQL server
+dbName = "db_Name" # Set the name of your database
+dbDriverChar = "SQL Server" # Set either "SQL Server" or "PostgreSQL"
+mainOutputDir = file.path(".", "results")
+radarTimeZone = "Etc/GMT0"
+targetTimeZone = "Etc/GMT0"
+listOfRfFeaturesToExtract = c(167, 168)
+siteLocation = c(47.494427, 8.716432)
+sunOrCivil = "civil"
+
 # Get data
 # ===========================================================================
-  dbData = extractDbData(dbDriverChar                   = dbDriverChar,
-                         dbServer                       = dbServer, 
-                         dbName                         = dbName, 
-                         saveDbToFile                   = TRUE,
-                         dbDataDir                      = mainOutputDir,
-                         radarTimeZone                  = radarTimeZone,
-                         targetTimeZone                 = targetTimeZone,
-                         listOfRfFeaturesToExtract      = listOfRfFeaturesToExtract,
-                         siteLocation                   = siteLocation, 
-                         sunOrCivil                   = sunOrCivil,
-                         crepuscule                     = "nauticalSolar")
-#' 
+dbData = extractDbData(
+  dbDriverChar = dbDriverChar,
+  dbServer = dbServer,
+  dbName = dbName,
+  saveDbToFile = TRUE,
+  dbDataDir = mainOutputDir,
+  radarTimeZone = radarTimeZone,
+  targetTimeZone = targetTimeZone,
+  listOfRfFeaturesToExtract = listOfRfFeaturesToExtract,
+  siteLocation = siteLocation,
+  sunOrCivil = sunOrCivil,
+  crepuscule = "nauticalSolar"
+)
+#'
 # Reclass To Bats
 # ===========================================================================
-  dbData$echoData = reclassToBats(echoData = dbData$echoData,
-                                  batClassProbabilitiesAndMtrFactors = 
-                                      dbData$batClassProbabilitiesAndMtrFactors,
-                                  reclassToBatCutoff = 0.5)
+dbData$echoData = reclassToBats(
+  echoData = dbData$echoData,
+  batClassProbabilitiesAndMtrFactors =
+    dbData$batClassProbabilitiesAndMtrFactors,
+  reclassToBatCutoff = 0.5
+)
 }
 }
 \author{
