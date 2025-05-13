@@ -7,7 +7,7 @@
 #'
 #' @usage data(manualBlindTimes)
 #'
-#' @format An object of class \code{"data.frame"}.
+#' @format An object of class `data.frame`.
 #'
 #' @keywords datasets
 #'

@@ -13,14 +13,14 @@ computeObservationTime(
 }
 \arguments{
 \item{timeBins}{dataframe with the time bins created by the function
-\code{createTimeBins}.}
+\code{\link[=createTimeBins]{createTimeBins()}}.}
 
 \item{protocolData}{dataframe with the protocol data from the data list
-created by the function \code{extractDBData} or a subset of it created by the
-function \code{filterProtocolData}.}
+created by the function \code{\link[=extractDBData]{extractDBData()}} or a subset of it created by the
+function \code{\link[=filterProtocolData]{filterProtocolData()}}.}
 
 \item{blindTimes}{dataframe containing the blind times created by the
-function \code{mergeVisibilityAndManualBlindTimes}.}
+function \code{\link[=mergeVisibilityAndManualBlindTimes]{mergeVisibilityAndManualBlindTimes()}}.}
 
 \item{blindTimeAsMtrZero}{character string vector with the blind time types
 which should be treated as observation time with MTR zero.}

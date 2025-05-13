@@ -16,7 +16,7 @@ saveMTR(
 )
 }
 \arguments{
-\item{mtr}{dataframe with MTR values created by the function \code{computeMTR}}
+\item{mtr}{dataframe with MTR values created by the function \code{\link[=computeMTR]{computeMTR()}}}
 
 \item{filepath}{character string, path of the directory. If the directory
 does not exist it will be created if possible.}

@@ -2,19 +2,19 @@
 #' @title filterEchoData
 #' @author Fabian Hertner, \email{fabian.hertner@@swiss-birdradar.com};
 #' Birgen Haest, \email{birgen.haest@@vogelwarte.ch}
-#' @description With the function \code{filterEchoData} the echo data can be
+#' @description With the function [filterEchoData()] the echo data can be
 #' filtered by several parameters. The function returns the filtered echo data.
 #'
-#' @param echoData dataframe with the echo data from the data list created by
-#' the function \code{extractDBData}.
+#' @param echoData `data.frame` with the echo data from the data list created by
+#' the function [extractDBData()].
 #' @param timeRangeTargetTZ Character vector of length 2, with start and end of
 #' time range, formatted as "%Y-%m-%d %H:%M". Echoes outside the time range will
 #' be excluded.
 #' @param targetTimeZone "Etc/GMT0" String specifying the target time zone.
 #' Default is "Etc/GMT0".
-#' @param protocolData dataframe with the protocol data from the data list
-#' created by the function \code{extractDBData} or a subset of it created by
-#' the function \code{filterProtocolData}. Echoes not detected during the listed
+#' @param protocolData `data.frame` with the protocol data from the data list
+#' created by the function [extractDBData()] or a subset of it created by
+#' the function [filterProtocolData()]. Echoes not detected during the listed
 #' protocols will be excluded.
 #' @param classSelection character string vector with the classes that should
 #' be included.
@@ -23,13 +23,13 @@
 #' @param altitudeRange_AGL numeric vector of length 2 with start and end of the
 #' altitude range. Echoes outside the altitude range will be excluded.
 #' @param manualBlindTimes dataframe with the manual blind times created by the
-#' function \code{loadManualBlindTimes}.
+#' function [loadManualBlindTimes()].
 #' @param echoValidator logical, if set to TRUE, echoes labelled by the echo
 #' validator as “non-bio scatterer” will be excluded. If set to FALSE, all
 #' echoes are included.
 #'
 #' @return returns the filtered echo data in the same format as provided in the
-#' parameter \code{echoData}.
+#' parameter `echoData`.
 #' @export
 #' @examples
 #' \dontrun{

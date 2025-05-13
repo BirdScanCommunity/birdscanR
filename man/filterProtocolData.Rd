@@ -11,8 +11,8 @@ filterProtocolData(
 )
 }
 \arguments{
-\item{protocolData}{dataframe with the protocol data from the data list
-created by the function \code{extractDBData}}
+\item{protocolData}{\code{data.frame} with the protocol data from the data list
+created by the function \code{\link[=extractDBData]{extractDBData()}}}
 
 \item{pulseTypeSelection}{character vector with the pulse types which should
 be included in the subset. Options: “S”, “M”, “L” (short-, medium-,
@@ -27,7 +27,7 @@ returns the filtered protocol data in the same format as provided in
 the parameter \code{protocolData}.
 }
 \description{
-With the function \code{filterProtocolData} the protocol data
+With the function \code{\link[=filterProtocolData]{filterProtocolData()}} the protocol data
 can be filtered by the operation mode (pulse-type and antenna rotation). The
 function returns the filtered subset of the protocol data which can later be
 used to filter the echoes based on the operation mode/protocol

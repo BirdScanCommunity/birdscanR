@@ -6,12 +6,12 @@
 #'  on protocol data and blind times
 #'
 #' @param timeBins dataframe with the time bins created by the function
-#' \code{createTimeBins}.
+#' [createTimeBins()].
 #' @param protocolData dataframe with the protocol data from the data list
-#' created by the function \code{extractDBData} or a subset of it created by the
-#' function \code{filterProtocolData}.
+#' created by the function [extractDBData()] or a subset of it created by the
+#' function [filterProtocolData()].
 #' @param blindTimes dataframe containing the blind times created by the
-#' function \code{mergeVisibilityAndManualBlindTimes}.
+#' function [mergeVisibilityAndManualBlindTimes()].
 #' @param blindTimeAsMtrZero character string vector with the blind time types
 #' which should be treated as observation time with MTR zero.
 #'
