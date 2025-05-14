@@ -1,9 +1,10 @@
 # birdscanR (development version)
 
-- New functionality: the function `compileData()` was added to compile a standardized MR1 dataset for publication to a data repository and allow easier interoperability (#44).
+- New functionality: `compileData()` was added to compile a standardized MR1 dataset for publication to a data repository and allow easier interoperability (#44).
+- New functionality: `createVPTS()` was added to create vpts csv output files in line with the ALOFT standard (#52).
 - New functionality: the functions `getCollectionTable()` and `extractDbData()` now include an additional optional parameter `timeInterval` for when you want to limit the data being retrieved from the collection table (#49).
-- New functionality: the function `extractDBData()` now includes an additional optional parameter `dbHost` to set your postgreSQL database host site (#54).
-- New functionality: the function `getEchoFeatures()` now includes an additional optional parameter `echoSubset` for when you want to limit the data being retrieved from the `echo_rffeature_map` table to a certain subset of echoes only. In the function `extractDBData()`, the default is now to not extract the full `echo_rffeature_map` table anymore, but only for the echoes included in the `collection` table (which can now be subset based on a time interval). This improves performance for very large databases.
+- New functionality: `extractDBData()` now includes an additional optional parameter `dbHost` to set your postgreSQL database host site (#54).
+- New functionality: `getEchoFeatures()` now includes an additional optional parameter `echoSubset` for when you want to limit the data being retrieved from the `echo_rffeature_map` table to a certain subset of echoes only. In the function `extractDBData()`, the default is now to not extract the full `echo_rffeature_map` table anymore, but only for the echoes included in the `collection` table (which can now be subset based on a time interval). This improves performance for very large databases.
 - Simplification: all `get` functions do not require the `dbDriverChar` argument.
 - Improved documentation: README (#66), pkgdown website (#67) and styling (#70 and #74).
 - Improved collaboration: Contributing guide, Code of conduct and license (#66), GitHub actions for R CMD check, pkgdown and styler (#67).

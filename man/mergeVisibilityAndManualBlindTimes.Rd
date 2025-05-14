@@ -80,6 +80,7 @@ Other manipulation functions:
 \code{\link{computeDensity}()},
 \code{\link{computeMTR}()},
 \code{\link{convertTimeZone}()},
+\code{\link{createVPTS}()},
 \code{\link{reclassToBats}()},
 \code{\link{twilight}()}
 }
