@@ -63,7 +63,7 @@ function \code{\link[=filterProtocolData]{filterProtocolData()}}.}
 created by \code{\link[=extractDbData]{extractDbData()}}.}
 
 \item{siteData}{A data frame holding the site table, as extracted with
-\code{\link[=extractDBData]{extractDBData()}} or \code{\link[=getSiteTable]{getSiteTable()}}.}
+\code{\link[=extractDbData]{extractDbData()}} or \code{\link[=getSiteTable]{getSiteTable()}}.}
 
 \item{sunriseSunset}{dataframe with sunrise/sunset, and civil and nautical
 dawn/dusk. Computed with \code{\link[=twilight]{twilight()}}.}
