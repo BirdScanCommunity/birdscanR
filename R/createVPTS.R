@@ -14,6 +14,7 @@
 #' [extractDBData()] or [getSiteTable()].
 #'
 #' @return File path to the created VPTS CSV file.
+#' @family manipulation functions
 #' @export
 #'
 #' @examples

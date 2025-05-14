@@ -152,6 +152,17 @@ density calculation.
                        propObsTimeCutoff            = 0.2)
 }
 }
+\seealso{
+Other manipulation functions: 
+\code{\link{addDayNightInfoPerEcho}()},
+\code{\link{computeDensity}()},
+\code{\link{computeMTR}()},
+\code{\link{convertTimeZone}()},
+\code{\link{mergeVisibilityAndManualBlindTimes}()},
+\code{\link{reclassToBats}()},
+\code{\link{twilight}()}
+}
 \author{
 Birgen Haest
 }
+\concept{manipulation functions}

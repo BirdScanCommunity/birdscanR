@@ -76,6 +76,7 @@ Other manipulation functions:
 \code{\link{addDayNightInfoPerEcho}()},
 \code{\link{computeDensity}()},
 \code{\link{computeMTR}()},
+\code{\link{createVPTS}()},
 \code{\link{mergeVisibilityAndManualBlindTimes}()},
 \code{\link{reclassToBats}()},
 \code{\link{twilight}()}

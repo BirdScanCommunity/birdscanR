@@ -192,6 +192,7 @@ Other manipulation functions:
 \code{\link{addDayNightInfoPerEcho}()},
 \code{\link{computeDensity}()},
 \code{\link{convertTimeZone}()},
+\code{\link{createVPTS}()},
 \code{\link{mergeVisibilityAndManualBlindTimes}()},
 \code{\link{reclassToBats}()},
 \code{\link{twilight}()}
