@@ -430,8 +430,9 @@ createVPTS = function(dbName,
 
 # Create the output directory
 # =============================================================================
-  outputDirVPTS = file.path(mainOutputDir, "vpts")
+  outputDirVPTS = file.path(outputDir, "vpts")
   dir.create(outputDirVPTS, showWarnings = F, recursive = T)
+  message(paste0("Writing daily VPTS csv files to ", outputDirVPTS), "..")
 
 # Save the vpts to files, one file per day
 # =============================================================================
