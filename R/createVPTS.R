@@ -11,7 +11,7 @@
 #' files to be stored. The function will create a subdirectory called "vpts"
 #' within the specified `outputDir`.
 #' @param siteData A data frame holding the site table, as extracted with
-#' [extractDBData()] or [getSiteTable()].
+#' [extractDbData()] or [getSiteTable()].
 #'
 #' @return File path to the created VPTS CSV file.
 #' @family manipulation functions
