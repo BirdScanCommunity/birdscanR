@@ -50,6 +50,7 @@ Imports:
   reshape2,
   RODBC,
   RPostgreSQL,
+  readr,
   rstudioapi,
   sp,
   stats,

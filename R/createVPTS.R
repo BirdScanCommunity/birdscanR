@@ -440,12 +440,13 @@ createVPTS = function(dbName,
   for (i in 1:length(allDays)){
     cDay = allDays[i]
     vptsDay = vpts[(vpts$datetime >= cDay) & (vpts$datetime < cDay+1),]
-    write.csv(vptsDay,
-              file = file.path(outputDirVPTS,
-                               paste0(siteData$radarID, "_vpts_",
-                                      format(cDay, format = "%Y%m%d"),
-                                      ".csv")),
-              row.names = F)
+    readr::write.csv(x = vptsDay,
+                     file = file.path(outputDirVPTS,
+                                      paste0(siteData$radarID, "_vpts_",
+                                             format(cDay, format = "%Y%m%d"),
+                                             ".csv")),
+                     na = "",
+                     row.names = F)
   }
 
 # Return directory where vpts were stored
