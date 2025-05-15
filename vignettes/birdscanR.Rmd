@@ -197,7 +197,7 @@ In addition to the standard echo classification in birds, insects, and non-biolo
 
 The bat classification is provided independently in separate tables. The function 'reclassToBats' overwrite the primary classification for possible bat-type echoes. 
 
-```{r}
+```{r, eval=FALSE}
 # not Run
 # table(dbData$echoData$class)
 
