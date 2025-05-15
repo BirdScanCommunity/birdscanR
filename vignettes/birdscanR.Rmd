@@ -97,7 +97,7 @@ altitudeRange = c(50, 1000)
 
 # Set the time range for echodata (in the targetTimeZone)
 # use format "yyyy-MM-dd hh:mm"
-timeRangeData = c("2021-01-15 00:00", "2021-01-31 00:00") 
+timeRangeData = c("2021-01-15 00:00", "2021-01-31 00:00")
 
 # Set whether to get the manual blind time from:
 # "mandb": the db file;
@@ -203,10 +203,12 @@ The bat classification is provided independently in separate tables. The functio
 
 # Reclass To Bats
 # ===========================================================================
-  dbData$echoData = reclassToBats(echoData = dbData$echoData,
-                                  batClassProbabilitiesAndMtrFactors = 
-                                      dbData$batProbabilitiesAndMtrFactors,
-                                  reclassToBatCutoff = 0.5)
+dbData$echoData = reclassToBats(
+  echoData = dbData$echoData,
+  batClassProbabilitiesAndMtrFactors =
+    dbData$batProbabilitiesAndMtrFactors,
+  reclassToBatCutoff = 0.5
+)
 # not Run - check reclassification
 # table(dbData$echoData$class)
 ```
@@ -412,7 +414,7 @@ outputDir.plots = file.path(mainOutputDir, "Plots")
 # Set the class of which the MTR data should be plotted.
 # If not set or set to “allClasses”, MTR of all classes will be plotted.
 # ===========================================================================
-plotClass = 'passerine_type' # "allClasses"
+plotClass = "passerine_type" # "allClasses"
 
 # Set the maximum value of the y-Scale of the plot to the given value.
 # If negative or not set, the y-Scale is auto-scaled.
