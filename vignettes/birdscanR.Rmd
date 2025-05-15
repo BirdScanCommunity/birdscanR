@@ -19,9 +19,11 @@ This vignette provides an example of the basic workflow to go from an 'MS-SQL' o
 
 1.    Extract the relevant data from the SQL database.
 
-1.    Filter the data to your target output period, class, and other preferences.
+2.a   Optional reclassification to include bat-type echoes.
 
-1.    Calculate the activity or migration traffic rates
+2.b   Filter the data to your target output period, class, and other preferences.
+
+3.    Calculate the activity or migration traffic rates
 
 ***
 # Before we get started
@@ -31,8 +33,8 @@ We first load the birdscanR package.
 library(birdscanR)
 ```
 
-Then we set our input:
-```{r, eval=FALSE}
+Then we set our inputs
+```{r}
 # Set main output directory
 # =============================================================================
 mainOutputDir = file.path(".", "results")
@@ -83,7 +85,7 @@ rotationSelection = c(1)
 # Example: classSelection = c("passerine_type", "wader_type", "swift_type",
 #                             "large_bird", "unid_bird", "bird_flock",
 #                             "insect", "nonbio", "precipitation")
-classSelection = c("insect")
+classSelection = c("passerine_type", "bat", "insect")
 
 # Set the classification propability cutoff (between 0 and 1) - only objects
 # for which the chosen label also has a classification probability > than the
@@ -95,7 +97,7 @@ altitudeRange = c(50, 1000)
 
 # Set the time range for echodata (in the targetTimeZone)
 # use format "yyyy-MM-dd hh:mm"
-timeRangeData = c("2021-01-15 00:00", "2021-01-31 00:00")
+timeRangeData = c("2021-01-15 00:00", "2021-01-31 00:00") 
 
 # Set whether to get the manual blind time from:
 # "mandb": the db file;
@@ -117,11 +119,11 @@ useEchoValidator = FALSE
 saveBlindTimes = TRUE
 
 # Set altitude Range and Bin Size for the MTR calculations
-altitudeRange.mtr = c(25, 1025)
+altitudeRange.mtr = altitudeRange
 altitudeBinSize = 50
 
 # time range for timeBins (targetTimeZone) - format: "yyyy-MM-dd hh:mm"
-timeRangesTimeBins = c("2021-01-15 00:00", "2021-01-31 00:00")
+timeRangesTimeBins = timeRangeData
 
 # timeBin size in seconds
 timeBinduration_sec = 3600
@@ -143,8 +145,8 @@ propObsTimeCutoff = 0.2
 # Example: classSelection = c("passerine_type", "wader_type", "large_bird")
 # classSelection = c("passerine_type", "wader_type", "swift_type",
 #                    "large_bird", "unid_bird", "bird_flock",
-#                    "insect", "nonbio", "precipitation")
-classSelection.mtr = c("insect")
+#                    "insect", "nonbio", "precipitation","bat")
+classSelection.mtr = classSelection
 
 # Set whether to compute MTR per timebin or per day/night
 # TRUE: MTR is computed per day and night;
@@ -158,7 +160,9 @@ saveMTR2File = TRUE
 ***
 # Extract the relevant data from the SQL database
 
-Extracting the data that is need for MTR calculations, can be done with the `extractDbData()` function. This function will connect to your SQL database and read all the necessary data to memory. If requested, it will also write it to an .rds file in the output directory you chose. The file is automatically named to: `[yourDbName]_DataExtract.rds`, and written to the main output directory you defined in the input settings.
+Extracting the data that is need for MTR calculations, can be done with the `extractDbData()` function. This function will connect to your SQL database and read all the necessary data to memory. If requested, it will also write it to an .rds file in the output directory you chose. The file is automatically named to: `[yourDbName]_DataExtract.rds`, and written to the main output directory 'mainOutputDir' you defined in the input settings.
+
+If you have no connection to an SQL server with a MR1-database attached, you can skip step 1) and manually load such the RDS-file : 'dbData = readRDS(file.path(mainOutputDir, `[yourDbName]_DataExtract.rds`))'.
 
 ```{r, eval=FALSE}
 # Print progress message
@@ -184,6 +188,30 @@ dbData = extractDbData(
 # =============================================================================
 message(paste0("Finished extracting data from ", dbName))
 ```
+
+
+***
+# Optional - Reclass echoes to include bat classification
+
+In addition to the standard echo classification in birds, insects, and non-biological echoes, the MR1 software (version 1.7.0.0 or newer) offers the possibility to classify echoes as bat.
+
+The bat classification is provided independently in separate tables. The function 'reclassToBats' overwrite the primary classification for possible bat-type echoes. 
+
+```{r}
+# not Run
+# table(dbData$echoData$class)
+
+# Reclass To Bats
+# ===========================================================================
+  dbData$echoData = reclassToBats(echoData = dbData$echoData,
+                                  batClassProbabilitiesAndMtrFactors = 
+                                      dbData$batProbabilitiesAndMtrFactors,
+                                  reclassToBatCutoff = 0.5)
+# not Run - check reclassification
+# table(dbData$echoData$class)
+```
+
+
 
 ***
 # Filter the extracted data to what you are interested in
@@ -375,10 +403,7 @@ The function `plotLongitudinalMTR()` creates a time series plot of the MTR value
 # A plot is created for each timerange
 # use format "yyyy-MM-dd hh:mm"
 # ===========================================================================
-timeRangePlot = list(
-  c("2021-01-15 00:00", "2021-01-22 00:00"),
-  c("2021-01-23 00:00", "2021-01-31 00:00")
-)
+timeRangePlot = createTimeRangePlot(timeRangeData[1], timeRangeData[2], 7)
 
 # Set output path for plots
 # ===========================================================================
@@ -387,7 +412,7 @@ outputDir.plots = file.path(mainOutputDir, "Plots")
 # Set the class of which the MTR data should be plotted.
 # If not set or set to “allClasses”, MTR of all classes will be plotted.
 # ===========================================================================
-plotClass = "allClasses"
+plotClass = 'passerine_type' # "allClasses"
 
 # Set the maximum value of the y-Scale of the plot to the given value.
 # If negative or not set, the y-Scale is auto-scaled.
