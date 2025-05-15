@@ -5,6 +5,7 @@
 # Session Data files
 .RData
 .RDataTmp
+*.rds
 
 # User-specific files
 .Ruserdata
@@ -52,4 +53,3 @@ rsconnect/
 # Mac OS
 .DS_Store
 docs
-*.rds
