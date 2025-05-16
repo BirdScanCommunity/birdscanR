@@ -48,8 +48,8 @@ dsn = paste0(
   "driver=", dbDriverChar, ";server=", dbServer,
   ";database=", dbName,
   ";uid=", rstudioapi::askForPassword("Database user"),
-   ";pwd=", rstudioapi::askForPassword("Database password")
-  )
+  ";pwd=", rstudioapi::askForPassword("Database password")
+)
 dbConnection = RODBC::odbcDriverConnect(dsn)
 ```
 
@@ -87,7 +87,7 @@ Additional features are stored in an other table. Set a list of features, extrac
 List of features to extract (link to full list **ToDo : description fo the features now in compileData, but document somewhere as stand-alone yamal ?**
 ) :
 ```{r}
-# Example: Get wing beat frequency and credibility : 
+# Example: Get wing beat frequency and credibility :
 listOfRfFeaturesToExtract = c(167, 168)
 ```
 
@@ -107,7 +107,7 @@ echoRfFeatureMap = getEchoFeatures(dbConnection, dbDriverChar,
 
 Add the newly extracted features to the existing echoData :
 ```{r}
-echoData %>% left_join(echoData, echoRfFeatureMap, by = join_by(row == echo) )
+echoData %>% left_join(echoData, echoRfFeatureMap, by = join_by(row == echo))
 ```
 
 
