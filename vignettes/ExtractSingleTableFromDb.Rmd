@@ -1,0 +1,124 @@
+---
+title: "How to extract single tables?"
+author: Birgen Haest, Fabian Hertner, Baptiste Schmid
+output: rmarkdown::html_vignette
+description: > 
+  Which functions do I need to call to get data from single tables? This vignette describes the main workflow to do so.
+vignette: >
+  %\VignetteIndexEntry{Introduction to birdscanR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+``` {r, echo = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+***
+# Summary
+
+This vignette details the function `extractDbData()` and give example on how to complement existing extractions
+
+***
+# Before we get started
+
+We first load the birdscanR package.
+```{r}
+library(birdscanR)
+```
+
+Then we set our inputs
+
+Input working folder :
+```{r}
+# Set main output directory
+# =============================================================================
+mainOutputDir = file.path(".", "results")
+```
+
+Open connection to SQL database : 
+```{r}
+# Set server and database settings
+# =============================================================================
+dbServer = "MACHINE\\SERVERNAME" # Set the name of your SQL server
+dbName = "db_Name" # Set the name of your database
+dbDriverChar = "SQL Server" # Set either "SQL Server" or "PostgreSQL"
+
+# Open the connection with the database
+# ===========================================================================
+dsn = paste0(
+  "driver=", dbDriverChar, ";server=", dbServer,
+  ";database=", dbName,
+  ";uid=", rstudioapi::askForPassword("Database user"),
+   ";pwd=", rstudioapi::askForPassword("Database password")
+  )
+dbConnection = RODBC::odbcDriverConnect(dsn)
+```
+
+`ExtractDbData()` will query the SQL database using a sequence of functions (starting with 'get'), calculating day and night information, and compiling these data into a list (`dbData`).
+
+If for some reason, some data were not extracted, or the extraction last too long, it is possible to extract single database tables using the specific SQL-wrapper function.
+
+List of SQL-wrapper functions:
+```{r get-functions, echo=TRUE, results='asis'}
+get_functions <- grep("^get", getNamespaceExports("birdscanR"), value = TRUE)
+# cat("### BirdscanR functions warpping SQL query\n")
+cat(paste0("- `", get_functions, "()`"), sep = "\n")
+```
+
+Below some example of their utilities outside the main function `extractDbData()`.
+
+***
+# Retrieve echoes
+
+Use `getCollectionTable()` to get all echoes registered during 'timeInterval'. Set 'timeInterval = NULL' to extract all registered echoes.
+```{r}
+# load collection table
+# =============================================================================
+message("Extracting collection table from DB...")
+timeInterval = NULL # e.g. c(as.Date("2024-03-01"),as.Date("2024-03-15"))
+echoData = getCollectionTable(dbConnection, dbDriverChar, timeInterval)
+```
+
+***
+# Retrieve additional echo features
+
+Additional features are stored in an other table. Set a list of features, extract from the database, and merge with the echoes data set.
+
+
+List of features to extract (link to full list **ToDo : description fo the features now in compileData, but document somewhere as stand-alone yamal ?**
+) :
+```{r}
+# Example: Get wing beat frequency and credibility : 
+listOfRfFeaturesToExtract = c(167, 168)
+```
+
+Extract the features from the database for specific echoes (see `echoData$row`)
+```{r}
+# Get the requested rf features for the echoes
+# =============================================================================
+message("Extracting rffeatures table from DB...")
+echoRfFeatureMap = getEchoFeatures(dbConnection, dbDriverChar,
+  listOfRfFeaturesToExtract = listOfRfFeaturesToExtract,
+  echoIDRange = c(
+    min(echoData$row),
+    max(echoData$row)
+  )
+)
+```
+
+Add the newly extracted features to the existing echoData :
+```{r}
+echoData %>% left_join(echoData, echoRfFeatureMap, by = join_by(row == echo) )
+```
+
+
+***
+# Extract information on study site
+
+Key parameters are start and end dates, site location, and for (older) campaign time zone (time shift from UTC).
+```{r}
+# load site from local MS-SQL DB
+# =============================================================================
+message("Extracting site table from DB...")
+siteTable = getSiteTable(dbConnection, dbDriverChar)
+```
+
