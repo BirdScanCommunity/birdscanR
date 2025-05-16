@@ -445,8 +445,7 @@ createVPTS = function(dbName,
                                       paste0(siteData$radarID, "_vpts_",
                                              format(cDay, format = "%Y%m%d"),
                                              ".csv")),
-                     na = "",
-                     row.names = F)
+                     na = "")
   }
 
 # Return directory where vpts were stored
