@@ -193,6 +193,7 @@ Other manipulation functions:
 \code{\link{computeDensity}()},
 \code{\link{convertTimeZone}()},
 \code{\link{createVPTS}()},
+\code{\link{filterSpeedFeature37}()},
 \code{\link{mergeVisibilityAndManualBlindTimes}()},
 \code{\link{reclassToBats}()},
 \code{\link{twilight}()}

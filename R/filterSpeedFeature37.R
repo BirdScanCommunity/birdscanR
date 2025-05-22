@@ -7,7 +7,7 @@
 #' @param minEchoDuration minimum duration of a echo to allow speed feature
 #'
 #' @return echoData with the filtered speed feature 37
-#' @family Filter and manipulation functions
+#' @family manipulation functions
 #' @export
 #' @examples
 #' \dontrun{

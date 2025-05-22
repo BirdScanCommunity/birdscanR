@@ -25,8 +25,19 @@ data$echoData <- filterSpeedFeature37( echoData = data$echoData,
                                       minEchoDuration = minEchoDuration )
 }
 }
+\seealso{
+Other manipulation functions: 
+\code{\link{addDayNightInfoPerEcho}()},
+\code{\link{computeDensity}()},
+\code{\link{computeMTR}()},
+\code{\link{convertTimeZone}()},
+\code{\link{createVPTS}()},
+\code{\link{mergeVisibilityAndManualBlindTimes}()},
+\code{\link{reclassToBats}()},
+\code{\link{twilight}()}
+}
 \author{
 Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
 Birgen Haest, \email{birgen.haest@vogelwarte.ch}
 }
-\concept{Filter and manipulation functions}
+\concept{manipulation functions}
