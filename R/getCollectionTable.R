@@ -150,6 +150,10 @@ getCollectionTable = function(dbConnection, dbDriverChar, timeInterval = NULL) {
   names(collectionTable)[names(collectionTable) == "mtr_fact"] = "mtr_factor_old"
   names(collectionTable)[names(collectionTable) == "statistical_classification"] = "statistical_classification_old"
 
+  # Adjust feature37.speed to set unreasonable values to NA
+  # ===========================================================================
+  collectionTable = filterSpeedFeature37(echoData = collectionTable)
+
   # Return collection table
   # ===========================================================================
   return(collectionTable)
