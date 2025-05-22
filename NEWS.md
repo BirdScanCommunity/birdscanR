@@ -1,6 +1,7 @@
 # birdscanR (development version)
 
 - New functionality: `compileData()` was added to compile a standardized MR1 dataset for publication to a data repository and allow easier interoperability (#44).
+- New functionality: `filterSpeedFeature37()` was added to filter unreasonable speed values created for animals flying through the radar beam for too short a time (#50).
 - New functionality: `createVPTS()` was added to create vpts csv output files in line with the ALOFT standard (#52).
 - New functionality: the functions `getCollectionTable()` and `extractDbData()` now include an additional optional parameter `timeInterval` for when you want to limit the data being retrieved from the collection table (#49).
 - New functionality: `extractDBData()` now includes an additional optional parameter `dbHost` to set your postgreSQL database host site (#54).
