@@ -33,7 +33,7 @@ getProtocolTable = function(dbConnection, dbDriverChar) {
   }
   # load protocol table from MS-SQL DB
   # ============================================================================
-  if (class(dbConnection) %in% "PqConnection") {
+  if (class(dbConnection) != "PqConnection") {
     protocolTable = QUERY(dbConnection, query = "SELECT * FROM protocol order by protocolID asc")
     colnames(protocolTable)[colnames(protocolTable) == "starttime"] = "startTime"
     colnames(protocolTable)[colnames(protocolTable) == "stoptime"] = "stopTime"
