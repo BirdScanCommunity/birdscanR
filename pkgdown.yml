@@ -3,7 +3,7 @@ pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   birdscanR: birdscanR.html
-last_built: 2025-05-26T18:10Z
+last_built: 2025-05-28T09:37Z
 urls:
   reference: https://birdscancommunity.github.io/birdscanR/reference
   article: https://birdscancommunity.github.io/birdscanR/articles
