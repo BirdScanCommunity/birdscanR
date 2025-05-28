@@ -5,8 +5,8 @@
 - New functionality: `createVPTS()` was added to create vpts csv output files in line with the ALOFT standard (#52).
 - New functionality: the functions `getCollectionTable()` and `extractDbData()` now include an additional optional parameter `timeInterval` for when you want to limit the data being retrieved from the collection table (#49).
 - New functionality: `extractDBData()` now includes an additional optional parameter `dbHost` to set your postgreSQL database host site (#54).
-- New functionality: `getEchoFeatures()` now includes an additional optional parameter `echoSubset` for when you want to limit the data being retrieved from the `echo_rffeature_map` table to a certain subset of echoes only. In the function `extractDBData()`, the default is now to not extract the full `echo_rffeature_map` table anymore, but only for the echoes included in the `collection` table (which can now be subset based on a time interval). This improves performance for very large databases.
-- Simplification: all `get` functions do not require the `dbDriverChar` argument.
+- New functionality: `getEchoFeatures()` now includes an additional optional parameter `echoSubset` for when you want to limit the data being retrieved from the `echo_rffeature_map` table to a certain subset of echoes only. In the function `extractDBData()`, the default is now to not extract the full `echo_rffeature_map` table anymore, but only for the echoes included in the `collection` table (which can now be subset based on a time interval). This improves performance for very large databases (#78988c56f4d3b6849801f9f8afc6dd46b84b6a3d).
+- Simplification: all `get` functions do not require the `dbDriverChar` argument (#72).
 - Improved documentation: README (#66), pkgdown website (#67) and styling (#70 and #74).
 - Improved collaboration: Contributing guide, Code of conduct and license (#66), GitHub actions for R CMD check, pkgdown and styler (#67).
 
