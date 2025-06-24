@@ -54,9 +54,33 @@ createTimeBins = function(timeRange,
       "'crepBins' to TRUE, and rerun createTimeBins()."
     ))
   }
+  if (!("POSIXct" %in% class(timeRange))) {
+    timeRange = as.POSIXct(timeRange, tz = timeZone)
+  }
+
+  # Check whether requested time range is within the sunriseSunset data
+  # ============================================================================
+  if (as.Date(timeRange[1]) < (as.Date(sunriseSunset$date[1]) + 1)) {
+    warning(paste0(
+      "'createTimeBins()' was called with an input time range that starts ",
+      "earlier than 1 day after the first sunrise/sunset in the sunriseSunset dataset. ",
+      "The start of the timerange was adjusted to the first date in the ",
+      "sunriseSunset dataset + 1 day."
+    ))
+    timeRange[1] = sunriseSunset$date[1] + (60 * 60 * 24)
+  }
+  if (as.Date(timeRange[2]) >= (as.Date(sunriseSunset$date[nrow(sunriseSunset)]) - 2)) {
+    warning(paste0(
+      "'createTimeBins()' was called with an input time range that ends ",
+      "later than 2 days before the last sunrise/sunset in the sunriseSunset dataset. ",
+      "The end of the timerange was adjusted to the last date in the ",
+      "sunriseSunset dataset - 2 days."
+    ))
+    timeRange[2] = sunriseSunset$date[nrow(sunriseSunset)] - (60 * 60 * 24 * 2)
+  }
 
   # Create day/night timeBins, if requested
-  # =============================================================================
+  # ============================================================================
   if (dnBins) {
     if (sunOrCivil == "sun") {
       timeBinsDN = data.frame(
@@ -265,7 +289,6 @@ createTimeBins = function(timeRange,
       (timeBinsCrep$start <= timeRange[2]), ]
   }
 
-
   # Create timeBins with the requested timeBinDuration
   # =============================================================================
   timeStart = timeRange[1] -
@@ -292,7 +315,7 @@ createTimeBins = function(timeRange,
   timeBins = timeBins[(timeBins$stop > timeRange[1]) &
     (timeBins$start < timeRange[2]), ]
   timeBins$start[1] = timeRange[1]
-  timeBins$stop[length(timeBins[, 1])] = timeRange[2]
+  timeBins$stop[nrow(timeBins)] = timeRange[2]
 
   # Remove timeBins with same starttime as any startime in timeBinsCrep or timeBinsDN
   # =============================================================================
@@ -389,6 +412,9 @@ createTimeBins = function(timeRange,
       },
       logical(length(nightTimes[, 1]))
     )
+    if (is.vector(isNight)) {
+      isNight = matrix(isNight, nrow = 1)
+    }
     isNight = colSums(isNight)
     isDay = vapply(
       timeBinsMean,
@@ -397,6 +423,9 @@ createTimeBins = function(timeRange,
       },
       logical(length(dayTimes[, 1]))
     )
+    if (is.vector(isDay)) {
+      isDay = matrix(isDay, nrow = 1)
+    }
     isDay = colSums(isDay)
     timeBins$dayOrNight[as.logical(isNight)] = "night"
     timeBins$dayOrNight[as.logical(isDay)] = "day"
@@ -471,6 +500,9 @@ createTimeBins = function(timeRange,
       },
       logical(nrow(crepusculeMorning))
     )
+    if (is.vector(isCrepMorning)) {
+      isCrepMorning = matrix(isCrepMorning, nrow = 1)
+    }
     isCrepMorning = colSums(isCrepMorning, na.rm = TRUE)
     isCrepEvening = vapply(
       timeBinsMean,
@@ -479,6 +511,9 @@ createTimeBins = function(timeRange,
       },
       logical(nrow(crepusculeEvening))
     )
+    if (is.vector(isCrepEvening)) {
+      isCrepEvening = matrix(isCrepEvening, nrow = 1)
+    }
     isCrepEvening = colSums(isCrepEvening, na.rm = TRUE)
     isNight = vapply(
       timeBinsMean,
@@ -487,6 +522,9 @@ createTimeBins = function(timeRange,
       },
       logical(nrow(nights))
     )
+    if (is.vector(isNight)) {
+      isNight = matrix(isNight, nrow = 1)
+    }
     isNight = colSums(isNight, na.rm = TRUE)
     isDay = vapply(
       timeBinsMean,
@@ -495,6 +533,9 @@ createTimeBins = function(timeRange,
       },
       logical(nrow(days))
     )
+    if (is.vector(isDay)) {
+      isDay = matrix(isDay, nrow = 1)
+    }
     isDay = colSums(isDay, na.rm = TRUE)
     timeBins$dielPhase[as.logical(isCrepMorning)] = "crepusculeMorning"
     timeBins$dielPhase[as.logical(isCrepEvening)] = "crepusculeEvening"
