@@ -13,8 +13,10 @@
 #' \dontrun{
 #' minEchoDuration = 5
 #'
-#' data$echoData <- filterSpeedFeature37( echoData = data$echoData,
-#'                                       minEchoDuration = minEchoDuration )
+#' data$echoData <- filterSpeedFeature37(
+#'   echoData = data$echoData,
+#'   minEchoDuration = minEchoDuration
+#' )
 #' }
 filterSpeedFeature37 <- function(echoData = NULL, minEchoDuration = 5) {
   if (!is.null(echoData)) {
