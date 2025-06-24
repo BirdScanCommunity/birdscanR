@@ -21,9 +21,9 @@
 #' }
 #'
 createTimeRangeForPlot = function(startDate = timeRangeData[1],
-                               endDate = timeRangeData[2],
-                               periodLength = 7,
-                               returnAsList = TRUE) {
+                                  endDate = timeRangeData[2],
+                                  periodLength = 7,
+                                  returnAsList = TRUE) {
   # Convert inputs to Date class if they're not already
   # =============================================================================
   startDate <- as.Date(startDate)
