@@ -173,35 +173,34 @@ extractDbData = function(dbDriverChar = "SQL Server",
   # load collection table
   # =============================================================================
   message("Extracting collection table from DB...")
-  collectionTable = getCollectionTable(dbConnection, dbDriverChar, timeInterval)
+  collectionTable = getCollectionTable(dbConnection, timeInterval)
 
   # load protocol from local MS-SQL DB
   # =============================================================================
   message("Extracting protocol table from DB...")
-  protocolTable = getProtocolTable(dbConnection, dbDriverChar)
+  protocolTable = getProtocolTable(dbConnection)
 
   # load radar from local MS-SQL DB
   # =============================================================================
   message("Extracting radar table from DB...")
-  radarTable = getRadarTable(dbConnection, dbDriverChar)
+  radarTable = getRadarTable(dbConnection)
 
   # load site from local MS-SQL DB
   # =============================================================================
   message("Extracting site table from DB...")
-  siteTable = getSiteTable(dbConnection, dbDriverChar)
+  siteTable = getSiteTable(dbConnection)
 
   # load visibility from local MS-SQL DB
   # =============================================================================
   message("Extracting visibility table from DB...")
-  visibilityData = getVisibilityTable(dbConnection, dbDriverChar)
+  visibilityData = getVisibilityTable(dbConnection)
 
   # load manual visibility from local MS-SQL DB
   # =============================================================================
   message("Extracting MANUAL visibility table from DB...")
   manualVisibilityTable = try(
     getManualVisibilityTable(
-      dbConnection,
-      dbDriverChar
+      dbConnection
     ),
     silent = TRUE
   )

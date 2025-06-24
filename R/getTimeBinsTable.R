@@ -33,7 +33,7 @@ getTimeBinsTable = function(dbConnection, dbDriverChar) {
   }
   # load protocol table from local MS-SQL DB
   # ============================================================================
-  if (class(dbConnection) %in% "PqConnection") {
+  if (class(dbConnection) != "PqConnection") {
     timeBinsTable = QUERY(
       dbConnection,
       query =
