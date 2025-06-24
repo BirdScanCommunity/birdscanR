@@ -157,7 +157,7 @@ twilight = function(timeRange,
       format(as.POSIXct(nauticalDawn[i + 1]), format = "%Y-%m-%d %H:%M:%S", tz = timeZone)
   }
 
-  # Convert all twilight time variables to POSICct class
+  # Convert all twilight time variables to POSIXct class
   # ===========================================================================
   twilightData$sunStart = as.POSIXct(twilightData$sunStart,
     format = "%Y-%m-%d %H:%M:%S",
