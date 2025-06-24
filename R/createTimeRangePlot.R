@@ -1,14 +1,15 @@
-#' @title Extract DB Data
-#' @description Segment the time range into regular periods for plots.
-#' @author Baptiste Schmid
-#' @param start_date Per default, the first element of the input setting 'timeRangeData'
-#' @param end_date Per default, the second element of the input setting 'timeRangeData'
-#' @param period_length duration in days of the period
+#' @title Create  Time Range for Plot
+#' @description Create a list by segmenting the input time range into regular periods for plots.
+#' @author Baptiste Schmid, Birgen Haest
+#' @param startDate Per default, the first element of the input setting 'timeRangeData'
+#' @param endDate Per default, the second element of the input setting 'timeRangeData'
+#' @param periodLength Duration in days of each period
 #' @param returnAsList TRUE per default, otherwise as data.frame.
 #'
 #' @return A list of time periods
-#' @family
+#' @family plot functions
 #' @export
+
 #' @examples
 #' \dontrun{
 #' # Set server, database, and other input settings
@@ -19,30 +20,30 @@
 #' print(timeRangePlot)
 #' }
 #'
-createTimeRangePlot = function(start_date = timeRangeData[1],
-                               end_date = timeRangeData[2],
-                               period_length = 7,
+createTimeRangeForPlot = function(startDate = timeRangeData[1],
+                               endDate = timeRangeData[2],
+                               periodLength = 7,
                                returnAsList = TRUE) {
   # Convert inputs to Date class if they're not already
   # =============================================================================
-  start_date <- as.Date(start_date)
-  end_date <- as.Date(end_date)
+  startDate <- as.Date(startDate)
+  endDate <- as.Date(endDate)
 
   # Calculate number of complete periods
   # =============================================================================
-  total_days <- as.numeric(difftime(end_date, start_date, units = "days"))
-  num_periods <- ceiling(total_days / period_length)
+  total_days <- as.numeric(difftime(endDate, startDate, units = "days"))
+  num_periods <- ceiling(total_days / periodLength)
 
   # Create sequence of dates
   period_starts <- seq(
-    from = start_date,
+    from = startDate,
     length.out = num_periods,
-    by = paste(period_length, "days")
+    by = paste(periodLength, "days")
   )
 
   # Create period ends (one day less than next period start)
   # =============================================================================
-  period_ends <- c(period_starts[-1] - 1, end_date)
+  period_ends <- c(period_starts[-1] - 1, endDate)
 
   # Combine into a data frame
   # =============================================================================
