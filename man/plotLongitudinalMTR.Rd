@@ -143,6 +143,7 @@ plotExplorationplotLongitudinalMTR(
 }
 \seealso{
 Other plot functions: 
+\code{\link{createTimeRangeForPlot}()},
 \code{\link{plotExploration}()}
 }
 \author{
