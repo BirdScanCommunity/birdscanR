@@ -19,7 +19,7 @@ reference:
 - title: Sample data
   contents:
   - has_concept("sample data")
-articles:
-- title: "More HowTo guides"
-  contents:
-  - extractingSingleTableFromTheSqlDatabase
+navbar:
+  components:
+    articles:
+      text: "More HowTo Guide"  # Change "Articles" to "More HowTo Guide"
