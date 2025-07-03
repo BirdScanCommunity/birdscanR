@@ -40,7 +40,7 @@ To get started, see:
   overview of all functions.
 - [More HowTo
   Guides](https://birdscancommunity.github.io/birdscanR/articles/):
-  Addtional guides to get you up and going with the different
+  Additional guides to get you up and going with the different
   functionality of the package.
 
 ## Installation
