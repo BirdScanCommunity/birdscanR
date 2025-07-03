@@ -1,0 +1,125 @@
+---
+title: "Guide to extracting specific tables from a Birdscan MR1 SQL database"
+author: Birgen Haest, Fabian Hertner, Baptiste Schmid
+output: rmarkdown::html_vignette
+description: > 
+  Which functions do I need to call to get the data from specific tables from the Birdscsan MR1 SQL database? This vignette describes the main workflow to do so.
+vignette: >
+  %\VignetteIndexEntry{Extracting specifc tables from the SQL database}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+``` {r, echo = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+***
+# Summary
+Instead of using `extractDbData()` to extract all relevant data at once to calculate densities or Migration Traffic Rates, one sometimes just wants to have a look at certain specific tables in the database like the `site`, `radar` or any of the other tables in the 'Birdscan MR1' 'SQL' database. This vignette provides some examples of how the different 'get' functions can be used to extract these different tables: 
+
+- `getBatClassification()`: extract the bat classification table
+
+- `getCollectionTable()`: extract the echo collection table
+
+- `getEchoFeatures()`: extract the echo features table
+
+- `getEchoValidationTable()`: extract the echo validation table
+
+- `getProtocolTable()`: extract the protocol table
+
+- `getRadarTable()`: extract the radar table
+
+- `getRfClassification()`: extract the RF classification table
+
+- `getSiteTable()`: extract the site table
+
+- `getTimeBinsTable()`: extract the time bins table (note: These are not the time bins used in `computeMTR()` and `computeDensity()`)
+
+- `getVisibilityTable()`: extract the visibility table
+
+
+***
+# Before we get started
+
+We first load the birdscanR package:
+```{r}
+library(birdscanR)
+```
+
+Then we set our inputs:
+```{r}
+# Set main output directory
+# =============================================================================
+mainOutputDir = file.path(".", "results")
+```
+
+Open the connection to the SQL database: 
+```{r, eval=FALSE}
+# Set server and database settings
+# =============================================================================
+dbServer = "MACHINE\\SERVERNAME" # Set the name of your SQL server
+dbName = "db_Name" # Set the name of your database
+dbDriverChar = "SQL Server" # Set either "SQL Server" or "PostgreSQL"
+
+# Open the connection with the database
+# ===========================================================================
+dsn = paste0(
+  "driver=", dbDriverChar, ";server=", dbServer,
+  ";database=", dbName,
+  ";uid=", rstudioapi::askForPassword("Database user"),
+  ";pwd=", rstudioapi::askForPassword("Database password")
+)
+dbConnection = RODBC::odbcDriverConnect(dsn)
+```
+
+***
+# Examples
+
+## Extracting the bat classification table
+
+Use `getBatClassification()` to extract the table with the bat vs nonbat classifications.   
+```{r, eval=FALSE}
+# load collection table
+# =============================================================================
+message("Extracting the bat classification table from DB...")
+batClassifications = getBatClassification(dbConnection, timeInterval)
+```
+
+
+## Extracting the echo collection table
+
+Use `getCollectionTable()` to extract the echo data from the collection table.  The parameter `timeInterval` can be used to restrict extraction to a specific time interval only. 
+```{r, eval=FALSE}
+# load collection table
+# =============================================================================
+message("Extracting collection table from DB...")
+timeInterval = NULL # e.g. c(as.Date("2024-03-01"),as.Date("2024-03-15"))
+echoData = getCollectionTable(dbConnection, timeInterval)
+```
+
+
+## Extracting specific echo features form the echo_rffeature_map table
+
+Use `getEchoFeatures()` to extract additional features stored for each sample.  For a full list of available features, and the corresponding feature numbers, see the `rffeatures` table in the SQL dataset. There are currently 190 features available. Use `c(0, 189)` to extract all features from the `echo_rffeature_map` table.
+```{r, eval=FALSE}
+# Example: Extract the wing beat frequency and credibility
+# =============================================================================
+message("Extracting rffeatures table from DB...")
+listOfRfFeaturesToExtract = c(167, 168)
+echoRfFeatureMap = getEchoFeatures(dbConnection, dbDriverChar,
+  listOfRfFeaturesToExtract = listOfRfFeaturesToExtract)
+
+# Add the newly extracted features to the existing echoData
+# =============================================================================
+echoData %>% left_join(echoData, echoRfFeatureMap, by = join_by(row == echo))
+```
+
+## Extracting information on the study site
+
+Use `getSiteTable()` to extract the `site` table that holds information about the site where the data was collected like the start and end dates of the radar campaign, latitude, longitude, altitude, and other details.
+```{r, eval=FALSE}
+# Extract the site  table from the SQL database
+# =============================================================================
+message("Extracting site table from DB...")
+siteTable = getSiteTable(dbConnection)
+```
+***
