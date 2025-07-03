@@ -21,8 +21,10 @@ Filter outliers in Speed feature (collection.feature37)
 \dontrun{
 minEchoDuration = 5
 
-data$echoData <- filterSpeedFeature37( echoData = data$echoData,
-                                      minEchoDuration = minEchoDuration )
+data$echoData <- filterSpeedFeature37(
+  echoData = data$echoData,
+  minEchoDuration = minEchoDuration
+)
 }
 }
 \seealso{

@@ -19,3 +19,7 @@ reference:
 - title: Sample data
   contents:
   - has_concept("sample data")
+articles:
+- title: "More HowTo guides"
+  contents:
+  - extractingSingleTableFromTheSqlDatabase
