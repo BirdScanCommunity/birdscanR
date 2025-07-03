@@ -19,7 +19,3 @@ reference:
 - title: Sample data
   contents:
   - has_concept("sample data")
-navbar:
-  components:
-    articles:
-      text: "More HowTo Guide"  # Change "Articles" to "More HowTo Guide"
