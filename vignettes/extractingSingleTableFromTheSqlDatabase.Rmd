@@ -106,7 +106,8 @@ Use `getEchoFeatures()` to extract additional features stored for each sample.  
 message("Extracting rffeatures table from DB...")
 listOfRfFeaturesToExtract = c(167, 168)
 echoRfFeatureMap = getEchoFeatures(dbConnection, dbDriverChar,
-  listOfRfFeaturesToExtract = listOfRfFeaturesToExtract)
+  listOfRfFeaturesToExtract = listOfRfFeaturesToExtract
+)
 
 # Add the newly extracted features to the existing echoData
 # =============================================================================
