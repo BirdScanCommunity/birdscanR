@@ -234,7 +234,7 @@ computeMTR = function(dbName,
 # Remove echoes with NA in 'mtr_factor'
 # =============================================================================
   if (any(is.na(echoes$mtr_factor_rf))){
-    n = length(is.na(echoes$mtr_factor_rf))
+    n = length(which(is.na(echoes$mtr_factor_rf)))
     echoes = echoes[!is.na(echoes$mtr_factor_rf),]
     message(paste0("Missing MTR-factors for ",  n, " echoes, thus excldued from the MTR calculation."))
   }
