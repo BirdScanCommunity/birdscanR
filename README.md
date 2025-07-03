@@ -38,6 +38,10 @@ To get started, see:
 - [Function
   reference](https://birdscancommunity.github.io/birdscanR/reference/index.html):
   overview of all functions.
+- [More HowTo
+  Guides](https://birdscancommunity.github.io/birdscanR/articles/):
+  Addtional guides to get you up and going with the different
+  functionality of the package.
 
 ## Installation
 
