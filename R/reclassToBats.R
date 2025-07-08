@@ -2,7 +2,7 @@
 #' @author Fabian Hertner
 #' @description Reclassifies echoes based on bat classification.
 #' @param echoData echodata dataframe, output from extractDbData
-#' @param batClassProbabilitiesAndMtrFactors probabilities of bat classification,
+#' @param batProbabilitiesAndMtrFactors probabilities of bat classification,
 #' output from extractDbData'
 #' @param reclassToBatCutoff Threshold (0..1), classification of echoes with
 #' bat probability higher than reclassToBatCutoff will be set to 'bat'
@@ -44,26 +44,26 @@
 #' # ===========================================================================
 #' dbData$echoData = reclassToBats(
 #'   echoData = dbData$echoData,
-#'   batClassProbabilitiesAndMtrFactors =
-#'     dbData$batClassProbabilitiesAndMtrFactors,
+#'   batProbabilitiesAndMtrFactors =
+#'     dbData$batProbabilitiesAndMtrFactors,
 #'   reclassToBatCutoff = 0.5
 #' )
 #' }
 reclassToBats = function(echoData = NULL,
-                         batClassProbabilitiesAndMtrFactors = NULL,
+                         batProbabilitiesAndMtrFactors = NULL,
                          reclassToBatCutoff = -1) {
   # reclass by bat probability
   if (!is.null(echoData) &&
-    !is.null(batClassProbabilitiesAndMtrFactors) &&
+    !is.null(batProbabilitiesAndMtrFactors) &&
     !is.null(reclassToBatCutoff) &&
     is.numeric(reclassToBatCutoff) &&
     reclassToBatCutoff >= 0 &&
     reclassToBatCutoff <= 1) {
-    if (nrow(batClassProbabilitiesAndMtrFactors) == 0) {
+    if (nrow(batProbabilitiesAndMtrFactors) == 0) {
       stop("no bat class probabilities, check database and settings")
     }
 
-    echoDataTmp <- merge(echoData, batClassProbabilitiesAndMtrFactors, by = "echo", all.x = TRUE, all.y = FALSE)
+    echoDataTmp <- merge(echoData, batProbabilitiesAndMtrFactors, by = "echo", all.x = TRUE, all.y = FALSE)
 
     echoData[!is.na(echoDataTmp$classProb.bat) & echoDataTmp$classProb.bat > reclassToBatCutoff, ]$class = "bat"
     echoData[!is.na(echoDataTmp$classProb.bat) & echoDataTmp$classProb.bat > reclassToBatCutoff, ]$class_probability = echoDataTmp[!is.na(echoDataTmp$classProb.bat) & echoDataTmp$classProb.bat > reclassToBatCutoff, ]$classProb.bat
