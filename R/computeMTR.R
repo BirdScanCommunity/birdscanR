@@ -166,6 +166,13 @@ computeMTR = function(dbName,
                 "'computePerDayCrepusculeNight' to TRUE, and rerun computeMTR()."))
   }
 
+# Check if there is at least one echo in the echo dataset
+# =============================================================================
+  if(nrow(echoes) == 0){
+    stop(paste0("There are no echoes to calculate the mtr on. Please check your ",
+                "input dataset."))
+  }
+
 # Create altitudeBins
 # =============================================================================
   message("Creating altitude bins..")
