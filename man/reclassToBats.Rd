@@ -6,14 +6,14 @@
 \usage{
 reclassToBats(
   echoData = NULL,
-  batClassProbabilitiesAndMtrFactors = NULL,
+  batProbabilitiesAndMtrFactors = NULL,
   reclassToBatCutoff = -1
 )
 }
 \arguments{
 \item{echoData}{echodata dataframe, output from extractDbData}
 
-\item{batClassProbabilitiesAndMtrFactors}{probabilities of bat classification,
+\item{batProbabilitiesAndMtrFactors}{probabilities of bat classification,
 output from extractDbData'}
 
 \item{reclassToBatCutoff}{Threshold (0..1), classification of echoes with
@@ -59,8 +59,8 @@ dbData = extractDbData(
 # ===========================================================================
 dbData$echoData = reclassToBats(
   echoData = dbData$echoData,
-  batClassProbabilitiesAndMtrFactors =
-    dbData$batClassProbabilitiesAndMtrFactors,
+  batProbabilitiesAndMtrFactors =
+    dbData$batProbabilitiesAndMtrFactors,
   reclassToBatCutoff = 0.5
 )
 }
