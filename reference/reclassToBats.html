@@ -46,7 +46,7 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">reclassToBats</span><span class="op">(</span></span>
 <span>  echoData <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  batClassProbabilitiesAndMtrFactors <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  batProbabilitiesAndMtrFactors <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  reclassToBatCutoff <span class="op">=</span> <span class="op">-</span><span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -59,7 +59,7 @@
 <dd><p>echodata dataframe, output from extractDbData</p></dd>
 
 
-<dt id="arg-batclassprobabilitiesandmtrfactors">batClassProbabilitiesAndMtrFactors<a class="anchor" aria-label="anchor" href="#arg-batclassprobabilitiesandmtrfactors"></a></dt>
+<dt id="arg-batprobabilitiesandmtrfactors">batProbabilitiesAndMtrFactors<a class="anchor" aria-label="anchor" href="#arg-batprobabilitiesandmtrfactors"></a></dt>
 <dd><p>probabilities of bat classification,
 output from extractDbData'</p></dd>
 
@@ -125,8 +125,8 @@ bat probability higher than reclassToBatCutoff will be set to 'bat'</p></dd>
 <span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
 <span class="r-in"><span><span class="va">dbData</span><span class="op">$</span><span class="va">echoData</span> <span class="op">=</span> <span class="fu">reclassToBats</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  echoData <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">echoData</span>,</span></span>
-<span class="r-in"><span>  batClassProbabilitiesAndMtrFactors <span class="op">=</span></span></span>
-<span class="r-in"><span>    <span class="va">dbData</span><span class="op">$</span><span class="va">batClassProbabilitiesAndMtrFactors</span>,</span></span>
+<span class="r-in"><span>  batProbabilitiesAndMtrFactors <span class="op">=</span></span></span>
+<span class="r-in"><span>    <span class="va">dbData</span><span class="op">$</span><span class="va">batProbabilitiesAndMtrFactors</span>,</span></span>
 <span class="r-in"><span>  reclassToBatCutoff <span class="op">=</span> <span class="fl">0.5</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
