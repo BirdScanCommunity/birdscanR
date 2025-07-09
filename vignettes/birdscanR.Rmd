@@ -1,9 +1,9 @@
 ---
 title: "Introduction to birdscanR"
-author: Birgen Haest, Fabian Hertner
+author: Birgen Haest, Baptiste Schmid, Fabian Hertner
 output: rmarkdown::html_vignette
 description: > 
-  Which functions do I need to call to get out migration traffic rates from a Birdscan database? This vignette describes the main workflow to do so.
+  Which functions do I need to call to calculate migration traffic rates from data stored in an SQL Birdscan database? This vignette describes the main workflow to do so.
 vignette: >
   %\VignetteIndexEntry{Introduction to birdscanR}
   %\VignetteEngine{knitr::rmarkdown}
@@ -15,13 +15,15 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ***
 # Summary
 
-This vignette provides an example of the basic workflow to go from an 'MS-SQL' or 'PostgreSQL' Birdscan database to Activity Rates, or Migration Traffic Rates. The workflow includes 3 steps:
+This vignette provides an example of the basic workflow to go from an 'MS-SQL' or 'PostgreSQL' Birdscan database to Activity Rates, or Migration Traffic Rates for the target animal classes. The workflow includes 4 steps, of which step 2 is optional, i.e., only of interest when you also want to know about possible migratory bat activity):
 
 1.    Extract the relevant data from the SQL database.
 
-1.    Filter the data to your target output period, class, and other preferences.
+2.    (optional) Join the bat classification with the base MR1 classification output (that contains insects and different bird groups). This step is only needed if you want to calculate migration traffic rates for bats, as the bat classification is not part of the standard MR1 classification output. If you are only interested in birds and insects, you can skip this step.
 
-1.    Calculate the activity or migration traffic rates
+3.    Filter the data to your target output period, classes, and other preferences.
+
+4.    Calculate the activity or migration traffic rates
 
 ***
 # Before we get started
@@ -83,7 +85,7 @@ rotationSelection = c(1)
 # Example: classSelection = c("passerine_type", "wader_type", "swift_type",
 #                             "large_bird", "unid_bird", "bird_flock",
 #                             "insect", "nonbio", "precipitation")
-classSelection = c("insect")
+classSelection = c("insect", "bat", "passerine_type")
 
 # Set the classification propability cutoff (between 0 and 1) - only objects
 # for which the chosen label also has a classification probability > than the
@@ -117,7 +119,7 @@ useEchoValidator = FALSE
 saveBlindTimes = TRUE
 
 # Set altitude Range and Bin Size for the MTR calculations
-altitudeRange.mtr = c(25, 1025)
+altitudeRange.mtr = c(50, 500)
 altitudeBinSize = 50
 
 # time range for timeBins (targetTimeZone) - format: "yyyy-MM-dd hh:mm"
@@ -144,7 +146,7 @@ propObsTimeCutoff = 0.2
 # classSelection = c("passerine_type", "wader_type", "swift_type",
 #                    "large_bird", "unid_bird", "bird_flock",
 #                    "insect", "nonbio", "precipitation")
-classSelection.mtr = c("insect")
+classSelection.mtr = c("insect", "bat")
 
 # Set whether to compute MTR per timebin or per day/night
 # TRUE: MTR is computed per day and night;
@@ -156,16 +158,18 @@ saveMTR2File = TRUE
 ```
 
 ***
-# Extract the relevant data from the SQL database
+# Step 1: Extract the relevant data from the SQL database (or load it from a )
 
-Extracting the data that is need for MTR calculations, can be done with the `extractDbData()` function. This function will connect to your SQL database and read all the necessary data to memory. If requested, it will also write it to an .rds file in the output directory you chose. The file is automatically named to: `[yourDbName]_DataExtract.rds`, and written to the main output directory you defined in the input settings.
+Extracting the data that is need for MTR calculations, can be done with the `extractDbData()` function. This function will connect to your SQL database and read all the necessary data to memory. If requested by setting the parameter `saveDbToFile` to `TRUE` , it will also write it to an .rds file in the output directory you chose. The file is automatically named to: `[yourDbName]_DataExtract.rds`, and written to the main output directory you defined in the input settings.
+
+If you currently have no connection to an SQL server with your MR1 database attached, and have extracted or received an extracted dataset earlier, you can directly load your database from the the RDS file, using 'dbData = readRDS(file.path(`directory containing the file`, `[yourDbName]_DataExtract.rds`))'.
 
 ```{r, eval=FALSE}
 # Print progress message
 # =============================================================================
 message(paste0("Extracting data from ", dbName))
 
-# Get data
+# Extract the data from the SQL database
 # =============================================================================
 dbData = extractDbData(
   dbDriverChar = dbDriverChar,
@@ -186,7 +190,24 @@ message(paste0("Finished extracting data from ", dbName))
 ```
 
 ***
-# Filter the extracted data to what you are interested in
+# Step 2: (optional) Join the bat classification with the base MR1 classification output
+
+In addition to the standard echo classification in insects, different bird groups, and non-biological echoes, Birdscan MR1 databases that were measuring with or have been updated to version 1.7.0.0 or higher, offer the possibility to classify echoes as bat.
+
+The bat infromation is, however, included in separate tables in the SQL database. With `reclassToBats()` one can merge the bat classification information with the standard classification output. If you are not interested in bats, you can simply skip this step.
+
+```{r, eval=FALSE}
+# Join bat classification information with standard echo classifcation
+# ===========================================================================
+dbData$echoData = reclassToBats(
+  echoData = dbData$echoData,
+  batClassProbabilitiesAndMtrFactors = dbData$batProbabilitiesAndMtrFactors,
+  reclassToBatCutoff = 0.5
+)
+```
+
+***
+# Step 3: Filter the extracted data to what you are interested in
 
 Filtering both the protocol and echo data (extracted in the previous step) can be done in one step with the function `filterData()`.   
 
@@ -273,7 +294,7 @@ saveRDS(dbData, outputFile)
 message(paste0("Finished filtering data from ", dbName))
 ```
 
-# Calculate the activity or migration traffic rates
+# Step 4: Calculate the activity or migration traffic rates
 
 Calculation of the migration traffic rates is done with the function computeMTR().
 
@@ -375,10 +396,7 @@ The function `plotLongitudinalMTR()` creates a time series plot of the MTR value
 # A plot is created for each timerange
 # use format "yyyy-MM-dd hh:mm"
 # ===========================================================================
-timeRangePlot = list(
-  c("2021-01-15 00:00", "2021-01-22 00:00"),
-  c("2021-01-23 00:00", "2021-01-31 00:00")
-)
+timeRangePlot = createTimeRangePlot(timeRangeData[1], timeRangeData[2], 7)
 
 # Set output path for plots
 # ===========================================================================
@@ -387,7 +405,7 @@ outputDir.plots = file.path(mainOutputDir, "Plots")
 # Set the class of which the MTR data should be plotted.
 # If not set or set to “allClasses”, MTR of all classes will be plotted.
 # ===========================================================================
-plotClass = "allClasses"
+plotClass = "passerine_type"
 
 # Set the maximum value of the y-Scale of the plot to the given value.
 # If negative or not set, the y-Scale is auto-scaled.
