@@ -11,9 +11,9 @@
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to birdscanR">
-<meta name="description" content="Which functions do I need to call to get out migration traffic rates from a Birdscan database? This vignette describes the main workflow to do so.
+<meta name="description" content="Which functions do I need to call to calculate migration traffic rates from data stored in an SQL Birdscan database? This vignette describes the main workflow to do so.
 ">
-<meta property="og:description" content="Which functions do I need to call to get out migration traffic rates from a Birdscan database? This vignette describes the main workflow to do so.
+<meta property="og:description" content="Which functions do I need to call to calculate migration traffic rates from data stored in an SQL Birdscan database? This vignette describes the main workflow to do so.
 ">
 </head>
 <body>
@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">birdscanR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9021</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9022</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,7 @@
 
       <h1>Introduction to birdscanR</h1>
                         <h4 data-toc-skip class="author">Birgen Haest,
-Fabian Hertner</h4>
+Baptiste Schmid, Fabian Hertner</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/BirdScanCommunity/birdscanR/blob/develop/vignettes/birdscanR.Rmd" class="external-link"><code>vignettes/birdscanR.Rmd</code></a></small>
@@ -78,10 +78,18 @@ Fabian Hertner</h4>
 </h2>
 <p>This vignette provides an example of the basic workflow to go from an
 ‘MS-SQL’ or ‘PostgreSQL’ Birdscan database to Activity Rates, or
-Migration Traffic Rates. The workflow includes 3 steps:</p>
+Migration Traffic Rates for the target animal classes. The workflow
+includes 4 steps, of which step 2 is optional, i.e., only of interest
+when you also want to know about possible migratory bat activity):</p>
 <ol style="list-style-type: decimal">
 <li><p>Extract the relevant data from the SQL database.</p></li>
-<li><p>Filter the data to your target output period, class, and other
+<li><p>(optional) Join the bat classification with the base MR1
+classification output (that contains insects and different bird groups).
+This step is only needed if you want to calculate migration traffic
+rates for bats, as the bat classification is not part of the standard
+MR1 classification output. If you are only interested in birds and
+insects, you can skip this step.</p></li>
+<li><p>Filter the data to your target output period, classes, and other
 preferences.</p></li>
 <li><p>Calculate the activity or migration traffic rates</p></li>
 </ol>
@@ -145,7 +153,7 @@ preferences.</p></li>
 <span><span class="co"># Example: classSelection = c("passerine_type", "wader_type", "swift_type",</span></span>
 <span><span class="co">#                             "large_bird", "unid_bird", "bird_flock",</span></span>
 <span><span class="co">#                             "insect", "nonbio", "precipitation")</span></span>
-<span><span class="va">classSelection</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"insect"</span><span class="op">)</span></span>
+<span><span class="va">classSelection</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"insect"</span>, <span class="st">"bat"</span>, <span class="st">"passerine_type"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Set the classification propability cutoff (between 0 and 1) - only objects</span></span>
 <span><span class="co"># for which the chosen label also has a classification probability &gt; than the</span></span>
@@ -179,7 +187,7 @@ preferences.</p></li>
 <span><span class="va">saveBlindTimes</span> <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span></span>
 <span><span class="co"># Set altitude Range and Bin Size for the MTR calculations</span></span>
-<span><span class="va">altitudeRange.mtr</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">1025</span><span class="op">)</span></span>
+<span><span class="va">altitudeRange.mtr</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">500</span><span class="op">)</span></span>
 <span><span class="va">altitudeBinSize</span> <span class="op">=</span> <span class="fl">50</span></span>
 <span></span>
 <span><span class="co"># time range for timeBins (targetTimeZone) - format: "yyyy-MM-dd hh:mm"</span></span>
@@ -206,7 +214,7 @@ preferences.</p></li>
 <span><span class="co"># classSelection = c("passerine_type", "wader_type", "swift_type",</span></span>
 <span><span class="co">#                    "large_bird", "unid_bird", "bird_flock",</span></span>
 <span><span class="co">#                    "insect", "nonbio", "precipitation")</span></span>
-<span><span class="va">classSelection.mtr</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"insect"</span><span class="op">)</span></span>
+<span><span class="va">classSelection.mtr</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"insect"</span>, <span class="st">"bat"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Set whether to compute MTR per timebin or per day/night</span></span>
 <span><span class="co"># TRUE: MTR is computed per day and night;</span></span>
@@ -218,21 +226,29 @@ preferences.</p></li>
 <hr>
 </div>
 <div class="section level2">
-<h2 id="extract-the-relevant-data-from-the-sql-database">Extract the relevant data from the SQL database<a class="anchor" aria-label="anchor" href="#extract-the-relevant-data-from-the-sql-database"></a>
+<h2 id="step-1-extract-the-relevant-data-from-the-sql-database-or-load-it-from-a">Step 1: Extract the relevant data from the SQL database (or load it
+from a )<a class="anchor" aria-label="anchor" href="#step-1-extract-the-relevant-data-from-the-sql-database-or-load-it-from-a"></a>
 </h2>
 <p>Extracting the data that is need for MTR calculations, can be done
 with the <code><a href="../reference/extractDbData.html">extractDbData()</a></code> function. This function will
 connect to your SQL database and read all the necessary data to memory.
-If requested, it will also write it to an .rds file in the output
+If requested by setting the parameter <code>saveDbToFile</code> to
+<code>TRUE</code> , it will also write it to an .rds file in the output
 directory you chose. The file is automatically named to:
 <code>[yourDbName]_DataExtract.rds</code>, and written to the main
 output directory you defined in the input settings.</p>
+<p>If you currently have no connection to an SQL server with your MR1
+database attached, and have extracted or received an extracted dataset
+earlier, you can directly load your database from the the RDS file,
+using ‘dbData =
+readRDS(file.path(<code>directory containing the file</code>,
+<code>[yourDbName]_DataExtract.rds</code>))’.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Print progress message</span></span>
 <span><span class="co"># =============================================================================</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Extracting data from "</span>, <span class="va">dbName</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Get data</span></span>
+<span><span class="co"># Extract the data from the SQL database</span></span>
 <span><span class="co"># =============================================================================</span></span>
 <span><span class="va">dbData</span> <span class="op">=</span> <span class="fu"><a href="../reference/extractDbData.html">extractDbData</a></span><span class="op">(</span></span>
 <span>  dbDriverChar <span class="op">=</span> <span class="va">dbDriverChar</span>,</span>
@@ -253,12 +269,34 @@ output directory you defined in the input settings.</p>
 <hr>
 </div>
 <div class="section level2">
-<h2 id="filter-the-extracted-data-to-what-you-are-interested-in">Filter the extracted data to what you are interested in<a class="anchor" aria-label="anchor" href="#filter-the-extracted-data-to-what-you-are-interested-in"></a>
+<h2 id="step-2-optional-join-the-bat-classification-with-the-base-mr1-classification-output">Step 2: (optional) Join the bat classification with the base MR1
+classification output<a class="anchor" aria-label="anchor" href="#step-2-optional-join-the-bat-classification-with-the-base-mr1-classification-output"></a>
+</h2>
+<p>In addition to the standard echo classification in insects, different
+bird groups, and non-biological echoes, Birdscan MR1 databases that were
+measuring with or have been updated to version 1.7.0.0 or higher, offer
+the possibility to classify echoes as bat.</p>
+<p>The bat infromation is, however, included in separate tables in the
+SQL database. With <code><a href="../reference/reclassToBats.html">reclassToBats()</a></code> one can merge the bat
+classification information with the standard classification output. If
+you are not interested in bats, you can simply skip this step.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Join bat classification information with standard echo classifcation</span></span>
+<span><span class="co"># ===========================================================================</span></span>
+<span><span class="va">dbData</span><span class="op">$</span><span class="va">echoData</span> <span class="op">=</span> <span class="fu"><a href="../reference/reclassToBats.html">reclassToBats</a></span><span class="op">(</span></span>
+<span>  echoData <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">echoData</span>,</span>
+<span>  batClassProbabilitiesAndMtrFactors <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">batProbabilitiesAndMtrFactors</span>,</span>
+<span>  reclassToBatCutoff <span class="op">=</span> <span class="fl">0.5</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level2">
+<h2 id="step-3-filter-the-extracted-data-to-what-you-are-interested-in">Step 3: Filter the extracted data to what you are interested in<a class="anchor" aria-label="anchor" href="#step-3-filter-the-extracted-data-to-what-you-are-interested-in"></a>
 </h2>
 <p>Filtering both the protocol and echo data (extracted in the previous
 step) can be done in one step with the function
 <code><a href="../reference/filterData.html">filterData()</a></code>.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Print progress message</span></span>
 <span><span class="co"># =============================================================================</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Filtering data from "</span>, <span class="va">dbName</span><span class="op">)</span><span class="op">)</span></span>
@@ -341,11 +379,11 @@ step) can be done in one step with the function
 <span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Finished filtering data from "</span>, <span class="va">dbName</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="calculate-the-activity-or-migration-traffic-rates">Calculate the activity or migration traffic rates<a class="anchor" aria-label="anchor" href="#calculate-the-activity-or-migration-traffic-rates"></a>
+<h2 id="step-4-calculate-the-activity-or-migration-traffic-rates">Step 4: Calculate the activity or migration traffic rates<a class="anchor" aria-label="anchor" href="#step-4-calculate-the-activity-or-migration-traffic-rates"></a>
 </h2>
 <p>Calculation of the migration traffic rates is done with the function
 computeMTR().</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Print information message</span></span>
 <span><span class="co"># =====================================================================</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="va">computePerDayNight</span><span class="op">)</span> <span class="op">{</span></span>
@@ -437,17 +475,14 @@ traffic rates<a class="anchor" aria-label="anchor" href="#create-some-plots-to-e
 functions to visualize and explore the MTR results.</p>
 <p>The function <code><a href="../reference/plotLongitudinalMTR.html">plotLongitudinalMTR()</a></code> creates a time series
 plot of the MTR values (one per altitude bin in the MTR data):</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Make time series plot</span></span>
 <span><span class="co"># =============================================================================</span></span>
 <span><span class="co"># Set time range for plots (in targetTimeZone) ;</span></span>
 <span><span class="co"># A plot is created for each timerange</span></span>
 <span><span class="co"># use format "yyyy-MM-dd hh:mm"</span></span>
 <span><span class="co"># ===========================================================================</span></span>
-<span><span class="va">timeRangePlot</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2021-01-15 00:00"</span>, <span class="st">"2021-01-22 00:00"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2021-01-23 00:00"</span>, <span class="st">"2021-01-31 00:00"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
+<span><span class="va">timeRangePlot</span> <span class="op">=</span> <span class="fu">createTimeRangePlot</span><span class="op">(</span><span class="va">timeRangeData</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">timeRangeData</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="fl">7</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Set output path for plots</span></span>
 <span><span class="co"># ===========================================================================</span></span>
@@ -456,7 +491,7 @@ plot of the MTR values (one per altitude bin in the MTR data):</p>
 <span><span class="co"># Set the class of which the MTR data should be plotted.</span></span>
 <span><span class="co"># If not set or set to “allClasses”, MTR of all classes will be plotted.</span></span>
 <span><span class="co"># ===========================================================================</span></span>
-<span><span class="va">plotClass</span> <span class="op">=</span> <span class="st">"allClasses"</span></span>
+<span><span class="va">plotClass</span> <span class="op">=</span> <span class="st">"passerine_type"</span></span>
 <span></span>
 <span><span class="co"># Set the maximum value of the y-Scale of the plot to the given value.</span></span>
 <span><span class="co"># If negative or not set, the y-Scale is auto-scaled.</span></span>
@@ -492,7 +527,7 @@ plot of the MTR values (one per altitude bin in the MTR data):</p>
 <p>With the second plotting function <code><a href="../reference/plotExploration.html">plotExploration()</a></code> you
 can create a time series plot of the detected objects. Each object is
 shown at the respective height (m above ground level) and time:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Make an exploration plot</span></span>
 <span><span class="co"># =============================================================================</span></span>
 <span><span class="co"># Set  the maximum value of the y-Scale of the plot to the given value.</span></span>
