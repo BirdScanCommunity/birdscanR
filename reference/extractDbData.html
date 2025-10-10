@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">birdscanR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9022</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9024</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,7 @@
 <span>  dbName <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dbUser <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dbPwd <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  dbHost <span class="op">=</span> <span class="st">"cloud.birdradar.com"</span>,</span>
+<span>  dbPort <span class="op">=</span> <span class="fl">5432</span>,</span>
 <span>  saveDbToFile <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  dbDataDir <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  radarTimeZone <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -69,28 +69,29 @@
 
 <dl><dt id="arg-dbdriverchar">dbDriverChar<a class="anchor" aria-label="anchor" href="#arg-dbdriverchar"></a></dt>
 <dd><p>'SQL Server' The name of the driver. Should be either
-'SQL Server' or 'PostgreSQL'. If 'PostgreSQL', it connects to
-cloud.birdradar.com</p></dd>
+'SQL Server' or 'PostgreSQL'.</p></dd>
 
 
 <dt id="arg-dbserver">dbServer<a class="anchor" aria-label="anchor" href="#arg-dbserver"></a></dt>
-<dd><p>NULL The name of the Server</p></dd>
+<dd><p>NULL The name of the SQL Server. For a 'PostgreSQL' this can
+be a the host address or the internal IP.</p></dd>
 
 
 <dt id="arg-dbname">dbName<a class="anchor" aria-label="anchor" href="#arg-dbname"></a></dt>
-<dd><p>NULL The name of the Database</p></dd>
+<dd><p>NULL The name of the SQL database</p></dd>
 
 
 <dt id="arg-dbuser">dbUser<a class="anchor" aria-label="anchor" href="#arg-dbuser"></a></dt>
-<dd><p>NULL The USER name of the Server</p></dd>
+<dd><p>NULL The username of the SQL server</p></dd>
 
 
 <dt id="arg-dbpwd">dbPwd<a class="anchor" aria-label="anchor" href="#arg-dbpwd"></a></dt>
 <dd><p>NULL The password for the user name</p></dd>
 
 
-<dt id="arg-dbhost">dbHost<a class="anchor" aria-label="anchor" href="#arg-dbhost"></a></dt>
-<dd><p>"cloud.birdradar.com" The host of the database</p></dd>
+<dt id="arg-dbport">dbPort<a class="anchor" aria-label="anchor" href="#arg-dbport"></a></dt>
+<dd><p>5432 The dbPort parameter specifies the TCP/IP port number on
+which the PostgreSQL server is listening for connections (default is 5432)</p></dd>
 
 
 <dt id="arg-savedbtofile">saveDbToFile<a class="anchor" aria-label="anchor" href="#arg-savedbtofile"></a></dt>
@@ -155,6 +156,7 @@ crepuscular period. Default is "nauticalSolar".</p></dd>
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other read SQL database functions:
 <code><a href="QUERY.html">QUERY</a>()</code>,
+<code><a href="dbConnectBirdscanSQL.html">dbConnectBirdscanSQL</a>()</code>,
 <code><a href="getBatClassification.html">getBatClassification</a>()</code>,
 <code><a href="getCollectionTable.html">getCollectionTable</a>()</code>,
 <code><a href="getEchoFeatures.html">getEchoFeatures</a>()</code>,
@@ -176,9 +178,9 @@ crepuscular period. Default is "nauticalSolar".</p></dd>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co"># Set server, database, and other input settings</span></span></span>
 <span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
+<span class="r-in"><span><span class="va">dbDriverChar</span> <span class="op">=</span> <span class="st">"SQL Server"</span> <span class="co"># Set either "SQL Server" or "PostgreSQL"</span></span></span>
 <span class="r-in"><span><span class="va">dbServer</span> <span class="op">=</span> <span class="st">"MACHINE\\SERVERNAME"</span> <span class="co"># Set the name of your SQL server</span></span></span>
 <span class="r-in"><span><span class="va">dbName</span> <span class="op">=</span> <span class="st">"db_Name"</span> <span class="co"># Set the name of your database</span></span></span>
-<span class="r-in"><span><span class="va">dbDriverChar</span> <span class="op">=</span> <span class="st">"SQL Server"</span> <span class="co"># Set either "SQL Server" or "PostgreSQL"</span></span></span>
 <span class="r-in"><span><span class="va">mainOutputDir</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"."</span>, <span class="st">"results"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">radarTimeZone</span> <span class="op">=</span> <span class="st">"Etc/GMT0"</span></span></span>
 <span class="r-in"><span><span class="va">targetTimeZone</span> <span class="op">=</span> <span class="st">"Etc/GMT0"</span></span></span>
