@@ -96,42 +96,44 @@ extractDbData = function(dbDriverChar = "SQL Server",
          been provided. Please check your input!")
   }
 
-# Open the database connection
-# =============================================================================
-  dbConnection = dbConnectBirdscanSQL(dbDriverChar = dbDriverChar,
-                                      dbServer     = dbServer,
-                                      dbName       = dbName,
-                                      dbUser       = dbUser,
-                                      dbPwd        = dbPwd,
-                                      dbPort       = dbPort)
+  # Open the database connection
+  # =============================================================================
+  dbConnection = dbConnectBirdscanSQL(
+    dbDriverChar = dbDriverChar,
+    dbServer = dbServer,
+    dbName = dbName,
+    dbUser = dbUser,
+    dbPwd = dbPwd,
+    dbPort = dbPort
+  )
 
-# load collection table
-# =============================================================================
+  # load collection table
+  # =============================================================================
   message("Extracting collection table from DB...")
   collectionTable = getCollectionTable(dbConnection, timeInterval)
 
-# load protocol from local MS-SQL DB
-# =============================================================================
+  # load protocol from local MS-SQL DB
+  # =============================================================================
   message("Extracting protocol table from DB...")
   protocolTable = getProtocolTable(dbConnection)
 
-# load radar from local MS-SQL DB
-# =============================================================================
+  # load radar from local MS-SQL DB
+  # =============================================================================
   message("Extracting radar table from DB...")
   radarTable = getRadarTable(dbConnection)
 
-# load site from local MS-SQL DB
-# =============================================================================
+  # load site from local MS-SQL DB
+  # =============================================================================
   message("Extracting site table from DB...")
   siteTable = getSiteTable(dbConnection)
 
-# load visibility from local MS-SQL DB
-# =============================================================================
+  # load visibility from local MS-SQL DB
+  # =============================================================================
   message("Extracting visibility table from DB...")
   visibilityData = getVisibilityTable(dbConnection)
 
-# load manual visibility from local MS-SQL DB
-# =============================================================================
+  # load manual visibility from local MS-SQL DB
+  # =============================================================================
   message("Extracting MANUAL visibility table from DB...")
   manualVisibilityTable = try(
     getManualVisibilityTable(
@@ -146,18 +148,18 @@ extractDbData = function(dbDriverChar = "SQL Server",
     rm(manualVisibilityTable)
   }
 
-# load time bins from local MS-SQL DB
-# =============================================================================
+  # load time bins from local MS-SQL DB
+  # =============================================================================
   message("Extracting time_bins table from DB...")
   timeBinsTable = getTimeBinsTable(dbConnection)
 
-# load weather from local MS-SQL DB
-# =============================================================================
+  # load weather from local MS-SQL DB
+  # =============================================================================
   message("Extracting weather table from DB...")
   weatherTable = QUERY(dbConnection, query = "Select * From weather")
 
-# load weather properties from local MS-SQL DB
-# =============================================================================
+  # load weather properties from local MS-SQL DB
+  # =============================================================================
   message("Extracting weather_property table from DB...")
   weatherPropertyTable = QUERY(
     dbConnection,
@@ -176,8 +178,8 @@ extractDbData = function(dbDriverChar = "SQL Server",
   )
   rm(list = "weatherTable", "weatherPropertyTable", "weatherPropertyList")
 
-# Get the requested rf features for the echoes
-# =============================================================================
+  # Get the requested rf features for the echoes
+  # =============================================================================
   message("Extracting rffeatures table from DB...")
   echoRfFeatureMap = getEchoFeatures(dbConnection,
     listOfRfFeaturesToExtract = listOfRfFeaturesToExtract,
@@ -187,8 +189,8 @@ extractDbData = function(dbDriverChar = "SQL Server",
     )
   )
 
-# Load rf classification
-# =============================================================================
+  # Load rf classification
+  # =============================================================================
   message("Extracting RF classification...")
   rfclassificationTable = getRfClassification(dbConnection)
 
@@ -196,13 +198,13 @@ extractDbData = function(dbDriverChar = "SQL Server",
   message("Extracting Bat classification...")
   batClassificationTable = getBatClassification(dbConnection)
 
-# load echo validation from local MS-SQL DB
-# =============================================================================
+  # load echo validation from local MS-SQL DB
+  # =============================================================================
   message("Extracting echo_validation table from DB...")
   echovalidationTable = getEchoValidationTable(dbConnection)
 
-# Merge echo Data
-# =============================================================================
+  # Merge echo Data
+  # =============================================================================
   echoData = collectionTable
   names(echoData)[names(echoData) == "row"] = "echo"
   if (!is.null(echoRfFeatureMap$echoRfFeatureMap)) {
@@ -230,18 +232,18 @@ extractDbData = function(dbDriverChar = "SQL Server",
     batClassificationTable
   )
 
-# rename protocolTable
-# =============================================================================
+  # rename protocolTable
+  # =============================================================================
   protocolData = protocolTable
   rm(protocolTable)
 
-# Merge site Data
-# =============================================================================
+  # Merge site Data
+  # =============================================================================
   siteData = merge(siteTable, radarTable, by = "radarID", all = TRUE)
   rm(siteTable, radarTable)
 
-# Merge timebin Data
-# =============================================================================
+  # Merge timebin Data
+  # =============================================================================
   timeBinData = timeBinsTable
   names(timeBinData)[names(timeBinData) == "id"] = "time_bin"
   timeBinData = merge(timeBinData, weather,
@@ -249,8 +251,8 @@ extractDbData = function(dbDriverChar = "SQL Server",
   )
   rm(timeBinsTable, weather)
 
-# insert a.s.l. altitude column to echoData
-# =============================================================================
+  # insert a.s.l. altitude column to echoData
+  # =============================================================================
   asl = data.frame("feature1.altitude_ASL" = echoData$feature1.altitude_AGL) +
     siteData$altitude
   echoData = data.frame(
@@ -266,8 +268,8 @@ extractDbData = function(dbDriverChar = "SQL Server",
   )
   rm(asl)
 
-# get radarTZ from siteData (or siteTable)
-# =============================================================================
+  # get radarTZ from siteData (or siteTable)
+  # =============================================================================
   if (is.null(radarTimeZone)) {
     # Get time zone saved in the database table 'dbo.site'
     tz_shift = as.numeric(siteData$timeShift)
@@ -292,8 +294,8 @@ extractDbData = function(dbDriverChar = "SQL Server",
     "targetTimeZone" = targetTimeZone
   )
 
-# time zone conversion
-# =============================================================================
+  # time zone conversion
+  # =============================================================================
   visibilityData = convertTimeZone(
     data = visibilityData,
     colNames = c("blind_from", "blind_to"),
@@ -325,8 +327,8 @@ extractDbData = function(dbDriverChar = "SQL Server",
     targetTZ = targetTimeZone
   )
 
-# Define output list with all output data
-# =============================================================================
+  # Define output list with all output data
+  # =============================================================================
   # CASE: manual VisibilityTable
   # ===========================================================================
   if (exists("manualVisibilityTable")) {
@@ -363,37 +365,37 @@ extractDbData = function(dbDriverChar = "SQL Server",
     )
   }
 
-# Start sunrise/sunset and twilight information calculation
-# =============================================================================
+  # Start sunrise/sunset and twilight information calculation
+  # =============================================================================
   message("Computing sunrise/sunset and twilight information..")
 
-# Set min and max time_stamps of echodata as time range for
-# sunrise/sunset calculation
-# =============================================================================
+  # Set min and max time_stamps of echodata as time range for
+  # sunrise/sunset calculation
+  # =============================================================================
   timeRangeSunriseSunset = c(
     min(outputList$echoData$time_stamp_targetTZ),
     max(outputList$echoData$time_stamp_targetTZ)
   )
 
-# Compute sunrise/sunset and dawn/dusk (civil)
-# =============================================================================
+  # Compute sunrise/sunset and dawn/dusk (civil)
+  # =============================================================================
   sunriseSunset = twilight(
     timeRange = timeRangeSunriseSunset,
     latLon = siteLocation,
     timeZone = TimeZone$targetTimeZone
   )
 
-# Add the sunrise/sunset information to the output list
-# =============================================================================
+  # Add the sunrise/sunset information to the output list
+  # =============================================================================
   outputList$sunriseSunset = sunriseSunset
   rm(sunriseSunset)
 
-# Start adding day/night information for each echo
-# =============================================================================
+  # Start adding day/night information for each echo
+  # =============================================================================
   message("Adding day/night information per echo..")
 
-# Add day/night infor per echo
-# =============================================================================
+  # Add day/night infor per echo
+  # =============================================================================
   outputList$echoData = addDayNightInfoPerEcho(
     echoData = outputList$echoData,
     sunriseSunset = outputList$sunriseSunset,
@@ -401,12 +403,12 @@ extractDbData = function(dbDriverChar = "SQL Server",
     crepuscule = crepuscule
   )
 
-# Create the output directory if it doesn't exist
-# =============================================================================
+  # Create the output directory if it doesn't exist
+  # =============================================================================
   dir.create(dbDataDir, showWarnings = FALSE, recursive = TRUE)
 
-# save DB Data to a file, if requested
-# =============================================================================
+  # save DB Data to a file, if requested
+  # =============================================================================
   if (saveDbToFile) {
     outputFileName = file.path(
       dbDataDir,
@@ -415,21 +417,21 @@ extractDbData = function(dbDriverChar = "SQL Server",
     saveRDS(outputList, file = outputFileName)
   }
 
-# close database connections
-# =============================================================================
+  # close database connections
+  # =============================================================================
   if (dbDriverChar != "PostgreSQL") {
     RODBC::odbcCloseAll()
   } else {
     DBI::dbDisconnect(dbConnection)
   }
 
-# Return output
-# =============================================================================
+  # Return output
+  # =============================================================================
   return(outputList)
 
-# =============================================================================
-# =============================================================================
-# End of Function
-# =============================================================================
-# =============================================================================
+  # =============================================================================
+  # =============================================================================
+  # End of Function
+  # =============================================================================
+  # =============================================================================
 }
