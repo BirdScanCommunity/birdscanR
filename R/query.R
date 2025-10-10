@@ -40,7 +40,7 @@ QUERY <- function(dbConnection, dbDriverChar, query, as.is = FALSE) {
   }
   if (class(dbConnection) %in% c("PqConnection", "PostgreSQLConnection")) {
     t <- DBI::dbGetQuery(dbConnection, query, as.is = as.is)
-  } else if (class(dbConnection) %in% "RODBC"){
+  } else if (class(dbConnection) %in% "RODBC") {
     t <- RODBC::sqlQuery(dbConnection, query, as.is = as.is)
   } else {
     stop("The `dbConnection` argument now only supports connections of the

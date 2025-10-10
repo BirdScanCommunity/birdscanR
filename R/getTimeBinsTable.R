@@ -10,25 +10,25 @@
 #' \dontrun{
 #' # Set server and database settings
 #' # ==========================================================================
-#'   # Using and Microsoft SQL database
-#'   # ========================================================================
-#'     dbServer     = "MACHINE\\SERVERNAME" # Set the name of your SQL server
-#'     dbName       = "db_Name"             # Set the name of your database
-#'     dbDriverChar = "SQL Server"          # Set to "SQL Server"
+#' # Using and Microsoft SQL database
+#' # ========================================================================
+#' dbServer = "MACHINE\\SERVERNAME" # Set the name of your SQL server
+#' dbName = "db_Name" # Set the name of your database
+#' dbDriverChar = "SQL Server" # Set to "SQL Server"
 #'
-#'   # Using a PostgreSQL
-#'   # ========================================================================
-#'     dbServer     = "cloud.birdradar.com" # Set the name or IP of your postgreSQL
-#'     dbName       = "db_Name"             # Set the name of your database
-#'     dbDriverChar = "PostgreSQL"          # Set to "PostgreSQL"
+#' # Using a PostgreSQL
+#' # ========================================================================
+#' dbServer = "cloud.birdradar.com" # Set the name or IP of your postgreSQL
+#' dbName = "db_Name" # Set the name of your database
+#' dbDriverChar = "PostgreSQL" # Set to "PostgreSQL"
 #'
 #' # Open the connection with the database
 #' # ==========================================================================
-#'   dbConnection = dbConnectBirdscanSQL(
-#'                    dbDriverChar = dbDriverChar,
-#'                    dbServer     = dbServer,
-#'                    dbName       = dbName,
-#'   )
+#' dbConnection = dbConnectBirdscanSQL(
+#'   dbDriverChar = dbDriverChar,
+#'   dbServer     = dbServer,
+#'   dbName       = dbName,
+#' )
 #'
 #' timeBinsTable = getTimeBinsTable(dbConnection)
 #' }
@@ -58,7 +58,7 @@ getTimeBinsTable = function(dbConnection, dbDriverChar) {
 
     # load protocol table from PostGreSQL
     # ============================================================================
-  } else if (class(dbConnection) %in% c("PqConnection", "PostgreSQLConnection")){
+  } else if (class(dbConnection) %in% c("PqConnection", "PostgreSQLConnection")) {
     timeBinsTable = QUERY(
       dbConnection,
       query = paste0(

@@ -15,25 +15,25 @@
 #' \dontrun{
 #' # Set server and database settings
 #' # ==========================================================================
-#'   # Using and Microsoft SQL database
-#'   # ========================================================================
-#'     dbServer     = "MACHINE\\SERVERNAME" # Set the name of your SQL server
-#'     dbName       = "db_Name"             # Set the name of your database
-#'     dbDriverChar = "SQL Server"          # Set to "SQL Server"
+#' # Using and Microsoft SQL database
+#' # ========================================================================
+#' dbServer = "MACHINE\\SERVERNAME" # Set the name of your SQL server
+#' dbName = "db_Name" # Set the name of your database
+#' dbDriverChar = "SQL Server" # Set to "SQL Server"
 #'
-#'   # Using a PostgreSQL
-#'   # ========================================================================
-#'     dbServer     = "cloud.birdradar.com" # Set the name or IP of your postgreSQL
-#'     dbName       = "db_Name"             # Set the name of your database
-#'     dbDriverChar = "PostgreSQL"          # Set to "PostgreSQL"
+#' # Using a PostgreSQL
+#' # ========================================================================
+#' dbServer = "cloud.birdradar.com" # Set the name or IP of your postgreSQL
+#' dbName = "db_Name" # Set the name of your database
+#' dbDriverChar = "PostgreSQL" # Set to "PostgreSQL"
 #'
 #' # Open the connection with the database
 #' # ==========================================================================
-#'   dbConnection = dbConnectBirdscanSQL(
-#'                    dbDriverChar = dbDriverChar,
-#'                    dbServer     = dbServer,
-#'                    dbName       = dbName,
-#'   )
+#' dbConnection = dbConnectBirdscanSQL(
+#'   dbDriverChar = dbDriverChar,
+#'   dbServer     = dbServer,
+#'   dbName       = dbName,
+#' )
 #'
 #' batClassification = getBatClassification(dbConnection)
 #' }
@@ -47,7 +47,7 @@ getBatClassification = function(dbConnection, dbDriverChar) {
   if (class(dbConnection) %in% c("PqConnection", "PostgreSQLConnection")) {
     batClassificationTableExists <- DBI::dbExistsTable(dbConnection, "bat_classification")
     batProbabilityTableExists <- DBI::dbExistsTable(dbConnection, "bat_class_probability")
-  } else if (class(dbConnection) %in% "RODBC"){
+  } else if (class(dbConnection) %in% "RODBC") {
     batClassificationTableExists <- "bat_classification" %in% RODBC::sqlTables(dbConnection)$TABLE_NAME
     batProbabilityTableExists <- "bat_class_probability" %in% RODBC::sqlTables(dbConnection)$TABLE_NAME
   }
