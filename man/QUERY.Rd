@@ -48,6 +48,7 @@ QUERY(
 }
 \seealso{
 Other read SQL database functions: 
+\code{\link{dbConnectBirdscanSQL}()},
 \code{\link{extractDbData}()},
 \code{\link{getBatClassification}()},
 \code{\link{getCollectionTable}()},

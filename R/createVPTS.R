@@ -429,8 +429,8 @@ createVPTS = function(dbName,
             # Get the weighted average rcs
             # =================================================================
               mtrFactorWeights  = mtrFactorsToProcess/max(mtrFactorsToProcess)
-              vpts[cRow, "rcs"] = weighted.mean(x = rcsToProcessInCM2,
-                                                w = mtrFactorWeights)
+              vpts[cRow, "rcs"] = stats::weighted.mean(x = rcsToProcessInCM2,
+                                                       w = mtrFactorWeights)
           }
       }
   }

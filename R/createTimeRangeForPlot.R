@@ -1,8 +1,8 @@
 #' @title Create  Time Range for Plot
 #' @description Create a list by segmenting the input time range into regular periods for plots.
 #' @author Baptiste Schmid, Birgen Haest
-#' @param startDate Per default, the first element of the input setting 'timeRangeData'
-#' @param endDate Per default, the second element of the input setting 'timeRangeData'
+#' @param startDate Per default, the first element of the input setting `timeRangeData`
+#' @param endDate Per default, the second element of the input setting `timeRangeData``
 #' @param periodLength Duration in days of each period
 #' @param returnAsList TRUE per default, otherwise as data.frame.
 #'
@@ -20,8 +20,8 @@
 #' print(timeRangePlot)
 #' }
 #'
-createTimeRangeForPlot = function(startDate = timeRangeData[1],
-                                  endDate = timeRangeData[2],
+createTimeRangeForPlot = function(startDate = NULL,
+                                  endDate = NULL,
                                   periodLength = 7,
                                   returnAsList = TRUE) {
   # Convert inputs to Date class if they're not already

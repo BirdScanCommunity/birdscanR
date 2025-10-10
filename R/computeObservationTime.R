@@ -4,7 +4,7 @@
 #'  on protocol data and blind times
 #'
 #' @param timeBins dataframe with the time bins created with
-#' [createTimeBins()].
+#' `createTimeBins()`.
 #' @param protocolData dataframe with the protocol data from the data list
 #' created by [extractDbData()] or a subset of it created by the
 #' function `filterProtocolData`.

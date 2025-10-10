@@ -5,16 +5,16 @@
 \title{Create  Time Range for Plot}
 \usage{
 createTimeRangeForPlot(
-  startDate = timeRangeData[1],
-  endDate = timeRangeData[2],
+  startDate = NULL,
+  endDate = NULL,
   periodLength = 7,
   returnAsList = TRUE
 )
 }
 \arguments{
-\item{startDate}{Per default, the first element of the input setting 'timeRangeData'}
+\item{startDate}{Per default, the first element of the input setting \code{timeRangeData}}
 
-\item{endDate}{Per default, the second element of the input setting 'timeRangeData'}
+\item{endDate}{Per default, the second element of the input setting `timeRangeData``}
 
 \item{periodLength}{Duration in days of each period}
 

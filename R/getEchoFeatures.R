@@ -12,20 +12,26 @@
 #' @examples
 #' \dontrun{
 #' # Set server and database settings
-#' # ===========================================================================
-#' dbServer = "MACHINE\\SERVERNAME" # Set the name of your SQL server
-#' dbName = "db_Name" # Set the name of your database
-#' dbDriverChar = "SQL Server" # Set either "SQL Server" or "PostgreSQL"
+#' # ==========================================================================
+#'   # Using and Microsoft SQL database
+#'   # ========================================================================
+#'     dbServer     = "MACHINE\\SERVERNAME" # Set the name of your SQL server
+#'     dbName       = "db_Name"             # Set the name of your database
+#'     dbDriverChar = "SQL Server"          # Set to "SQL Server"
+#'
+#'   # Using a PostgreSQL
+#'   # ========================================================================
+#'     dbServer     = "cloud.birdradar.com" # Set the name or IP of your postgreSQL
+#'     dbName       = "db_Name"             # Set the name of your database
+#'     dbDriverChar = "PostgreSQL"          # Set to "PostgreSQL"
 #'
 #' # Open the connection with the database
-#' # ===========================================================================
-#' dsn = paste0(
-#'   "driver=", dbDriverChar, ";server=", dbServer,
-#'   ";database=", dbName,
-#'   ";uid=", rstudioapi::askForPassword("Database user"),
-#'   ";pwd=", rstudioapi::askForPassword("Database password")
-#' )
-#' dbConnection = RODBC::odbcDriverConnect(dsn)
+#' # ==========================================================================
+#'   dbConnection = dbConnectBirdscanSQL(
+#'                    dbDriverChar = dbDriverChar,
+#'                    dbServer     = dbServer,
+#'                    dbName       = dbName,
+#'   )
 #'
 #' # Set list of Rf features you also want to extract
 #' # Vector with RF features to extract. Feature IDs can be found in the

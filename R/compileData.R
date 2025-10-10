@@ -395,7 +395,7 @@ compileData = function(echoData = NULL,
     radarSiteData     = metaRadarSiteData,
     filterParameters  = metaFilters,
     database          = dbName, # at the moment, only keep the name of the database, but additional information could be used: version of BirdscanR-package, name of the person who extracted the data, etc.
-    birdscanR         = packageVersion("birdScanR") # classifier version is included in the echo-dataset
+    birdscanR         = utils::packageVersion("birdScanR") # classifier version is included in the echo-dataset
   )
 
 
@@ -531,7 +531,7 @@ compileData = function(echoData = NULL,
         } else {
           # Save as CSV for table elements
           file_path <- file.path(csvDirPath, paste0(name, ".csv"))
-          write.csv(compiledData[[name]], file = file_path, row.names = FALSE)
+          utils::write.csv(compiledData[[name]], file = file_path, row.names = FALSE)
         }
       }
     }

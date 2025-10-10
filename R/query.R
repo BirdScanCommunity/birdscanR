@@ -38,14 +38,13 @@ QUERY <- function(dbConnection, dbDriverChar, query, as.is = FALSE) {
   if (!missing(dbDriverChar)) {
     lifecycle::deprecate_warn("0.4.0", "QUERY(dbDriverChar)")
   }
-  if (class(dbConnection) %in% "PqConnection") {
+  if (class(dbConnection) %in% c("PqConnection", "PostgreSQLConnection")) {
     t <- DBI::dbGetQuery(dbConnection, query, as.is = as.is)
+  } else if (class(dbConnection) %in% "RODBC"){
+    t <- RODBC::sqlQuery(dbConnection, query, as.is = as.is)
   } else {
-    if (class(dbConnection) %in% "RODBC") {
-      t <- RODBC::sqlQuery(dbConnection, query, as.is = as.is)
-    } else {
-      stop("The `dbConnection` argument now only supports connections of the class `PqConnection` and `RODBC`.")
-    }
+    stop("The `dbConnection` argument now only supports connections of the
+         class `PqConnection`, `PostgreSQLConnection` and `RODBC`.")
   }
 
   return(t)

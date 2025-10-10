@@ -33,7 +33,7 @@ Other contributors:
   \item Damiano Preatoni \email{damiano.preatoni@uninsubria.it} (\href{https://orcid.org/0000-0001-8760-1316}{ORCID}) [contributor]
   \item Johannes De Groeve \email{j.degroeve@uva.nl} (\href{https://orcid.org/0000-0002-1274-3237}{ORCID}) [contributor]
   \item Felix Liechti \email{felix.liechti@swiss-birdradar.com} (\href{https://orcid.org/0000-0001-9473-0837}{ORCID}) [contributor]
-  \item Swiss Ornithological Institute (03mcsbr76) [copyright holder]
+  \item Swiss Ornithological Institute (\href{https://ror.org/03mcsbr76}{ROR}) [copyright holder]
   \item Swiss Birdradar Solution AG (https://swiss-birdradar.com) [copyright holder]
 }
 
