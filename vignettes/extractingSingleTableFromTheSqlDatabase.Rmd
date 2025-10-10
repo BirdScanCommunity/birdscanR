@@ -5,7 +5,7 @@ output: rmarkdown::html_vignette
 description: > 
   Which functions do I need to call to get the data from specific tables from the Birdscsan MR1 SQL database? This vignette describes the main workflow to do so.
 vignette: >
-  %\VignetteIndexEntry{Extracting specific tables from the SQL database}
+  %\VignetteIndexEntry{Guide to extracting specific tables from a Birdscan MR1 SQL database}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
