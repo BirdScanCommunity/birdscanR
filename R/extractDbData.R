@@ -98,7 +98,7 @@ extractDbData = function(dbDriverChar = "SQL Server",
 
 # Open the database connection
 # =============================================================================
-  dbConnection = dbConnectBirdscanSQL(dbDriverChar = "SQL Server",
+  dbConnection = dbConnectBirdscanSQL(dbDriverChar = dbDriverChar,
                                       dbServer     = dbServer,
                                       dbName       = dbName,
                                       dbUser       = dbUser,
