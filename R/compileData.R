@@ -384,7 +384,6 @@ compileData = function(echoData = NULL,
   }
 
 
-
   # compile meta data into a list
   # =============================================================================
   ls_metaData <- list(
@@ -397,7 +396,6 @@ compileData = function(echoData = NULL,
     database          = dbName, # at the moment, only keep the name of the database, but additional information could be used: version of BirdscanR-package, name of the person who extracted the data, etc.
     birdscanR         = utils::packageVersion("birdScanR") # classifier version is included in the echo-dataset
   )
-
 
 
   # Return the filtered protocol and echo data

@@ -67,13 +67,13 @@ getEchoFeatures = function(dbConnection, dbDriverChar,
 
   # Set listOfRfFeaturesToExtract to all features if "all" is provided
   # ===========================================================================
-    if (!is.null(listOfRfFeaturesToExtract)) {
-      if (is.character(listOfRfFeaturesToExtract)) {
-        if (listOfRfFeaturesToExtract == "all") {
-          listOfRfFeaturesToExtract = rffeaturesTable$id
-        }
+  if (!is.null(listOfRfFeaturesToExtract)) {
+    if (is.character(listOfRfFeaturesToExtract)) {
+      if (listOfRfFeaturesToExtract == "all") {
+        listOfRfFeaturesToExtract = rffeaturesTable$id
       }
     }
+  }
 
   # load 'echo_rffeature_map' table from 'MS-SQL' database
   # ===========================================================================
