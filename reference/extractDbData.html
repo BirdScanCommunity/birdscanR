@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">birdscanR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9025</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9026</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -116,13 +116,15 @@ Default is "Etc/GMT0".</p></dd>
 
 
 <dt id="arg-timeinterval">timeInterval<a class="anchor" aria-label="anchor" href="#arg-timeinterval"></a></dt>
-<dd><p>Null An optional vector of timestamps (either as <code>Date</code> or <code>POSIXct</code>)
+<dd><p>NULL An optional vector of timestamps (either as <code>Date</code> or <code>POSIXct</code>)
 to limit the the data retrieved from the collections table. The filtering is done
 based on the original radar timezone.</p></dd>
 
 
 <dt id="arg-listofrffeaturestoextract">listOfRfFeaturesToExtract<a class="anchor" aria-label="anchor" href="#arg-listofrffeaturestoextract"></a></dt>
-<dd><p>NULL or a list of feature to extract</p></dd>
+<dd><p>Either NULL (i.e., don't extract any of the
+rf features), "all" (i.e., extract all rf features) or a vector of the
+feature numbers to extract. Default is NULL.</p></dd>
 
 
 <dt id="arg-sitelocation">siteLocation<a class="anchor" aria-label="anchor" href="#arg-sitelocation"></a></dt>
