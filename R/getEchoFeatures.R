@@ -2,7 +2,10 @@
 #' @author Fabian Hertner, Birgen Haest
 #' @description Load echo rffeature map from 'Birdscan MR1' 'SQL' database.
 #' @inheritParams QUERY
-#' @param listOfRfFeaturesToExtract a list of feature to extract
+#' @param listOfRfFeaturesToExtract Either NULL (i.e., don't extract any of the
+#' rf features), "all" (i.e., extract all rf features) or a vector of the
+#' feature numbers to extract. Default is NULL. Feature IDs can be found in the
+#' 'rfFeatures' table in the sql database.
 #' @param echoIDRange NULL A two-element vector of integers to subset the rf
 #' feature extraction to a range of echoIDs. Default is to extract for all echoes.
 #'
@@ -38,6 +41,7 @@
 #' # 'rfFeatures' table in the sql database.
 #' # Example: Get wing beat frequency and credibility: c(167, 168)
 #' # Set to NULL to not extract any.
+#' # Set to "all" to extract all features.
 #' # ===========================================================================
 #' listOfRfFeaturesToExtract = c(167, 168)
 #'
@@ -60,6 +64,16 @@ getEchoFeatures = function(dbConnection, dbDriverChar,
     query =
       "SELECT * FROM rffeatures"
   )
+
+  # Set listOfRfFeaturesToExtract to all features if "all" is provided
+  # ===========================================================================
+    if (!is.null(listOfRfFeaturesToExtract)) {
+      if (is.character(listOfRfFeaturesToExtract)) {
+        if (listOfRfFeaturesToExtract == "all") {
+          listOfRfFeaturesToExtract = rffeaturesTable$id
+        }
+      }
+    }
 
   # load 'echo_rffeature_map' table from 'MS-SQL' database
   # ===========================================================================

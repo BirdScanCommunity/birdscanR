@@ -16,7 +16,10 @@ getEchoFeatures(
 
 \item{dbDriverChar}{This was the name of the driver, and is now automatically detected, therefore it should be omitted into the future.}
 
-\item{listOfRfFeaturesToExtract}{a list of feature to extract}
+\item{listOfRfFeaturesToExtract}{Either NULL (i.e., don't extract any of the
+rf features), "all" (i.e., extract all rf features) or a vector of the
+feature numbers to extract. Default is NULL. Feature IDs can be found in the
+'rfFeatures' table in the sql database.}
 
 \item{echoIDRange}{NULL A two-element vector of integers to subset the rf
 feature extraction to a range of echoIDs. Default is to extract for all echoes.}
@@ -31,31 +34,32 @@ Load echo rffeature map from 'Birdscan MR1' 'SQL' database.
 \dontrun{
 # Set server and database settings
 # ==========================================================================
-  # Using and Microsoft SQL database
-  # ========================================================================
-    dbServer     = "MACHINE\\\\SERVERNAME" # Set the name of your SQL server
-    dbName       = "db_Name"             # Set the name of your database
-    dbDriverChar = "SQL Server"          # Set to "SQL Server"
+# Using and Microsoft SQL database
+# ========================================================================
+dbServer = "MACHINE\\\\SERVERNAME" # Set the name of your SQL server
+dbName = "db_Name" # Set the name of your database
+dbDriverChar = "SQL Server" # Set to "SQL Server"
 
-  # Using a PostgreSQL
-  # ========================================================================
-    dbServer     = "cloud.birdradar.com" # Set the name or IP of your postgreSQL
-    dbName       = "db_Name"             # Set the name of your database
-    dbDriverChar = "PostgreSQL"          # Set to "PostgreSQL"
+# Using a PostgreSQL
+# ========================================================================
+dbServer = "cloud.birdradar.com" # Set the name or IP of your postgreSQL
+dbName = "db_Name" # Set the name of your database
+dbDriverChar = "PostgreSQL" # Set to "PostgreSQL"
 
 # Open the connection with the database
 # ==========================================================================
-  dbConnection = dbConnectBirdscanSQL(
-                   dbDriverChar = dbDriverChar,
-                   dbServer     = dbServer,
-                   dbName       = dbName,
-  )
+dbConnection = dbConnectBirdscanSQL(
+  dbDriverChar = dbDriverChar,
+  dbServer     = dbServer,
+  dbName       = dbName,
+)
 
 # Set list of Rf features you also want to extract
 # Vector with RF features to extract. Feature IDs can be found in the
 # 'rfFeatures' table in the sql database.
 # Example: Get wing beat frequency and credibility: c(167, 168)
 # Set to NULL to not extract any.
+# Set to "all" to extract all features.
 # ===========================================================================
 listOfRfFeaturesToExtract = c(167, 168)
 
