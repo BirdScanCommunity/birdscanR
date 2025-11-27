@@ -1,0 +1,169 @@
+# Extract DB Data
+
+Load the data from the database or file and save it to file
+
+## Usage
+
+``` r
+extractDbData(
+  dbDriverChar = "SQL Server",
+  dbServer = NULL,
+  dbName = NULL,
+  dbUser = NULL,
+  dbPwd = NULL,
+  dbPort = 5432,
+  saveDbToFile = FALSE,
+  dbDataDir = NULL,
+  radarTimeZone = NULL,
+  targetTimeZone = "Etc/GMT0",
+  timeInterval = NULL,
+  listOfRfFeaturesToExtract = NULL,
+  siteLocation = NULL,
+  sunOrCivil = "civil",
+  crepuscule = "nauticalSolar"
+)
+```
+
+## Arguments
+
+- dbDriverChar:
+
+  'SQL Server' The name of the driver. Should be either 'SQL Server' or
+  'PostgreSQL'.
+
+- dbServer:
+
+  NULL The name of the SQL Server. For a 'PostgreSQL' this can be a the
+  host address or the internal IP.
+
+- dbName:
+
+  NULL The name of the SQL database
+
+- dbUser:
+
+  NULL The username of the SQL server
+
+- dbPwd:
+
+  NULL The password for the user name
+
+- dbPort:
+
+  5432 The dbPort parameter specifies the TCP/IP port number on which
+  the PostgreSQL server is listening for connections (default is 5432)
+
+- saveDbToFile:
+
+  FALSE Set to TRUE if you want to save the extracted database data to
+  an rds file. The output filename is automatically set to
+  dbName_DataExtract.rds
+
+- dbDataDir:
+
+  NULL The path to the output directory where to store the extracted
+  dataset. If the directory does not exist, it will be created.
+
+- radarTimeZone:
+
+  NULL String specifying the radar time zone. Default is NULL: extract
+  the time zone from the site table of the 'SQL' database.
+
+- targetTimeZone:
+
+  "Etc/GMT0" String specifying the target time zone. Default is
+  "Etc/GMT0".
+
+- timeInterval:
+
+  NULL An optional vector of timestamps (either as `Date` or `POSIXct`)
+  to limit the the data retrieved from the collections table. The
+  filtering is done based on the original radar timezone.
+
+- listOfRfFeaturesToExtract:
+
+  Either NULL (i.e., don't extract any of the rf features), "all" (i.e.,
+  extract all rf features) or a vector of the feature numbers to
+  extract. Default is NULL.
+
+- siteLocation:
+
+  Geographic location of the radar measurements in decimal format:
+  c(Latitude, Longitude)
+
+- sunOrCivil:
+
+  optional character variable, Set to “sun” to use sunrise/sunset times
+  or to “civil” to use civil twilight times to group echoes into
+  day/night. Default is "civil".
+
+- crepuscule:
+
+  optional character variable, Set to “nauticalSolar” to use the time
+  between nautical dusk/dawn and sunrise/sunset times to define the
+  crepuscular period, or to "nauticalCivil" to use the time between
+  nautical and civil dusk/dawn to define the crepuscular period, or to
+  "civilSolar" to use the time between civil dusk/dawn and
+  sunrise/sunset times to define the crepuscular period. Default is
+  "nauticalSolar".
+
+## Value
+
+a list of R objects with data extracted from the Database: 'echoData',
+'protocolData', 'siteData', 'visibilityData', 'timeBinData',
+'rfFeatures', 'availableClasses', 'availableBatClasses',
+'classProbabilitiesAndMtrFactors', 'batProbabilitiesAndMtrFactors'
+
+## See also
+
+Other read SQL database functions:
+[`QUERY()`](https://birdscancommunity.github.io/birdscanR/reference/QUERY.md),
+[`dbConnectBirdscanSQL()`](https://birdscancommunity.github.io/birdscanR/reference/dbConnectBirdscanSQL.md),
+[`getBatClassification()`](https://birdscancommunity.github.io/birdscanR/reference/getBatClassification.md),
+[`getCollectionTable()`](https://birdscancommunity.github.io/birdscanR/reference/getCollectionTable.md),
+[`getEchoFeatures()`](https://birdscancommunity.github.io/birdscanR/reference/getEchoFeatures.md),
+[`getEchoValidationTable()`](https://birdscancommunity.github.io/birdscanR/reference/getEchoValidationTable.md),
+[`getProtocolTable()`](https://birdscancommunity.github.io/birdscanR/reference/getProtocolTable.md),
+[`getRadarTable()`](https://birdscancommunity.github.io/birdscanR/reference/getRadarTable.md),
+[`getRfClassification()`](https://birdscancommunity.github.io/birdscanR/reference/getRfClassification.md),
+[`getSiteTable()`](https://birdscancommunity.github.io/birdscanR/reference/getSiteTable.md),
+[`getTimeBinsTable()`](https://birdscancommunity.github.io/birdscanR/reference/getTimeBinsTable.md),
+[`getVisibilityTable()`](https://birdscancommunity.github.io/birdscanR/reference/getVisibilityTable.md)
+
+## Author
+
+Fabian Hertner, Birgen Haest
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+# Set server, database, and other input settings
+# ===========================================================================
+dbDriverChar = "SQL Server" # Set either "SQL Server" or "PostgreSQL"
+dbServer = "MACHINE\\SERVERNAME" # Set the name of your SQL server
+dbName = "db_Name" # Set the name of your database
+mainOutputDir = file.path(".", "results")
+radarTimeZone = "Etc/GMT0"
+targetTimeZone = "Etc/GMT0"
+listOfRfFeaturesToExtract = c(167, 168)
+siteLocation = c(47.494427, 8.716432)
+sunOrCivil = "civil"
+
+# Get data
+# ===========================================================================
+dbData = extractDbData(
+  dbDriverChar = dbDriverChar,
+  dbServer = dbServer,
+  dbName = dbName,
+  saveDbToFile = TRUE,
+  dbDataDir = mainOutputDir,
+  radarTimeZone = radarTimeZone,
+  targetTimeZone = targetTimeZone,
+  listOfRfFeaturesToExtract = listOfRfFeaturesToExtract,
+  siteLocation = siteLocation,
+  sunOrCivil = sunOrCivil,
+  crepuscule = "nauticalSolar"
+)
+} # }
+```

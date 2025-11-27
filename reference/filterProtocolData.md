@@ -1,0 +1,96 @@
+# filterProtocolData
+
+With `filterProtocolData()` the protocol data can be filtered by the
+operation mode (pulse-type and antenna rotation). The function returns
+the filtered subset of the protocol data which can later be used to
+filter the echoes based on the operation mode/protocol
+
+## Usage
+
+``` r
+filterProtocolData(
+  protocolData = NULL,
+  pulseTypeSelection = NULL,
+  rotationSelection = NULL
+)
+```
+
+## Arguments
+
+- protocolData:
+
+  `data.frame` with the protocol data from the data list created by
+  [`extractDbData()`](https://birdscancommunity.github.io/birdscanR/reference/extractDbData.md)
+
+- pulseTypeSelection:
+
+  character vector with the pulse types which should be included in the
+  subset. Options: “S”, “M”, “L” (short-, medium-, long-pulse). Default
+  is NULL: no filtering applied based on pulseType.
+
+- rotationSelection:
+
+  numeric vector to select the operation modes with and/or without
+  antenna rotation. Options: 0, 1. (0 = no rotation, 1 = rotation).
+  Default is NULL: no filtering applied based on rotation mode.
+
+## Value
+
+returns the filtered protocol data in the same format as provided in the
+parameter `protocolData`.
+
+## See also
+
+Other filter functions:
+[`filterData()`](https://birdscancommunity.github.io/birdscanR/reference/filterData.md),
+[`filterEchoData()`](https://birdscancommunity.github.io/birdscanR/reference/filterEchoData.md)
+
+## Author
+
+Fabian Hertner, Birgen Haest
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+# Set server, database, and other input settings for data extraction
+# ===========================================================================
+dbServer = "MACHINE\\SERVERNAME" # Set the name of your SQL server
+dbName = "db_Name" # Set the name of your database
+dbDriverChar = "SQL Server" # Set either "SQL Server" or "PostgreSQL"
+mainOutputDir = file.path(".", "results")
+radarTimeZone = "Etc/GMT0"
+targetTimeZone = "Etc/GMT0"
+listOfRfFeaturesToExtract = c(167, 168)
+siteLocation = c(47.494427, 8.716432)
+sunOrCivil = "civil"
+
+# Get data
+# ===========================================================================
+dbData = extractDbData(
+  dbDriverChar = dbDriverChar,
+  dbServer = dbServer,
+  dbName = dbName,
+  saveDbToFile = TRUE,
+  dbDataDir = mainOutputDir,
+  radarTimeZone = radarTimeZone,
+  targetTimeZone = targetTimeZone,
+  listOfRfFeaturesToExtract = listOfRfFeaturesToExtract,
+  siteLocation = siteLocation,
+  sunOrCivil = sunOrCivil
+)
+
+# Set input settings for filtering of the data
+# ===========================================================================
+pulseLengthSelection = "S"
+rotationSelection = 1
+
+# Filter the echo data
+# ===========================================================================
+filteredProtocolData = filterProtocolData(
+  protocolData = dbData$protocolData,
+  pulseTypeSelection = pulseLengthSelection,
+  rotationSelection = rotationSelection
+)
+} # }
+```

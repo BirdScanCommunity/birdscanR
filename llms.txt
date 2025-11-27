@@ -1,0 +1,166 @@
+# birdscanR
+
+BirdscanR is an R package to extract data from Birdscan MR1 SQL
+vertical-looking radar databases, filter, and process them to Migration
+Traffic Rates (# objects per hour and km) or density (# objects per km3)
+of, for example birds, and insects. Object classifications in the
+‘Birdscan MR1’ databases are based on the dataset of [Haest et
+al. (2021)](https://doi.org10.5281/zenodo.5734960). Migration Traffic
+Rates and densities can be calculated separately for different height
+bins (with a height resolution of choice) as well as over time periods
+of choice (e.g., 1/2 hour, 1 hour, 1 day, day/night, the full time
+period of observation, and anything in between). Two plotting functions
+are also included to explore the data in the SQL databases and the
+resulting Migration Traffic Rate results. For details on the Migration
+Traffic Rate calculation procedures, see [Schmid et
+al. (2019)](https://doi.org/10.1111/ecog.04025).
+
+To get started, see:
+
+- [Get
+  started](https://birdscancommunity.github.io/birdscanR/articles/birdscanR.html):
+  an introduction to the package’s main functionalities.
+- [Function
+  reference](https://birdscancommunity.github.io/birdscanR/reference/index.html):
+  overview of all functions.
+- [More HowTo
+  Guides](https://birdscancommunity.github.io/birdscanR/articles/):
+  Additional guides to get you up and going with the different
+  functionality of the package.
+
+## Installation
+
+Install the latest released version from CRAN:
+
+``` r
+install.packages("birdscanR")
+```
+
+Or the development version from
+[GitHub](https://github.com/BirdScanCommunity/birdscanR):
+
+``` r
+# install.packages("devtools")
+devtools::install_github("BirdScanCommunity/birdscanR")
+```
+
+## Meta
+
+- We welcome
+  [contributions](https://BirdScanCommunity.github.io/birdscanR/CONTRIBUTING.html)
+  including bug reports.
+- License: GPL-3
+- Get [citation
+  information](https://BirdScanCommunity.github.io/birdscanR/authors.html#citation)
+  for birdscanR in R doing `citation("birdscanR")`.
+- Please note that this project is released with a [Contributor Code of
+  Conduct](https://BirdScanCommunity.github.io/birdscanR/CODE_OF_CONDUCT.html).
+  By participating in this project you agree to abide by its terms.
+
+# Package index
+
+## Read SQL database functions
+
+- [`QUERY()`](https://birdscancommunity.github.io/birdscanR/reference/QUERY.md)
+  : Query 'SQL' database
+- [`dbConnectBirdscanSQL()`](https://birdscancommunity.github.io/birdscanR/reference/dbConnectBirdscanSQL.md)
+  : Connect to a Birdscan SQL database
+- [`extractDbData()`](https://birdscancommunity.github.io/birdscanR/reference/extractDbData.md)
+  : Extract DB Data
+- [`getBatClassification()`](https://birdscancommunity.github.io/birdscanR/reference/getBatClassification.md)
+  : Get a BirdScan 'batClassification' table
+- [`getCollectionTable()`](https://birdscancommunity.github.io/birdscanR/reference/getCollectionTable.md)
+  : Get BirdScan collection table
+- [`getEchoFeatures()`](https://birdscancommunity.github.io/birdscanR/reference/getEchoFeatures.md)
+  : Get BirdScan echo features
+- [`getEchoValidationTable()`](https://birdscancommunity.github.io/birdscanR/reference/getEchoValidationTable.md)
+  : Get a BirdScan echo validation table
+- [`getProtocolTable()`](https://birdscancommunity.github.io/birdscanR/reference/getProtocolTable.md)
+  : Get BirdScan protocol table
+- [`getRadarTable()`](https://birdscancommunity.github.io/birdscanR/reference/getRadarTable.md)
+  : Get a BirdScan radar table
+- [`getRfClassification()`](https://birdscancommunity.github.io/birdscanR/reference/getRfClassification.md)
+  : Get a BirdScan 'rfClassification' table
+- [`getSiteTable()`](https://birdscancommunity.github.io/birdscanR/reference/getSiteTable.md)
+  : Get BirdScan site table
+- [`getTimeBinsTable()`](https://birdscancommunity.github.io/birdscanR/reference/getTimeBinsTable.md)
+  : Get BirdScan time bins table
+- [`getVisibilityTable()`](https://birdscancommunity.github.io/birdscanR/reference/getVisibilityTable.md)
+  : Get BirdScan visibility table
+
+## Read and write file functions
+
+- [`getManualVisibilityTable()`](https://birdscancommunity.github.io/birdscanR/reference/getManualVisibilityTable.md)
+  : Get manual visibility table
+- [`compileData()`](https://birdscancommunity.github.io/birdscanR/reference/compileData.md)
+  : compileData
+- [`saveMTR()`](https://birdscancommunity.github.io/birdscanR/reference/saveMTR.md)
+  : saveMTR
+- [`savePlotToFile()`](https://birdscancommunity.github.io/birdscanR/reference/savePlotToFile.md)
+  : savePlotToFile
+
+## Filter and manipulation functions
+
+- [`filterData()`](https://birdscancommunity.github.io/birdscanR/reference/filterData.md)
+  : filterData
+- [`filterEchoData()`](https://birdscancommunity.github.io/birdscanR/reference/filterEchoData.md)
+  : filterEchoData
+- [`filterProtocolData()`](https://birdscancommunity.github.io/birdscanR/reference/filterProtocolData.md)
+  : filterProtocolData
+- [`addDayNightInfoPerEcho()`](https://birdscancommunity.github.io/birdscanR/reference/addDayNightInfoPerEcho.md)
+  : addDayNightInfoPerEcho
+- [`computeDensity()`](https://birdscancommunity.github.io/birdscanR/reference/computeDensity.md)
+  : computeDensity
+- [`computeMTR()`](https://birdscancommunity.github.io/birdscanR/reference/computeMTR.md)
+  : computeMTR
+- [`convertTimeZone()`](https://birdscancommunity.github.io/birdscanR/reference/convertTimeZone.md)
+  : Converts timestamps from radar time zone to an user-defined time
+  zone
+- [`createVPTS()`](https://birdscancommunity.github.io/birdscanR/reference/createVPTS.md)
+  : createVPTS
+- [`filterSpeedFeature37()`](https://birdscancommunity.github.io/birdscanR/reference/filterSpeedFeature37.md)
+  : Filter outliers in Speed feature (collection.feature37)
+- [`mergeVisibilityAndManualBlindTimes()`](https://birdscancommunity.github.io/birdscanR/reference/mergeVisibilityAndManualBlindTimes.md)
+  : mergeVisibilityAndManualBlindTimes
+- [`reclassToBats()`](https://birdscancommunity.github.io/birdscanR/reference/reclassToBats.md)
+  : integrate bat classification
+- [`twilight()`](https://birdscancommunity.github.io/birdscanR/reference/twilight.md)
+  : Get the nautical, civil, and solar dawn and dusk for a given
+  timerange and locations.
+
+## Plot functions
+
+- [`createTimeRangeForPlot()`](https://birdscancommunity.github.io/birdscanR/reference/createTimeRangeForPlot.md)
+  : Create Time Range for Plot
+- [`plotExploration()`](https://birdscancommunity.github.io/birdscanR/reference/plotExploration.md)
+  : plotExploration
+- [`plotLongitudinalMTR()`](https://birdscancommunity.github.io/birdscanR/reference/plotLongitudinalMTR.md)
+  : plotLongitudinalMTR
+
+## Sample data
+
+- [`classAbbreviations`](https://birdscancommunity.github.io/birdscanR/reference/classAbbreviations.md)
+  : Default class abbreviations table of the birdscanR package
+- [`loadManualBlindTimes()`](https://birdscancommunity.github.io/birdscanR/reference/loadManualBlindTimes.md)
+  : loadManualBlindTimes
+- [`manualBlindTimes`](https://birdscancommunity.github.io/birdscanR/reference/manualBlindTimes.md)
+  : Example file on how to include manual blind times for your 'Birdscan
+  MR1' database.
+
+# Articles
+
+### All vignettes
+
+- [Introduction to
+  birdscanR](https://birdscancommunity.github.io/birdscanR/articles/birdscanR.md):
+
+  Which functions do I need to call to calculate migration traffic rates
+  from data stored in an SQL Birdscan database? This vignette describes
+  the main workflow to do so.
+
+- [Guide to extracting specific tables from a Birdscan MR1 SQL
+  database](https://birdscancommunity.github.io/birdscanR/articles/extractingSingleTableFromTheSqlDatabase.md):
+
+  Which functions do I need to call to get the data from specific tables
+  from the Birdscsan MR1 SQL database? This vignette describes the main
+  workflow to do so.

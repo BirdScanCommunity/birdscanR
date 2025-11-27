@@ -1,0 +1,504 @@
+# Introduction to birdscanR
+
+------------------------------------------------------------------------
+
+## Summary
+
+This vignette provides an example of the basic workflow to go from an
+‘MS-SQL’ or ‘PostgreSQL’ Birdscan database to Activity Rates, or
+Migration Traffic Rates for the target animal classes. The workflow
+includes 4 steps, of which step 2 is optional, i.e., only of interest
+when you also want to know about possible migratory bat activity):
+
+1.  Extract the relevant data from the SQL database.
+
+2.  (optional) Join the bat classification with the base MR1
+    classification output (that contains insects and different bird
+    groups). This step is only needed if you want to calculate migration
+    traffic rates for bats, as the bat classification is not part of the
+    standard MR1 classification output. If you are only interested in
+    birds and insects, you can skip this step.
+
+3.  Filter the data to your target output period, classes, and other
+    preferences.
+
+4.  Calculate the activity or migration traffic rates
+
+------------------------------------------------------------------------
+
+## Before we get started
+
+We first load the birdscanR package.
+
+``` r
+library(birdscanR)
+```
+
+Then we set our input:
+
+``` r
+# Set main output directory
+# =============================================================================
+mainOutputDir = file.path(".", "results")
+
+# Set server and database settings
+# =============================================================================
+dbServer = "MACHINE\\SERVERNAME" # Set the name of your SQL server
+dbName = "db_Name" # Set the name of your database
+dbDriverChar = "SQL Server" # Set either "SQL Server" or "PostgreSQL"
+
+# Set timezone used by the radar/database
+# Use "Etc/GMT0" (UTC) as radarTimeZone for birdscan v1.6
+# and greater as all times are in UTC as of this software version.
+# =============================================================================
+radarTimeZone = "Etc/GMT0"
+
+# Set target timezone for the radar/dataset
+# Example: targetTimeZone = "Etc/GMT-1" (Etc/GMT-1 equals UTC+1)
+# =============================================================================
+targetTimeZone = "Etc/GMT0"
+
+# Set list of Rf features you also want to extract
+# Vector with RF features to extract. Feature IDs can be found in the
+# rffeatures table in the sql database.
+# Example: Get wing beat frequency and credibility: c(167, 168)
+# Set to NULL to not extract any.
+# =============================================================================
+listOfRfFeaturesToExtract = NULL
+
+# Geographic location of the radar measurements - c(Latitude, Longitude)
+# =============================================================================
+siteLocation = c(47.494427, 8.716432)
+
+# Set type of twilight to use for day/night decision, i.e., "sun" or "civil"
+# =============================================================================
+sunOrCivil = "civil"
+
+# Filter settings
+# =============================================================================
+# Set desired pulseLength modes
+pulseLengthSelection = c("S")
+
+# Set desired rotation modes (multiple simultaneous selections possible)
+# options: 1 (rotation), 0 (nonrotation)
+rotationSelection = c(1)
+
+# Set classes to use in the analysis
+# Example: classSelection = c("passerine_type", "wader_type", "swift_type",
+#                             "large_bird", "unid_bird", "bird_flock",
+#                             "insect", "nonbio", "precipitation")
+classSelection = c("insect", "bat", "passerine_type")
+
+# Set the classification propability cutoff (between 0 and 1) - only objects
+# for which the chosen label also has a classification probability > than the
+# cutoff are retained; Set to NULL to not subset according to probability.
+classProbCutoff = NULL
+
+# Set the altitude range (in meters agl)
+altitudeRange = c(50, 1000)
+
+# Set the time range for echodata (in the targetTimeZone)
+# use format "yyyy-MM-dd hh:mm"
+timeRangeData = c("2021-01-15 00:00", "2021-01-31 00:00")
+
+# Set whether to get the manual blind time from:
+# "mandb": the db file;
+# "csv"  : a separate csv file
+manBlindSource = "csv"
+
+# Set paths to manual blind times file, if manBlindSource == "csv"
+if (manBlindSource %in% "csv") {
+  manblindFile = file.path("data", "manualBlindTimes.csv")
+}
+
+# Set whether to use the echoValidator - If set to TRUE, echoes labelled
+# by the echo validator as “non-bio scatterer” will be excluded.
+useEchoValidator = FALSE
+
+# MTR calculation settings
+# =============================================================================
+# Set whether to save the blind times to file
+saveBlindTimes = TRUE
+
+# Set altitude Range and Bin Size for the MTR calculations
+altitudeRange.mtr = c(50, 500)
+altitudeBinSize = 50
+
+# time range for timeBins (targetTimeZone) - format: "yyyy-MM-dd hh:mm"
+timeRangesTimeBins = c("2021-01-15 00:00", "2021-01-31 00:00")
+
+# timeBin size in seconds
+timeBinduration_sec = 3600
+
+# set blindtime types which should not be treated as blindtime but MTR = 0
+blindTimeAsMtrZero = c("rain")
+
+# cutoff for proportional observation times: Ignore TimeBins where
+# "observationTime/timeBinDuration < propObsTimeCutoff"
+# in 'computeMTR' only used if parameter 'computePerDayNight' is set to
+# 'TRUE' and timeBins are shorter than day/night. In this case timeBins
+# are combined by day/night and only time bins with a proportional
+# observation time greater than the cutoff will be used to compute the
+# day/night MTR and spread.
+# set value from 0-1
+propObsTimeCutoff = 0.2
+
+# Set classes for which you want the MTR
+# Example: classSelection = c("passerine_type", "wader_type", "large_bird")
+# classSelection = c("passerine_type", "wader_type", "swift_type",
+#                    "large_bird", "unid_bird", "bird_flock",
+#                    "insect", "nonbio", "precipitation")
+classSelection.mtr = c("insect", "bat")
+
+# Set whether to compute MTR per timebin or per day/night
+# TRUE: MTR is computed per day and night;
+# FALSE: MTR is computed for each time bin
+computePerDayNight = FALSE
+
+# Set whether to save the MTR to file
+saveMTR2File = TRUE
+```
+
+------------------------------------------------------------------------
+
+## Step 1: Extract the relevant data from the SQL database (or load it from a )
+
+Extracting the data that is need for MTR calculations, can be done with
+the
+[`extractDbData()`](https://birdscancommunity.github.io/birdscanR/reference/extractDbData.md)
+function. This function will connect to your SQL database and read all
+the necessary data to memory. If requested by setting the parameter
+`saveDbToFile` to `TRUE` , it will also write it to an .rds file in the
+output directory you chose. The file is automatically named to:
+`[yourDbName]_DataExtract.rds`, and written to the main output directory
+you defined in the input settings.
+
+If you currently have no connection to an SQL server with your MR1
+database attached, and have extracted or received an extracted dataset
+earlier, you can directly load your database from the the RDS file,
+using ‘dbData = readRDS(file.path(`directory containing the file`,
+`[yourDbName]_DataExtract.rds`))’.
+
+``` r
+# Print progress message
+# =============================================================================
+message(paste0("Extracting data from ", dbName))
+
+# Extract the data from the SQL database
+# =============================================================================
+dbData = extractDbData(
+  dbDriverChar = dbDriverChar,
+  dbServer = dbServer,
+  dbName = dbName,
+  saveDbToFile = TRUE,
+  dbDataDir = mainOutputDir,
+  radarTimeZone = radarTimeZone,
+  targetTimeZone = targetTimeZone,
+  listOfRfFeaturesToExtract = listOfRfFeaturesToExtract,
+  siteLocation = siteLocation,
+  sunOrCivil = sunOrCivil
+)
+
+# Print progress message
+# =============================================================================
+message(paste0("Finished extracting data from ", dbName))
+```
+
+------------------------------------------------------------------------
+
+## Step 2: (optional) Join the bat classification with the base MR1 classification output
+
+In addition to the standard echo classification in insects, different
+bird groups, and non-biological echoes, Birdscan MR1 databases that were
+measuring with or have been updated to version 1.7.0.0 or higher, offer
+the possibility to classify echoes as bat.
+
+The bat infromation is, however, included in separate tables in the SQL
+database. With
+[`reclassToBats()`](https://birdscancommunity.github.io/birdscanR/reference/reclassToBats.md)
+one can merge the bat classification information with the standard
+classification output. If you are not interested in bats, you can simply
+skip this step.
+
+``` r
+# Join bat classification information with standard echo classifcation
+# ===========================================================================
+dbData$echoData = reclassToBats(
+  echoData = dbData$echoData,
+  batClassProbabilitiesAndMtrFactors = dbData$batProbabilitiesAndMtrFactors,
+  reclassToBatCutoff = 0.5
+)
+```
+
+------------------------------------------------------------------------
+
+## Step 3: Filter the extracted data to what you are interested in
+
+Filtering both the protocol and echo data (extracted in the previous
+step) can be done in one step with the function
+[`filterData()`](https://birdscancommunity.github.io/birdscanR/reference/filterData.md).
+
+``` r
+# Print progress message
+# =============================================================================
+message(paste0("Filtering data from ", dbName))
+
+# Get current manual blind times
+# =============================================================================
+# CASE: manBlindSource == "csv"
+# ===========================================================================
+if (manBlindSource %in% "csv") {
+  # Read manual blindtimes from csv File
+  # csv contains one row per blindtime and 3 columns
+  # (start of blindtime, stop of blindtime, type of blindtime)
+  # times have to be of format 'yyyy-MM-dd hh:mm:ss'
+  # =======================================================================
+  cManualBlindTimes = loadManualBlindTimes(
+    filePath = manblindFile,
+    blindTimesTZ = radarTimeZone,
+    targetTZ = targetTimeZone
+  )
+  # CASE: manBlindSource == "mandb"
+  # ===========================================================================
+} else if (manBlindSource %in% "mandb") {
+  cManualBlindTimes = dbData$manualVisibilityTable
+}
+
+# Filter the data
+# =============================================================================
+filteredEchoProtocol = filterData(
+  echoData = dbData$echoData,
+  protocolData = dbData$protocolData,
+  pulseTypeSelection = pulseLengthSelection,
+  rotationSelection = rotationSelection,
+  timeRangeTargetTZ = timeRangeData,
+  targetTimeZone = targetTimeZone,
+  classSelection = classSelection,
+  classProbCutOff = classProbCutoff,
+  altitudeRange_AGL = altitudeRange,
+  manualBlindTimes = cManualBlindTimes,
+  echoValidator = useEchoValidator
+)
+
+# Save the filtered echo and protocol data to the database data list
+# =============================================================================
+dbData$echoData = filteredEchoProtocol$echoData
+dbData$protocolData = filteredEchoProtocol$protocolData
+
+# Save the filtered dataset to a file, including also all filter settings,
+# and the other tables in the original dataset
+# =============================================================================
+dbData$echoFiltersApplied = list(
+  classProbCutoff = classProbCutoff,
+  altitudeRange_AGL = altitudeRange,
+  targetTimeZone = targetTimeZone,
+  timeRangeEchoData = timeRangeData,
+  useEchoValidator = useEchoValidator
+)
+if (is.null(classProbCutoff)) {
+  classProbCutoff.char = 0
+} else {
+  classProbCutoff.char = classProbCutoff
+}
+outputFile = file.path(
+  mainOutputDir,
+  paste0(
+    dbName, "_filtered_",
+    "cut", classProbCutoff.char, "_",
+    "altRange", paste(altitudeRange, collapse = "to"), "_",
+    "timeRange", paste(format(as.Date(timeRangeData), "%Y%m%d"),
+      collapse = "to"
+    ),
+    "_",
+    "echoVal", as.character(useEchoValidator),
+    ".rds"
+  )
+)
+saveRDS(dbData, outputFile)
+
+# Print progress message
+# =============================================================================
+message(paste0("Finished filtering data from ", dbName))
+```
+
+## Step 4: Calculate the activity or migration traffic rates
+
+Calculation of the migration traffic rates is done with the function
+computeMTR().
+
+``` r
+# Print information message
+# =====================================================================
+if (computePerDayNight) {
+  message(paste0(
+    "Computing MTR for ", dbName, ", using:\n",
+    "Classes: ", paste(classSelection.mtr, collapse = ", "), "\n",
+    "For altitudes: ", paste(altitudeRange.mtr, collapse = " to "),
+    " in bins of ", altitudeBinSize, "m\n",
+    "on a nightly/daily basis"
+  ))
+} else {
+  message(paste0(
+    "Computing MTR for ", dbName, ", using:\n",
+    "Classes: ", paste(classSelection.mtr, collapse = ", "), "\n",
+    "For altitudes: ", paste(altitudeRange.mtr, collapse = " to "),
+    " in bins of ", altitudeBinSize, "m\n",
+    "Timebins of: ", timeBinduration_sec, " seconds or ",
+    timeBinduration_sec / 3600, " hours"
+  ))
+}
+
+# Calculate the MTR
+# =====================================================================
+mtr = computeMTR(
+  dbName = dbName,
+  echoes = dbData$echoData,
+  classSelection = classSelection.mtr,
+  altitudeRange = altitudeRange.mtr,
+  altitudeBinSize = altitudeBinSize,
+  timeRange = timeRangesTimeBins,
+  timeBinDuration_sec = timeBinduration_sec,
+  timeZone = targetTimeZone,
+  sunriseSunset = dbData$sunriseSunset,
+  sunOrCivil = sunOrCivil,
+  protocolData = dbData$protocolData,
+  visibilityData = dbData$visibilityData,
+  manualBlindTimes = cManualBlindTimes,
+  saveBlindTimes = saveBlindTimes,
+  blindTimesOutputDir = mainOutputDir,
+  blindTimeAsMtrZero = blindTimeAsMtrZero,
+  propObsTimeCutoff = propObsTimeCutoff,
+  computePerDayNight = computePerDayNight,
+  computeAltitudeDistribution = TRUE
+)
+
+# Save the mTR to file, if requested
+# =====================================================================
+if (saveMTR2File) {
+  if (computePerDayNight) {
+    outputFile = paste0(
+      "mtr_", dbName,
+      "_alt", paste(altitudeRange.mtr,
+        collapse = "to"
+      ),
+      "per", altitudeBinSize, "m_",
+      "time",
+      paste(format(as.Date(timeRangesTimeBins), "%Y%m%d"),
+        collapse = "to"
+      ),
+      "perDayNight_",
+      "cut", propObsTimeCutoff, ".rds"
+    )
+  } else {
+    outputFile = paste0(
+      "mtr_", dbName,
+      "_alt", paste(altitudeRange.mtr,
+        collapse = "to"
+      ),
+      "per", altitudeBinSize, "m_",
+      "time", paste(format(as.Date(timeRangesTimeBins), "%Y%m%d"),
+        collapse = "to"
+      ),
+      "per", timeBinduration_sec, "s_",
+      "cut", propObsTimeCutoff, ".rds"
+    )
+  }
+  saveMTR(
+    mtr = mtr,
+    filepath = mainOutputDir,
+    fileName = outputFile
+  )
+}
+```
+
+## Create some plots to explore the calculated activity / migration traffic rates
+
+The `birdscanR` package also provides two basic plotting functions to
+visualize and explore the MTR results.
+
+The function
+[`plotLongitudinalMTR()`](https://birdscancommunity.github.io/birdscanR/reference/plotLongitudinalMTR.md)
+creates a time series plot of the MTR values (one per altitude bin in
+the MTR data):
+
+``` r
+# Make time series plot
+# =============================================================================
+# Set time range for plots (in targetTimeZone) ;
+# A plot is created for each timerange
+# use format "yyyy-MM-dd hh:mm"
+# ===========================================================================
+timeRangePlot = createTimeRangePlot(timeRangeData[1], timeRangeData[2], 7)
+
+# Set output path for plots
+# ===========================================================================
+outputDir.plots = file.path(mainOutputDir, "Plots")
+
+# Set the class of which the MTR data should be plotted.
+# If not set or set to “allClasses”, MTR of all classes will be plotted.
+# ===========================================================================
+plotClass = "passerine_type"
+
+# Set the maximum value of the y-Scale of the plot to the given value.
+# If negative or not set, the y-Scale is auto-scaled.
+# ===========================================================================
+maxMTR.plot = -1
+
+# Set the propObsTimeCutOff for the plot
+# Time bins with a proportional observation time smaller than
+# propObsTimeCutoff will not be shown in the plot
+# ===========================================================================
+propObsTimeCutoff.plot = 0.2
+
+# Set if the spread (first and third quartile) should be plotted
+# ===========================================================================
+plotSpread = TRUE
+
+# Print message
+# ===========================================================================
+message("Plotting time series of MTR values..")
+
+# Make Plot
+# ===========================================================================
+plotLongitudinalMTR(
+  mtr = mtr,
+  maxMTR = maxMTR.plot,
+  timeRange = timeRangePlot,
+  targetTimeZone = "Etc/GMT0",
+  plotClass = plotClass,
+  propObsTimeCutoff = propObsTimeCutoff.plot,
+  plotSpread = plotSpread,
+  filePath = outputDir.plots
+)
+```
+
+With the second plotting function
+[`plotExploration()`](https://birdscancommunity.github.io/birdscanR/reference/plotExploration.md)
+you can create a time series plot of the detected objects. Each object
+is shown at the respective height (m above ground level) and time:
+
+``` r
+# Make an exploration plot
+# =============================================================================
+# Set  the maximum value of the y-Scale of the plot to the given value.
+# If negative or not set, the y-Scale is auto-scaled.
+maxAltitude.plot = -1
+
+# Print message
+# ===========================================================================
+message("Plotting exploration..")
+
+# Make Plot
+# ===========================================================================
+plotExploration(
+  echoData = dbData$echoData,
+  timeRange = timeRangePlot,
+  targetTimeZone = "Etc/GMT0",
+  manualBlindTimes = cManualBlindTimes,
+  visibilityData = dbData$visibilityData,
+  protocolData = dbData$protocolData,
+  sunriseSunset = dbData$sunriseSunset,
+  maxAltitude = maxAltitude.plot,
+  filePath = outputDir.plots
+)
+```

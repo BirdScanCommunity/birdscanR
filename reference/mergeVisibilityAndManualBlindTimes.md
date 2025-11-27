@@ -1,0 +1,101 @@
+# mergeVisibilityAndManualBlindTimes
+
+Function to merge manual blind times with blind times from visibility
+table. For further processing the radar (visibility) and manual blind
+times have to be merged with `mergeVisibilityAndManualBlindTimes()`.
+This function will add a blind time type to the radar/visibility blind
+times. Blind times during the block time (usually 60s) at the beginning
+of each protocol are given the type 'protocolChange', the rest of the
+radar blind times are given the type “visibility”. After that the
+visibility and manual blind times will be merged. In case manual blind
+times and radar blind times are overlapping, radar blind times with type
+“visibility” will be overwritten, but not radar blind times with type
+“protocolChange”.
+
+## Usage
+
+``` r
+mergeVisibilityAndManualBlindTimes(
+  visibilityData,
+  manualBlindTimes = NULL,
+  protocolData
+)
+```
+
+## Arguments
+
+- visibilityData:
+
+  dataframe with the visibility data from the data list created by
+  [`extractDbData()`](https://birdscancommunity.github.io/birdscanR/reference/extractDbData.md).
+
+- manualBlindTimes:
+
+  dataframe with the manual blind times created by the function
+  ‘loadManualBlindTimes’.
+
+- protocolData:
+
+  dataframe with the protocol data from the data list created by
+  [`extractDbData()`](https://birdscancommunity.github.io/birdscanR/reference/extractDbData.md)
+  or a subset of it created by the function
+  [`filterProtocolData()`](https://birdscancommunity.github.io/birdscanR/reference/filterProtocolData.md).
+
+## Value
+
+dataframe with overall blind times
+
+## See also
+
+Other manipulation functions:
+[`addDayNightInfoPerEcho()`](https://birdscancommunity.github.io/birdscanR/reference/addDayNightInfoPerEcho.md),
+[`computeDensity()`](https://birdscancommunity.github.io/birdscanR/reference/computeDensity.md),
+[`computeMTR()`](https://birdscancommunity.github.io/birdscanR/reference/computeMTR.md),
+[`convertTimeZone()`](https://birdscancommunity.github.io/birdscanR/reference/convertTimeZone.md),
+[`createVPTS()`](https://birdscancommunity.github.io/birdscanR/reference/createVPTS.md),
+[`filterSpeedFeature37()`](https://birdscancommunity.github.io/birdscanR/reference/filterSpeedFeature37.md),
+[`reclassToBats()`](https://birdscancommunity.github.io/birdscanR/reference/reclassToBats.md),
+[`twilight()`](https://birdscancommunity.github.io/birdscanR/reference/twilight.md)
+
+## Author
+
+Fabian Hertner, Birgen Haest, Baptiste Schmid
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+# Set server and database settings
+# ===========================================================================
+dbServer = "MACHINE\\SERVERNAME" # Set the name of your SQL server
+dbName = "db_Name" # Set the name of your database
+dbDriverChar = "SQL Server" # Set either "SQL Server" or "PostgreSQL"
+
+# Open the connection with the database
+# ===========================================================================
+dsn = paste0(
+  "driver=", dbDriverChar, ";server=", dbServer,
+  ";database=", dbName,
+  ";uid=", rstudioapi::askForPassword("Database user"),
+  ";pwd=", rstudioapi::askForPassword("Database password")
+)
+dbConnection = RODBC::odbcDriverConnect(dsn)
+
+# Get visibility table
+# ===========================================================================
+visibilityTable = getVisibilityTable(dbConnection)
+
+# Get manual blind times
+# ===========================================================================
+data(manualBlindTimes)
+cManualBlindTimes = manualBlindTimes
+
+# Merge manual and automatic blind times
+# ===========================================================================
+blindTimes = mergeVisibilityAndManualBlindTimes(
+  visibilityData = visibilityTable,
+  manualBlindTimes = cManualBlindTimes,
+  protocolData = protocolData
+)
+} # }
+```
