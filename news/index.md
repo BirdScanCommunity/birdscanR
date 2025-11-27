@@ -68,11 +68,12 @@
   Fixed, and made database connection code cleaner by using a separate
   function
   [`dbConnectBirdscanSQL()`](https://birdscancommunity.github.io/birdscanR/reference/dbConnectBirdscanSQL.md)
-  and file.
+  and file ([commit
+  337a6be](https://github.com/BirdScanCommunity/birdscanR/commit/337a6be473178eb9f35d545e1c7bb164ad951f76)).
 - Some smaller bug fixes:
   ([\#63](https://github.com/BirdScanCommunity/birdscanR/issues/63),
-  ([commit
-  41288aa](https://github.com/BirdScanCommunity/birdscanR/commit/41288aa18898c95958372c5668f942b8ea9626a8))).
+  [commit
+  41288aa](https://github.com/BirdScanCommunity/birdscanR/commit/41288aa18898c95958372c5668f942b8ea9626a8)).
 
 ## birdscanR 0.3.0
 
