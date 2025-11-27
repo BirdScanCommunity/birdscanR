@@ -64,7 +64,7 @@
   ([\#66](https://github.com/BirdScanCommunity/birdscanR/issues/66)),
   GitHub actions for R CMD check, pkgdown and styler
   ([\#67](https://github.com/BirdScanCommunity/birdscanR/issues/67)).
-- Bug Fix: Connections to psotgreSQL servers were not working anymore.
+- Bug Fix: Connections to postgreSQL servers were not working anymore.
   Fixed, and made database connection code cleaner by using a separate
   function
   [`dbConnectBirdscanSQL()`](https://birdscancommunity.github.io/birdscanR/reference/dbConnectBirdscanSQL.md)
