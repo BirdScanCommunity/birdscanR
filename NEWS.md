@@ -7,7 +7,7 @@
 - New functionality: `getEchoFeatures()` now includes an additional optional parameter `echoSubset` for when you want to limit the data being retrieved from the `echo_rffeature_map` table to a certain subset of echoes only. In the function `extractDBData()`, the default is now to not extract the full `echo_rffeature_map` table anymore, but only for the echoes included in the `collection` table (which can now be subset based on a time interval). This improves performance for very large databases ([commit 78988c5](https://github.com/BirdScanCommunity/birdscanR/commit/78988c56f4d3b6849801f9f8afc6dd46b84b6a3d)).
 - New functionality: Added a function to create a list of time ranges that can then be used for plotting (#78).
 - Simplification: all `get` functions do not require the `dbDriverChar` argument (#72).
-- Improved functionality: For `getEchoFeatures()` and `extractDbData()`, `listOfRfFeaturesToExtract` can now also be set to 'all' to extract all features.
+- Improved functionality: For `getEchoFeatures()` and `extractDbData()`, `listOfRfFeaturesToExtract` can now also be set to 'all' to extract all features (#85).
 - Improved documentation: README (#66), pkgdown website (#67), styling (#70 and #74), updated 'Getting Started' vignette (#77) and additional vignette on extracting specific tables from the 'Birdscan MR1' 'SQL' database (#80).
 - Improved collaboration: Contributing guide, Code of conduct and license (#66), GitHub actions for R CMD check, pkgdown and styler (#67).
 - Bug Fix: Connections to psotgreSQL servers were not working anymore. Fixed, and made database connection code cleaner by using a separate function `dbConnectBirdscanSQL()` and file.
