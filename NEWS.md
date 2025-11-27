@@ -10,8 +10,8 @@
 - Improved functionality: For `getEchoFeatures()` and `extractDbData()`, `listOfRfFeaturesToExtract` can now also be set to 'all' to extract all features (#85).
 - Improved documentation: README (#66), pkgdown website (#67), styling (#70 and #74), updated 'Getting Started' vignette (#77) and additional vignette on extracting specific tables from the 'Birdscan MR1' 'SQL' database (#80).
 - Improved collaboration: Contributing guide, Code of conduct and license (#66), GitHub actions for R CMD check, pkgdown and styler (#67).
-- Bug Fix: Connections to psotgreSQL servers were not working anymore. Fixed, and made database connection code cleaner by using a separate function `dbConnectBirdscanSQL()` and file.
-- Some smaller bug fixes: (#63, ([commit 41288aa](https://github.com/BirdScanCommunity/birdscanR/commit/41288aa18898c95958372c5668f942b8ea9626a8))). 
+- Bug Fix: Connections to psotgreSQL servers were not working anymore. Fixed, and made database connection code cleaner by using a separate function `dbConnectBirdscanSQL()` and file ([commit 337a6be](https://github.com/BirdScanCommunity/birdscanR/commit/337a6be473178eb9f35d545e1c7bb164ad951f76)).
+- Some smaller bug fixes: (#63, [commit 41288aa](https://github.com/BirdScanCommunity/birdscanR/commit/41288aa18898c95958372c5668f942b8ea9626a8)). 
 
 # birdscanR 0.3.0
 
