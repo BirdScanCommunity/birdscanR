@@ -219,9 +219,25 @@ computeMTR = function(dbName,
 # compute blindtimes
 # =====================================================================
   message("Calculating blind times..")
-  blindTimes = mergeVisibilityAndManualBlindTimes(visibilityData   = visibilityData,
-                                                  manualBlindTimes = manualBlindTimes,
-                                                  protocolData     = protocolData)
+  # if visibilityData origniate from dbExtract
+  colsOfInterest = c(
+    "visibilityLogID", "protocolID",
+    "blind_from_targetTZ", "blind_to_targetTZ"
+  )
+  if(all(names(visibilityData) %in% colsOfInterest)) {
+    blindTimes = mergeVisibilityAndManualBlindTimes(visibilityData   = visibilityData,
+                                                    manualBlindTimes = manualBlindTimes,
+                                                    protocolData     = protocolData)
+    print("Visibility data merged with manualBlindTimes.")
+  }
+  # if visibilityData was already merged with Blindtimes in the function mergeVisibilityAndManualBlindTimes()
+  colsOfInterest = c(
+    "start_targetTZ", "stop_targetTZ", "type"
+  )
+  if(all(names(visibilityData) %in% colsOfInterest)) {
+    blindTimes = visibilityData
+    print("Visibility data was already merged with manualBlindtTimes")
+  }
 
 # Save blind times to file, if requested
 # =============================================================================
