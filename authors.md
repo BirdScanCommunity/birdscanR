@@ -36,7 +36,7 @@
 Source:
 [`inst/CITATION`](https://github.com/BirdScanCommunity/birdscanR/blob/develop/inst/CITATION)
 
-Haest B, Hertner F, Schmid B, Preatoni D, De Groeve J, Liechti F (2025).
+Haest B, Hertner F, Schmid B, Preatoni D, De Groeve J, Liechti F (2026).
 “birdscanR: Migration Traffic Rate Calculation Package for Birdscan MR1
 Radars.”
 [doi:10.5281/zenodo.7326820](https://doi.org/10.5281/zenodo.7326820),
@@ -45,7 +45,7 @@ Radars.”
     @Misc{,
       title = {birdscanR: Migration Traffic Rate Calculation Package for Birdscan MR1 Radars.},
       author = {Birgen Haest and Fabian Hertner and Baptiste Schmid and Damiano Preatoni and Johannes {De Groeve} and Felix Liechti},
-      year = {2025},
+      year = {2026},
       url = {https://zenodo.org/record/7326820},
       doi = {10.5281/zenodo.7326820},
     }

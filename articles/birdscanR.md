@@ -225,7 +225,7 @@ skip this step.
 # ===========================================================================
 dbData$echoData = reclassToBats(
   echoData = dbData$echoData,
-  batClassProbabilitiesAndMtrFactors = dbData$batProbabilitiesAndMtrFactors,
+  batProbabilitiesAndMtrFactors = dbData$batProbabilitiesAndMtrFactors,
   reclassToBatCutoff = 0.5
 )
 ```
