@@ -201,7 +201,7 @@ The bat infromation is, however, included in separate tables in the SQL database
 # ===========================================================================
 dbData$echoData = reclassToBats(
   echoData = dbData$echoData,
-  batClassProbabilitiesAndMtrFactors = dbData$batProbabilitiesAndMtrFactors,
+  batProbabilitiesAndMtrFactors = dbData$batProbabilitiesAndMtrFactors,
   reclassToBatCutoff = 0.5
 )
 ```
