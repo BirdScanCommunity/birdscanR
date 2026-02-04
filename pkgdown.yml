@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   birdscanR: birdscanR.html
   extractingSingleTableFromTheSqlDatabase: extractingSingleTableFromTheSqlDatabase.html
-last_built: 2026-02-03T15:21Z
+last_built: 2026-02-04T08:40Z
 urls:
   reference: https://birdscancommunity.github.io/birdscanR/reference
   article: https://birdscancommunity.github.io/birdscanR/articles

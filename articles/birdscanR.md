@@ -428,7 +428,7 @@ the MTR data):
 # A plot is created for each timerange
 # use format "yyyy-MM-dd hh:mm"
 # ===========================================================================
-timeRangePlot = createTimeRangePlot(timeRangeData[1], timeRangeData[2], 7)
+timeRangePlot = createTimeRangeForPlot(timeRangeData[1], timeRangeData[2], 7)
 
 # Set output path for plots
 # ===========================================================================
