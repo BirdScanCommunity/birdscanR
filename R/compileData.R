@@ -6,6 +6,7 @@
 #' e.g. time frame, pulse type.
 #' @param echoData dataframe with the echo data from the data list created with
 #' [extractDbData()].
+#' @param listOfRfFeaturesToKeep List of columns to keep from the extracted echo table in the compiled dataset. 'NULL' keeps a predefined selection, 'all' keep all, additional names can be added as a vector, e.g. keep_col = c("name1", "name2").
 #' @param protocolData dataframe with the protocol data from the data list created
 #' with [extractDbData()]. Echoes not detected during the listed protocols
 #' will be excluded.
@@ -46,6 +47,7 @@
 #' @family write file functions
 #' @export
 compileData = function(echoData = NULL,
+                       listOfRfFeaturesToKeep = NULL,
                        protocolData = NULL,
                        blindTimesData = NULL,
                        sunriseSunsetData = NULL,
@@ -361,6 +363,44 @@ compileData = function(echoData = NULL,
   )
   if (nrow(echoDataSubset) == 0) {
     warning(paste0("No echo remaining in the filtered data. Check 'TimeRange' and 'manualBlindTimes', or other filters such as 'pulse-type', 'classSelection', 'altitudeRange'"))
+  }
+
+  #-----------------------------------------------------------------------------
+  # filter columns of echo data
+  selcol <- if (!is.null(listOfRfFeaturesToKeep) && listOfRfFeaturesToKeep == "all") {
+    message(paste0("All RF features are kept in the compiled dataset. Total number of RF features: ", length(names(echoDataSubset))))
+  } else {
+    # keep a subset of all columns
+    selcol_base <- c(
+      "echo", "echoID", "protocolID", "stc_level",
+      "time_stamp_originTZ", "time_stamp_targetTZ", "time_string", "fs",
+      "feature1.altitude_AGL", "feature1.altitude_ASL",
+      "feature2.azimuth", "feature3.speed", "feature37.speed",
+      "feature6.rotationFreq", "feature13.freqRatio", "feature14.maxLevel", "feature15.polRatio", "feature16.absPolarisation", "feature17.rcs", "feature18.sqrt.RCS.", "feature19.durationOfEcho", "feature20.durationOfEchoInSTC",
+      "feature24.alpha", "feature25.theta", "feature30.altitudeLeftSideOfEcho", "feature31.altitudeRightSideOfEcho", "feature33.distLeftToBottom", "feature34.nSamplesInEcho", "feature35.areaOfEcho"
+    )
+    selcol_class <- c("class", "mtr_factor_rf", "class_probability", "mtr_factor_sphereDiaCm", "classifierVersion")
+    selcol_twilight <- c("dayOrNight", "dayOrCrepOrNight", "dateSunset")
+    selcol_wingbeat <- c("WFF_credibility", "WFF_predicted")
+    selcol <- c(selcol_base, selcol_class, selcol_twilight, selcol_wingbeat, listOfRfFeaturesToKeep)
+
+    # select columns
+    echoDataSubset <- echoDataSubset[, names(echoDataSubset) %in% selcol]
+
+    # message on selected columns
+    absent_from_echo <- selcol[!selcol %in% names(echoDataSubset)]
+    if (length(absent_from_echo) > 0) {
+      message(
+        "the following column names were absent from the echo table : \n",
+        paste(absent_from_echo, collapse = ", ")
+      )
+    }
+    if (length(listOfRfFeaturesToKeep) == 0) {
+      message(paste0("A predefined selection of echo columns is kept in the compiled dataset. Total number of columns: ", length(selcol)))
+    }
+    if (length(listOfRfFeaturesToKeep) != 0) {
+      message(paste0("A predefined selection of echo columns plus ", length(listOfRfFeaturesToKeep), " additional RF features are kept in the compiled dataset. Total number of columns: ", length(selcol)))
+    }
   }
 
   #-----------------------------------------------------------------------------
