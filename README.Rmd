@@ -42,8 +42,8 @@ install.packages("birdscanR")
 Or the development version from [GitHub](https://github.com/BirdScanCommunity/birdscanR):
 
 ```{r, eval = FALSE}
-# install.packages("devtools")
-devtools::install_github("BirdScanCommunity/birdscanR")
+# install.packages("pak")
+pak::pak("BirdScanCommunity/birdscanR")
 ```
 
 
