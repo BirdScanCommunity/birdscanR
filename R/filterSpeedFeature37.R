@@ -15,7 +15,8 @@
 #' # ===========================================================================
 #' dbData = readRDS(system.file("extdata",
 #'   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
-#'   package = "birdscanR"))
+#'   package = "birdscanR"
+#' ))
 #'
 #' # Filter speed feature 37
 #' # ===========================================================================

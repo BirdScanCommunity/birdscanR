@@ -36,10 +36,11 @@
 #' \donttest{
 #' # Load example data
 #' # ===========================================================================
-#' dbData         = readRDS(system.file("extdata",
+#' dbData = readRDS(system.file("extdata",
 #'   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
-#'   package = "birdscanR"))
-#' mainOutputDir  = file.path(".", "results")
+#'   package = "birdscanR"
+#' ))
+#' mainOutputDir = file.path(".", "results")
 #'
 #' # Set manual blind times to NULL (no manual blind times)
 #' # ===========================================================================
