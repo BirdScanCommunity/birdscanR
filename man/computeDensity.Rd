@@ -121,49 +121,23 @@ properly on Birdscan MR1 database versions >= 1.7.0.4 as the variable
 feature37.speed is required for the density calculation.
 }
 \examples{
-\dontrun{
-# Set server, database, and other input settings
+\donttest{
+# Load example data
 # ===========================================================================
-  dbServer       = "MACHINE\\\\SERVERNAME"     # Set the name of your SQL server
-  dbName         = "db_Name"                   # Set the name of your database
-  dbDriverChar   = "SQL Server"                # Set either "SQL Server" or "PostgreSQL"
-  mainOutputDir  = file.path(".", "results")
-  radarTimeZone  = "Etc/GMT0"
+  dbData         = readRDS(system.file("extdata",
+    "CH_Sempach_2024_SEP24_25_DataExtract.rds",
+    package = "birdscanR"))
+  dbName         = "CH_Sempach_2024_SEP24_25"
   targetTimeZone = "Etc/GMT0"
-  listOfRfFeaturesToExtract = c(167, 168)
-  siteLocation   = c(47.494427, 8.716432)
-  sunOrCivil     = "civil"
-  crepuscule     = "nauticalSolar"
-  timeRangeData  = c("2021-01-15 00:00", "2021-01-31 00:00")
+  timeRangeData  = c("2024-09-24 00:00", "2024-09-25 23:59")
 
-# Get data
+# Set manual blind times to NULL (no manual blind times)
 # ===========================================================================
-  dbData = extractDbData(dbDriverChar                   = dbDriverChar,
-                         dbServer                       = dbServer,
-                         dbName                         = dbName,
-                         saveDbToFile                   = TRUE,
-                         dbDataDir                      = mainOutputDir,
-                         radarTimeZone                  = radarTimeZone,
-                         targetTimeZone                 = targetTimeZone,
-                         listOfRfFeaturesToExtract      = listOfRfFeaturesToExtract,
-                         siteLocation                   = siteLocation,
-                         sunOrCivil                     = sunOrCivil,
-                         crepuscule                     = crepuscule)
+  cManualBlindTimes = NULL
 
-# Get sunrise/sunset
+# Compute density
 # ===========================================================================
-  sunriseSunset = twilight(timeRange = timeRangeData,
-                           latLon    = c(47.494427, 8.716432),
-                           timeZone  = targetTimeZone)
-
-# Get manual blind times
-# ===========================================================================
-  data(manualBlindTimes)
-  cManualBlindTimes = manualBlindTimes
-
-# Compute migration traffic rate
-# ===========================================================================
-  classSelection.density = c("insect")
+  classSelection.density = c("passerine_type")
   densityData = computeDensity(dbName                       = dbName,
                                echoes                       = dbData$echoData,
                                classSelection               = classSelection.density,
@@ -172,9 +146,9 @@ feature37.speed is required for the density calculation.
                                timeRange                    = timeRangeData,
                                timeBinDuration_sec          = 1800,
                                timeZone                     = targetTimeZone,
-                               sunriseSunset                = sunriseSunset,
+                               sunriseSunset                = dbData$sunriseSunset,
                                sunOrCivil                   = "civil",
-                               crepuscule                   = crepuscule,
+                               crepuscule                   = "nauticalSolar",
                                protocolData                 = dbData$protocolData,
                                visibilityData               = dbData$visibilityData,
                                manualBlindTimes             = cManualBlindTimes,
@@ -183,7 +157,7 @@ feature37.speed is required for the density calculation.
                                blindTimeAsMtrZero           = NULL,
                                propObsTimeCutoff            = 0,
                                computePerDayNight           = FALSE,
-                               computePerDayCrepusculeNight = FALSE
+                               computePerDayCrepusculeNight = FALSE,
                                computeAltitudeDistribution  = TRUE)
 }
 

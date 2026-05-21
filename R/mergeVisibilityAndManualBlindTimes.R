@@ -24,38 +24,34 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' # Set server and database settings
+#' \donttest{
+#' # Load example data
 #' # ===========================================================================
-#' dbServer = "MACHINE\\SERVERNAME" # Set the name of your SQL server
-#' dbName = "db_Name" # Set the name of your database
-#' dbDriverChar = "SQL Server" # Set either "SQL Server" or "PostgreSQL"
-#'
-#' # Open the connection with the database
-#' # ===========================================================================
-#' dsn = paste0(
-#'   "driver=", dbDriverChar, ";server=", dbServer,
-#'   ";database=", dbName,
-#'   ";uid=", rstudioapi::askForPassword("Database user"),
-#'   ";pwd=", rstudioapi::askForPassword("Database password")
-#' )
-#' dbConnection = RODBC::odbcDriverConnect(dsn)
-#'
-#' # Get visibility table
-#' # ===========================================================================
-#' visibilityTable = getVisibilityTable(dbConnection)
+#' dbData = readRDS(system.file("extdata",
+#'   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
+#'   package = "birdscanR"
+#' ))
 #'
 #' # Get manual blind times
 #' # ===========================================================================
 #' data(manualBlindTimes)
-#' cManualBlindTimes = manualBlindTimes
+#' tmpFile = tempfile(fileext = ".csv")
+#' write.table(manualBlindTimes,
+#'   file = tmpFile, sep = ",",
+#'   row.names = FALSE, col.names = FALSE
+#' )
+#' cManualBlindTimes = loadManualBlindTimes(
+#'   filePath     = tmpFile,
+#'   blindTimesTZ = "Etc/GMT0",
+#'   targetTZ     = "Etc/GMT0"
+#' )
 #'
 #' # Merge manual and automatic blind times
 #' # ===========================================================================
 #' blindTimes = mergeVisibilityAndManualBlindTimes(
-#'   visibilityData = visibilityTable,
+#'   visibilityData   = dbData$visibilityData,
 #'   manualBlindTimes = cManualBlindTimes,
-#'   protocolData = protocolData
+#'   protocolData     = dbData$protocolData
 #' )
 #' }
 #'

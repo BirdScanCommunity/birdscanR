@@ -32,88 +32,61 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' # Set server, database, and other input settings
+#' \donttest{
+#' # Load example data
 #' # ===========================================================================
-#' dbServer = "MACHINE\\SERVERNAME" # Set the name of your SQL server
-#' dbName = "db_Name" # Set the name of your database
-#' dbDriverChar = "SQL Server" # Set either "SQL Server" or "PostgreSQL"
-#' mainOutputDir = file.path(".", "results")
-#' radarTimeZone = "Etc/GMT0"
+#' dbData = readRDS(system.file("extdata",
+#'   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
+#'   package = "birdscanR"
+#' ))
+#' dbName = "CH_Sempach_2024_SEP24_25"
 #' targetTimeZone = "Etc/GMT0"
-#' listOfRfFeaturesToExtract = c(167, 168)
-#' siteLocation = c(47.494427, 8.716432)
-#' sunOrCivil = "civil"
-#' timeRangeData = c("2021-01-15 00:00", "2021-01-31 00:00")
+#' timeRangeData = c("2024-09-24 00:00", "2024-09-25 23:59")
 #'
-#' # Get data
+#' # Set manual blind times to NULL (no manual blind times)
 #' # ===========================================================================
-#' dbData = extractDbData(
-#'   dbDriverChar = dbDriverChar,
-#'   dbServer = dbServer,
-#'   dbName = dbName,
-#'   saveDbToFile = TRUE,
-#'   dbDataDir = mainOutputDir,
-#'   radarTimeZone = radarTimeZone,
-#'   targetTimeZone = targetTimeZone,
-#'   listOfRfFeaturesToExtract = listOfRfFeaturesToExtract,
-#'   siteLocation = siteLocation,
-#'   sunOrCivil = sunOrCivil
-#' )
-#'
-#' # Get sunrise/sunset
-#' # ===========================================================================
-#' sunriseSunset = twilight(
-#'   timeRange = timeRangeData,
-#'   latLon = c(47.494427, 8.716432),
-#'   timeZone = targetTimeZone
-#' )
-#'
-#' # Get manual blind times
-#' # ===========================================================================
-#' data(manualBlindTimes)
-#' cManualBlindTimes = manualBlindTimes
+#' cManualBlindTimes = NULL
 #'
 #' # Compute migration traffic rate
 #' # ===========================================================================
-#' classSelection.mtr = c("insect")
+#' classSelection.mtr = c("passerine_type")
 #' mtrData = computeMTR(
-#'   dbName = dbName,
-#'   echoes = dbData$echoData,
-#'   classSelection = classSelection.mtr,
-#'   altitudeRange = c(25, 1025),
-#'   altitudeBinSize = 50,
-#'   timeRange = timeRangeData,
-#'   timeBinDuration_sec = 1800,
-#'   timeZone = targetTimeZone,
-#'   sunriseSunset = sunriseSunset,
-#'   sunOrCivil = "civil",
-#'   protocolData = dbData$protocolData,
-#'   visibilityData = dbData$visibilityData,
-#'   manualBlindTimes = cManualBlindTimes,
-#'   saveBlindTimes = FALSE,
-#'   blindTimesOutputDir = getwd(),
-#'   blindTimeAsMtrZero = NULL,
-#'   propObsTimeCutoff = 0,
-#'   computePerDayNight = FALSE,
-#'   computeAltitudeDistribution = TRUE
+#'   dbName                       = dbName,
+#'   echoes                       = dbData$echoData,
+#'   classSelection               = classSelection.mtr,
+#'   altitudeRange                = c(25, 1025),
+#'   altitudeBinSize              = 50,
+#'   timeRange                    = timeRangeData,
+#'   timeBinDuration_sec          = 1800,
+#'   timeZone                     = targetTimeZone,
+#'   sunriseSunset                = dbData$sunriseSunset,
+#'   sunOrCivil                   = "civil",
+#'   protocolData                 = dbData$protocolData,
+#'   visibilityData               = dbData$visibilityData,
+#'   manualBlindTimes             = cManualBlindTimes,
+#'   saveBlindTimes               = FALSE,
+#'   blindTimesOutputDir          = getwd(),
+#'   blindTimeAsMtrZero           = NULL,
+#'   propObsTimeCutoff            = 0,
+#'   computePerDayNight           = FALSE,
+#'   computeAltitudeDistribution  = TRUE
 #' )
 #'
 #' # Make Plot
 #' # ===========================================================================
 #' timeRangePlot = list(
-#'   c("2021-01-15 00:00", "2021-01-22 00:00"),
-#'   c("2021-01-23 00:00", "2021-01-31 00:00")
+#'   c("2024-09-24 00:00", "2024-09-24 23:59"),
+#'   c("2024-09-25 00:00", "2024-09-25 23:59")
 #' )
-#' plotExplorationplotLongitudinalMTR(
-#'   mtr = mtrData,
-#'   maxMTR = -1,
-#'   timeRange = timeRangePlot,
-#'   targetTimeZone = "Etc/GMT0",
-#'   plotClass = "allClasses",
+#' plotLongitudinalMTR(
+#'   mtr               = mtrData,
+#'   maxMTR            = -1,
+#'   timeRange         = timeRangePlot,
+#'   targetTimeZone    = "Etc/GMT0",
+#'   plotClass         = "allClasses",
 #'   propObsTimeCutoff = 0.2,
-#'   plotSpread = TRUE,
-#'   filePath = "./"
+#'   plotSpread        = TRUE,
+#'   filePath          = "./"
 #' )
 #' }
 #'

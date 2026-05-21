@@ -34,18 +34,25 @@
 #' @family sample data
 #' @export
 #' @examples
-#' \dontrun{
-#' # load manual blind time example data from birdscanR package
+#' \donttest{
+#' # Load manual blind time example data from birdscanR package
+#' # ===========================================================================
 #' data(manualBlindTimes)
 #'
-#' # Save example manual blind times to a file
-#' write.csv(manualBlindTimes, file = "manualBlindTimes.csv", row.names = F)
+#' # Save example manual blind times to a temporary file
+#' # ===========================================================================
+#' tmpFile = tempfile(fileext = ".csv")
+#' write.table(manualBlindTimes,
+#'   file = tmpFile, sep = ",",
+#'   row.names = FALSE, col.names = FALSE
+#' )
 #'
 #' # Read the manual blind times from file
+#' # ===========================================================================
 #' manualBlindTimes.new = loadManualBlindTimes(
-#'   filePath = "./manualBlindTimes.csv",
-#'   blindTimesTZ = "ETC/GMT",
-#'   targetTZ = "ETC/GMT"
+#'   filePath     = tmpFile,
+#'   blindTimesTZ = "Etc/GMT0",
+#'   targetTZ     = "Etc/GMT0"
 #' )
 #' }
 #'

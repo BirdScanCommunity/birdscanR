@@ -10,11 +10,19 @@
 #' @family manipulation functions
 #' @export
 #' @examples
-#' \dontrun{
-#' minEchoDuration = 5
+#' \donttest{
+#' # Load example data
+#' # ===========================================================================
+#' dbData = readRDS(system.file("extdata",
+#'   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
+#'   package = "birdscanR"
+#' ))
 #'
-#' data$echoData <- filterSpeedFeature37(
-#'   echoData = data$echoData,
+#' # Filter speed feature 37
+#' # ===========================================================================
+#' minEchoDuration = 5
+#' dbData$echoData = filterSpeedFeature37(
+#'   echoData        = dbData$echoData,
 #'   minEchoDuration = minEchoDuration
 #' )
 #' }
