@@ -9,7 +9,7 @@ If the directory is not existing it will be created if possible."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">birdscanR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9028</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9029</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -130,78 +130,60 @@ the package; See data(classAbbreviations). Used to create the filename, if
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="co"># Set server, database, and other input settings</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co"># Load example data</span></span></span>
 <span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
-<span class="r-in"><span><span class="va">dbServer</span> <span class="op">=</span> <span class="st">"MACHINE\\SERVERNAME"</span> <span class="co"># Set the name of your SQL server</span></span></span>
-<span class="r-in"><span><span class="va">dbName</span> <span class="op">=</span> <span class="st">"db_Name"</span> <span class="co"># Set the name of your database</span></span></span>
-<span class="r-in"><span><span class="va">dbDriverChar</span> <span class="op">=</span> <span class="st">"SQL Server"</span> <span class="co"># Set either "SQL Server" or "PostgreSQL"</span></span></span>
-<span class="r-in"><span><span class="va">mainOutputDir</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"."</span>, <span class="st">"results"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">radarTimeZone</span> <span class="op">=</span> <span class="st">"Etc/GMT0"</span></span></span>
+<span class="r-in"><span><span class="va">dbData</span>         <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"CH_Sempach_2024_SEP24_25_DataExtract.rds"</span>,</span></span>
+<span class="r-in"><span>  package <span class="op">=</span> <span class="st">"birdscanR"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dbName</span>         <span class="op">=</span> <span class="st">"CH_Sempach_2024_SEP24_25"</span></span></span>
+<span class="r-in"><span><span class="va">mainOutputDir</span>  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"."</span>, <span class="st">"results"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">targetTimeZone</span> <span class="op">=</span> <span class="st">"Etc/GMT0"</span></span></span>
-<span class="r-in"><span><span class="va">listOfRfFeaturesToExtract</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">167</span>, <span class="fl">168</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">siteLocation</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">47.494427</span>, <span class="fl">8.716432</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">sunOrCivil</span> <span class="op">=</span> <span class="st">"civil"</span></span></span>
-<span class="r-in"><span><span class="va">timeRangeData</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2021-01-15 00:00"</span>, <span class="st">"2021-01-31 00:00"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">timeRangeData</span>  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2024-09-24 00:00"</span>, <span class="st">"2024-09-25 23:59"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Get data</span></span></span>
+<span class="r-in"><span><span class="co"># Set manual blind times to NULL (no manual blind times)</span></span></span>
 <span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
-<span class="r-in"><span><span class="va">dbData</span> <span class="op">=</span> <span class="fu"><a href="extractDbData.html">extractDbData</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  dbDriverChar <span class="op">=</span> <span class="va">dbDriverChar</span>,</span></span>
-<span class="r-in"><span>  dbServer <span class="op">=</span> <span class="va">dbServer</span>,</span></span>
-<span class="r-in"><span>  dbName <span class="op">=</span> <span class="va">dbName</span>,</span></span>
-<span class="r-in"><span>  saveDbToFile <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>  dbDataDir <span class="op">=</span> <span class="va">mainOutputDir</span>,</span></span>
-<span class="r-in"><span>  radarTimeZone <span class="op">=</span> <span class="va">radarTimeZone</span>,</span></span>
-<span class="r-in"><span>  targetTimeZone <span class="op">=</span> <span class="va">targetTimeZone</span>,</span></span>
-<span class="r-in"><span>  listOfRfFeaturesToExtract <span class="op">=</span> <span class="va">listOfRfFeaturesToExtract</span>,</span></span>
-<span class="r-in"><span>  siteLocation <span class="op">=</span> <span class="va">siteLocation</span>,</span></span>
-<span class="r-in"><span>  sunOrCivil <span class="op">=</span> <span class="va">sunOrCivil</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Get sunrise/sunset</span></span></span>
-<span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
-<span class="r-in"><span><span class="va">sunriseSunset</span> <span class="op">=</span> <span class="fu"><a href="twilight.html">twilight</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  timeRange <span class="op">=</span> <span class="va">timeRangeData</span>,</span></span>
-<span class="r-in"><span>  latLon <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">47.494427</span>, <span class="fl">8.716432</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  timeZone <span class="op">=</span> <span class="va">targetTimeZone</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Get manual blind times</span></span></span>
-<span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">manualBlindTimes</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">cManualBlindTimes</span> <span class="op">=</span> <span class="va">manualBlindTimes</span></span></span>
+<span class="r-in"><span><span class="va">cManualBlindTimes</span> <span class="op">=</span> <span class="cn">NULL</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Compute migration traffic rate</span></span></span>
 <span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
-<span class="r-in"><span><span class="va">classSelection.mtr</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"insect"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">classSelection.mtr</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"passerine_type"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mtrData</span> <span class="op">=</span> <span class="fu"><a href="computeMTR.html">computeMTR</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  dbName <span class="op">=</span> <span class="va">dbName</span>,</span></span>
-<span class="r-in"><span>  echoes <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">echoData</span>,</span></span>
-<span class="r-in"><span>  classSelection <span class="op">=</span> <span class="va">classSelection.mtr</span>,</span></span>
-<span class="r-in"><span>  altitudeRange <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">1025</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  altitudeBinSize <span class="op">=</span> <span class="fl">50</span>,</span></span>
-<span class="r-in"><span>  timeRange <span class="op">=</span> <span class="va">timeRangeData</span>,</span></span>
-<span class="r-in"><span>  timeBinDuration_sec <span class="op">=</span> <span class="fl">1800</span>,</span></span>
-<span class="r-in"><span>  timeZone <span class="op">=</span> <span class="va">targetTimeZone</span>,</span></span>
-<span class="r-in"><span>  sunriseSunset <span class="op">=</span> <span class="va">sunriseSunset</span>,</span></span>
-<span class="r-in"><span>  sunOrCivil <span class="op">=</span> <span class="st">"civil"</span>,</span></span>
-<span class="r-in"><span>  protocolData <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">protocolData</span>,</span></span>
-<span class="r-in"><span>  visibilityData <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">visibilityData</span>,</span></span>
-<span class="r-in"><span>  manualBlindTimes <span class="op">=</span> <span class="va">cManualBlindTimes</span>,</span></span>
-<span class="r-in"><span>  saveBlindTimes <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
-<span class="r-in"><span>  blindTimesOutputDir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  blindTimeAsMtrZero <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
-<span class="r-in"><span>  propObsTimeCutoff <span class="op">=</span> <span class="fl">0</span>,</span></span>
-<span class="r-in"><span>  computePerDayNight <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>  dbName                      <span class="op">=</span> <span class="va">dbName</span>,</span></span>
+<span class="r-in"><span>  echoes                      <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">echoData</span>,</span></span>
+<span class="r-in"><span>  classSelection              <span class="op">=</span> <span class="va">classSelection.mtr</span>,</span></span>
+<span class="r-in"><span>  altitudeRange               <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">1025</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  altitudeBinSize             <span class="op">=</span> <span class="fl">50</span>,</span></span>
+<span class="r-in"><span>  timeRange                   <span class="op">=</span> <span class="va">timeRangeData</span>,</span></span>
+<span class="r-in"><span>  timeBinDuration_sec         <span class="op">=</span> <span class="fl">1800</span>,</span></span>
+<span class="r-in"><span>  timeZone                    <span class="op">=</span> <span class="va">targetTimeZone</span>,</span></span>
+<span class="r-in"><span>  sunriseSunset               <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">sunriseSunset</span>,</span></span>
+<span class="r-in"><span>  sunOrCivil                  <span class="op">=</span> <span class="st">"civil"</span>,</span></span>
+<span class="r-in"><span>  protocolData                <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">protocolData</span>,</span></span>
+<span class="r-in"><span>  visibilityData              <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">visibilityData</span>,</span></span>
+<span class="r-in"><span>  manualBlindTimes            <span class="op">=</span> <span class="va">cManualBlindTimes</span>,</span></span>
+<span class="r-in"><span>  saveBlindTimes              <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>  blindTimesOutputDir         <span class="op">=</span> <span class="va">mainOutputDir</span>,</span></span>
+<span class="r-in"><span>  blindTimeAsMtrZero          <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
+<span class="r-in"><span>  propObsTimeCutoff           <span class="op">=</span> <span class="fl">0</span>,</span></span>
+<span class="r-in"><span>  computePerDayNight          <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>  computeAltitudeDistribution <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Creating altitude bins..</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Creating time bins..</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>'createTimeBins()' was called with an input time range that ends later than 2 days before the last sunrise/sunset in the sunriseSunset dataset. The end of the timerange was adjusted to the last date in the sunriseSunset dataset - 2 days.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating blind times..</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing observation times for each timebin..</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 93 echoes above the defined altitude range, thus excldued from the MTR calculation.</span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Save the MTR data to file</span></span></span>
+<span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
 <span class="r-in"><span><span class="fu">saveMTR</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  mtr <span class="op">=</span> <span class="va">mtrData</span>,</span></span>
-<span class="r-in"><span>  filepath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  mtr      <span class="op">=</span> <span class="va">mtrData</span>,</span></span>
+<span class="r-in"><span>  filepath <span class="op">=</span> <span class="va">mainOutputDir</span>,</span></span>
+<span class="r-in"><span>  dbName   <span class="op">=</span> <span class="va">dbName</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

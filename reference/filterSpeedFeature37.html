@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">birdscanR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9028</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9029</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,14 +83,21 @@ Birgen Haest, <a href="mailto:birgen.haest@vogelwarte.ch">birgen.haest@vogelwart
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="va">minEchoDuration</span> <span class="op">=</span> <span class="fl">5</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co"># Load example data</span></span></span>
+<span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
+<span class="r-in"><span><span class="va">dbData</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"CH_Sempach_2024_SEP24_25_DataExtract.rds"</span>,</span></span>
+<span class="r-in"><span>  package <span class="op">=</span> <span class="st">"birdscanR"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">data</span><span class="op">$</span><span class="va">echoData</span> <span class="op">&lt;-</span> <span class="fu">filterSpeedFeature37</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  echoData <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">echoData</span>,</span></span>
+<span class="r-in"><span><span class="co"># Filter speed feature 37</span></span></span>
+<span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
+<span class="r-in"><span><span class="va">minEchoDuration</span> <span class="op">=</span> <span class="fl">5</span></span></span>
+<span class="r-in"><span><span class="va">dbData</span><span class="op">$</span><span class="va">echoData</span> <span class="op">=</span> <span class="fu">filterSpeedFeature37</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  echoData        <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">echoData</span>,</span></span>
 <span class="r-in"><span>  minEchoDuration <span class="op">=</span> <span class="va">minEchoDuration</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

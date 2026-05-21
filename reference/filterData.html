@@ -11,7 +11,7 @@ and protocol data."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">birdscanR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9028</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9029</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -147,65 +147,46 @@ provided in the parameters <code>echoData</code> and <code>protocolData</code>.<
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="co"># Set server, database, and other input settings for data extraction</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co"># Load example data</span></span></span>
 <span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
-<span class="r-in"><span><span class="va">dbServer</span> <span class="op">=</span> <span class="st">"MACHINE\\SERVERNAME"</span> <span class="co"># Set the name of your SQL server</span></span></span>
-<span class="r-in"><span><span class="va">dbName</span> <span class="op">=</span> <span class="st">"db_Name"</span> <span class="co"># Set the name of your database</span></span></span>
-<span class="r-in"><span><span class="va">dbDriverChar</span> <span class="op">=</span> <span class="st">"SQL Server"</span> <span class="co"># Set either "SQL Server" or "PostgreSQL"</span></span></span>
-<span class="r-in"><span><span class="va">mainOutputDir</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"."</span>, <span class="st">"results"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">radarTimeZone</span> <span class="op">=</span> <span class="st">"Etc/GMT0"</span></span></span>
-<span class="r-in"><span><span class="va">targetTimeZone</span> <span class="op">=</span> <span class="st">"Etc/GMT0"</span></span></span>
-<span class="r-in"><span><span class="va">listOfRfFeaturesToExtract</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">167</span>, <span class="fl">168</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">siteLocation</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">47.494427</span>, <span class="fl">8.716432</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">sunOrCivil</span> <span class="op">=</span> <span class="st">"civil"</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Get data</span></span></span>
-<span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
-<span class="r-in"><span><span class="va">dbData</span> <span class="op">=</span> <span class="fu"><a href="extractDbData.html">extractDbData</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  dbDriverChar <span class="op">=</span> <span class="va">dbDriverChar</span>,</span></span>
-<span class="r-in"><span>  dbServer <span class="op">=</span> <span class="va">dbServer</span>,</span></span>
-<span class="r-in"><span>  dbName <span class="op">=</span> <span class="va">dbName</span>,</span></span>
-<span class="r-in"><span>  saveDbToFile <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>  dbDataDir <span class="op">=</span> <span class="va">mainOutputDir</span>,</span></span>
-<span class="r-in"><span>  radarTimeZone <span class="op">=</span> <span class="va">radarTimeZone</span>,</span></span>
-<span class="r-in"><span>  targetTimeZone <span class="op">=</span> <span class="va">targetTimeZone</span>,</span></span>
-<span class="r-in"><span>  listOfRfFeaturesToExtract <span class="op">=</span> <span class="va">listOfRfFeaturesToExtract</span>,</span></span>
-<span class="r-in"><span>  siteLocation <span class="op">=</span> <span class="va">siteLocation</span>,</span></span>
-<span class="r-in"><span>  sunOrCivil <span class="op">=</span> <span class="va">sunOrCivil</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dbData</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"CH_Sempach_2024_SEP24_25_DataExtract.rds"</span>,</span></span>
+<span class="r-in"><span>  package <span class="op">=</span> <span class="st">"birdscanR"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Set input settings for filtering of the data</span></span></span>
 <span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
 <span class="r-in"><span><span class="va">pulseLengthSelection</span> <span class="op">=</span> <span class="st">"S"</span></span></span>
-<span class="r-in"><span><span class="va">rotationSelection</span> <span class="op">=</span> <span class="fl">1</span></span></span>
-<span class="r-in"><span><span class="va">timeRangeData</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2021-01-15 00:00"</span>, <span class="st">"2021-01-31 00:00"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">rotationSelection</span>    <span class="op">=</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span><span class="va">timeRangeData</span>        <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2024-09-24 00:00"</span>, <span class="st">"2024-09-25 23:59"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">targetTimeZone</span>       <span class="op">=</span> <span class="st">"Etc/GMT0"</span></span></span>
 <span class="r-in"><span><span class="va">classSelection</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="st">"passerine_type"</span>, <span class="st">"wader_type"</span>, <span class="st">"swift_type"</span>,</span></span>
 <span class="r-in"><span>  <span class="st">"large_bird"</span>, <span class="st">"unid_bird"</span>, <span class="st">"bird_flock"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">classProbCutoff</span> <span class="op">=</span> <span class="cn">NULL</span></span></span>
-<span class="r-in"><span><span class="va">altitudeRange</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">1000</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">manualBlindTimes</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">cManualBlindTimes</span> <span class="op">=</span> <span class="va">manualBlindTimes</span></span></span>
+<span class="r-in"><span><span class="va">classProbCutoff</span>  <span class="op">=</span> <span class="cn">NULL</span></span></span>
+<span class="r-in"><span><span class="va">altitudeRange</span>    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">1000</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cManualBlindTimes</span> <span class="op">=</span> <span class="cn">NULL</span></span></span>
 <span class="r-in"><span><span class="va">useEchoValidator</span> <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Filter the data</span></span></span>
 <span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
 <span class="r-in"><span><span class="va">filteredData</span> <span class="op">=</span> <span class="fu">filterData</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  echoData <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">echoData</span>,</span></span>
-<span class="r-in"><span>  protocolData <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">protocolData</span>,</span></span>
+<span class="r-in"><span>  echoData           <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">echoData</span>,</span></span>
+<span class="r-in"><span>  protocolData       <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">protocolData</span>,</span></span>
 <span class="r-in"><span>  pulseTypeSelection <span class="op">=</span> <span class="va">pulseLengthSelection</span>,</span></span>
-<span class="r-in"><span>  rotationSelection <span class="op">=</span> <span class="va">rotationSelection</span>,</span></span>
-<span class="r-in"><span>  timeRangeTargetTZ <span class="op">=</span> <span class="va">timeRangeData</span>,</span></span>
-<span class="r-in"><span>  targetTimeZone <span class="op">=</span> <span class="va">targetTimeZone</span>,</span></span>
-<span class="r-in"><span>  classSelection <span class="op">=</span> <span class="va">classSelection</span>,</span></span>
-<span class="r-in"><span>  classProbCutOff <span class="op">=</span> <span class="va">classProbCutoff</span>,</span></span>
-<span class="r-in"><span>  altitudeRange_AGL <span class="op">=</span> <span class="va">altitudeRange</span>,</span></span>
-<span class="r-in"><span>  manualBlindTimes <span class="op">=</span> <span class="va">cManualBlindTimes</span>,</span></span>
-<span class="r-in"><span>  echoValidator <span class="op">=</span> <span class="va">useEchoValidator</span></span></span>
+<span class="r-in"><span>  rotationSelection  <span class="op">=</span> <span class="va">rotationSelection</span>,</span></span>
+<span class="r-in"><span>  timeRangeTargetTZ  <span class="op">=</span> <span class="va">timeRangeData</span>,</span></span>
+<span class="r-in"><span>  targetTimeZone     <span class="op">=</span> <span class="va">targetTimeZone</span>,</span></span>
+<span class="r-in"><span>  classSelection     <span class="op">=</span> <span class="va">classSelection</span>,</span></span>
+<span class="r-in"><span>  classProbCutOff    <span class="op">=</span> <span class="va">classProbCutoff</span>,</span></span>
+<span class="r-in"><span>  altitudeRange_AGL  <span class="op">=</span> <span class="va">altitudeRange</span>,</span></span>
+<span class="r-in"><span>  manualBlindTimes   <span class="op">=</span> <span class="va">cManualBlindTimes</span>,</span></span>
+<span class="r-in"><span>  echoValidator      <span class="op">=</span> <span class="va">useEchoValidator</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Filtering protocol Data..</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Filtering echo Data..</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

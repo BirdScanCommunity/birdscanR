@@ -13,7 +13,7 @@ feature37.speed is required for the density calculation."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">birdscanR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9028</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9029</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -229,7 +229,53 @@ altitude distribution of density for the pre-defined quantiles 0.05, 0.25, 0.5,
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co"># Load example data</span></span></span>
+<span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
+<span class="r-in"><span>  <span class="va">dbData</span>         <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,</span></span>
+<span class="r-in"><span>    <span class="st">"CH_Sempach_2024_SEP24_25_DataExtract.rds"</span>,</span></span>
+<span class="r-in"><span>    package <span class="op">=</span> <span class="st">"birdscanR"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">dbName</span>         <span class="op">=</span> <span class="st">"CH_Sempach_2024_SEP24_25"</span></span></span>
+<span class="r-in"><span>  <span class="va">targetTimeZone</span> <span class="op">=</span> <span class="st">"Etc/GMT0"</span></span></span>
+<span class="r-in"><span>  <span class="va">timeRangeData</span>  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2024-09-24 00:00"</span>, <span class="st">"2024-09-25 23:59"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Set manual blind times to NULL (no manual blind times)</span></span></span>
+<span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
+<span class="r-in"><span>  <span class="va">cManualBlindTimes</span> <span class="op">=</span> <span class="cn">NULL</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Compute density</span></span></span>
+<span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
+<span class="r-in"><span>  <span class="va">classSelection.density</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"passerine_type"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">densityData</span> <span class="op">=</span> <span class="fu">computeDensity</span><span class="op">(</span>dbName                       <span class="op">=</span> <span class="va">dbName</span>,</span></span>
+<span class="r-in"><span>                               echoes                       <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">echoData</span>,</span></span>
+<span class="r-in"><span>                               classSelection               <span class="op">=</span> <span class="va">classSelection.density</span>,</span></span>
+<span class="r-in"><span>                               altitudeRange                <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">1025</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                               altitudeBinSize              <span class="op">=</span> <span class="fl">50</span>,</span></span>
+<span class="r-in"><span>                               timeRange                    <span class="op">=</span> <span class="va">timeRangeData</span>,</span></span>
+<span class="r-in"><span>                               timeBinDuration_sec          <span class="op">=</span> <span class="fl">1800</span>,</span></span>
+<span class="r-in"><span>                               timeZone                     <span class="op">=</span> <span class="va">targetTimeZone</span>,</span></span>
+<span class="r-in"><span>                               sunriseSunset                <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">sunriseSunset</span>,</span></span>
+<span class="r-in"><span>                               sunOrCivil                   <span class="op">=</span> <span class="st">"civil"</span>,</span></span>
+<span class="r-in"><span>                               crepuscule                   <span class="op">=</span> <span class="st">"nauticalSolar"</span>,</span></span>
+<span class="r-in"><span>                               protocolData                 <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">protocolData</span>,</span></span>
+<span class="r-in"><span>                               visibilityData               <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">visibilityData</span>,</span></span>
+<span class="r-in"><span>                               manualBlindTimes             <span class="op">=</span> <span class="va">cManualBlindTimes</span>,</span></span>
+<span class="r-in"><span>                               saveBlindTimes               <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>                               blindTimesOutputDir          <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                               blindTimeAsMtrZero           <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
+<span class="r-in"><span>                               propObsTimeCutoff            <span class="op">=</span> <span class="fl">0</span>,</span></span>
+<span class="r-in"><span>                               computePerDayNight           <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>                               computePerDayCrepusculeNight <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>                               computeAltitudeDistribution  <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Creating altitude bins..</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Creating time bins..</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>'createTimeBins()' was called with an input time range that ends later than 2 days before the last sunrise/sunset in the sunriseSunset dataset. The end of the timerange was adjusted to the last date in the sunriseSunset dataset - 2 days.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating blind times..</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing observation times for each timebin..</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 93 echoes above the defined altitude range, thus excldued from the Density calculation.</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

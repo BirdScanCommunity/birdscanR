@@ -141,6 +141,8 @@ devtools::install_github("BirdScanCommunity/birdscanR")
 
 ## Sample data
 
+- [`CH_Sempach_2024_SEP24_25_DataExtract`](https://birdscancommunity.github.io/birdscanR/reference/CH_Sempach_2024_SEP24_25_DataExtract.md)
+  : Example Birdscan MR1 data extract from Sempach, Switzerland
 - [`classAbbreviations`](https://birdscancommunity.github.io/birdscanR/reference/classAbbreviations.md)
   : Default class abbreviations table of the birdscanR package
 - [`loadManualBlindTimes()`](https://birdscancommunity.github.io/birdscanR/reference/loadManualBlindTimes.md)

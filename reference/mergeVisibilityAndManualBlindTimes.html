@@ -27,7 +27,7 @@ blind times with type “protocolChange”."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">birdscanR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9028</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9029</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -124,40 +124,34 @@ function <code><a href="filterProtocolData.html">filterProtocolData()</a></code>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="co"># Set server and database settings</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co"># Load example data</span></span></span>
 <span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
-<span class="r-in"><span><span class="va">dbServer</span> <span class="op">=</span> <span class="st">"MACHINE\\SERVERNAME"</span> <span class="co"># Set the name of your SQL server</span></span></span>
-<span class="r-in"><span><span class="va">dbName</span> <span class="op">=</span> <span class="st">"db_Name"</span> <span class="co"># Set the name of your database</span></span></span>
-<span class="r-in"><span><span class="va">dbDriverChar</span> <span class="op">=</span> <span class="st">"SQL Server"</span> <span class="co"># Set either "SQL Server" or "PostgreSQL"</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Open the connection with the database</span></span></span>
-<span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
-<span class="r-in"><span><span class="va">dsn</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="st">"driver="</span>, <span class="va">dbDriverChar</span>, <span class="st">";server="</span>, <span class="va">dbServer</span>,</span></span>
-<span class="r-in"><span>  <span class="st">";database="</span>, <span class="va">dbName</span>,</span></span>
-<span class="r-in"><span>  <span class="st">";uid="</span>, <span class="fu">rstudioapi</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/rstudioapi/reference/askForPassword.html" class="external-link">askForPassword</a></span><span class="op">(</span><span class="st">"Database user"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  <span class="st">";pwd="</span>, <span class="fu">rstudioapi</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/rstudioapi/reference/askForPassword.html" class="external-link">askForPassword</a></span><span class="op">(</span><span class="st">"Database password"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">dbConnection</span> <span class="op">=</span> <span class="fu">RODBC</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RODBC/man/odbcConnect.html" class="external-link">odbcDriverConnect</a></span><span class="op">(</span><span class="va">dsn</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Get visibility table</span></span></span>
-<span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
-<span class="r-in"><span><span class="va">visibilityTable</span> <span class="op">=</span> <span class="fu"><a href="getVisibilityTable.html">getVisibilityTable</a></span><span class="op">(</span><span class="va">dbConnection</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dbData</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"CH_Sempach_2024_SEP24_25_DataExtract.rds"</span>,</span></span>
+<span class="r-in"><span>  package <span class="op">=</span> <span class="st">"birdscanR"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Get manual blind times</span></span></span>
 <span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">manualBlindTimes</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">cManualBlindTimes</span> <span class="op">=</span> <span class="va">manualBlindTimes</span></span></span>
+<span class="r-in"><span><span class="va">tmpFile</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".csv"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.table</a></span><span class="op">(</span><span class="va">manualBlindTimes</span>, file <span class="op">=</span> <span class="va">tmpFile</span>, sep <span class="op">=</span> <span class="st">","</span>,</span></span>
+<span class="r-in"><span>            row.names <span class="op">=</span> <span class="cn">FALSE</span>, col.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cManualBlindTimes</span> <span class="op">=</span> <span class="fu"><a href="loadManualBlindTimes.html">loadManualBlindTimes</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  filePath     <span class="op">=</span> <span class="va">tmpFile</span>,</span></span>
+<span class="r-in"><span>  blindTimesTZ <span class="op">=</span> <span class="st">"Etc/GMT0"</span>,</span></span>
+<span class="r-in"><span>  targetTZ     <span class="op">=</span> <span class="st">"Etc/GMT0"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Merge manual and automatic blind times</span></span></span>
 <span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
 <span class="r-in"><span><span class="va">blindTimes</span> <span class="op">=</span> <span class="fu">mergeVisibilityAndManualBlindTimes</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  visibilityData <span class="op">=</span> <span class="va">visibilityTable</span>,</span></span>
+<span class="r-in"><span>  visibilityData   <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">visibilityData</span>,</span></span>
 <span class="r-in"><span>  manualBlindTimes <span class="op">=</span> <span class="va">cManualBlindTimes</span>,</span></span>
-<span class="r-in"><span>  protocolData <span class="op">=</span> <span class="va">protocolData</span></span></span>
+<span class="r-in"><span>  protocolData     <span class="op">=</span> <span class="va">dbData</span><span class="op">$</span><span class="va">protocolData</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>CHECK and correct : some time periods overlapp in manualBlindTimes</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
