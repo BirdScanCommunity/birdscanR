@@ -39,7 +39,7 @@ Source:
 Haest B, Hertner F, Schmid B, Preatoni D, De Groeve J, Liechti F (2026).
 “birdscanR: Migration Traffic Rate Calculation Package for Birdscan MR1
 Radars.”
-[doi:10.5281/zenodo.7326820](https://doi.org/10.5281/zenodo.7326820),
+[doi:10.5281/zenodo.7326820](https://doi.org/10.5281/zenodo.7326820).
 <https://zenodo.org/record/7326820>.
 
     @Misc{,

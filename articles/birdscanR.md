@@ -31,12 +31,14 @@ when you also want to know about possible migratory bat activity):
 We first load the birdscanR package.
 
 ``` r
+
 library(birdscanR)
 ```
 
 Then we set our input:
 
 ``` r
+
 # Set main output directory
 # =============================================================================
 mainOutputDir = file.path(".", "results")
@@ -180,6 +182,7 @@ using ‘dbData = readRDS(file.path(`directory containing the file`,
 `[yourDbName]_DataExtract.rds`))’.
 
 ``` r
+
 # Print progress message
 # =============================================================================
 message(paste0("Extracting data from ", dbName))
@@ -221,6 +224,7 @@ classification output. If you are not interested in bats, you can simply
 skip this step.
 
 ``` r
+
 # Join bat classification information with standard echo classifcation
 # ===========================================================================
 dbData$echoData = reclassToBats(
@@ -239,6 +243,7 @@ step) can be done in one step with the function
 [`filterData()`](https://birdscancommunity.github.io/birdscanR/reference/filterData.md).
 
 ``` r
+
 # Print progress message
 # =============================================================================
 message(paste0("Filtering data from ", dbName))
@@ -327,6 +332,7 @@ Calculation of the migration traffic rates is done with the function
 computeMTR().
 
 ``` r
+
 # Print information message
 # =====================================================================
 if (computePerDayNight) {
@@ -422,6 +428,7 @@ creates a time series plot of the MTR values (one per altitude bin in
 the MTR data):
 
 ``` r
+
 # Make time series plot
 # =============================================================================
 # Set time range for plots (in targetTimeZone) ;
@@ -478,6 +485,7 @@ you can create a time series plot of the detected objects. Each object
 is shown at the respective height (m above ground level) and time:
 
 ``` r
+
 # Make an exploration plot
 # =============================================================================
 # Set  the maximum value of the y-Scale of the plot to the given value.

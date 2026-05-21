@@ -53,12 +53,14 @@ to extract these different tables:
 We first load the birdscanR package:
 
 ``` r
+
 library(birdscanR)
 ```
 
 Then we set our inputs:
 
 ``` r
+
 # Set main output directory
 # =============================================================================
 mainOutputDir = file.path(".", "results")
@@ -67,6 +69,7 @@ mainOutputDir = file.path(".", "results")
 Open the connection to the SQL database:
 
 ``` r
+
 # Set server and database settings
 # =============================================================================
 dbServer = "MACHINE\\SERVERNAME" # Set the name of your SQL server
@@ -95,6 +98,7 @@ Use
 to extract the table with the bat vs nonbat classifications.
 
 ``` r
+
 # load collection table
 # =============================================================================
 message("Extracting the bat classification table from DB...")
@@ -110,6 +114,7 @@ to extract the echo data from the collection table. The parameter
 interval only.
 
 ``` r
+
 # load collection table
 # =============================================================================
 message("Extracting collection table from DB...")
@@ -128,6 +133,7 @@ available. Use `c(0, 189)` to extract all features from the
 `echo_rffeature_map` table.
 
 ``` r
+
 # Example: Extract the wing beat frequency and credibility
 # =============================================================================
 message("Extracting rffeatures table from DB...")
@@ -150,6 +156,7 @@ the data was collected like the start and end dates of the radar
 campaign, latitude, longitude, altitude, and other details.
 
 ``` r
+
 # Extract the site  table from the SQL database
 # =============================================================================
 message("Extracting site table from DB...")

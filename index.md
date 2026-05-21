@@ -33,6 +33,7 @@ To get started, see:
 Install the latest released version from CRAN:
 
 ``` r
+
 install.packages("birdscanR")
 ```
 
@@ -40,6 +41,7 @@ Or the development version from
 [GitHub](https://github.com/BirdScanCommunity/birdscanR):
 
 ``` r
+
 # install.packages("devtools")
 devtools::install_github("BirdScanCommunity/birdscanR")
 ```
