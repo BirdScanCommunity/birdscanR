@@ -63,7 +63,7 @@ compileData = function(echoData = NULL,
                        tagOutputFile = c(NULL, NULL),
                        saveCSV = FALSE) {
   # set the time window
-  if (!is.Date(timeRangeTargetTZ) | !is.POSIXt(timeRangeTargetTZ)) {
+  if (!inherits(timeRangeTargetTZ, "Date") | !inherits(timeRangeTargetTZ, "POSIXt")) {
     timeRangeTargetTZ = as.POSIXct(timeRangeTargetTZ, tz = targetTimeZone)
   }
   startTime = timeRangeTargetTZ[1]

@@ -28,16 +28,11 @@ Get the time of nautical (sun at 12 degrees below horizon), civil
 dawn and dusk for each day over a given time range.
 }
 \examples{
-\dontrun{
-sunrisesunset = twilight(
-  timeRange = c(
-    "2021-01-15 00:00",
-    "2021-01-31 00:00"
-  ),
-  latLon = c(47.494427, 8.716432),
-  timeZone = "Etc/GMT0"
+sunriseSunset = twilight(
+  timeRange = c("2024-09-24 00:00", "2024-09-25 23:59"),
+  latLon    = c(47.12764, 8.192569),
+  timeZone  = "Etc/GMT0"
 )
-}
 }
 \seealso{
 Other manipulation functions: 

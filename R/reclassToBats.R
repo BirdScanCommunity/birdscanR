@@ -11,42 +11,19 @@
 #' @family manipulation functions
 #' @export
 #' @examples
-#' \dontrun{
-#' # Set server, database, and other input settings
+#' \donttest{
+#' # Load example data
 #' # ===========================================================================
-#' dbServer = "MACHINE\\SERVERNAME" # Set the name of your SQL server
-#' dbName = "db_Name" # Set the name of your database
-#' dbDriverChar = "SQL Server" # Set either "SQL Server" or "PostgreSQL"
-#' mainOutputDir = file.path(".", "results")
-#' radarTimeZone = "Etc/GMT0"
-#' targetTimeZone = "Etc/GMT0"
-#' listOfRfFeaturesToExtract = c(167, 168)
-#' siteLocation = c(47.494427, 8.716432)
-#' sunOrCivil = "civil"
+#' dbData = readRDS(system.file("extdata",
+#'   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
+#'   package = "birdscanR"))
 #'
-#' # Get data
-#' # ===========================================================================
-#' dbData = extractDbData(
-#'   dbDriverChar = dbDriverChar,
-#'   dbServer = dbServer,
-#'   dbName = dbName,
-#'   saveDbToFile = TRUE,
-#'   dbDataDir = mainOutputDir,
-#'   radarTimeZone = radarTimeZone,
-#'   targetTimeZone = targetTimeZone,
-#'   listOfRfFeaturesToExtract = listOfRfFeaturesToExtract,
-#'   siteLocation = siteLocation,
-#'   sunOrCivil = sunOrCivil,
-#'   crepuscule = "nauticalSolar"
-#' )
-#' #'
 #' # Reclass To Bats
 #' # ===========================================================================
 #' dbData$echoData = reclassToBats(
-#'   echoData = dbData$echoData,
-#'   batProbabilitiesAndMtrFactors =
-#'     dbData$batProbabilitiesAndMtrFactors,
-#'   reclassToBatCutoff = 0.5
+#'   echoData                     = dbData$echoData,
+#'   batProbabilitiesAndMtrFactors = dbData$batProbabilitiesAndMtrFactors,
+#'   reclassToBatCutoff           = 0.5
 #' )
 #' }
 reclassToBats = function(echoData = NULL,

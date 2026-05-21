@@ -19,6 +19,7 @@ data(classAbbreviations)
 }
 \seealso{
 Other sample data: 
+\code{\link{CH_Sempach_2024_SEP24_25_DataExtract}},
 \code{\link{loadManualBlindTimes}()},
 \code{\link{manualBlindTimes}}
 }
