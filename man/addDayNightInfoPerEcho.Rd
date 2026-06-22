@@ -45,7 +45,8 @@ allows the user to filter echo data easily by “day” and “night”, or "day
 # ===========================================================================
 dbData = readRDS(system.file("extdata",
   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
-  package = "birdscanR"))
+  package = "birdscanR"
+))
 
 # Add day/night info to echo data
 # ===========================================================================

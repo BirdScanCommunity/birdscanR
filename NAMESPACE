@@ -2,10 +2,10 @@
 
 export(QUERY)
 export(addDayNightInfoPerEcho)
-export(compileData)
 export(computeDensity)
 export(computeMTR)
 export(convertTimeZone)
+export(createDataPackage)
 export(createTimeRangeForPlot)
 export(createVPTS)
 export(dbConnectBirdscanSQL)

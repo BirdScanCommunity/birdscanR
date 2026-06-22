@@ -72,20 +72,21 @@ and protocol data.
 # ===========================================================================
 dbData = readRDS(system.file("extdata",
   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
-  package = "birdscanR"))
+  package = "birdscanR"
+))
 
 # Set input settings for filtering of the data
 # ===========================================================================
 pulseLengthSelection = "S"
-rotationSelection    = 1
-timeRangeData        = c("2024-09-24 00:00", "2024-09-25 23:59")
-targetTimeZone       = "Etc/GMT0"
+rotationSelection = 1
+timeRangeData = c("2024-09-24 00:00", "2024-09-25 23:59")
+targetTimeZone = "Etc/GMT0"
 classSelection = c(
   "passerine_type", "wader_type", "swift_type",
   "large_bird", "unid_bird", "bird_flock"
 )
-classProbCutoff  = NULL
-altitudeRange    = c(50, 1000)
+classProbCutoff = NULL
+altitudeRange = c(50, 1000)
 cManualBlindTimes = NULL
 useEchoValidator = FALSE
 

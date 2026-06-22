@@ -29,7 +29,8 @@ on September 24–25, 2024. Load with:
 \examples{
 dbData = readRDS(system.file("extdata",
   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
-  package = "birdscanR"))
+  package = "birdscanR"
+))
 }
 \seealso{
 Other sample data: 

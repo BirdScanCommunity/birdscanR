@@ -31,14 +31,15 @@ Reclassifies echoes based on bat classification.
 # ===========================================================================
 dbData = readRDS(system.file("extdata",
   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
-  package = "birdscanR"))
+  package = "birdscanR"
+))
 
 # Reclass To Bats
 # ===========================================================================
 dbData$echoData = reclassToBats(
-  echoData                     = dbData$echoData,
+  echoData = dbData$echoData,
   batProbabilitiesAndMtrFactors = dbData$batProbabilitiesAndMtrFactors,
-  reclassToBatCutoff           = 0.5
+  reclassToBatCutoff = 0.5
 )
 }
 }
