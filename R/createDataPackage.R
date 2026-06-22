@@ -1,67 +1,129 @@
-#' @title createDataPackage
+#' @title Create MR1 Data Package
 #' @author Baptiste Schmid, Fabian Hertner, Birgen Haest
-#' @description [createDataPackage()] filters database-extracts and
-#' saves metadata used to compute MTR [computeMTR()]. It takes the output from
-#' [extractDbData()] and trunks the needed dataset to the restricted settings,
-#' e.g. time frame, pulse type.
+#' @description [createDataPackage()] compiles data from [extractDbData()] into
+#' a standardized MR1 data package, applying filters on time range, pulse type,
+#' rotation, echo class, altitude, and class probability. The output follows the
+#' MR1 Data Standard (one package per campaign): `echoData`, `protocolData`,
+#' `blindTimesData`, `sunriseSunsetData`, `radarSiteData`, `filterParameters`,
+#' and `metaData`. Filtering is applied via [filterEchoData()] and
+#' [filterProtocolData()]. When `outputDirPath` is provided, the package is
+#' saved by default as standardized CSV and YAML files suitable for Zenodo
+#' deposit; saving as RDS requires `saveAsRDS = TRUE`.
 #' @param echoData dataframe with the echo data from the data list created with
 #' [extractDbData()].
-#' @param protocolData dataframe with the protocol data from the data list created
-#' with [extractDbData()]. Echoes not detected during the listed protocols
-#' will be excluded.
+#' @param protocolData dataframe with the protocol data from the data list
+#' created with [extractDbData()]. Echoes not detected during the listed
+#' protocols will be excluded.
 #' @param blindTimesData dataframe with the manual blind times created by
-#' [loadManualBlindTimes()].
-#' It include the automated blind times induced by changes in measurement protocol,
-#' and blind time added manually to remove periods of incoherent data collection.
+#' [loadManualBlindTimes()]. It includes the automated blind times induced by
+#' changes in measurement protocol, and blind times added manually to remove
+#' periods of incoherent data collection.
 #' @param sunriseSunsetData dataframe with sunrise/sunset, and civil and
-#'   nautical dawn/dusk. Computed with [twilight()].
+#' nautical dawn/dusk. Computed with [twilight()].
 #' @param radarSiteData dataframe/vector with the database site table.
-#' @param dbName Name of the database. Can be a useful meta data.
+#' @param dbName Name of the database. Used as metadata and as part of the
+#' auto-generated output filename.
 #' @param pulseTypeSelection character vector with the pulse types which should
-#' be included in the subset. Options: `S`, `M`, `L`, i.e. short-, medium-, long-pulse, respectively.
-#' Default is NULL: no filtering applied based on pulseType.
-#' @param rotationSelection numeric vector to select the operation modes with and/or without
-#'  antenna rotation. Options: 0, 1. (0 = no rotation, 1 = rotation).
-#'  Default is NULL: no filtering applied based on rotation mode.
+#' be included in the subset. Options: `S`, `M`, `L`, i.e. short-, medium-,
+#' long-pulse, respectively. Default is `NULL`: no filtering applied based on
+#' pulseType.
+#' @param rotationSelection numeric vector to select the operation modes with
+#' and/or without antenna rotation. Options: 0, 1. (0 = no rotation,
+#' 1 = rotation). Default is `NULL`: no filtering applied based on rotation mode.
 #' @param timeRangeTargetTZ Character vector of length 2, with start and end of
-#' time range, formatted as "%Y-%m-%d %H:%M". Echoes outside the time range will
-#'  be excluded.
-#' @param targetTimeZone "Etc/GMT0" String specifying the target time zone.
-#' Default is "Etc/GMT0".
-#' @param classSelection character string vector with the classes that should be
-#' included.
-#' @param classProbCutOff numeric cutoff value for class probabilities. Echoes
-#' with a lower class probability will be excluded.
-#' @param altitudeRange_AGL numeric vector of length 2 with start and end of the
-#' altitude range. Echoes outside the altitude range will be excluded.
-#' @param echoValidator logical, If set to FALSE - default -, no additional filters
-#' is applied; if set to TRUE, echoes labelled by the echo validator as "non-bio scatterer"
+#' time range, formatted as `"%Y-%m-%d %H:%M"`. Echoes outside the time range
 #' will be excluded.
-#' @param filePath If given, the data-list is saved as RDS.
-#' @param tagOutputFile Vector of two elements for prefix & suffix to file name, given `filePath` is not NULL.
-#' @param saveCSV if true, save tables as CSV in a folder nested in `filePath`.
+#' @param targetTimeZone String specifying the target time zone.
+#' Default is `"Etc/GMT0"`.
+#' @param classSelection character string vector with the classes that should be
+#' included. Default is `NULL`: all classes are included.
+#' @param classProbCutOff numeric cutoff value for class probabilities. Echoes
+#' with a lower class probability will be excluded. Default is `NULL`: no cutoff
+#' applied.
+#' @param altitudeRange_AGL numeric vector of length 2 with start and end of the
+#' altitude range in metres a.g.l. Echoes outside the altitude range will be
+#' excluded. Default is `NULL`: no altitude filtering applied.
+#' @param echoValidator logical. If set to `FALSE` (default), no additional
+#' filter is applied; if set to `TRUE`, echoes labelled by the echo validator as
+#' `"non-bio scatterer"` will be excluded.
+#' @param outputDirPath Directory path where output files are saved. The output
+#' filename is auto-generated from the active filter parameters. If `NULL`
+#' (default), no files are written.
+#' @param tagOutputFile Vector of two elements `c(prefix, suffix)` inserted
+#' around the auto-generated filename. Either element may be `NULL`. Only used
+#' when `outputDirPath` is not `NULL`.
+#' @param saveCSV logical. If `TRUE` (default), creates a subdirectory named
+#' after the auto-generated filename and writes the MR1-standard files:
+#' `echoData.csv`, `protocolData.csv`, `blindTimesData.csv`,
+#' `sunriseSunsetData.csv`, `radarSiteData.csv`, `filterParameters.yaml`,
+#' `metaData.yaml`. Only used when `outputDirPath` is not `NULL`.
+#' @param saveAsRDS logical. If `TRUE`, saves the full data list as a single
+#' `.rds` file in `outputDirPath`. Useful as an in-session cache but not
+#' required for the MR1 data standard. Default is `FALSE`.
 #'
-#' @return Returns filtered data table - echo, protocol, blindTimes, sunriseSunset,
-#' radarSite - and necessary parameters as input for [computeMTR()].
+#' @return A named list with the following elements:
+#' \describe{
+#'   \item{echoData}{Filtered echo data.}
+#'   \item{protocolData}{Filtered protocol data (columns defined by MR1 standard).}
+#'   \item{blindTimesData}{Filtered blind times data.}
+#'   \item{sunriseSunsetData}{Filtered sunrise/sunset data (columns defined by MR1 standard).}
+#'   \item{radarSiteData}{Radar and site metadata, with `targetTimeZone` added.}
+#'   \item{filterParameters}{Named list of the filter settings applied.}
+#'   \item{metaData}{Named list with per-table column metadata (name, type,
+#'   description), plus `database` name and `birdscanR` package version.}
+#' }
 #' @family write file functions
 #' @export
+#' @examples
+#' \donttest{
+#' # Load example data
+#' # ===========================================================================
+#' dbData = readRDS(system.file("extdata",
+#'   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
+#'   package = "birdscanR"
+#' ))
+#' dbName = "CH_Sempach_2024_SEP24_25"
+#' targetTimeZone = "Etc/GMT0"
+#' timeRangeTargetTZ = c("2024-09-24 00:00", "2024-09-25 23:59")
+#'
+#' # Set manual blind times to NULL (no manual blind times)
+#' # ===========================================================================
+#' cManualBlindTimes = NULL
+#'
+#' # Create MR1 data package
+#' # ===========================================================================
+#' compiledData = createDataPackage(
+#'   echoData           = dbData$echoData,
+#'   protocolData       = dbData$protocolData,
+#'   blindTimesData     = cManualBlindTimes,
+#'   sunriseSunsetData  = dbData$sunriseSunset,
+#'   radarSiteData      = dbData$siteData,
+#'   dbName             = dbName,
+#'   timeRangeTargetTZ  = timeRangeTargetTZ,
+#'   targetTimeZone     = targetTimeZone,
+#'   pulseTypeSelection = "S",
+#'   classSelection     = c("passerine_type"),
+#'   outputDirPath      = getwd()
+#' )
+#' }
 createDataPackage = function(echoData = NULL,
-                       protocolData = NULL,
-                       blindTimesData = NULL,
-                       sunriseSunsetData = NULL,
-                       radarSiteData = NULL,
-                       dbName = NULL,
-                       pulseTypeSelection = NULL,
-                       rotationSelection = NULL,
-                       timeRangeTargetTZ = NULL,
-                       targetTimeZone = "Etc/GMT0",
-                       classSelection = NULL,
-                       classProbCutOff = NULL,
-                       altitudeRange_AGL = NULL,
-                       echoValidator = FALSE,
-                       filePath = NULL,
-                       tagOutputFile = c(NULL, NULL),
-                       saveCSV = FALSE) {
+                             protocolData = NULL,
+                             blindTimesData = NULL,
+                             sunriseSunsetData = NULL,
+                             radarSiteData = NULL,
+                             dbName = NULL,
+                             pulseTypeSelection = NULL,
+                             rotationSelection = NULL,
+                             timeRangeTargetTZ = NULL,
+                             targetTimeZone = "Etc/GMT0",
+                             classSelection = NULL,
+                             classProbCutOff = NULL,
+                             altitudeRange_AGL = NULL,
+                             echoValidator = FALSE,
+                             outputDirPath = NULL,
+                             tagOutputFile = c(NULL, NULL),
+                             saveCSV = TRUE,
+                             saveAsRDS = FALSE) {
   # set the time window
   if (!inherits(timeRangeTargetTZ, "Date") | !inherits(timeRangeTargetTZ, "POSIXt")) {
     timeRangeTargetTZ = as.POSIXct(timeRangeTargetTZ, tz = targetTimeZone)
@@ -136,7 +198,7 @@ createDataPackage = function(echoData = NULL,
       "int", "int",
       "POSIXct", "POSIXct", "POSIXct", "POSIXct",
       "char", "int", "num", "num",
-      "logi" # obviously missing information!?
+      "char"
     ),
     "description" = c(
       "Incremental ID of measurement periods - linked to EchoData and BlindTimes.",
@@ -146,10 +208,10 @@ createDataPackage = function(echoData = NULL,
       "Timestamp upon the end of the measurement period. TimeZone as given in DB",
       "Timestamp upon the end of the measurement period. TimeZone defined by the user, since 2020 usually UTC",
       'Either "S" for Short-pulse, "M" for Medium pulse, "L" for Long-pulse. See radar table for pulse duration',
-      '"0"when the antenna is static, "1" if the antena is rotating on its vertical axis. Flight speed and direction available only if the anteanna is rotating',
-      "Sensitivity Time Control in meter. Bascially a distance to set the minial detected object size. Key feature to calcualte the MTR-factor of the echo.",
-      "Detection threshold in DBm. Key feature to calcualte the MTR-factor of the echo.",
-      "not Available. Software version updon detection. Can differ from the classifier versions"
+      '"0" when the antenna is static, "1" if the antenna is rotating on its vertical axis. Flight speed and direction available only if the antenna is rotating.',
+      "Sensitivity Time Control in metres. Basically a distance to set the minimal detected object size. Key feature to calculate the MTR-factor of the echo.",
+      "Detection threshold in dBm. Key feature to calculate the MTR-factor of the echo.",
+      "Software version upon detection. Can differ from the classifier version."
     )
   )
 
@@ -237,7 +299,7 @@ createDataPackage = function(echoData = NULL,
       "num"
     ),
     "description" = c(
-      "Serial number of radar unit - abrevaited.",
+      "Serial number of radar unit - abbreviated.",
       "Radar location: Site ID (integer) given by radar operator.",
       "Radar location: Site code (three letters) given by radar operator.",
       "Radar location: full name.",
@@ -251,14 +313,14 @@ createDataPackage = function(echoData = NULL,
       "Radar location: Latitude",
       "Radar location: altitude above sea level",
       "Radar operator",
-      'Model of radar unit, e.r. "BirdScan MR1" from Swiss Birdradar Solution.',
+      'Model of radar unit, e.g. "BirdScan MR1" from Swiss Birdradar Solution.',
       "Serial number of radar unit - full",
       "Radar parameter: northOffset",
       "Radar parameter: delta",
-      "Radar parameter: titltAngle - a contstant for BirdScan MR1.",
+      "Radar parameter: tiltAngle - a constant for BirdScan MR1.",
       "Radar parameter: transmitted power [W] - can vary between years because of exchange of the magnetron.",
-      "Radar parameter: Antenna gain [dBi] is given by the antenna - a contstant for BirdScan MR1.",
-      "Radar parameter: Wave Guide attenuation []is given by the antenna - a contstant for BirdScan MR1.",
+      "Radar parameter: Antenna gain [dBi] is given by the antenna - a constant for BirdScan MR1.",
+      "Radar parameter: Wave Guide attenuation [dB] is given by the antenna - a constant for BirdScan MR1.",
       "Pulse type parameter: xxx0V - Calibration. ",
       "Pulse type  parameter: xxxSatLower - Calibration.",
       "Pulse type  parameter: xxxSteepness - Calibration.",
@@ -293,10 +355,10 @@ createDataPackage = function(echoData = NULL,
     ),
     "description" = c(
       'Type of BlindTime.
-                          Blindtime is used to calcualte the effective duration of measurements during a teporal bin of the MTR table.
+                          Blindtime is used to calculate the effective duration of measurements during a temporal bin of the MTR table.
                           Common denominations are:
-                          "protocolChange" that include the blindtime subsequent to the start of a new measrurement period (protocolID),
-                          "technical" denote periods with technical misfunction of the radar,
+                          "protocolChange" that include the blindtime subsequent to the start of a new measurement period (protocolID),
+                          "technical" denote periods with technical malfunction of the radar,
                           "rain" denote periods of precipitation.',
       "Beginning of the blind period",
       "End of the blind period",
@@ -365,7 +427,7 @@ createDataPackage = function(echoData = NULL,
 
   #-----------------------------------------------------------------------------
   # meta data
-  metaEcho = NULL
+  metaEcho = NULL # TODO: implement echo column metadata
   # metaEcho <- data.frame(
   #   "colname" = c("dummy"
   #
@@ -394,7 +456,7 @@ createDataPackage = function(echoData = NULL,
     radarSiteData     = metaRadarSiteData,
     filterParameters  = metaFilters,
     database          = dbName, # at the moment, only keep the name of the database, but additional information could be used: version of BirdscanR-package, name of the person who extracted the data, etc.
-    birdscanR         = utils::packageVersion("birdScanR") # classifier version is included in the echo-dataset
+    birdscanR         = utils::packageVersion("birdscanR") # classifier version is included in the echo-dataset
   )
 
 
@@ -412,9 +474,9 @@ createDataPackage = function(echoData = NULL,
 
 
   # save output
-  if (!is.null(filePath) && length(filePath) == 1) {
+  if (!is.null(outputDirPath) && length(outputDirPath) == 1) {
     # =============================================================================
-    # create filename to save plot
+    # create filename
     # =========================================================================
     fileName = "compiledData"
 
@@ -502,24 +564,14 @@ createDataPackage = function(echoData = NULL,
       fileName = paste(fileName, suffix, sep = "_")
     }
 
-    # save RDS
+    # Save CSV (default)
     # =========================================================================
-    rdsFileName = paste0(fileName, ".rds")
+    if (saveCSV) {
+      csvDirPath = file.path(outputDirPath, fileName)
 
-    # add output folder 'filePath'
-    rdsFilePathName <- file.path(filePath, rdsFileName) # ; print(filePathName)
-
-    saveRDS(compiledData, file = rdsFilePathName)
-
-    # Save CSV
-    # =========================================================================
-    if (saveCSV && length(filePath) == 1) {
-      csvDirPath = file.path(filePath, fileName)
-
-      # Create a directory to store the CSV files (optional)
+      # Create a directory to store the CSV files
       dir.create(csvDirPath, showWarnings = FALSE)
 
-      # Loop through each element in the list
       # Loop through each element in the list
       for (name in names(compiledData)) {
         if (name %in% c("filterParameters", "metaData")) {
@@ -533,7 +585,16 @@ createDataPackage = function(echoData = NULL,
         }
       }
     }
-  } # end of if( !is.null(filePath) && length(filePath) == 1){
+
+    # Save RDS (optional)
+    # =========================================================================
+    if (saveAsRDS) {
+      rdsFileName = paste0(fileName, ".rds")
+      rdsFilePathName <- file.path(outputDirPath, rdsFileName)
+      base::saveRDS(compiledData, file = rdsFilePathName)
+    }
+
+  } # end of if (!is.null(outputDirPath) && length(outputDirPath) == 1)
 
   return(compiledData)
 }
