@@ -1,7 +1,7 @@
-#' @title compileData
+#' @title createDataPackage
 #' @author Baptiste Schmid, Fabian Hertner, Birgen Haest
-#' @description [compileData()] filters database-extracts and
-#' save metadata used to compute MTR [computeMTR()]. It takes the output from
+#' @description [createDataPackage()] filters database-extracts and
+#' saves metadata used to compute MTR [computeMTR()]. It takes the output from
 #' [extractDbData()] and trunks the needed dataset to the restricted settings,
 #' e.g. time frame, pulse type.
 #' @param echoData dataframe with the echo data from the data list created with
@@ -45,7 +45,7 @@
 #' radarSite - and necessary parameters as input for [computeMTR()].
 #' @family write file functions
 #' @export
-compileData = function(echoData = NULL,
+createDataPackage = function(echoData = NULL,
                        protocolData = NULL,
                        blindTimesData = NULL,
                        sunriseSunsetData = NULL,
