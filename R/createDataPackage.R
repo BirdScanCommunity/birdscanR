@@ -593,7 +593,6 @@ createDataPackage = function(echoData = NULL,
       rdsFilePathName <- file.path(outputDirPath, rdsFileName)
       base::saveRDS(compiledData, file = rdsFilePathName)
     }
-
   } # end of if (!is.null(outputDirPath) && length(outputDirPath) == 1)
 
   return(compiledData)
