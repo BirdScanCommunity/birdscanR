@@ -60,5 +60,6 @@ getRadarTable = function(dbConnection, dbDriverChar) {
   colnames(radarTable)[colnames(radarTable) == "pulselengthlong"] = "pulseLengthLong"
   colnames(radarTable)[colnames(radarTable) == "tiltangle"] = "tiltAngle"
   colnames(radarTable)[colnames(radarTable) == "transmitpower"] = "transmitPower"
+  radarTable$radarID = as.character(radarTable$radarID)
   return(radarTable)
 }
