@@ -21,6 +21,8 @@
 #' @param sunriseSunsetData dataframe with sunrise/sunset, and civil and
 #' nautical dawn/dusk. Computed with [twilight()].
 #' @param radarSiteData dataframe/vector with the database site table.
+#' @param manualBlindTimes dataframe with the manual blind times created by the
+#' function [loadManualBlindTimes()].
 #' @param dbName Name of the database. Used as metadata and as part of the
 #' auto-generated output filename.
 #' @param pulseTypeSelection character vector with the pulse types which should
@@ -106,11 +108,12 @@
 #'   outputDirPath      = getwd()
 #' )
 #' }
-createDataPackage = function(echoData = NULL,
-                             protocolData = NULL,
-                             blindTimesData = NULL,
-                             sunriseSunsetData = NULL,
-                             radarSiteData = NULL,
+createDataPackage = function(echoData,
+                             protocolData,
+                             blindTimesData,
+                             sunriseSunsetData,
+                             radarSiteData,
+                             manualBlindTimes = NULL,
                              dbName = NULL,
                              pulseTypeSelection = NULL,
                              rotationSelection = NULL,
@@ -124,7 +127,9 @@ createDataPackage = function(echoData = NULL,
                              tagOutputFile = c(NULL, NULL),
                              saveCSV = TRUE,
                              saveAsRDS = FALSE) {
+
   # set the time window
+  # ============================================================================
   if (!inherits(timeRangeTargetTZ, "Date") | !inherits(timeRangeTargetTZ, "POSIXt")) {
     timeRangeTargetTZ = as.POSIXct(timeRangeTargetTZ, tz = targetTimeZone)
   }
@@ -132,7 +137,7 @@ createDataPackage = function(echoData = NULL,
   stopTime = timeRangeTargetTZ[2]
 
   # Filter parameters
-  # =============================================================================
+  # ============================================================================
   ls_filters <- list(
     timeRangeTargetTZ    = timeRangeTargetTZ,
     pulseTypeSelection   = pulseTypeSelection,
@@ -143,8 +148,8 @@ createDataPackage = function(echoData = NULL,
     echoValidator        = echoValidator
   )
 
-  #-----------------------------------------------------------------------------
   # meta data
+  # ============================================================================
   metaFilters <- data.frame(
     "colname" = c(
       "timeRangeTargetTZ",
@@ -176,7 +181,7 @@ createDataPackage = function(echoData = NULL,
   )
 
   # Filter protocol data
-  # =============================================================================
+  # ============================================================================
   protocolDataSubset = filterProtocolData(
     protocolData = protocolData,
     pulseTypeSelection = pulseTypeSelection,
@@ -185,8 +190,10 @@ createDataPackage = function(echoData = NULL,
   TimesInd = (protocolDataSubset$startTime_targetTZ < stopTime) &
     (protocolDataSubset$stopTime_targetTZ > startTime)
   protocolDataSubset = protocolDataSubset[TimesInd, ]
-  #-----------------------------------------------------------------------------
+
+
   # meta data for ProtocolData
+  # ============================================================================
   metaProtocol <- data.frame(
     "colname" = c(
       "protocolID", "siteID",
@@ -218,7 +225,7 @@ createDataPackage = function(echoData = NULL,
   protocolDataSubset = protocolDataSubset[, metaProtocol$colname]
 
   # Filter Site & Radar data
-  # =============================================================================
+  # ============================================================================
   radarSiteData$targetTimeZone = targetTimeZone
 
   mycols_site <- c(
@@ -228,7 +235,9 @@ createDataPackage = function(echoData = NULL,
     "longitude", "latitude", "altitude",
     "customer"
   )
+
   # Select according to Pulse Type
+  # ============================================================================
   mycols_radar <- c(
     "type", "serialNo", "northOffset", "delta", "tiltAngle",
     "transmitPower", "antennaGainInDBi", "waveGuideAttenuation"
@@ -256,8 +265,9 @@ createDataPackage = function(echoData = NULL,
   radarSiteData <- radarSiteData[, c(mycols_site, mycols_radar)]
   # if( is.na(radarSiteData$timeShift) ) warning("The 'timeShift' parameter is missing. Edit the site table!")
 
-  #-----------------------------------------------------------------------------
+
   # meta data
+  # ============================================================================
   metaRadarSiteData <- data.frame(
     "colname" = c(
       "radarID", "siteID", "siteCode", "siteName", "siteDesc",
@@ -331,15 +341,15 @@ createDataPackage = function(echoData = NULL,
 
 
   # Filter blindTimes data
-  # =============================================================================
+  # ============================================================================
   # restrict the time range
   if (!any(names(blindTimesData) == "type")) warning("The 'type' column is missing in the dataset 'blindTimesData'. Use the output of the function 'mergeVisibilityAnd ManualBlindTime'.")
   TimesInd = (blindTimesData$start_targetTZ < stopTime) &
     (blindTimesData$stop_targetTZ > startTime)
   blindTimesDataSubset = blindTimesData[TimesInd, ]
 
-  #-----------------------------------------------------------------------------
   # meta data
+  # ============================================================================
   metaBlindTimes <- data.frame(
     "colname" = c(
       "type",
@@ -371,15 +381,15 @@ createDataPackage = function(echoData = NULL,
 
 
   # Filter twilight data
-  # =============================================================================
+  # ============================================================================
   # restrict the time range on sunStart and sunStop
   TimesInd = (sunriseSunsetData$sunStart < stopTime) &
     (sunriseSunsetData$sunStop > startTime)
   sunriseSunsetDataSubset = sunriseSunsetData[TimesInd, ]
   # ToDo: use the twilight function if no dataset is included, but the site table include the necessary info on location.
 
-  #-----------------------------------------------------------------------------
   # meta data
+  # ============================================================================
   metaSunriseSunset <- data.frame(
     "colname" = c(
       "is_night", "date",
@@ -409,7 +419,7 @@ createDataPackage = function(echoData = NULL,
 
 
   # Filter echo data
-  # =============================================================================
+  # ============================================================================
   echoDataSubset = filterEchoData(
     echoData = echoData,
     timeRangeTargetTZ = timeRangeTargetTZ,
@@ -425,8 +435,8 @@ createDataPackage = function(echoData = NULL,
     warning(paste0("No echo remaining in the filtered data. Check 'TimeRange' and 'manualBlindTimes', or other filters such as 'pulse-type', 'classSelection', 'altitudeRange'"))
   }
 
-  #-----------------------------------------------------------------------------
   # meta data
+  # ============================================================================
   metaEcho = NULL # TODO: implement echo column metadata
   # metaEcho <- data.frame(
   #   "colname" = c("dummy"
@@ -445,7 +455,6 @@ createDataPackage = function(echoData = NULL,
     echoDataSubset = echoDataSubset[, metaEcho$colname]
   }
 
-
   # compile meta data into a list
   # =============================================================================
   ls_metaData <- list(
@@ -459,7 +468,6 @@ createDataPackage = function(echoData = NULL,
     birdscanR         = utils::packageVersion("birdscanR") # classifier version is included in the echo-dataset
   )
 
-
   # Return the filtered protocol and echo data
   # =============================================================================
   compiledData = list(
@@ -471,7 +479,6 @@ createDataPackage = function(echoData = NULL,
     filterParameters   = ls_filters,
     metaData           = ls_metaData
   )
-
 
   # save output
   if (!is.null(outputDirPath) && length(outputDirPath) == 1) {
