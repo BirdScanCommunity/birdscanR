@@ -127,7 +127,6 @@ createDataPackage = function(echoData,
                              tagOutputFile = c(NULL, NULL),
                              saveCSV = TRUE,
                              saveAsRDS = FALSE) {
-
   # set the time window
   # ============================================================================
   if (!inherits(timeRangeTargetTZ, "Date") | !inherits(timeRangeTargetTZ, "POSIXt")) {
