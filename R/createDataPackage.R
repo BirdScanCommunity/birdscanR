@@ -94,7 +94,7 @@
 #'
 #' # Create MR1 data package
 #' # ===========================================================================
-#' compiledData = createDataPackage(
+#' dataPackage = createDataPackage(
 #'   echoData           = dbData$echoData,
 #'   protocolData       = dbData$protocolData,
 #'   blindTimesData     = cManualBlindTimes,
@@ -470,7 +470,7 @@ createDataPackage = function(echoData,
 
   # Return the filtered protocol and echo data
   # =============================================================================
-  compiledData = list(
+  dataPackage = list(
     echoData           = echoDataSubset,
     protocolData       = protocolDataSubset,
     blindTimesData     = blindTimesDataSubset,
@@ -485,7 +485,7 @@ createDataPackage = function(echoData,
     # =============================================================================
     # create filename
     # =========================================================================
-    fileName = "compiledData"
+    fileName = "dataPackage"
 
     # Add prefix from tagOutputFile to fileName
     # =========================================================================
@@ -580,15 +580,15 @@ createDataPackage = function(echoData,
       dir.create(csvDirPath, showWarnings = FALSE)
 
       # Loop through each element in the list
-      for (name in names(compiledData)) {
+      for (name in names(dataPackage)) {
         if (name %in% c("filterParameters", "metaData")) {
           # Save as YAML for list elements
           file_path <- file.path(csvDirPath, paste0(name, ".yaml"))
-          yaml::write_yaml(compiledData[[name]], file = file_path)
+          yaml::write_yaml(dataPackage[[name]], file = file_path)
         } else {
           # Save as CSV for table elements
           file_path <- file.path(csvDirPath, paste0(name, ".csv"))
-          utils::write.csv(compiledData[[name]], file = file_path, row.names = FALSE)
+          utils::write.csv(dataPackage[[name]], file = file_path, row.names = FALSE)
         }
       }
     }
@@ -598,9 +598,9 @@ createDataPackage = function(echoData,
     if (saveAsRDS) {
       rdsFileName = paste0(fileName, ".rds")
       rdsFilePathName <- file.path(outputDirPath, rdsFileName)
-      base::saveRDS(compiledData, file = rdsFilePathName)
+      base::saveRDS(dataPackage, file = rdsFilePathName)
     }
   } # end of if (!is.null(outputDirPath) && length(outputDirPath) == 1)
 
-  return(compiledData)
+  return(dataPackage)
 }
