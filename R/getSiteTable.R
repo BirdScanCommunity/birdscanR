@@ -61,5 +61,6 @@ getSiteTable <- function(dbConnection, dbDriverChar) {
   colnames(siteTable_times)[colnames(siteTable_times) == "projectend"] <- "projectEnd"
   siteTable$projectStart <- siteTable_times$projectStart
   siteTable$projectEnd <- siteTable_times$projectEnd
+  siteTable$radarID <- as.character(siteTable$radarID)
   return(siteTable)
 }
