@@ -89,7 +89,7 @@ vptsDir = createVPTS(
 # Step 2: Read the CSV-file and convert to VPTS with BioRad::as.vpts()
 
 ```{r}
-vpts = read.csv( file.path(vptsDir, "200_vpts_20240924.csv") )
+vpts = read.csv(file.path(vptsDir, "200_vpts_20240924.csv"))
 vpts = as.vpts(vpts) # requires loading "bioRad"
 ```
 
