@@ -17,24 +17,18 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 
 This vignette provides an example of the basic workflow for creatVPTS using:
 
-1.    Create a VPTS using the BirdScan MR1 exemple data
+1.    Create a VPTS using the BirdScan MR1 exemple data and create a CSV file,
 
-2.    Read the VPTS with getRad(), and visualise with bioRad::
+2.    Read and convert the CSV file to VPTS,
+
+3.    Visualise the time series.
 
 ***
 # Before we get started
 
-We first install the develop branch of birdscanR from GitHub, and load the package.
-```{r, eval=FALSE}
-# Install the develop branch of birdscanR from GitHub
-# =============================================================================
-pak::pak("BirdScanCommunity/birdscanR@develop")
-```
-
 ```{r}
 library(birdscanR)
-library(getRad)
-# library(bioRad)
+library(bioRad)
 ```
 
 Read Test BirdScanMR1 data
@@ -92,34 +86,19 @@ vptsDir = createVPTS(
 
 
 ***
-# Step 2: Read the VPTS back in with getRad
-
-`createVPTS()` writes one daily file named `[radarID]_vpts_[yyyyMMdd].csv` into
-the `vpts` subdirectory of `outputDir` (i.e. `vptsDir`). The
-[getRad](https://github.com/aloftdata/getRad) package can read such local VPTS
-CSV files with `get_vpts()` by setting the `path` argument and matching the
-local file naming pattern via the `getRad.vpts_local_path_format_aloft`
-option.
+# Step 2: Read the CSV-file and convert to VPTS with BioRad::as.vpts()
 
 ```{r}
-# Tell getRad how the local vpts files are named, so it can find them
-# =============================================================================
-options(getRad.vpts_local_path_format_aloft = "{radar}_vpts_{year}{month}{day}.csv")
-
-# Read the vpts files created above back in
-# =============================================================================
-radarID = dbData$siteData$radarID
-vpts = getRad::get_vpts(
-  radar = radarID,
-  datetime = as.Date(c("2024-09-24", "2024-09-25")),
-  path = vptsDir
-)
-vpts
+vpts = read.csv( file.path(vptsDir, "200_vpts_20240924.csv") )
+vpts = as.vpts(vpts) # requires loading "bioRad"
 ```
 
+***
+# Step 3: Visualise
+
+Visualise
 ```{r}
-plot(bioRad::regularize_vpts(vpts))
-plot(vpts)
+plot(vpts) # requires loading "bioRad"
 ```
 
 
