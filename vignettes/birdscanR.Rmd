@@ -117,7 +117,7 @@ altitudeRange = c(50, 1000)
 #     format(max(dbData$protocolData$stopTime_targetTZ, na.rm = TRUE), "%Y-%m-%d %H:%M")
 #   )
 # }
-timeRangeData = c("2021-09-24 00:00", "2025-09-25 23:59")
+timeRangeData = c("2024-09-24 00:00", "2025-09-25 23:59")
 
 # Set whether to get the manual blind time from:
 # "mandb": the db file;
