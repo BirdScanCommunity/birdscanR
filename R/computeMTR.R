@@ -451,6 +451,17 @@ computeMTR = function(dbName,
   mtr = dplyr::left_join(mtr, all_mtr, by = c("timeChunkId", "altitudeChunkId")) %>%
     dplyr::left_join(each_mtr, by = c("timeChunkId", "altitudeChunkId"))
 
+  # Ensure requested class columns exist even if no echoes were present for
+  # that class in the selected period/filters.
+  for (i_class in classSelection) {
+    for (i_metric in c("nEchoes", "sumOfMTRFactors", "mtr")) {
+      i_col = paste(i_metric, i_class, sep = ".")
+      if (!(i_col %in% colnames(mtr))) {
+        mtr[[i_col]] = NA_real_
+      }
+    }
+  }
+
   # replace NA as ZERO for nEchoes, sumMTRfactors, MTR, if "proportionalTimeObserved"] != 0
   # =============================================================================
   for (i in 0:length(classSelection)) { # i = 0
