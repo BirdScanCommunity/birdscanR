@@ -65,7 +65,7 @@ dbData = readRDS(system.file("extdata",
   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
   package = "birdscanR"
 ))
-mainOutputDir = file.path(".", "results")
+mainOutputDir = tempdir()
 
 # Set manual blind times to NULL (no manual blind times)
 # ===========================================================================

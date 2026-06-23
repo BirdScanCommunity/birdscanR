@@ -44,7 +44,6 @@ Imports:
   dplyr,
   lifecycle,
   ggplot2,
-  grDevices,
   methods,
   modi,
   reshape2,
@@ -60,6 +59,7 @@ Imports:
   utils,
   yaml
 Suggests:
+  bioRad,
   knitr,
   rmarkdown
 VignetteBuilder: knitr

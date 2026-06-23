@@ -86,7 +86,7 @@
 #'   plotClass         = "allClasses",
 #'   propObsTimeCutoff = 0.2,
 #'   plotSpread        = TRUE,
-#'   filePath          = "./"
+#'   filePath          = tempdir()
 #' )
 #' }
 #'

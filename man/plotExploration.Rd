@@ -91,7 +91,7 @@ plotExploration(
   protocolData     = dbData$protocolData,
   sunriseSunset    = dbData$sunriseSunset,
   maxAltitude      = -1,
-  filePath         = "./"
+  filePath         = tempdir()
 )
 }
 

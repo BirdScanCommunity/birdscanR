@@ -26,7 +26,7 @@
 #'   package = "birdscanR"
 #' ))
 #' dbName = "CH_Sempach_2024_SEP24_25"
-#' mainOutputDir = file.path(".", "results")
+#' mainOutputDir = tempdir()
 #' targetTimeZone = "Etc/GMT0"
 #' timeRangeData = c("2024-09-24 00:00", "2024-09-25 23:59")
 #'

@@ -12,6 +12,9 @@ vignette: >
 ``` {r, echo = FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
+```{r setup, include=FALSE}
+hasBioRad <- requireNamespace("bioRad", quietly = TRUE)
+```
 ***
 # Summary
 
@@ -25,12 +28,10 @@ This vignette provides an example of the basic workflow for createVPTS:
 
 ***
 # Before we get started
-
-```{r}
-install.packages("bioRad")
-install.packages("birdscanR")
+```{r, eval = hasBioRad}
 library(birdscanR)
 library(bioRad)
+outDir <- tempdir()
 ```
 
 Read Test BirdScanMR1 data
@@ -55,7 +56,7 @@ variable `feature37.speed` is required for the density calculation.
 
 ```{r}
 dbName = "CH_Sempach_2024_SEP24_25"
-mainOutputDir = file.path(".", "results")
+mainOutputDir = file.path(outDir)
 targetTimeZone = "Etc/GMT0"
 timeRangeData = c("2024-09-24 00:00", "2024-09-25 23:59")
 
@@ -90,7 +91,7 @@ vptsDir = createVPTS(
 ***
 # Step 2: Read the CSV-file and convert to VPTS with BioRad::as.vpts()
 
-```{r}
+```{r, eval = hasBioRad}
 vpts = read.csv(file.path(vptsDir, "200_vpts_20240924.csv"))
 vpts = as.vpts(vpts) 
 ```
@@ -99,8 +100,10 @@ vpts = as.vpts(vpts)
 # Step 3: Visualise
 
 Visualise
-```{r}
+```{r, eval = hasBioRad}
+png(file.path(outDir, "plot.png"))
 plot(vpts)
+dev.off()
 ```
 
 

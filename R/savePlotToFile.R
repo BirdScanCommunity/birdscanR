@@ -40,7 +40,7 @@
 #'   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
 #'   package = "birdscanR"
 #' ))
-#' mainOutputDir = file.path(".", "results")
+#' mainOutputDir = tempdir()
 #'
 #' # Set manual blind times to NULL (no manual blind times)
 #' # ===========================================================================
@@ -148,7 +148,7 @@ savePlotToFile = function(plot = NULL,
       ggplot2::ggsave(
         filename = fileName,
         plot = plot,
-        device = grDevices::png(),
+        device = "png",
         path = filePath,
         scale = 1,
         width = plotWidth_mm,
@@ -161,7 +161,7 @@ savePlotToFile = function(plot = NULL,
       ggplot2::ggsave(
         filename = fileName,
         plot = plot,
-        device = grDevices::png(),
+        device = "png",
         path = filePath,
         scale = 1,
         dpi = 300,
@@ -171,19 +171,7 @@ savePlotToFile = function(plot = NULL,
 
     # Close plotting device
     # =========================================================================
-    grDevices::dev.off()
+    #dev.off()
   }
 }
 
-# saveMTR(mtr = mtr_DayNight_25mto1025m_50m,
-#        filepath = mtrDataDir,
-#        dbName = dbName)
-# savePlotToFile(plot = directionPlot,
-#               filePath = filePath,
-#               plotType = "direction",
-#               plotWidth_mm = 150,
-#               plotHeight_mm = 150,
-#               timeRange = c(timeRange[[i]][1], timeRange[[i]][2]),
-#               classSelection = plotClasses,
-#               altitudeRange = c(min(altitudeRange_AGL),
-#                                 max(altitudeRange_AGL)))
