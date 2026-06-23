@@ -2,6 +2,7 @@
 
 export(QUERY)
 export(addDayNightInfoPerEcho)
+export(addFeatSummToMTR)
 export(compileData)
 export(computeDensity)
 export(computeMTR)
@@ -35,3 +36,4 @@ export(savePlotToFile)
 export(twilight)
 importFrom(dplyr,"%>%")
 importFrom(dplyr,.data)
+importFrom(foreach,"%dopar%")
