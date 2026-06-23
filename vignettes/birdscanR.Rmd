@@ -76,7 +76,11 @@ listOfRfFeaturesToExtract = NULL
 
 # Geographic location of the radar measurements - c(Latitude, Longitude)
 # =============================================================================
-siteLocation = c(47.12764, 8.192569)
+f (useBundledExampleData) {
+  siteLocation = c(dbData$siteData$latitude, dbData$siteData$longitude)
+} else { # or set them manually
+  siteLocation = c(47.12764, 8.192569)
+}
 
 # Set type of twilight to use for day/night decision, i.e., "sun" or "civil"
 # =============================================================================
