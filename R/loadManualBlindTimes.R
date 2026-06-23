@@ -62,29 +62,93 @@ loadManualBlindTimes = function(filePath,
   # Check whether file exists
   # ===========================================================================
   if (!file.exists(filePath)) {
-    paste0("manual blind times file does not exist: '", filePath)
+    warning(paste0("manual blind times file does not exist: '", filePath, "'"))
     manualBlindTimes = NULL
-  } else {
-    # read csv with blind times
-    # =========================================================================
-    manualBlindTimes = tryCatch(utils::read.csv(file = filePath, header = FALSE),
-      error = function(x) x = NULL
-    )
-
-    # If not empty, name columns
-    # =========================================================================
-    names(manualBlindTimes) = c("start", "stop", "type")
-
-    # convert blind times to target time zone
-    # =========================================================================
-    manualBlindTimes = convertTimeZone(
-      data = manualBlindTimes,
-      colNames = c("start", "stop"),
-      originTZ = blindTimesTZ,
-      targetTZ = targetTZ
-    )
+    return(manualBlindTimes)
   }
-
+  
+  # Detect file extension and load accordingly
+  # ===========================================================================
+  file_ext = tolower(tools::file_ext(filePath))
+  
+  if (file_ext == "csv") {
+    # Read CSV file
+    # =========================================================================
+    result <- tryCatch(
+      utils::read.csv(file = filePath, header = TRUE),
+      error = function(e) {
+        warning(paste0("Error reading CSV file: ", e$message))
+        return(NULL)
+      }
+    )
+    
+    if (!is.null(result) && nrow(result) > 0) {
+      names(result) = c("start", "stop", "type")
+      manualBlindTimes = result
+    } else {
+      manualBlindTimes = NULL
+    }
+    
+  } else if (file_ext %in% c("rda", "rdata")) {
+    # Load .rda/.rdata file
+    # =========================================================================
+    env <- new.env()
+    result <- tryCatch(
+      {
+        load(filePath, envir = env)
+        # Get the object name(s) loaded
+        obj_names <- ls(env)
+        if (length(obj_names) == 1) {
+          get(obj_names[1], envir = env)
+        } else {
+          warning(paste0("Multiple objects found in .rda file: ", 
+                         paste(obj_names, collapse = ", "), 
+                         ". Using the first one."))
+          get(obj_names[1], envir = env)
+        }
+      },
+      error = function(e) {
+        warning(paste0("Error loading .rda file: ", e$message))
+        return(NULL)
+      }
+    )
+    
+    if (!is.null(result)) {
+      # Ensure it's a data frame
+      if (!is.data.frame(result)) {
+        warning("Loaded object is not a data frame.")
+        manualBlindTimes = NULL
+      } else {
+        manualBlindTimes = result
+      }
+    } else {
+      manualBlindTimes = NULL
+    }
+    
+  } else {
+    warning(paste0("Unsupported file extension: '", file_ext, 
+                   "'. Only 'csv', 'rda', and 'rdata' are supported."))
+    manualBlindTimes = NULL
+  }
+  
+  # If we have valid data, convert time zones
+  # ===========================================================================
+  if (!is.null(manualBlindTimes) && nrow(manualBlindTimes) > 0) {
+    # Ensure column names are set correctly for .rda files
+    if (!all(c("start", "stop", "type") %in% names(manualBlindTimes))) {
+      warning("Data frame does not have expected columns (start, stop, type).")
+      manualBlindTimes = NULL
+    } else {
+      # Convert blind times to target time zone
+      manualBlindTimes = convertTimeZone(
+        data = manualBlindTimes,
+        colNames = c("start", "stop"),
+        originTZ = blindTimesTZ,
+        targetTZ = targetTZ
+      )
+    }
+  }
+  
   # Return manual blind times
   # ===========================================================================
   return(manualBlindTimes)

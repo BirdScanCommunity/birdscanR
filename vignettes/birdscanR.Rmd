@@ -38,12 +38,23 @@ Then we set our input:
 # Set main output directory
 # =============================================================================
 mainOutputDir = file.path(".", "results")
+dir.create(mainOutputDir, recursive = TRUE, showWarnings = FALSE)
 
-# Set server and database settings
+# Set to TRUE to use the bundled example dataset and run this vignette with
+# the bundled .Rds file instead of a live database connection. 
 # =============================================================================
-dbServer = "MACHINE\\SERVERNAME" # Set the name of your SQL server
-dbName = "db_Name" # Set the name of your database
-dbDriverChar = "SQL Server" # Set either "SQL Server" or "PostgreSQL"
+useBundledExampleData = TRUE
+
+# If not using bundled example data, set parameters for the database connection
+# =============================================================================
+if (useBundledExampleData) {
+  dbName = "CH_Sempach_2024_SEP24_25"
+  dbData = readRDS(file.path("inst", "extdata", paste0(dbName, "_DataExtract.rds")))
+} else {
+  dbServer = "MACHINE\\SERVERNAME" # Set the name of your SQL server
+  dbName = "db_Name" # Set the name of your database
+  dbDriverChar = "SQL Server" # Set either "SQL Server" or "PostgreSQL"
+}
 
 # Set timezone used by the radar/database
 # Use "Etc/GMT0" (UTC) as radarTimeZone for birdscan v1.6
@@ -66,7 +77,11 @@ listOfRfFeaturesToExtract = NULL
 
 # Geographic location of the radar measurements - c(Latitude, Longitude)
 # =============================================================================
-siteLocation = c(47.494427, 8.716432)
+if (useBundledExampleData) {
+  siteLocation = c(dbData$siteData$latitude, dbData$siteData$longitude)
+} else { # or set them manually
+  siteLocation = c(47.12764, 8.192569)
+}
 
 # Set type of twilight to use for day/night decision, i.e., "sun" or "civil"
 # =============================================================================
@@ -95,17 +110,26 @@ classProbCutoff = NULL
 # Set the altitude range (in meters agl)
 altitudeRange = c(50, 1000)
 
-# Set the time range for echodata (in the targetTimeZone)
-# use format "yyyy-MM-dd hh:mm"
-timeRangeData = c("2021-01-15 00:00", "2021-01-31 00:00")
+# Set the time range for echodata (in the targetTimeZone); use format "yyyy-MM-dd hh:mm".
+# Alternatively, you can clamp to the time rang ein the example dataset. 
+# if (useBundledExampleData) {
+#   timeRangeData = c(
+#     format(min(dbData$protocolData$startTime_targetTZ, na.rm = TRUE), "%Y-%m-%d %H:%M"),
+#     format(max(dbData$protocolData$stopTime_targetTZ, na.rm = TRUE), "%Y-%m-%d %H:%M")
+#   )
+# }
+timeRangeData = c("2024-09-24 00:00", "2024-09-25 23:59")
 
 # Set whether to get the manual blind time from:
 # "mandb": the db file;
 # "csv"  : a separate csv file
-manBlindSource = "csv"
+# "rda" : a separate rda file
+manBlindSource = "rda"
 
-# Set paths to manual blind times file, if manBlindSource == "csv"
-if (manBlindSource %in% "csv") {
+# Set paths to manual blind times file, if manBlindSource == "rda" or "csv"
+if (manBlindSource %in% "rda") {
+  manblindFile = file.path("data", "manualBlindTimes.rda")
+} else if (manBlindSource %in% "csv") {
   manblindFile = file.path("data", "manualBlindTimes.csv")
 }
 
@@ -123,7 +147,13 @@ altitudeRange.mtr = c(50, 500)
 altitudeBinSize = 50
 
 # time range for timeBins (targetTimeZone) - format: "yyyy-MM-dd hh:mm"
-timeRangesTimeBins = c("2021-01-15 00:00", "2021-01-31 00:00")
+if (useBundledExampleData) {
+  # Keep MTR time bins within the temporal extent of the loaded dataset.
+  # This avoids missing day/night labels during time-bin construction.
+  timeRangesTimeBins = timeRangeData
+} else { # or set time bins manually
+  timeRangesTimeBins = c("2024-09-24 00:00", "2025-09-25 23:59")
+}
 
 # timeBin size in seconds
 timeBinduration_sec = 3600
@@ -158,35 +188,39 @@ saveMTR2File = TRUE
 ```
 
 ***
-# Step 1: Extract the relevant data from the SQL database (or load it from a )
+# Step 1: Extract the relevant data from the SQL database (or load it from bundled .Rds file)
 
 Extracting the data that is need for MTR calculations, can be done with the `extractDbData()` function. This function will connect to your SQL database and read all the necessary data to memory. If requested by setting the parameter `saveDbToFile` to `TRUE` , it will also write it to an .rds file in the output directory you chose. The file is automatically named to: `[yourDbName]_DataExtract.rds`, and written to the main output directory you defined in the input settings.
 
 If you currently have no connection to an SQL server with your MR1 database attached, and have extracted or received an extracted dataset earlier, you can directly load your database from the the RDS file, using 'dbData = readRDS(file.path(`directory containing the file`, `[yourDbName]_DataExtract.rds`))'.
 
 ```{r, eval=FALSE}
-# Print progress message
-# =============================================================================
-message(paste0("Extracting data from ", dbName))
+if (useBundledExampleData) {
+  message(paste0("Using bundled .rds dataset for ", dbName))
+} else {
+  # Print progress message
+  # ===========================================================================
+  message(paste0("Extracting data from ", dbName))
 
-# Extract the data from the SQL database
-# =============================================================================
-dbData = extractDbData(
-  dbDriverChar = dbDriverChar,
-  dbServer = dbServer,
-  dbName = dbName,
-  saveDbToFile = TRUE,
-  dbDataDir = mainOutputDir,
-  radarTimeZone = radarTimeZone,
-  targetTimeZone = targetTimeZone,
-  listOfRfFeaturesToExtract = listOfRfFeaturesToExtract,
-  siteLocation = siteLocation,
-  sunOrCivil = sunOrCivil
-)
+  # Extract the data from the SQL database
+  # ===========================================================================
+  dbData = extractDbData(
+    dbDriverChar = dbDriverChar,
+    dbServer = dbServer,
+    dbName = dbName,
+    saveDbToFile = TRUE,
+    dbDataDir = mainOutputDir,
+    radarTimeZone = radarTimeZone,
+    targetTimeZone = targetTimeZone,
+    listOfRfFeaturesToExtract = listOfRfFeaturesToExtract,
+    siteLocation = siteLocation,
+    sunOrCivil = sunOrCivil
+  )
 
-# Print progress message
-# =============================================================================
-message(paste0("Finished extracting data from ", dbName))
+  # Print progress message
+  # ===========================================================================
+  message(paste0("Finished extracting data from ", dbName))
+}
 ```
 
 ***
@@ -197,13 +231,30 @@ In addition to the standard echo classification in insects, different bird group
 The bat infromation is, however, included in separate tables in the SQL database. With `reclassToBats()` one can merge the bat classification information with the standard classification output. If you are not interested in bats, you can simply skip this step.
 
 ```{r, eval=FALSE}
-# Join bat classification information with standard echo classifcation
+# Join bat classification information with standard echo classification if needed. 
+# The bundled example dataset contains the bat probability table, but the 
+# main 'class' column still needs to be reclassified to create 'bat' rows.
 # ===========================================================================
-dbData$echoData = reclassToBats(
-  echoData = dbData$echoData,
-  batProbabilitiesAndMtrFactors = dbData$batProbabilitiesAndMtrFactors,
-  reclassToBatCutoff = 0.5
-)
+if ("bat" %in% unique(as.character(dbData$echoData$class))) {
+  message("Bat classification already present in echoData$class, skipping reclassification.")
+} else if (
+  "batProbabilitiesAndMtrFactors" %in% names(dbData) &&
+  !is.null(dbData$batProbabilitiesAndMtrFactors) &&
+  nrow(dbData$batProbabilitiesAndMtrFactors) > 0
+) {
+  message("Applying bat reclassification to echo data.")
+  dbData$echoData = reclassToBats(
+    echoData = dbData$echoData,
+    batProbabilitiesAndMtrFactors = dbData$batProbabilitiesAndMtrFactors,
+    reclassToBatCutoff = 0.5
+  )
+} else if (useBundledExampleData) {
+  stop(
+    "The bundled example data does not contain usable batProbabilitiesAndMtrFactors, ",
+    "so bat reclassification cannot be run. Remove 'bat' from classSelection/classSelection.mtr, ",
+    "or reload a complete extract."
+  )
+}
 ```
 
 ***
@@ -218,9 +269,9 @@ message(paste0("Filtering data from ", dbName))
 
 # Get current manual blind times
 # =============================================================================
-# CASE: manBlindSource == "csv"
+# CASE: manBlindSource == "rda" or "csv"
 # ===========================================================================
-if (manBlindSource %in% "csv") {
+if (manBlindSource %in% c("csv", "rda")) {
   # Read manual blindtimes from csv File
   # csv contains one row per blindtime and 3 columns
   # (start of blindtime, stop of blindtime, type of blindtime)
