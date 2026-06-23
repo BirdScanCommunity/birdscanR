@@ -129,62 +129,84 @@ createDataPackage = function(echoData,
                              saveAsRDS = FALSE) {
   # Input validation
   # ============================================================================
-  if (!is.data.frame(echoData))
+  if (!is.data.frame(echoData)) {
     stop("'echoData' must be a data frame.")
-  if (!is.data.frame(protocolData))
+  }
+  if (!is.data.frame(protocolData)) {
     stop("'protocolData' must be a data frame.")
-  if (!is.null(visibilityData) && !is.data.frame(blindTimesData))
+  }
+  if (!is.null(visibilityData) && !is.data.frame(blindTimesData)) {
     stop("'visibilityData' must be a data frame or NULL.")
-  if (!is.data.frame(sunriseSunsetData))
+  }
+  if (!is.data.frame(sunriseSunsetData)) {
     stop("'sunriseSunsetData' must be a data frame.")
-  if (!is.data.frame(radarSiteData))
+  }
+  if (!is.data.frame(radarSiteData)) {
     stop("'radarSiteData' must be a data frame.")
-  if (!is.null(manualBlindTimes) && !is.data.frame(manualBlindTimes))
+  }
+  if (!is.null(manualBlindTimes) && !is.data.frame(manualBlindTimes)) {
     stop("'manualBlindTimes' must be a data frame or NULL.")
-  if (!is.null(dbName) && (!is.character(dbName) || length(dbName) != 1))
+  }
+  if (!is.null(dbName) && (!is.character(dbName) || length(dbName) != 1)) {
     stop("'dbName' must be a single character string or NULL.")
+  }
   if (!is.null(pulseTypeSelection)) {
-    if (!is.character(pulseTypeSelection) || !all(pulseTypeSelection %in% c("S", "M", "L")))
+    if (!is.character(pulseTypeSelection) || !all(pulseTypeSelection %in% c("S", "M", "L"))) {
       stop("'pulseTypeSelection' must be a character vector with values in c('S', 'M', 'L'), or NULL.")
+    }
   }
   if (!is.null(rotationSelection)) {
-    if (!is.numeric(rotationSelection) || !all(rotationSelection %in% c(0, 1)))
+    if (!is.numeric(rotationSelection) || !all(rotationSelection %in% c(0, 1))) {
       stop("'rotationSelection' must be a numeric vector with values in c(0, 1), or NULL.")
+    }
   }
-  if (is.null(timeRangeTargetTZ))
+  if (is.null(timeRangeTargetTZ)) {
     stop("'timeRangeTargetTZ' must be provided (character vector of length 2, or POSIXct/Date).")
+  }
   if (!inherits(timeRangeTargetTZ, c("Date", "POSIXt")) &&
-      (!is.character(timeRangeTargetTZ) || length(timeRangeTargetTZ) != 2))
+    (!is.character(timeRangeTargetTZ) || length(timeRangeTargetTZ) != 2)) {
     stop("'timeRangeTargetTZ' must be a character vector of length 2 (format '%Y-%m-%d %H:%M'), or a POSIXct/Date vector of length 2.")
+  }
   if (!is.character(targetTimeZone) || length(targetTimeZone) != 1 ||
-      !targetTimeZone %in% OlsonNames())
+    !targetTimeZone %in% OlsonNames()) {
     stop("'targetTimeZone' must be a single valid time zone string (see OlsonNames()).")
-  if (!is.null(classSelection) && !is.character(classSelection))
+  }
+  if (!is.null(classSelection) && !is.character(classSelection)) {
     stop("'classSelection' must be a character vector or NULL.")
+  }
   if (!is.null(classProbCutOff) &&
-      (!is.numeric(classProbCutOff) || length(classProbCutOff) != 1 ||
-       classProbCutOff < 0 || classProbCutOff > 1))
+    (!is.numeric(classProbCutOff) || length(classProbCutOff) != 1 ||
+      classProbCutOff < 0 || classProbCutOff > 1)) {
     stop("'classProbCutOff' must be a single numeric value between 0 and 1, or NULL.")
+  }
   if (!is.null(altitudeRange_AGL)) {
-    if (!is.numeric(altitudeRange_AGL) || length(altitudeRange_AGL) != 2)
+    if (!is.numeric(altitudeRange_AGL) || length(altitudeRange_AGL) != 2) {
       stop("'altitudeRange_AGL' must be a numeric vector of length 2, or NULL.")
-    if (altitudeRange_AGL[1] > altitudeRange_AGL[2])
+    }
+    if (altitudeRange_AGL[1] > altitudeRange_AGL[2]) {
       stop("'altitudeRange_AGL[1]' (start) must be <= 'altitudeRange_AGL[2]' (end).")
+    }
   }
-  if (!is.logical(echoValidator) || length(echoValidator) != 1)
+  if (!is.logical(echoValidator) || length(echoValidator) != 1) {
     stop("'echoValidator' must be a single logical value (TRUE or FALSE).")
-  if (!is.null(outputDirPath)) {
-    if (!is.character(outputDirPath) || length(outputDirPath) != 1)
-      stop("'outputDirPath' must be a single character string or NULL.")
-    if (!dir.exists(outputDirPath))
-      stop(paste0("'outputDirPath' does not exist: ", outputDirPath))
   }
-  if (length(tagOutputFile) != 2)
+  if (!is.null(outputDirPath)) {
+    if (!is.character(outputDirPath) || length(outputDirPath) != 1) {
+      stop("'outputDirPath' must be a single character string or NULL.")
+    }
+    if (!dir.exists(outputDirPath)) {
+      stop(paste0("'outputDirPath' does not exist: ", outputDirPath))
+    }
+  }
+  if (length(tagOutputFile) != 2) {
     stop("'tagOutputFile' must be a vector of length 2, e.g. c('prefix', 'suffix') or c(NULL, NULL).")
-  if (!is.logical(saveCSV) || length(saveCSV) != 1)
+  }
+  if (!is.logical(saveCSV) || length(saveCSV) != 1) {
     stop("'saveCSV' must be a single logical value (TRUE or FALSE).")
-  if (!is.logical(saveAsRDS) || length(saveAsRDS) != 1)
+  }
+  if (!is.logical(saveAsRDS) || length(saveAsRDS) != 1) {
     stop("'saveAsRDS' must be a single logical value (TRUE or FALSE).")
+  }
 
   # set the time window
   # ============================================================================
