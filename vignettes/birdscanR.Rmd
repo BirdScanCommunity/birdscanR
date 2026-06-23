@@ -123,10 +123,13 @@ timeRangeData = c("2024-09-24 00:00", "2024-09-25 23:59")
 # Set whether to get the manual blind time from:
 # "mandb": the db file;
 # "csv"  : a separate csv file
-manBlindSource = "csv"
+# "rda" : a separate rda file
+manBlindSource = "rda"
 
-# Set paths to manual blind times file, if manBlindSource == "csv"
-if (manBlindSource %in% "csv") {
+# Set paths to manual blind times file, if manBlindSource == "rda" or "csv"
+if (manBlindSource %in% "rda") {
+  manblindFile = file.path("data", "manualBlindTimes.rda")
+} else if (manBlindSource %in% "csv") {
   manblindFile = file.path("data", "manualBlindTimes.csv")
 }
 
@@ -266,9 +269,9 @@ message(paste0("Filtering data from ", dbName))
 
 # Get current manual blind times
 # =============================================================================
-# CASE: manBlindSource == "csv"
+# CASE: manBlindSource == "rda" or "csv"
 # ===========================================================================
-if (manBlindSource %in% "csv") {
+if (manBlindSource %in% c("csv", "rda")) {
   # Read manual blindtimes from csv File
   # csv contains one row per blindtime and 3 columns
   # (start of blindtime, stop of blindtime, type of blindtime)
