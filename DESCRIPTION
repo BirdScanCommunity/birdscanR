@@ -40,7 +40,10 @@ BugReports: https://github.com/BirdScanCommunity/birdscanR/issues
 Depends:
   R (>= 4.1.0)
 Imports: 
+  circular,
+  circhelp,
   DBI,
+  descriptio,
   dplyr,
   lifecycle,
   ggplot2,
