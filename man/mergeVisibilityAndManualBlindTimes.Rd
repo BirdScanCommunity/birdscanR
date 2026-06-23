@@ -43,14 +43,17 @@ blind times with type “protocolChange”.
 # ===========================================================================
 dbData = readRDS(system.file("extdata",
   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
-  package = "birdscanR"))
+  package = "birdscanR"
+))
 
 # Get manual blind times
 # ===========================================================================
 data(manualBlindTimes)
 tmpFile = tempfile(fileext = ".csv")
-write.table(manualBlindTimes, file = tmpFile, sep = ",",
-            row.names = FALSE, col.names = FALSE)
+write.table(manualBlindTimes,
+  file = tmpFile, sep = ",",
+  row.names = FALSE, col.names = FALSE
+)
 cManualBlindTimes = loadManualBlindTimes(
   filePath     = tmpFile,
   blindTimesTZ = "Etc/GMT0",
@@ -68,15 +71,16 @@ blindTimes = mergeVisibilityAndManualBlindTimes(
 
 }
 \seealso{
-Other manipulation functions: 
-\code{\link{addDayNightInfoPerEcho}()},
-\code{\link{computeDensity}()},
-\code{\link{computeMTR}()},
-\code{\link{convertTimeZone}()},
-\code{\link{createVPTS}()},
-\code{\link{filterSpeedFeature37}()},
-\code{\link{reclassToBats}()},
-\code{\link{twilight}()}
+Other manipulation functions:
+\code{\link[=addDayNightInfoPerEcho]{addDayNightInfoPerEcho()}},
+\code{\link[=addFeatSummToMTR]{addFeatSummToMTR()}},
+\code{\link[=computeDensity]{computeDensity()}},
+\code{\link[=computeMTR]{computeMTR()}},
+\code{\link[=convertTimeZone]{convertTimeZone()}},
+\code{\link[=createVPTS]{createVPTS()}},
+\code{\link[=filterSpeedFeature37]{filterSpeedFeature37()}},
+\code{\link[=reclassToBats]{reclassToBats()}},
+\code{\link[=twilight]{twilight()}}
 }
 \author{
 Fabian Hertner, Birgen Haest, Baptiste Schmid

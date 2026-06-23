@@ -18,9 +18,9 @@ MR1.
 data(classAbbreviations)
 }
 \seealso{
-Other sample data: 
+Other sample data:
 \code{\link{CH_Sempach_2024_SEP24_25_DataExtract}},
-\code{\link{loadManualBlindTimes}()},
+\code{\link[=loadManualBlindTimes]{loadManualBlindTimes()}},
 \code{\link{manualBlindTimes}}
 }
 \concept{sample data}

@@ -54,8 +54,10 @@ data(manualBlindTimes)
 # Save example manual blind times to a temporary file
 # ===========================================================================
 tmpFile = tempfile(fileext = ".csv")
-write.table(manualBlindTimes, file = tmpFile, sep = ",",
-            row.names = FALSE, col.names = FALSE)
+write.table(manualBlindTimes,
+  file = tmpFile, sep = ",",
+  row.names = FALSE, col.names = FALSE
+)
 
 # Read the manual blind times from file
 # ===========================================================================
@@ -68,7 +70,7 @@ manualBlindTimes.new = loadManualBlindTimes(
 
 }
 \seealso{
-Other sample data: 
+Other sample data:
 \code{\link{CH_Sempach_2024_SEP24_25_DataExtract}},
 \code{\link{classAbbreviations}},
 \code{\link{manualBlindTimes}}

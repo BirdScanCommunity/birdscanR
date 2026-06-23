@@ -38,7 +38,8 @@ used to filter the echoes based on the operation mode/protocol
 # ===========================================================================
 dbData = readRDS(system.file("extdata",
   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
-  package = "birdscanR"))
+  package = "birdscanR"
+))
 
 # Set input settings for filtering of the data
 # ===========================================================================
@@ -48,17 +49,17 @@ rotationSelection = 1
 # Filter the protocol data
 # ===========================================================================
 filteredProtocolData = filterProtocolData(
-  protocolData      = dbData$protocolData,
+  protocolData = dbData$protocolData,
   pulseTypeSelection = pulseLengthSelection,
-  rotationSelection  = rotationSelection
+  rotationSelection = rotationSelection
 )
 }
 
 }
 \seealso{
-Other filter functions: 
-\code{\link{filterData}()},
-\code{\link{filterEchoData}()}
+Other filter functions:
+\code{\link[=filterData]{filterData()}},
+\code{\link[=filterEchoData]{filterEchoData()}}
 }
 \author{
 Fabian Hertner, Birgen Haest

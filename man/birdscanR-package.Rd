@@ -22,6 +22,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Birgen Haest \email{birgen.haest@vogelwarte.ch} (\href{https://orcid.org/0000-0002-8739-6460}{ORCID})
   \item Fabian Hertner \email{fabian.hertner@swiss-birdradar.com}
 }
 

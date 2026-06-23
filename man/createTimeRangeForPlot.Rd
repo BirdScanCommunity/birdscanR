@@ -38,9 +38,9 @@ print(timeRangePlot)
 
 }
 \seealso{
-Other plot functions: 
-\code{\link{plotExploration}()},
-\code{\link{plotLongitudinalMTR}()}
+Other plot functions:
+\code{\link[=plotExploration]{plotExploration()}},
+\code{\link[=plotLongitudinalMTR]{plotLongitudinalMTR()}}
 }
 \author{
 Baptiste Schmid, Birgen Haest

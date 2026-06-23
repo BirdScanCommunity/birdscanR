@@ -58,12 +58,13 @@ negative bars.
 \donttest{
 # Load example data
 # ===========================================================================
-dbData         = readRDS(system.file("extdata",
+dbData = readRDS(system.file("extdata",
   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
-  package = "birdscanR"))
-dbName         = "CH_Sempach_2024_SEP24_25"
+  package = "birdscanR"
+))
+dbName = "CH_Sempach_2024_SEP24_25"
 targetTimeZone = "Etc/GMT0"
-timeRangeData  = c("2024-09-24 00:00", "2024-09-25 23:59")
+timeRangeData = c("2024-09-24 00:00", "2024-09-25 23:59")
 
 # Set manual blind times to NULL (no manual blind times)
 # ===========================================================================
@@ -114,9 +115,9 @@ plotLongitudinalMTR(
 
 }
 \seealso{
-Other plot functions: 
-\code{\link{createTimeRangeForPlot}()},
-\code{\link{plotExploration}()}
+Other plot functions:
+\code{\link[=createTimeRangeForPlot]{createTimeRangeForPlot()}},
+\code{\link[=plotExploration]{plotExploration()}}
 }
 \author{
 Fabian Hertner, Birgen Haest

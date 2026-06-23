@@ -31,27 +31,29 @@ Reclassifies echoes based on bat classification.
 # ===========================================================================
 dbData = readRDS(system.file("extdata",
   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
-  package = "birdscanR"))
+  package = "birdscanR"
+))
 
 # Reclass To Bats
 # ===========================================================================
 dbData$echoData = reclassToBats(
-  echoData                     = dbData$echoData,
+  echoData = dbData$echoData,
   batProbabilitiesAndMtrFactors = dbData$batProbabilitiesAndMtrFactors,
-  reclassToBatCutoff           = 0.5
+  reclassToBatCutoff = 0.5
 )
 }
 }
 \seealso{
-Other manipulation functions: 
-\code{\link{addDayNightInfoPerEcho}()},
-\code{\link{computeDensity}()},
-\code{\link{computeMTR}()},
-\code{\link{convertTimeZone}()},
-\code{\link{createVPTS}()},
-\code{\link{filterSpeedFeature37}()},
-\code{\link{mergeVisibilityAndManualBlindTimes}()},
-\code{\link{twilight}()}
+Other manipulation functions:
+\code{\link[=addDayNightInfoPerEcho]{addDayNightInfoPerEcho()}},
+\code{\link[=addFeatSummToMTR]{addFeatSummToMTR()}},
+\code{\link[=computeDensity]{computeDensity()}},
+\code{\link[=computeMTR]{computeMTR()}},
+\code{\link[=convertTimeZone]{convertTimeZone()}},
+\code{\link[=createVPTS]{createVPTS()}},
+\code{\link[=filterSpeedFeature37]{filterSpeedFeature37()}},
+\code{\link[=mergeVisibilityAndManualBlindTimes]{mergeVisibilityAndManualBlindTimes()}},
+\code{\link[=twilight]{twilight()}}
 }
 \author{
 Fabian Hertner

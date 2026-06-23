@@ -46,19 +46,19 @@ echovalidationTable = getEchoValidationTable(dbConnection)
 
 }
 \seealso{
-Other read SQL database functions: 
-\code{\link{QUERY}()},
-\code{\link{dbConnectBirdscanSQL}()},
-\code{\link{extractDbData}()},
-\code{\link{getBatClassification}()},
-\code{\link{getCollectionTable}()},
-\code{\link{getEchoFeatures}()},
-\code{\link{getProtocolTable}()},
-\code{\link{getRadarTable}()},
-\code{\link{getRfClassification}()},
-\code{\link{getSiteTable}()},
-\code{\link{getTimeBinsTable}()},
-\code{\link{getVisibilityTable}()}
+Other read SQL database functions:
+\code{\link[=QUERY]{QUERY()}},
+\code{\link[=dbConnectBirdscanSQL]{dbConnectBirdscanSQL()}},
+\code{\link[=extractDbData]{extractDbData()}},
+\code{\link[=getBatClassification]{getBatClassification()}},
+\code{\link[=getCollectionTable]{getCollectionTable()}},
+\code{\link[=getEchoFeatures]{getEchoFeatures()}},
+\code{\link[=getProtocolTable]{getProtocolTable()}},
+\code{\link[=getRadarTable]{getRadarTable()}},
+\code{\link[=getRfClassification]{getRfClassification()}},
+\code{\link[=getSiteTable]{getSiteTable()}},
+\code{\link[=getTimeBinsTable]{getTimeBinsTable()}},
+\code{\link[=getVisibilityTable]{getVisibilityTable()}}
 }
 \author{
 Fabian Hertner, Birgen Haest

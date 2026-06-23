@@ -29,12 +29,13 @@ on September 24–25, 2024. Load with:
 \examples{
 dbData = readRDS(system.file("extdata",
   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
-  package = "birdscanR"))
+  package = "birdscanR"
+))
 }
 \seealso{
-Other sample data: 
+Other sample data:
 \code{\link{classAbbreviations}},
-\code{\link{loadManualBlindTimes}()},
+\code{\link[=loadManualBlindTimes]{loadManualBlindTimes()}},
 \code{\link{manualBlindTimes}}
 }
 \concept{sample data}

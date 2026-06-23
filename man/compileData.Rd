@@ -89,9 +89,9 @@ save metadata used to compute MTR \code{\link[=computeMTR]{computeMTR()}}. It ta
 e.g. time frame, pulse type.
 }
 \seealso{
-Other write file functions: 
-\code{\link{saveMTR}()},
-\code{\link{savePlotToFile}()}
+Other write file functions:
+\code{\link[=saveMTR]{saveMTR()}},
+\code{\link[=savePlotToFile]{savePlotToFile()}}
 }
 \author{
 Baptiste Schmid, Fabian Hertner, Birgen Haest

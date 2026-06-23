@@ -35,15 +35,16 @@ sunriseSunset = twilight(
 )
 }
 \seealso{
-Other manipulation functions: 
-\code{\link{addDayNightInfoPerEcho}()},
-\code{\link{computeDensity}()},
-\code{\link{computeMTR}()},
-\code{\link{convertTimeZone}()},
-\code{\link{createVPTS}()},
-\code{\link{filterSpeedFeature37}()},
-\code{\link{mergeVisibilityAndManualBlindTimes}()},
-\code{\link{reclassToBats}()}
+Other manipulation functions:
+\code{\link[=addDayNightInfoPerEcho]{addDayNightInfoPerEcho()}},
+\code{\link[=addFeatSummToMTR]{addFeatSummToMTR()}},
+\code{\link[=computeDensity]{computeDensity()}},
+\code{\link[=computeMTR]{computeMTR()}},
+\code{\link[=convertTimeZone]{convertTimeZone()}},
+\code{\link[=createVPTS]{createVPTS()}},
+\code{\link[=filterSpeedFeature37]{filterSpeedFeature37()}},
+\code{\link[=mergeVisibilityAndManualBlindTimes]{mergeVisibilityAndManualBlindTimes()}},
+\code{\link[=reclassToBats]{reclassToBats()}}
 }
 \author{
 Fabian Hertner, Birgen Haest

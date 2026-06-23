@@ -61,13 +61,14 @@ If the directory is not existing it will be created if possible.
 \donttest{
 # Load example data
 # ===========================================================================
-dbData         = readRDS(system.file("extdata",
+dbData = readRDS(system.file("extdata",
   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
-  package = "birdscanR"))
-dbName         = "CH_Sempach_2024_SEP24_25"
-mainOutputDir  = file.path(".", "results")
+  package = "birdscanR"
+))
+dbName = "CH_Sempach_2024_SEP24_25"
+mainOutputDir = file.path(".", "results")
 targetTimeZone = "Etc/GMT0"
-timeRangeData  = c("2024-09-24 00:00", "2024-09-25 23:59")
+timeRangeData = c("2024-09-24 00:00", "2024-09-25 23:59")
 
 # Set manual blind times to NULL (no manual blind times)
 # ===========================================================================
@@ -109,9 +110,9 @@ saveMTR(
 
 }
 \seealso{
-Other write file functions: 
-\code{\link{compileData}()},
-\code{\link{savePlotToFile}()}
+Other write file functions:
+\code{\link[=compileData]{compileData()}},
+\code{\link[=savePlotToFile]{savePlotToFile()}}
 }
 \author{
 Fabian Hertner, Birgen Haest

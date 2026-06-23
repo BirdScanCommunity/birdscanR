@@ -23,7 +23,8 @@ Filter outliers in Speed feature (collection.feature37)
 # ===========================================================================
 dbData = readRDS(system.file("extdata",
   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
-  package = "birdscanR"))
+  package = "birdscanR"
+))
 
 # Filter speed feature 37
 # ===========================================================================
@@ -35,15 +36,16 @@ dbData$echoData = filterSpeedFeature37(
 }
 }
 \seealso{
-Other manipulation functions: 
-\code{\link{addDayNightInfoPerEcho}()},
-\code{\link{computeDensity}()},
-\code{\link{computeMTR}()},
-\code{\link{convertTimeZone}()},
-\code{\link{createVPTS}()},
-\code{\link{mergeVisibilityAndManualBlindTimes}()},
-\code{\link{reclassToBats}()},
-\code{\link{twilight}()}
+Other manipulation functions:
+\code{\link[=addDayNightInfoPerEcho]{addDayNightInfoPerEcho()}},
+\code{\link[=addFeatSummToMTR]{addFeatSummToMTR()}},
+\code{\link[=computeDensity]{computeDensity()}},
+\code{\link[=computeMTR]{computeMTR()}},
+\code{\link[=convertTimeZone]{convertTimeZone()}},
+\code{\link[=createVPTS]{createVPTS()}},
+\code{\link[=mergeVisibilityAndManualBlindTimes]{mergeVisibilityAndManualBlindTimes()}},
+\code{\link[=reclassToBats]{reclassToBats()}},
+\code{\link[=twilight]{twilight()}}
 }
 \author{
 Fabian Hertner, \email{fabian.hertner@swiss-birdradar.com};
