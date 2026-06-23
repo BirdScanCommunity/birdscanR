@@ -48,11 +48,7 @@ useBundledExampleData = TRUE
 # =============================================================================
 if (useBundledExampleData) {
   dbName = "CH_Sempach_2024_SEP24_25"
-  dbData = readRDS(system.file(
-    "extdata",
-    paste0(dbName, "_DataExtract.rds"),
-    package = "birdscanR"
-  ))
+  dbData = readRDS(file.path("inst", "extdata", paste0(dbName, "_DataExtract.rds")))
 } else {
   dbServer = "MACHINE\\SERVERNAME" # Set the name of your SQL server
   dbName = "db_Name" # Set the name of your database
