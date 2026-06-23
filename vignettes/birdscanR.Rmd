@@ -184,35 +184,39 @@ saveMTR2File = TRUE
 ```
 
 ***
-# Step 1: Extract the relevant data from the SQL database (or load it from a )
+# Step 1: Extract the relevant data from the SQL database (or load it from bundled .Rds file)
 
 Extracting the data that is need for MTR calculations, can be done with the `extractDbData()` function. This function will connect to your SQL database and read all the necessary data to memory. If requested by setting the parameter `saveDbToFile` to `TRUE` , it will also write it to an .rds file in the output directory you chose. The file is automatically named to: `[yourDbName]_DataExtract.rds`, and written to the main output directory you defined in the input settings.
 
 If you currently have no connection to an SQL server with your MR1 database attached, and have extracted or received an extracted dataset earlier, you can directly load your database from the the RDS file, using 'dbData = readRDS(file.path(`directory containing the file`, `[yourDbName]_DataExtract.rds`))'.
 
 ```{r, eval=FALSE}
-# Print progress message
-# =============================================================================
-message(paste0("Extracting data from ", dbName))
+if (useBundledExampleData) {
+  message(paste0("Using bundled .rds dataset for ", dbName))
+} else {
+  # Print progress message
+  # ===========================================================================
+  message(paste0("Extracting data from ", dbName))
 
-# Extract the data from the SQL database
-# =============================================================================
-dbData = extractDbData(
-  dbDriverChar = dbDriverChar,
-  dbServer = dbServer,
-  dbName = dbName,
-  saveDbToFile = TRUE,
-  dbDataDir = mainOutputDir,
-  radarTimeZone = radarTimeZone,
-  targetTimeZone = targetTimeZone,
-  listOfRfFeaturesToExtract = listOfRfFeaturesToExtract,
-  siteLocation = siteLocation,
-  sunOrCivil = sunOrCivil
-)
+  # Extract the data from the SQL database
+  # ===========================================================================
+  dbData = extractDbData(
+    dbDriverChar = dbDriverChar,
+    dbServer = dbServer,
+    dbName = dbName,
+    saveDbToFile = TRUE,
+    dbDataDir = mainOutputDir,
+    radarTimeZone = radarTimeZone,
+    targetTimeZone = targetTimeZone,
+    listOfRfFeaturesToExtract = listOfRfFeaturesToExtract,
+    siteLocation = siteLocation,
+    sunOrCivil = sunOrCivil
+  )
 
-# Print progress message
-# =============================================================================
-message(paste0("Finished extracting data from ", dbName))
+  # Print progress message
+  # ===========================================================================
+  message(paste0("Finished extracting data from ", dbName))
+}
 ```
 
 ***
