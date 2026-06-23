@@ -55,15 +55,15 @@
 #' # Filter the echo data
 #' # ===========================================================================
 #' filteredEchoData = filterEchoData(
-#'   echoData          = dbData$echoData,
+#'   echoData = dbData$echoData,
 #'   timeRangeTargetTZ = timeRangeData,
-#'   targetTimeZone    = targetTimeZone,
-#'   protocolData      = dbData$protocolData,
-#'   classSelection    = classSelection,
-#'   classProbCutOff   = classProbCutoff,
+#'   targetTimeZone = targetTimeZone,
+#'   protocolData = dbData$protocolData,
+#'   classSelection = classSelection,
+#'   classProbCutOff = classProbCutoff,
 #'   altitudeRange = altitudeRange,
-#'   manualBlindTimes  = cManualBlindTimes,
-#'   echoValidator     = useEchoValidator
+#'   manualBlindTimes = cManualBlindTimes,
+#'   echoValidator = useEchoValidator
 #' )
 #' }
 #'
@@ -194,5 +194,3 @@ filterEchoData = function(echoData = NULL,
   # =============================================================================
   return(echoData)
 }
-
-

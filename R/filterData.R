@@ -63,17 +63,17 @@
 #' # Filter the data
 #' # ===========================================================================
 #' filteredData = filterData(
-#'   echoData           = dbData$echoData,
-#'   protocolData       = dbData$protocolData,
+#'   echoData = dbData$echoData,
+#'   protocolData = dbData$protocolData,
 #'   pulseTypeSelection = pulseLengthSelection,
-#'   rotationSelection  = rotationSelection,
-#'   timeRangeTargetTZ  = timeRangeData,
-#'   targetTimeZone     = targetTimeZone,
-#'   classSelection     = classSelection,
-#'   classProbCutOff    = classProbCutoff,
-#'   altitudeRange  = altitudeRange,
-#'   manualBlindTimes   = cManualBlindTimes,
-#'   echoValidator      = useEchoValidator
+#'   rotationSelection = rotationSelection,
+#'   timeRangeTargetTZ = timeRangeData,
+#'   targetTimeZone = targetTimeZone,
+#'   classSelection = classSelection,
+#'   classProbCutOff = classProbCutoff,
+#'   altitudeRange = altitudeRange,
+#'   manualBlindTimes = cManualBlindTimes,
+#'   echoValidator = useEchoValidator
 #' )
 #' }
 #'
