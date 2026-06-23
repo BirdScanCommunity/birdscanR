@@ -228,13 +228,30 @@ In addition to the standard echo classification in insects, different bird group
 The bat infromation is, however, included in separate tables in the SQL database. With `reclassToBats()` one can merge the bat classification information with the standard classification output. If you are not interested in bats, you can simply skip this step.
 
 ```{r, eval=FALSE}
-# Join bat classification information with standard echo classifcation
+# Join bat classification information with standard echo classification if needed. 
+# The bundled example dataset contains the bat probability table, but the 
+# main 'class' column still needs to be reclassified to create 'bat' rows.
 # ===========================================================================
-dbData$echoData = reclassToBats(
-  echoData = dbData$echoData,
-  batProbabilitiesAndMtrFactors = dbData$batProbabilitiesAndMtrFactors,
-  reclassToBatCutoff = 0.5
-)
+if ("bat" %in% unique(as.character(dbData$echoData$class))) {
+  message("Bat classification already present in echoData$class, skipping reclassification.")
+} else if (
+  "batProbabilitiesAndMtrFactors" %in% names(dbData) &&
+  !is.null(dbData$batProbabilitiesAndMtrFactors) &&
+  nrow(dbData$batProbabilitiesAndMtrFactors) > 0
+) {
+  message("Applying bat reclassification to echo data.")
+  dbData$echoData = reclassToBats(
+    echoData = dbData$echoData,
+    batProbabilitiesAndMtrFactors = dbData$batProbabilitiesAndMtrFactors,
+    reclassToBatCutoff = 0.5
+  )
+} else if (useBundledExampleData) {
+  stop(
+    "The bundled example data does not contain usable batProbabilitiesAndMtrFactors, ",
+    "so bat reclassification cannot be run. Remove 'bat' from classSelection/classSelection.mtr, ",
+    "or reload a complete extract."
+  )
+}
 ```
 
 ***
