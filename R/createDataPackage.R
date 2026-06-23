@@ -67,7 +67,7 @@
 #' \describe{
 #'   \item{echoData}{Filtered echo data.}
 #'   \item{protocolData}{Filtered protocol data (columns defined by MR1 standard).}
-#'   \item{blindTimesData}{Filtered blind times data.}
+#'   \item{visibilityData}{Filtered blind times data.}
 #'   \item{sunriseSunsetData}{Filtered sunrise/sunset data (columns defined by MR1 standard).}
 #'   \item{radarSiteData}{Radar and site metadata, with `targetTimeZone` added.}
 #'   \item{filterParameters}{Named list of the filter settings applied.}
@@ -97,7 +97,7 @@
 #' dataPackage = createDataPackage(
 #'   echoData           = dbData$echoData,
 #'   protocolData       = dbData$protocolData,
-#'   blindTimesData     = cManualBlindTimes,
+#'   visibilityData     = dbData$visibilityData,
 #'   sunriseSunsetData  = dbData$sunriseSunset,
 #'   radarSiteData      = dbData$siteData,
 #'   dbName             = dbName,
@@ -110,7 +110,7 @@
 #' }
 createDataPackage = function(echoData,
                              protocolData,
-                             blindTimesData,
+                             visibilityData,
                              sunriseSunsetData,
                              radarSiteData,
                              manualBlindTimes = NULL,
@@ -127,9 +127,68 @@ createDataPackage = function(echoData,
                              tagOutputFile = c(NULL, NULL),
                              saveCSV = TRUE,
                              saveAsRDS = FALSE) {
+  # Input validation
+  # ============================================================================
+  if (!is.data.frame(echoData))
+    stop("'echoData' must be a data frame.")
+  if (!is.data.frame(protocolData))
+    stop("'protocolData' must be a data frame.")
+  if (!is.null(visibilityData) && !is.data.frame(blindTimesData))
+    stop("'visibilityData' must be a data frame or NULL.")
+  if (!is.data.frame(sunriseSunsetData))
+    stop("'sunriseSunsetData' must be a data frame.")
+  if (!is.data.frame(radarSiteData))
+    stop("'radarSiteData' must be a data frame.")
+  if (!is.null(manualBlindTimes) && !is.data.frame(manualBlindTimes))
+    stop("'manualBlindTimes' must be a data frame or NULL.")
+  if (!is.null(dbName) && (!is.character(dbName) || length(dbName) != 1))
+    stop("'dbName' must be a single character string or NULL.")
+  if (!is.null(pulseTypeSelection)) {
+    if (!is.character(pulseTypeSelection) || !all(pulseTypeSelection %in% c("S", "M", "L")))
+      stop("'pulseTypeSelection' must be a character vector with values in c('S', 'M', 'L'), or NULL.")
+  }
+  if (!is.null(rotationSelection)) {
+    if (!is.numeric(rotationSelection) || !all(rotationSelection %in% c(0, 1)))
+      stop("'rotationSelection' must be a numeric vector with values in c(0, 1), or NULL.")
+  }
+  if (is.null(timeRangeTargetTZ))
+    stop("'timeRangeTargetTZ' must be provided (character vector of length 2, or POSIXct/Date).")
+  if (!inherits(timeRangeTargetTZ, c("Date", "POSIXt")) &&
+      (!is.character(timeRangeTargetTZ) || length(timeRangeTargetTZ) != 2))
+    stop("'timeRangeTargetTZ' must be a character vector of length 2 (format '%Y-%m-%d %H:%M'), or a POSIXct/Date vector of length 2.")
+  if (!is.character(targetTimeZone) || length(targetTimeZone) != 1 ||
+      !targetTimeZone %in% OlsonNames())
+    stop("'targetTimeZone' must be a single valid time zone string (see OlsonNames()).")
+  if (!is.null(classSelection) && !is.character(classSelection))
+    stop("'classSelection' must be a character vector or NULL.")
+  if (!is.null(classProbCutOff) &&
+      (!is.numeric(classProbCutOff) || length(classProbCutOff) != 1 ||
+       classProbCutOff < 0 || classProbCutOff > 1))
+    stop("'classProbCutOff' must be a single numeric value between 0 and 1, or NULL.")
+  if (!is.null(altitudeRange_AGL)) {
+    if (!is.numeric(altitudeRange_AGL) || length(altitudeRange_AGL) != 2)
+      stop("'altitudeRange_AGL' must be a numeric vector of length 2, or NULL.")
+    if (altitudeRange_AGL[1] > altitudeRange_AGL[2])
+      stop("'altitudeRange_AGL[1]' (start) must be <= 'altitudeRange_AGL[2]' (end).")
+  }
+  if (!is.logical(echoValidator) || length(echoValidator) != 1)
+    stop("'echoValidator' must be a single logical value (TRUE or FALSE).")
+  if (!is.null(outputDirPath)) {
+    if (!is.character(outputDirPath) || length(outputDirPath) != 1)
+      stop("'outputDirPath' must be a single character string or NULL.")
+    if (!dir.exists(outputDirPath))
+      stop(paste0("'outputDirPath' does not exist: ", outputDirPath))
+  }
+  if (length(tagOutputFile) != 2)
+    stop("'tagOutputFile' must be a vector of length 2, e.g. c('prefix', 'suffix') or c(NULL, NULL).")
+  if (!is.logical(saveCSV) || length(saveCSV) != 1)
+    stop("'saveCSV' must be a single logical value (TRUE or FALSE).")
+  if (!is.logical(saveAsRDS) || length(saveAsRDS) != 1)
+    stop("'saveAsRDS' must be a single logical value (TRUE or FALSE).")
+
   # set the time window
   # ============================================================================
-  if (!inherits(timeRangeTargetTZ, "Date") | !inherits(timeRangeTargetTZ, "POSIXt")) {
+  if (!inherits(timeRangeTargetTZ, "Date") && !inherits(timeRangeTargetTZ, "POSIXt")) {
     timeRangeTargetTZ = as.POSIXct(timeRangeTargetTZ, tz = targetTimeZone)
   }
   startTime = timeRangeTargetTZ[1]
@@ -207,7 +266,7 @@ createDataPackage = function(echoData,
       "char"
     ),
     "description" = c(
-      "Incremental ID of measurement periods - linked to EchoData and BlindTimes.",
+      "Incremental ID of measurement periods - linked to EchoData and visibilityData.",
       "Site ID - linked to the site & radar data.",
       "Timestamp upon the start of the measurement period. TimeZone as given in DB",
       "Timestamp upon the start of the measurement period. TimeZone defined by the user, since 2020 usually UTC",
@@ -339,13 +398,13 @@ createDataPackage = function(echoData,
   )
 
 
-  # Filter blindTimes data
+  # Filter visibilityData data
   # ============================================================================
   # restrict the time range
-  if (!any(names(blindTimesData) == "type")) warning("The 'type' column is missing in the dataset 'blindTimesData'. Use the output of the function 'mergeVisibilityAnd ManualBlindTime'.")
-  TimesInd = (blindTimesData$start_targetTZ < stopTime) &
-    (blindTimesData$stop_targetTZ > startTime)
-  blindTimesDataSubset = blindTimesData[TimesInd, ]
+  if (!any(names(visibilityData) == "type")) warning("The 'type' column is missing in the dataset 'visibilityData'. Use the output of the function 'mergeVisibilityAnd ManualBlindTime'.")
+  TimesInd = (visibilityData$start_targetTZ < stopTime) &
+    (visibilityData$stop_targetTZ > startTime)
+  blindTimesDataSubset = visibilityData[TimesInd, ]
 
   # meta data
   # ============================================================================
@@ -459,7 +518,7 @@ createDataPackage = function(echoData,
   ls_metaData <- list(
     echoData          = metaEcho,
     protocolData      = metaProtocol,
-    blindTimesData    = metaBlindTimes,
+    visibilityData    = metaBlindTimes,
     sunriseSunsetData = metaSunriseSunset,
     radarSiteData     = metaRadarSiteData,
     filterParameters  = metaFilters,
@@ -472,7 +531,7 @@ createDataPackage = function(echoData,
   dataPackage = list(
     echoData           = echoDataSubset,
     protocolData       = protocolDataSubset,
-    blindTimesData     = blindTimesDataSubset,
+    visibilityData     = blindTimesDataSubset,
     sunriseSunsetData  = sunriseSunsetDataSubset,
     radarSiteData      = radarSiteData,
     filterParameters   = ls_filters,
