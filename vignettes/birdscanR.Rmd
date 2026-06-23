@@ -39,11 +39,25 @@ Then we set our input:
 # =============================================================================
 mainOutputDir = file.path(".", "results")
 
-# Set server and database settings
+# Set to TRUE to use the bundled example dataset and run this vignette with
+# the bundled .Rds file instead of a live database connection. 
 # =============================================================================
-dbServer = "MACHINE\\SERVERNAME" # Set the name of your SQL server
-dbName = "db_Name" # Set the name of your database
-dbDriverChar = "SQL Server" # Set either "SQL Server" or "PostgreSQL"
+useBundledExampleData = TRUE
+
+# If not using bundled example data, set parameters for the database connection
+# =============================================================================
+if (useBundledExampleData) {
+  dbName = "CH_Sempach_2024_SEP24_25"
+  dbData = readRDS(system.file(
+    "extdata",
+    paste0(dbName, "_DataExtract.rds"),
+    package = "birdscanR"
+  ))
+} else {
+  dbServer = "MACHINE\\SERVERNAME" # Set the name of your SQL server
+  dbName = "db_Name" # Set the name of your database
+  dbDriverChar = "SQL Server" # Set either "SQL Server" or "PostgreSQL"
+}
 
 # Set timezone used by the radar/database
 # Use "Etc/GMT0" (UTC) as radarTimeZone for birdscan v1.6
@@ -95,8 +109,14 @@ classProbCutoff = NULL
 # Set the altitude range (in meters agl)
 altitudeRange = c(50, 1000)
 
-# Set the time range for echodata (in the targetTimeZone)
-# use format "yyyy-MM-dd hh:mm"
+# Set the time range for echodata (in the targetTimeZone); use format "yyyy-MM-dd hh:mm".
+# Alternatively, you can clamp to the time rang ein the example dataset. 
+# if (useBundledExampleData) {
+#   timeRangeData = c(
+#     format(min(dbData$protocolData$startTime_targetTZ, na.rm = TRUE), "%Y-%m-%d %H:%M"),
+#     format(max(dbData$protocolData$stopTime_targetTZ, na.rm = TRUE), "%Y-%m-%d %H:%M")
+#   )
+# }
 timeRangeData = c("2021-09-24 00:00", "2025-09-25 23:59")
 
 # Set whether to get the manual blind time from:
