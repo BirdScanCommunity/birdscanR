@@ -4,7 +4,7 @@
 #' a standardized MR1 data package, applying filters on time range, pulse type,
 #' rotation, echo class, altitude, and class probability. The output follows the
 #' MR1 Data Standard (one package per campaign): `echoData`, `protocolData`,
-#' `blindTimesData`, `sunriseSunsetData`, `siteData`, `filterParameters`,
+#' `blindTimesData`, `sunriseSunset`, `siteData`, `filterParameters`,
 #' and `metaData`. Filtering is applied via [filterEchoData()] and
 #' [filterProtocolData()]. When `outputDirPath` is provided, the package is
 #' saved by default as standardized CSV and YAML files suitable for Zenodo
@@ -24,8 +24,6 @@
 #' @param timeRangeTargetTZ Character vector of length 2, with start and end of
 #' time range, formatted as `"%Y-%m-%d %H:%M"`. Echoes outside the time range
 #' will be excluded.
-#' @param targetTimeZone String specifying the target time zone.
-#' Default is `"Etc/GMT0"`.
 #' @param classSelection character string vector with the classes that should be
 #' included. Default is `NULL`: all classes are included.
 #' @param classProbCutOff numeric cutoff value for class probabilities. Echoes
@@ -52,7 +50,7 @@
 #'   \item{echoData}{Filtered echo data.}
 #'   \item{protocolData}{Filtered protocol data (columns defined by MR1 standard).}
 #'   \item{visibilityData}{Filtered blind times data.}
-#'   \item{sunriseSunsetData}{Filtered sunrise/sunset data (columns defined by MR1 standard).}
+#'   \item{sunriseSunset}{Filtered sunrise/sunset data (columns defined by MR1 standard).}
 #'   \item{siteData}{Radar and site metadata, with `targetTimeZone` added.}
 #'   \item{filterParameters}{Named list of the filter settings applied.}
 #'   \item{metaData}{Named list with per-table column metadata (name, type,
@@ -105,7 +103,7 @@ createDataPackage = function(dbExtract,
 # ==============================================================================
   requiredDataFrames <- c(
     "echoData", "protocolData", "visibilityData",
-    "sunriseSunsetData", "siteData", "TimeZone"
+    "sunriseSunset", "siteData", "TimeZone"
   )
   missingDataFrames <- setdiff(requiredDataFrames, names(dbExtract))
   if (length(missingDataFrames) > 0) {
@@ -119,7 +117,7 @@ createDataPackage = function(dbExtract,
   echoData <- dbExtract$echoData
   protocolData <- dbExtract$protocolData
   visibilityData <- dbExtract$visibilityData
-  sunriseSunsetData <- dbExtract$sunriseSunsetData
+  sunriseSunset <- dbExtract$sunriseSunset
   siteData <- dbExtract$siteData
   timeZone <- dbExtract$TimeZone
 
@@ -131,11 +129,11 @@ createDataPackage = function(dbExtract,
   if (!is.data.frame(protocolData)) {
     stop("'protocolData' must be a data frame.")
   }
-  if (!is.null(visibilityData) && !is.data.frame(blindTimesData)) {
+  if (!is.null(visibilityData) && !is.data.frame(visibilityData)) {
     stop("'visibilityData' must be a data frame or NULL.")
   }
-  if (!is.data.frame(sunriseSunsetData)) {
-    stop("'sunriseSunsetData' must be a data frame.")
+  if (!is.data.frame(sunriseSunset)) {
+    stop("'sunriseSunset' must be a data frame.")
   if (!is.data.frame(siteData))
     stop("'siteData' must be a data frame.")
   if (!is.data.frame(timeZone))
@@ -156,17 +154,14 @@ createDataPackage = function(dbExtract,
       stop("'rotationSelection' must be a numeric vector with values in c(0, 1), or NULL.")
     }
   }
-  if (is.null(timeRangeTargetTZ)) {
-    stop("'timeRangeTargetTZ' must be provided (character vector of length 2, or POSIXct/Date).")
-  }
-  if (!inherits(timeRangeTargetTZ, c("Date", "POSIXt")) &&
-    (!is.character(timeRangeTargetTZ) || length(timeRangeTargetTZ) != 2)) {
-    stop("'timeRangeTargetTZ' must be a character vector of length 2 (format '%Y-%m-%d %H:%M'), or a POSIXct/Date vector of length 2.")
-  }
-  if (!is.character(targetTimeZone) || length(targetTimeZone) != 1 ||
-    !targetTimeZone %in% OlsonNames()) {
-    stop("'targetTimeZone' must be a single valid time zone string (see OlsonNames()).")
-  }
+  # if (!inherits(timeRangeTargetTZ, c("Date", "POSIXt")) &&
+  #   (!is.character(timeRangeTargetTZ) || length(timeRangeTargetTZ) != 2)) {
+  #   stop("'timeRangeTargetTZ' must be a character vector of length 2 (format '%Y-%m-%d %H:%M'), or a POSIXct/Date vector of length 2.")
+  # }
+  # if (!is.character(targetTimeZone) || length(targetTimeZone) != 1 ||
+  #   !targetTimeZone %in% OlsonNames()) {
+  #   stop("'targetTimeZone' must be a single valid time zone string (see OlsonNames()).")
+  # }
   if (!is.null(classSelection) && !is.character(classSelection)) {
     stop("'classSelection' must be a character vector or NULL.")
   }
@@ -196,20 +191,22 @@ createDataPackage = function(dbExtract,
   }
   # if (length(tagOutputFile) != 2)
   #   stop("'tagOutputFile' must be a vector of length 2, e.g. c('prefix', 'suffix') or c(NULL, NULL).")
-  if (!is.logical(saveCSV) || length(saveCSV) != 1)
-    stop("'saveCSV' must be a single logical value (TRUE or FALSE).")
-  }
   if (!is.logical(saveAsRDS) || length(saveAsRDS) != 1) {
     stop("'saveAsRDS' must be a single logical value (TRUE or FALSE).")
   }
 
 # Set the time window to use for the data package
 # ==============================================================================
-  if (!inherits(timeRangeTargetTZ, "Date") && !inherits(timeRangeTargetTZ, "POSIXt")) {
-    timeRangeTargetTZ = as.POSIXct(timeRangeTargetTZ, tz = timeZone$targetTimeZone)
+  if (is.null(timeRangeTargetTZ)) {
+    startTime = min(echoData$time_stamp_targetTZ, na.rm = TRUE)
+    stopTime  = max(echoData$time_stamp_targetTZ, na.rm = TRUE)
+  } else {
+    if (!inherits(timeRangeTargetTZ, "Date") && !inherits(timeRangeTargetTZ, "POSIXt")) {
+      timeRangeTargetTZ = as.POSIXct(timeRangeTargetTZ, tz = timeZone$targetTimeZone)
+    }
+    startTime = timeRangeTargetTZ[1]
+    stopTime  = timeRangeTargetTZ[2]
   }
-  startTime = timeRangeTargetTZ[1]
-  stopTime = timeRangeTargetTZ[2]
 
 # Prepare the metadata
 # ==============================================================================
@@ -437,7 +434,7 @@ createDataPackage = function(dbExtract,
     echoData          = metaEcho,
     protocolData      = metaProtocol,
     visibilityData    = metaBlindTimes,
-    sunriseSunsetData = metaSunriseSunset,
+    sunriseSunset = metaSunriseSunset,
     siteData          = metasiteData,
     filterParameters  = metaDataPackageFilters,
     database          = dbName, # at the moment, only keep the name of the database, but additional information could be used: version of BirdscanR-package, name of the person who extracted the data, etc.
@@ -492,10 +489,10 @@ createDataPackage = function(dbExtract,
 
   # Filter twilight data
   # ============================================================================
-  timesInd = (sunriseSunsetData$sunStart < stopTime) &
-    (sunriseSunsetData$sunStop > startTime)
-  sunriseSunsetDataSubset = sunriseSunsetData[timesInd, ]
-  sunriseSunsetDataSubset = sunriseSunsetDataSubset[, metaSunriseSunset$colname]
+  timesInd = (sunriseSunset$sunStart < stopTime) &
+    (sunriseSunset$sunStop > startTime)
+  sunriseSunsetSubset = sunriseSunset[timesInd, ]
+  sunriseSunsetSubset = sunriseSunsetSubset[, metaSunriseSunset$colname]
 
   # Filter echo data
   # ============================================================================
@@ -516,7 +513,7 @@ createDataPackage = function(dbExtract,
     echoData           = echoDataSubset,
     protocolData       = protocolDataSubset,
     visibilityData     = blindTimesDataSubset,
-    sunriseSunsetData  = sunriseSunsetDataSubset,
+    sunriseSunset  = sunriseSunsetSubset,
     siteData           = siteData,
     filterParameters   = ls_filters,
     metaData           = ls_metaData
