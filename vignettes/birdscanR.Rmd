@@ -143,7 +143,13 @@ altitudeRange.mtr = c(50, 500)
 altitudeBinSize = 50
 
 # time range for timeBins (targetTimeZone) - format: "yyyy-MM-dd hh:mm"
-timeRangesTimeBins = c("2021-01-15 00:00", "2021-01-31 00:00")
+if (useBundledExampleData) {
+  # Keep MTR time bins within the temporal extent of the loaded dataset.
+  # This avoids missing day/night labels during time-bin construction.
+  timeRangesTimeBins = timeRangeData
+} else { # or set time bins manually
+  timeRangesTimeBins = c("2024-09-24 00:00", "2025-09-25 23:59")
+}
 
 # timeBin size in seconds
 timeBinduration_sec = 3600
