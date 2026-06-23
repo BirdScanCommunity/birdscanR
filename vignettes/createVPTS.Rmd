@@ -5,7 +5,7 @@ output: rmarkdown::html_vignette
 description: > 
   Test functionality and interoperability for createVPTS
 vignette: >
-  %\VignetteIndexEntry{Introduction to birdscanR}
+  %\VignetteIndexEntry{Guide to create VPTS csv output files in line with the ALOFT data standard, described [here](https://aloftdata.eu/vpts-csv/)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,9 +15,9 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ***
 # Summary
 
-This vignette provides an example of the basic workflow for creatVPTS using:
+This vignette provides an example of the basic workflow for createVPTS:
 
-1.    Create a VPTS using the BirdScan MR1 exemple data and create a CSV file,
+1.    Create a VPTS using the BirdScan MR1 example data and create a CSV file,
 
 2.    Read and convert the CSV file to VPTS,
 
@@ -27,6 +27,8 @@ This vignette provides an example of the basic workflow for creatVPTS using:
 # Before we get started
 
 ```{r}
+install.packages("bioRad")
+install.packages("birdscanR")
 library(birdscanR)
 library(bioRad)
 ```
@@ -90,7 +92,7 @@ vptsDir = createVPTS(
 
 ```{r}
 vpts = read.csv(file.path(vptsDir, "200_vpts_20240924.csv"))
-vpts = as.vpts(vpts) # requires loading "bioRad"
+vpts = as.vpts(vpts) 
 ```
 
 ***
@@ -98,7 +100,7 @@ vpts = as.vpts(vpts) # requires loading "bioRad"
 
 Visualise
 ```{r}
-plot(vpts) # requires loading "bioRad"
+plot(vpts)
 ```
 
 

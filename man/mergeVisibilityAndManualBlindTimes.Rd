@@ -43,14 +43,17 @@ blind times with type “protocolChange”.
 # ===========================================================================
 dbData = readRDS(system.file("extdata",
   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
-  package = "birdscanR"))
+  package = "birdscanR"
+))
 
 # Get manual blind times
 # ===========================================================================
 data(manualBlindTimes)
 tmpFile = tempfile(fileext = ".csv")
-write.table(manualBlindTimes, file = tmpFile, sep = ",",
-            row.names = FALSE, col.names = FALSE)
+write.table(manualBlindTimes,
+  file = tmpFile, sep = ",",
+  row.names = FALSE, col.names = FALSE
+)
 cManualBlindTimes = loadManualBlindTimes(
   filePath     = tmpFile,
   blindTimesTZ = "Etc/GMT0",
