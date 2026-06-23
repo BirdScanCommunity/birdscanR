@@ -42,6 +42,7 @@ Depends:
 Imports: 
   DBI,
   dplyr,
+  frictionless,
   lifecycle,
   ggplot2,
   grDevices,

@@ -121,7 +121,7 @@ createDataPackage = function(dbExtract,
   visibilityData <- dbExtract$visibilityData
   sunriseSunsetData <- dbExtract$sunriseSunsetData
   siteData <- dbExtract$siteData
-  timeZone <- dbExtract$TimeZone 
+  timeZone <- dbExtract$TimeZone
 
 # Input validation
 # ==============================================================================
@@ -478,7 +478,7 @@ createDataPackage = function(dbExtract,
   )
   radarCols <- c(radarCols, pulse_cols[[pulseTypeSelection]])
   siteData <- siteData[, c(siteCols, radarCols)]
-  
+
   # Filter visibilityData data
   # ============================================================================
   if (!any(names(visibilityData) == "type")) warning("The 'type' column is missing in the dataset 'visibilityData'. Use the output of the function 'mergeVisibilityAnd ManualBlindTime'.")
@@ -533,20 +533,26 @@ createDataPackage = function(dbExtract,
     # ==========================================================================
     if (!saveAsRDS){
       dir.create(file.path(outputDirPath, packageName), showWarnings = FALSE)
-
-      # Loop through each element in the list
-      for (name in names(dataPackage)) {
-        if (name %in% c("filterParameters", "metaData")) {
-          # Save as YAML for list elements
-          file_path <- file.path(csvDirPath, paste0(name, ".yaml"))
-          yaml::write_yaml(dataPackage[[name]], file = file_path)
-        } else {
-          # Save as CSV for table elements
-          file_path <- file.path(csvDirPath, paste0(name, ".csv"))
-          utils::write.csv(dataPackage[[name]], file = file_path, row.names = FALSE)
-        }
+      outputPackage = frictionless::create_package()
+      for (cResource in names(dataPackage)) {
+        outputPackage = frictionless::add_resource(outputPackage,
+                                                   data = dataPackage[cResource],
+                                                   resource_name = "echodata")
+      }
+      frictionless::write_package(outputPackage,
+                                  directory = file.path(outputDirPath, packageName),
+                                  compress  = TRUE)
     }
-    
+
+    # if (name %in% c("filterParameters", "metaData")) {
+    #   # Save as YAML for list elements
+    #   file_path <- file.path(csvDirPath, paste0(name, ".yaml"))
+    #   yaml::write_yaml(dataPackage[[name]], file = file_path)
+    # } else {
+    #   # Save as CSV for table elements
+    #   file_path <- file.path(csvDirPath, paste0(name, ".csv"))
+    #   utils::write.csv(dataPackage[[name]], file = file_path, row.names = FALSE)
+    # }
 
     # Save RDS (optional)
     # =========================================================================
@@ -555,7 +561,7 @@ createDataPackage = function(dbExtract,
         fileName = paste0(packageName, ".rds")
         base::saveRDS(dataPackage, file = file.path(outputDirPath, fileName))
       }
-      
+
     }
   } # end of if (!is.null(outputDirPath) && length(outputDirPath) == 1)
 
