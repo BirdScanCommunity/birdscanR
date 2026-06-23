@@ -38,6 +38,7 @@ Then we set our input:
 # Set main output directory
 # =============================================================================
 mainOutputDir = file.path(".", "results")
+dir.create(mainOutputDir, recursive = TRUE, showWarnings = FALSE)
 
 # Set to TRUE to use the bundled example dataset and run this vignette with
 # the bundled .Rds file instead of a live database connection. 
@@ -76,7 +77,7 @@ listOfRfFeaturesToExtract = NULL
 
 # Geographic location of the radar measurements - c(Latitude, Longitude)
 # =============================================================================
-f (useBundledExampleData) {
+if (useBundledExampleData) {
   siteLocation = c(dbData$siteData$latitude, dbData$siteData$longitude)
 } else { # or set them manually
   siteLocation = c(47.12764, 8.192569)
