@@ -185,5 +185,5 @@ savePlotToFile = function(plot = NULL,
 #               plotHeight_mm = 150,
 #               timeRange = c(timeRange[[i]][1], timeRange[[i]][2]),
 #               classSelection = plotClasses,
-#               altitudeRange = c(min(altitudeRange_AGL),
-#                                 max(altitudeRange_AGL)))
+#               altitudeRange = c(min(altitudeRange),
+#                                 max(altitudeRange)))

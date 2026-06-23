@@ -24,7 +24,7 @@
 #' included.
 #' @param classProbCutOff numeric cutoff value for class probabilities. Echoes
 #' with a lower class probability will be excluded.
-#' @param altitudeRange_AGL numeric vector of length 2 with start and end of the
+#' @param altitudeRange numeric vector of length 2 with start and end of the
 #' altitude range. Echoes outside the altitude range will be excluded.
 #' @param manualBlindTimes dataframe with the manual blind times created by the
 #' function [loadManualBlindTimes()].
@@ -71,7 +71,7 @@
 #'   targetTimeZone     = targetTimeZone,
 #'   classSelection     = classSelection,
 #'   classProbCutOff    = classProbCutoff,
-#'   altitudeRange_AGL  = altitudeRange,
+#'   altitudeRange  = altitudeRange,
 #'   manualBlindTimes   = cManualBlindTimes,
 #'   echoValidator      = useEchoValidator
 #' )
@@ -85,7 +85,7 @@ filterData = function(echoData = NULL,
                       targetTimeZone = "Etc/GMT0",
                       classSelection = NULL,
                       classProbCutOff = NULL,
-                      altitudeRange_AGL = NULL,
+                      altitudeRange = NULL,
                       manualBlindTimes = NULL,
                       echoValidator = FALSE) {
   # Start filtering protocol data
@@ -113,7 +113,7 @@ filterData = function(echoData = NULL,
     protocolData = protocolDataSubset,
     classSelection = classSelection,
     classProbCutOff = classProbCutOff,
-    altitudeRange_AGL = altitudeRange_AGL,
+    altitudeRange = altitudeRange,
     manualBlindTimes = manualBlindTimes,
     echoValidator = echoValidator
   )

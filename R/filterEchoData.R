@@ -18,7 +18,7 @@
 #' be included.
 #' @param classProbCutOff numeric cutoff value for class probabilities. Echoes
 #' with a lower class probability will be excluded.
-#' @param altitudeRange_AGL numeric vector of length 2 with start and end of the
+#' @param altitudeRange numeric vector of length 2 with start and end of the
 #' altitude range. Echoes outside the altitude range will be excluded.
 #' @param manualBlindTimes dataframe with the manual blind times created by the
 #' function [loadManualBlindTimes()].
@@ -61,7 +61,7 @@
 #'   protocolData      = dbData$protocolData,
 #'   classSelection    = classSelection,
 #'   classProbCutOff   = classProbCutoff,
-#'   altitudeRange_AGL = altitudeRange,
+#'   altitudeRange = altitudeRange,
 #'   manualBlindTimes  = cManualBlindTimes,
 #'   echoValidator     = useEchoValidator
 #' )
@@ -73,7 +73,7 @@ filterEchoData = function(echoData = NULL,
                           protocolData = NULL,
                           classSelection = NULL,
                           classProbCutOff = NULL,
-                          altitudeRange_AGL = NULL,
+                          altitudeRange = NULL,
                           manualBlindTimes = NULL,
                           echoValidator = FALSE) {
   # Check whether any input data is provided
@@ -151,11 +151,11 @@ filterEchoData = function(echoData = NULL,
 
   # Filter by altitudeRange
   # =============================================================================
-  if ((!is.null(altitudeRange_AGL)) &&
-    (length(altitudeRange_AGL) == 2) &&
-    (is.numeric(altitudeRange_AGL))) {
-    echoData = echoData[(echoData$feature1.altitude_AGL > altitudeRange_AGL[1]) &
-      (echoData$feature1.altitude_AGL < altitudeRange_AGL[2]), ]
+  if ((!is.null(altitudeRange)) &&
+    (length(altitudeRange) == 2) &&
+    (is.numeric(altitudeRange))) {
+    echoData = echoData[(echoData$feature1.altitude_AGL > altitudeRange[1]) &
+      (echoData$feature1.altitude_AGL < altitudeRange[2]), ]
   }
   if (nrow(echoData) == 0) {
     stop(paste0("No echo remaining after altitudeRange filter."))
@@ -195,5 +195,4 @@ filterEchoData = function(echoData = NULL,
   return(echoData)
 }
 
-# filterProtocolData(data$protocolData, pulseTypeSelection, rotationSelection)
-# filterEchoData(echoData = data$echoData, timeRangeTargetTZ = timeRangeEchoData, protocolData = protocolDataSubset, classSelection = classSelection, classProbCutOff = classProbCutoff, altitudeRange_AGL = altitudeRange_AGL_25_5000, manualBlindTimes = manualBlindTimes, echoValidator = TRUE)
+

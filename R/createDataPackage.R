@@ -42,7 +42,7 @@
 #' @param classProbCutOff numeric cutoff value for class probabilities. Echoes
 #' with a lower class probability will be excluded. Default is `NULL`: no cutoff
 #' applied.
-#' @param altitudeRange_AGL numeric vector of length 2 with start and end of the
+#' @param altitudeRange numeric vector of length 2 with start and end of the
 #' altitude range in metres a.g.l. Echoes outside the altitude range will be
 #' excluded. Default is `NULL`: no altitude filtering applied.
 #' @param echoValidator logical. If set to `FALSE` (default), no additional
@@ -121,7 +121,7 @@ createDataPackage = function(echoData,
                              targetTimeZone = "Etc/GMT0",
                              classSelection = NULL,
                              classProbCutOff = NULL,
-                             altitudeRange_AGL = NULL,
+                             altitudeRange = NULL,
                              echoValidator = FALSE,
                              outputDirPath = NULL,
                              tagOutputFile = c(NULL, NULL),
@@ -165,11 +165,11 @@ createDataPackage = function(echoData,
       (!is.numeric(classProbCutOff) || length(classProbCutOff) != 1 ||
        classProbCutOff < 0 || classProbCutOff > 1))
     stop("'classProbCutOff' must be a single numeric value between 0 and 1, or NULL.")
-  if (!is.null(altitudeRange_AGL)) {
-    if (!is.numeric(altitudeRange_AGL) || length(altitudeRange_AGL) != 2)
-      stop("'altitudeRange_AGL' must be a numeric vector of length 2, or NULL.")
-    if (altitudeRange_AGL[1] > altitudeRange_AGL[2])
-      stop("'altitudeRange_AGL[1]' (start) must be <= 'altitudeRange_AGL[2]' (end).")
+  if (!is.null(altitudeRange)) {
+    if (!is.numeric(altitudeRange) || length(altitudeRange) != 2)
+      stop("'altitudeRange' must be a numeric vector of length 2, or NULL.")
+    if (altitudeRange[1] > altitudeRange[2])
+      stop("'altitudeRange[1]' (start) must be <= 'altitudeRange[2]' (end).")
   }
   if (!is.logical(echoValidator) || length(echoValidator) != 1)
     stop("'echoValidator' must be a single logical value (TRUE or FALSE).")
@@ -202,7 +202,7 @@ createDataPackage = function(echoData,
     rotationSelection    = rotationSelection,
     classSelection       = classSelection,
     classProbCutOff      = classProbCutOff,
-    altitudeRange_AGL    = altitudeRange_AGL,
+    altitudeRange    = altitudeRange,
     echoValidator        = echoValidator
   )
 
@@ -215,7 +215,7 @@ createDataPackage = function(echoData,
       "rotationSelection",
       "classSelection",
       "classProbCutOff",
-      "altitudeRange_AGL",
+      "altitudeRange",
       "echoValidator"
     ),
     "type" = c(
@@ -485,7 +485,7 @@ createDataPackage = function(echoData,
     protocolData = protocolDataSubset,
     classSelection = classSelection,
     classProbCutOff = classProbCutOff,
-    altitudeRange_AGL = altitudeRange_AGL,
+    altitudeRange = altitudeRange,
     manualBlindTimes = blindTimesDataSubset, # blindTimesDataSubset[which(blindTimesDataSubset$type != "protocolChange"), ],
     echoValidator = echoValidator
   )
@@ -569,9 +569,9 @@ createDataPackage = function(echoData,
 
     # altitude range for fileName
     # =========================================================================
-    if (!is.null(altitudeRange_AGL) && length(altitudeRange_AGL) == 2) {
-      altitudeRangeStart = altitudeRange_AGL[1]
-      altitudeRangeStop = paste0(altitudeRange_AGL[2], "m")
+    if (!is.null(altitudeRange) && length(altitudeRange) == 2) {
+      altitudeRangeStart = altitudeRange[1]
+      altitudeRangeStop = paste0(altitudeRange[2], "m")
       altitude = paste("alt", altitudeRangeStart, "to", altitudeRangeStop, sep = "")
       fileName = paste(fileName, altitude, sep = "_")
     }
