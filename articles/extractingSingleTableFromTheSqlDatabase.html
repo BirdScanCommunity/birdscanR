@@ -38,7 +38,8 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/extractingSingleTableFromTheSqlDatabase.html">Guide to extracting specific tables from a Birdscan MR1 SQL database</a></li>
+<li><a class="dropdown-item" href="../articles/createVPTS.html">create and read VPTS</a></li>
+    <li><a class="dropdown-item" href="../articles/extractingSingleTableFromTheSqlDatabase.html">Guide to extracting specific tables from a Birdscan MR1 SQL database</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -99,7 +100,7 @@ table</p></li>
 table</p></li>
 <li><p><code><a href="../reference/getSiteTable.html">getSiteTable()</a></code>: extract the site table</p></li>
 <li><p><code><a href="../reference/getTimeBinsTable.html">getTimeBinsTable()</a></code>: extract the time bins table
-(note: These are not the time bins used in <code><a href="../reference/computeMTR.html">computeMTR()</a></code> and
+(note: These are not the time bins used in <code>computeMTR</code> and
 <code><a href="../reference/computeDensity.html">computeDensity()</a></code>)</p></li>
 <li><p><code><a href="../reference/getVisibilityTable.html">getVisibilityTable()</a></code>: extract the visibility
 table</p></li>
@@ -116,7 +117,7 @@ table</p></li>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Set main output directory</span></span>
 <span><span class="co"># =============================================================================</span></span>
-<span><span class="va">mainOutputDir</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"."</span>, <span class="st">"results"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">mainOutputDir</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Open the connection to the SQL database:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Set server and database settings</span></span>

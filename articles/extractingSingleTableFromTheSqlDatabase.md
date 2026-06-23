@@ -39,8 +39,7 @@ to extract these different tables:
 
 - [`getTimeBinsTable()`](https://birdscancommunity.github.io/birdscanR/reference/getTimeBinsTable.md):
   extract the time bins table (note: These are not the time bins used in
-  [`computeMTR()`](https://birdscancommunity.github.io/birdscanR/reference/computeMTR.md)
-  and
+  `computeMTR` and
   [`computeDensity()`](https://birdscancommunity.github.io/birdscanR/reference/computeDensity.md))
 
 - [`getVisibilityTable()`](https://birdscancommunity.github.io/birdscanR/reference/getVisibilityTable.md):
@@ -63,7 +62,7 @@ Then we set our inputs:
 
 # Set main output directory
 # =============================================================================
-mainOutputDir = file.path(".", "results")
+mainOutputDir = tempdir()
 ```
 
 Open the connection to the SQL database:

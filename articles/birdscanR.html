@@ -38,7 +38,8 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/extractingSingleTableFromTheSqlDatabase.html">Guide to extracting specific tables from a Birdscan MR1 SQL database</a></li>
+<li><a class="dropdown-item" href="../articles/createVPTS.html">create and read VPTS</a></li>
+    <li><a class="dropdown-item" href="../articles/extractingSingleTableFromTheSqlDatabase.html">Guide to extracting specific tables from a Birdscan MR1 SQL database</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -105,7 +106,7 @@ preferences.</p></li>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Set main output directory</span></span>
 <span><span class="co"># =============================================================================</span></span>
-<span><span class="va">mainOutputDir</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"."</span>, <span class="st">"results"</span><span class="op">)</span></span>
+<span><span class="va">mainOutputDir</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Set server and database settings</span></span>
 <span><span class="co"># =============================================================================</span></span>
@@ -486,7 +487,7 @@ plot of the MTR values (one per altitude bin in the MTR data):</p>
 <span></span>
 <span><span class="co"># Set output path for plots</span></span>
 <span><span class="co"># ===========================================================================</span></span>
-<span><span class="va">outputDir.plots</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">mainOutputDir</span>, <span class="st">"Plots"</span><span class="op">)</span></span>
+<span><span class="va">outputDir.plots</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">mainOutputDir</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Set the class of which the MTR data should be plotted.</span></span>
 <span><span class="co"># If not set or set to “allClasses”, MTR of all classes will be plotted.</span></span>

@@ -67,7 +67,8 @@ times will be computed."></head><body>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/extractingSingleTableFromTheSqlDatabase.html">Guide to extracting specific tables from a Birdscan MR1 SQL database</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/createVPTS.html">create and read VPTS</a></li>
+    <li><a class="dropdown-item" href="../articles/extractingSingleTableFromTheSqlDatabase.html">Guide to extracting specific tables from a Birdscan MR1 SQL database</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -162,8 +163,10 @@ file</p></dd>
 <span class="r-in"><span><span class="co"># Save example manual blind times to a temporary file</span></span></span>
 <span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>
 <span class="r-in"><span><span class="va">tmpFile</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".csv"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.table</a></span><span class="op">(</span><span class="va">manualBlindTimes</span>, file <span class="op">=</span> <span class="va">tmpFile</span>, sep <span class="op">=</span> <span class="st">","</span>,</span></span>
-<span class="r-in"><span>            row.names <span class="op">=</span> <span class="cn">FALSE</span>, col.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.table</a></span><span class="op">(</span><span class="va">manualBlindTimes</span>,</span></span>
+<span class="r-in"><span>  file <span class="op">=</span> <span class="va">tmpFile</span>, sep <span class="op">=</span> <span class="st">","</span>,</span></span>
+<span class="r-in"><span>  row.names <span class="op">=</span> <span class="cn">FALSE</span>, col.names <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Read the manual blind times from file</span></span></span>
 <span class="r-in"><span><span class="co"># ===========================================================================</span></span></span>

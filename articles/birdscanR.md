@@ -41,7 +41,7 @@ Then we set our input:
 
 # Set main output directory
 # =============================================================================
-mainOutputDir = file.path(".", "results")
+mainOutputDir = tempdir()
 
 # Set server and database settings
 # =============================================================================
@@ -439,7 +439,7 @@ timeRangePlot = createTimeRangeForPlot(timeRangeData[1], timeRangeData[2], 7)
 
 # Set output path for plots
 # ===========================================================================
-outputDir.plots = file.path(mainOutputDir, "Plots")
+outputDir.plots = file.path(mainOutputDir)
 
 # Set the class of which the MTR data should be plotted.
 # If not set or set to “allClasses”, MTR of all classes will be plotted.

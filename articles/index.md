@@ -9,6 +9,11 @@
   from data stored in an SQL Birdscan database? This vignette describes
   the main workflow to do so.
 
+- [create and read
+  VPTS](https://birdscancommunity.github.io/birdscanR/articles/createVPTS.md):
+
+  Test functionality and interoperability for createVPTS
+
 - [Guide to extracting specific tables from a Birdscan MR1 SQL
   database](https://birdscancommunity.github.io/birdscanR/articles/extractingSingleTableFromTheSqlDatabase.md):
 

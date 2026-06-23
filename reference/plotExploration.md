@@ -105,7 +105,8 @@ Fabian Hertner, Birgen Haest
 # ===========================================================================
 dbData = readRDS(system.file("extdata",
   "CH_Sempach_2024_SEP24_25_DataExtract.rds",
-  package = "birdscanR"))
+  package = "birdscanR"
+))
 
 # Set manual blind times to NULL (no manual blind times)
 # ===========================================================================
@@ -126,7 +127,7 @@ plotExploration(
   protocolData     = dbData$protocolData,
   sunriseSunset    = dbData$sunriseSunset,
   maxAltitude      = -1,
-  filePath         = "./"
+  filePath         = tempdir()
 )
 # }
 ```
