@@ -93,7 +93,7 @@ vptsDir = createVPTS(
 
 ```{r, eval = hasBioRad}
 vpts = read.csv(file.path(vptsDir, "200_vpts_20240924.csv"))
-vpts = as.vpts(vpts) 
+vpts = as.vpts(vpts)
 ```
 
 ***
