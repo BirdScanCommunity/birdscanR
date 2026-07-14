@@ -1607,7 +1607,7 @@ computeMTR = function(dbName,
   # Add weighted summary statistics of direction and speed, for all classes
   # together as well as for each class separately
   # =============================================================================
-  if (addFeaturesSummary){
+  if (addFeaturesSummary) {
     featureOutputLabels = c(
       "feature2.azimuth" = "Direction",
       "feature37.speed" = "Speed"
@@ -1620,7 +1620,7 @@ computeMTR = function(dbName,
     for (cFeature in names(featureOutputLabels)) {
       cOutputLabel = featureOutputLabels[[cFeature]]
       mtr = suppressMessages(addFeatSummary(
-       mtrDensVPTS = mtr,
+        mtrDensVPTS = mtr,
         echoData = echoes,
         class = "allClasses",
         inputVariable = cFeature,

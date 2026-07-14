@@ -90,11 +90,11 @@
 #'
 # =============================================================================
 addFeatSummary = function(mtrDensVPTS,
-                           echoData,
-                           class         = "allClasses",
-                           inputVariable,
-                           outputLabel   = NULL,
-                           nCores        = 2) {
+                          echoData,
+                          class = "allClasses",
+                          inputVariable,
+                          outputLabel = NULL,
+                          nCores = 2) {
   # nCores is retained for backward compatibility and is silently ignored:
   # the vectorised implementation does not create a parallel cluster.
 
@@ -123,19 +123,19 @@ addFeatSummary = function(mtrDensVPTS,
   # =============================================================================
   if (!is.null(outputLabel)) {
     labelLower = paste0(tolower(substring(outputLabel, 1, 1)), substring(outputLabel, 2))
-    nCol    = paste0("nEchoes", outputLabel, ".", classLabel)
+    nCol = paste0("nEchoes", outputLabel, ".", classLabel)
     meanCol = paste0(labelLower, "Mean.", classLabel)
-    rhoCol  = paste0(labelLower, "Rho.", classLabel)
-    sdCol   = paste0(labelLower, "SD.", classLabel)
+    rhoCol = paste0(labelLower, "Rho.", classLabel)
+    sdCol = paste0(labelLower, "SD.", classLabel)
   } else {
     nCol = paste0(inputVariable, "_n.", classLabel)
     if (isCircular) {
       meanCol = paste0(inputVariable, "_circMean.", classLabel)
-      rhoCol  = paste0(inputVariable, "_circRho.", classLabel)
-      sdCol   = paste0(inputVariable, "_circSD.", classLabel)
+      rhoCol = paste0(inputVariable, "_circRho.", classLabel)
+      sdCol = paste0(inputVariable, "_circSD.", classLabel)
     } else {
       meanCol = paste0(inputVariable, "_mean.", classLabel)
-      sdCol   = paste0(inputVariable, "_sd.", classLabel)
+      sdCol = paste0(inputVariable, "_sd.", classLabel)
     }
   }
 
@@ -155,7 +155,7 @@ addFeatSummary = function(mtrDensVPTS,
 
   # Build sorted, deduplicated bin lookup tables
   timeBinStartsNum = sort(unique(as.numeric(mtrDensVPTS$timeChunkBegin)))
-  altBinStarts     = sort(unique(mtrDensVPTS$altitudeChunkBegin))
+  altBinStarts = sort(unique(mtrDensVPTS$altitudeChunkBegin))
 
   timeRows = mtrDensVPTS[
     match(timeBinStartsNum, as.numeric(mtrDensVPTS$timeChunkBegin)),
@@ -174,30 +174,30 @@ addFeatSummary = function(mtrDensVPTS,
   aIdx = findInterval(echoData$feature1.altitude_AGL, altBinStarts)
 
   # Validate: echo must fall strictly within [begin, end) for both axes
-  nT      = nrow(timeRows)
-  nA      = nrow(altRows)
+  nT = nrow(timeRows)
+  nA = nrow(altRows)
   inRange = (tIdx >= 1L & tIdx <= nT & aIdx >= 1L & aIdx <= nA)
   inRange[inRange] = (
     as.numeric(echoData$time_stamp_targetTZ[inRange]) <
       as.numeric(timeRows$timeChunkEnd[tIdx[inRange]]) &
-    echoData$feature1.altitude_AGL[inRange] <
-      altRows$altitudeChunkEnd[aIdx[inRange]]
+      echoData$feature1.altitude_AGL[inRange] <
+        altRows$altitudeChunkEnd[aIdx[inRange]]
   )
 
   # Keep only echoes that are in range and have non-NA value and weight
-  values  = echoData[[inputVariable]]
+  values = echoData[[inputVariable]]
   weights = echoData[["mtr_factor_rf"]]
-  keep    = inRange & !is.na(values) & !is.na(weights)
+  keep = inRange & !is.na(values) & !is.na(weights)
 
   # =============================================================================
   # Grouped summarisation
   # =============================================================================
   if (any(keep)) {
     echoGroups = data.frame(
-      timeChunkId     = timeRows$timeChunkId[tIdx[keep]],
+      timeChunkId = timeRows$timeChunkId[tIdx[keep]],
       altitudeChunkId = altRows$altitudeChunkId[aIdx[keep]],
-      value           = values[keep],
-      weight          = weights[keep],
+      value = values[keep],
+      weight = weights[keep],
       stringsAsFactors = FALSE
     )
 
@@ -205,12 +205,12 @@ addFeatSummary = function(mtrDensVPTS,
       summaryDF = echoGroups %>%
         dplyr::group_by(timeChunkId, altitudeChunkId) %>%
         dplyr::summarise(
-          n    = dplyr::n(),
+          n = dplyr::n(),
           mean = circular::deg(
             circhelp::weighted_circ_mean(x = value, w = weight)
           ),
-          rho  = circhelp::weighted_circ_rho(x = value, w = weight),
-          sd   = suppressWarnings(
+          rho = circhelp::weighted_circ_rho(x = value, w = weight),
+          sd = suppressWarnings(
             circhelp::weighted_circ_sd(x = value, w = weight)
           ),
           .groups = "drop"
@@ -219,9 +219,9 @@ addFeatSummary = function(mtrDensVPTS,
       summaryDF = echoGroups %>%
         dplyr::group_by(timeChunkId, altitudeChunkId) %>%
         dplyr::summarise(
-          n    = dplyr::n(),
+          n = dplyr::n(),
           mean = stats::weighted.mean(x = value, w = weight),
-          sd   = descriptio::weighted.sd(x = value, weights = weight),
+          sd = descriptio::weighted.sd(x = value, weights = weight),
           .groups = "drop"
         )
     }
@@ -242,10 +242,10 @@ addFeatSummary = function(mtrDensVPTS,
   #  Bins absent from summaryDF (no echoes) receive n = 0 and NA for stats.
   # =============================================================================
   binKey = paste(mtrDensVPTS$timeChunkId, mtrDensVPTS$altitudeChunkId)
-  sumKey = paste(summaryDF$timeChunkId,   summaryDF$altitudeChunkId)
+  sumKey = paste(summaryDF$timeChunkId, summaryDF$altitudeChunkId)
   rowIdx = match(binKey, sumKey)
 
-  mtrDensVPTS[, nCol]    = ifelse(is.na(rowIdx), 0L,       as.integer(summaryDF$n[rowIdx]))
+  mtrDensVPTS[, nCol] = ifelse(is.na(rowIdx), 0L, as.integer(summaryDF$n[rowIdx]))
   mtrDensVPTS[, meanCol] = ifelse(is.na(rowIdx), NA_real_, summaryDF$mean[rowIdx])
   if (isCircular) {
     mtrDensVPTS[, rhoCol] = ifelse(is.na(rowIdx), NA_real_, summaryDF$rho[rowIdx])

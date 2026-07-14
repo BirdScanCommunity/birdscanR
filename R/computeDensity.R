@@ -1708,7 +1708,7 @@ computeDensity = function(dbName,
   # Add weighted summary statistics of direction and speed, for all classes
   # together as well as for each class separately
   # =============================================================================
-  if (addFeaturesSummary){
+  if (addFeaturesSummary) {
     featureOutputLabels = c(
       "feature2.azimuth" = "Direction",
       "feature37.speed" = "Speed"

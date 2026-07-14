@@ -347,7 +347,7 @@ createVPTS = function(dbName,
   # =============================================================================
   echoes$u_component = echoes$feature37.speed * sin(echoes$feature2.azimuth * pi / 180)
   echoes$v_component = echoes$feature37.speed * cos(echoes$feature2.azimuth * pi / 180)
-  echoes$rcs_cm2     = (10^(2 * echoes$RCS2_RCS_max_lowpassed)) * 10000
+  echoes$rcs_cm2 = (10^(2 * echoes$RCS2_RCS_max_lowpassed)) * 10000
 
   # Compute weighted mean u, v, and RCS for each time-altitude bin using
   #  addFeatSummary() (allClasses only — VPTS has fixed standard columns,
@@ -362,8 +362,8 @@ createVPTS = function(dbName,
     )
     density = addFeatSummary(
       mtrDensVPTS = density,
-      echoData    = echoes,
-      class       = "allClasses",
+      echoData = echoes,
+      class = "allClasses",
       inputVariable = cFeature,
       outputLabel = cLabel
     )
