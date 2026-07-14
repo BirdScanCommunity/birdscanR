@@ -62,6 +62,14 @@
 #' for each time bin defined in the time bin dataframe. The time bins that were
 #' split due to sunrise/sunset during the time bin will be combined to one bin.
 #' Default = FALSE.
+#' @param addFeaturesSummary logical, TRUE: compute summary statistics (n, mean,
+#' SD, and, for direction, the mean resultant length "rho") of direction
+#' (`feature2.azimuth`) and speed (`feature37.speed`) using [addFeatSummary()],
+#' for `classSelection` as well as for all classes pooled together. The
+#' summary statistics are added as columns named `nEchoesDirection.<class>`,
+#' `directionMean.<class>`, `directionRho.<class>`, `directionSD.<class>`,
+#' `nEchoesSpeed.<class>`, `speedMean.<class>`, and `speedSD.<class>`, with
+#' `<class>` replaced by `"allClasses"` or each class in `classSelection`.
 #' @param computeAltitudeDistribution logical, TRUE: compute the mean height and
 #' altitude distribution of density for the pre-defined quantiles 0.05, 0.25, 0.5,
 #' 0.75, 0.95
@@ -110,8 +118,13 @@
 #'   propObsTimeCutoff = 0,
 #'   computePerDayNight = FALSE,
 #'   computePerDayCrepusculeNight = FALSE,
+#'   addFeaturesSummary = TRUE,
 #'   computeAltitudeDistribution = TRUE
 #' )
+#'
+#' # The direction and speed summary statistics are available as, e.g.,
+#' # densityData$directionMean.allClasses and densityData$speedMean.passerine_type
+#' # ===========================================================================
 #' }
 #'
 # =============================================================================
@@ -135,6 +148,7 @@ computeDensity = function(dbName,
                           propObsTimeCutoff = 0,
                           computePerDayNight = FALSE,
                           computePerDayCrepusculeNight = FALSE,
+                          addFeaturesSummary = TRUE,
                           computeAltitudeDistribution = TRUE) {
   # Check whether only one of the options of computePerDayCrepusculeNight and
   #  computePerDayNight has been chosen
@@ -1689,6 +1703,40 @@ computeDensity = function(dbName,
   if (propObsTimeCutoff > 0) {
     i_index = which(density[, "proportionalTimeObserved"] < propObsTimeCutoff)
     density[i_index, paste("density", i_class, sep = ".")] = NA
+  }
+
+  # Add weighted summary statistics of direction and speed, for all classes
+  # together as well as for each class separately
+  # =============================================================================
+  if (addFeaturesSummary){
+    featureOutputLabels = c(
+      "feature2.azimuth" = "Direction",
+      "feature37.speed" = "Speed"
+    )
+    message(sprintf(
+      "Adding feature summaries (%s) for allClasses + %d classes..",
+      paste(names(featureOutputLabels), collapse = ", "),
+      length(classSelection)
+    ))
+    for (cFeature in names(featureOutputLabels)) {
+      cOutputLabel = featureOutputLabels[[cFeature]]
+      density = suppressMessages(addFeatSummary(
+        mtrDensVPTS = density,
+        echoData = echoes,
+        class = "allClasses",
+        inputVariable = cFeature,
+        outputLabel = cOutputLabel
+      ))
+      for (cClass in classSelection) {
+        density = suppressMessages(addFeatSummary(
+          mtrDensVPTS = density,
+          echoData = echoes,
+          class = cClass,
+          inputVariable = cFeature,
+          outputLabel = cOutputLabel
+        ))
+      }
+    }
   }
 
   # Compute altitude distribution
