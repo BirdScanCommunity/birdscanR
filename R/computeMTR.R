@@ -61,7 +61,7 @@
 #' for each time bin defined in the time bin dataframe. The time bins that were
 #' split due to sunrise/sunset during the time bin will be combined to one bin.
 #' Default = FALSE.
-#' @param addFeaturesSummary logical, TRUE: compute summary statistics (n, mean, SD) 
+#' @param addFeaturesSummary logical, TRUE: compute summary statistics (n, mean, SD)
 #' of direction and speed using [addFeatSummToMTR()]
 #' @param computeAltitudeDistribution logical, TRUE: compute the mean height and
 #' altitude distribution of MTR for the pre-defined quantiles 0.05, 0.25, 0.5,
@@ -1596,7 +1596,7 @@ computeMTR = function(dbName,
   # Add weighted summary statistics of azimuth and speed, for all classes
   # together as well as for each class separately
   # =============================================================================
-  if (addFeaturesSummary){
+  if (addFeaturesSummary) {
     for (cFeature in c("feature2.azimuth", "feature37.speed")) {
       mtr = addFeatSummToMTR(
         mtrDensVPTS = mtr,
@@ -1613,7 +1613,7 @@ computeMTR = function(dbName,
         )
       }
     }
-    # ToDo // rename output variables as follow (adjust the 'class' accordingly):  "nEchoesDirection.class", "directionMean.class","directionRho.class","directionSD.class","nEchoesSpeed.class","speedMean.class","speedSD.class"  
+    # ToDo // rename output variables as follow (adjust the 'class' accordingly):  "nEchoesDirection.class", "directionMean.class","directionRho.class","directionSD.class","nEchoesSpeed.class","speedMean.class","speedSD.class"
   }
 
   # Compute altitude distribution
@@ -1716,4 +1716,4 @@ computeMTR = function(dbName,
   # Return MTR
   # =============================================================================
   return(mtr)
-  }
+}
