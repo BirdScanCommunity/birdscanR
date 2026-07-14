@@ -25,6 +25,7 @@ computeDensity(
   propObsTimeCutoff = 0,
   computePerDayNight = FALSE,
   computePerDayCrepusculeNight = FALSE,
+  addFeaturesSummary = TRUE,
   computeAltitudeDistribution = TRUE
 )
 }
@@ -107,6 +108,15 @@ for each time bin defined in the time bin dataframe. The time bins that were
 split due to sunrise/sunset during the time bin will be combined to one bin.
 Default = FALSE.}
 
+\item{addFeaturesSummary}{logical, TRUE: compute summary statistics (n, mean,
+SD, and, for direction, the mean resultant length "rho") of direction
+(\code{feature2.azimuth}) and speed (\code{feature37.speed}) using \code{\link[=addFeatSummary]{addFeatSummary()}},
+for \code{classSelection} as well as for all classes pooled together. The
+summary statistics are added as columns named \code{nEchoesDirection.<class>},
+\code{directionMean.<class>}, \code{directionRho.<class>}, \code{directionSD.<class>},
+\code{nEchoesSpeed.<class>}, \code{speedMean.<class>}, and \code{speedSD.<class>}, with
+\code{<class>} replaced by \code{"allClasses"} or each class in \code{classSelection}.}
+
 \item{computeAltitudeDistribution}{logical, TRUE: compute the mean height and
 altitude distribution of density for the pre-defined quantiles 0.05, 0.25, 0.5,
 0.75, 0.95}
@@ -160,15 +170,20 @@ densityData = computeDensity(
   propObsTimeCutoff = 0,
   computePerDayNight = FALSE,
   computePerDayCrepusculeNight = FALSE,
+  addFeaturesSummary = TRUE,
   computeAltitudeDistribution = TRUE
 )
+
+# The direction and speed summary statistics are available as, e.g.,
+# densityData$directionMean.allClasses and densityData$speedMean.passerine_type
+# ===========================================================================
 }
 
 }
 \seealso{
 Other manipulation functions:
 \code{\link[=addDayNightInfoPerEcho]{addDayNightInfoPerEcho()}},
-\code{\link[=addFeatSummToMTR]{addFeatSummToMTR()}},
+\code{\link[=addFeatSummary]{addFeatSummary()}},
 \code{\link[=computeMTR]{computeMTR()}},
 \code{\link[=convertTimeZone]{convertTimeZone()}},
 \code{\link[=createVPTS]{createVPTS()}},

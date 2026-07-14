@@ -73,7 +73,7 @@ blindTimes = mergeVisibilityAndManualBlindTimes(
 \seealso{
 Other manipulation functions:
 \code{\link[=addDayNightInfoPerEcho]{addDayNightInfoPerEcho()}},
-\code{\link[=addFeatSummToMTR]{addFeatSummToMTR()}},
+\code{\link[=addFeatSummary]{addFeatSummary()}},
 \code{\link[=computeDensity]{computeDensity()}},
 \code{\link[=computeMTR]{computeMTR()}},
 \code{\link[=convertTimeZone]{convertTimeZone()}},

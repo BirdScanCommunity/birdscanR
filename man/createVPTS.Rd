@@ -82,6 +82,7 @@ which should be treated as observation time with MTR zero.}
 
 \item{propObsTimeCutoff}{numeric between 0 and 1. Time bins with a proportional
 observation time smaller than \code{propObsTimeCutoff} are set to NA.}
+
 }
 \value{
 File path to the created VPTS CSV file.
@@ -136,7 +137,7 @@ vptsDir = createVPTS(
 \seealso{
 Other manipulation functions:
 \code{\link[=addDayNightInfoPerEcho]{addDayNightInfoPerEcho()}},
-\code{\link[=addFeatSummToMTR]{addFeatSummToMTR()}},
+\code{\link[=addFeatSummary]{addFeatSummary()}},
 \code{\link[=computeDensity]{computeDensity()}},
 \code{\link[=computeMTR]{computeMTR()}},
 \code{\link[=convertTimeZone]{convertTimeZone()}},
