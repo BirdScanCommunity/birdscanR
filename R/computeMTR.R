@@ -1620,7 +1620,7 @@ computeMTR = function(dbName,
     for (cFeature in names(featureOutputLabels)) {
       cOutputLabel = featureOutputLabels[[cFeature]]
       mtr = suppressMessages(addFeatSummary(
-        mtrDensVPTS = mtr,
+       mtrDensVPTS = mtr,
         echoData = echoes,
         class = "allClasses",
         inputVariable = cFeature,
@@ -1738,4 +1738,4 @@ computeMTR = function(dbName,
   # Return MTR
   # =============================================================================
   return(mtr)
-  }
+}
