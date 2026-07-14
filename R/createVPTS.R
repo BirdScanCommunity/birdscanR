@@ -1,5 +1,5 @@
 #' @title createVPTS
-#' @author Birgen Haest
+#' @author Birgen Haest, Baptiste Schmid
 #' @description This function creates VPTS CSV output files in line with the
 #' ALOFT data standard, described [here](https://aloftdata.eu/vpts-csv/).
 #' Note that this function only works on Birdscan MR1 database
@@ -334,123 +334,78 @@ createVPTS = function(dbName,
     density[i_index, "density"] = NA
   }
 
+  # Coerce density to a plain data.frame so addFeatSummary()'s [<- column
+  #  assignment works reliably (dplyr tibbles can silently drop new columns
+  #  when assigned via [<-).
+  # =============================================================================
+  density = as.data.frame(density)
+
+  # Compute per-echo u/v flux components and RCS in cm² so addFeatSummary()
+  #  can derive weighted bin-level statistics vectorised over all bins at once.
+  #  NAs propagate automatically: u/v are NA whenever speed or direction is NA;
+  #  rcs_cm2 is NA when RCS2_RCS_max_lowpassed is NA.
+  # =============================================================================
+  echoes$u_component = echoes$feature37.speed * sin(echoes$feature2.azimuth * pi / 180)
+  echoes$v_component = echoes$feature37.speed * cos(echoes$feature2.azimuth * pi / 180)
+  echoes$rcs_cm2     = (10^(2 * echoes$RCS2_RCS_max_lowpassed)) * 10000
+
+  # Compute weighted mean u, v, and RCS for each time-altitude bin using
+  #  addFeatSummary() (allClasses only — VPTS has fixed standard columns,
+  #  no per-class breakdown)
+  # =============================================================================
+  message("Computing weighted flux components and RCS per time-altitude bin..")
+  for (cFeature in c("u_component", "v_component", "rcs_cm2")) {
+    cLabel = switch(cFeature,
+      u_component = "FluxU",
+      v_component = "FluxV",
+      rcs_cm2     = "WeightedRCS"
+    )
+    density = addFeatSummary(
+      mtrDensVPTS = density,
+      echoData    = echoes,
+      class       = "allClasses",
+      inputVariable = cFeature,
+      outputLabel = cLabel
+    )
+  }
 
   # Create vpts along ALOFT standard
+  #  u, v  : mtr-factor weighted mean flux components (m/s)
+  #  ff    : flux speed = sqrt(u^2 + v^2) (NOTE: this is the magnitude of the
+  #           mean flux vector, not the mean ground speed of individual birds)
+  #  dd    : flux direction = atan2(u, v) in degrees (0–360, N=0, clockwise)
+  #           (NOTE: same rationale as ff — flux direction, not mean bird direction)
+  #  n     : number of echoes with valid speed AND direction per bin
+  #  rcs   : mtr-factor weighted mean RCS in cm²
   # =============================================================================
   vpts = data.frame(
     radar            = siteData$radarID,
     datetime         = format(density$timeChunkBegin, format = "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
     height           = density$altitudeChunkBegin,
-    u                = NA_real_,
-    v                = NA_real_,
+    u                = density$fluxUMean.allClasses,
+    v                = density$fluxVMean.allClasses,
     w                = NA_real_,
-    ff               = NA_real_,
-    dd               = NA_real_,
+    ff               = sqrt(density$fluxUMean.allClasses^2 + density$fluxVMean.allClasses^2),
+    dd               = (atan2(density$fluxUMean.allClasses, density$fluxVMean.allClasses) * 180 / pi) %% 360,
     sd_vvp           = NA_real_,
     gap              = FALSE,
     eta              = NA_real_,
     dens             = density$density,
     dbz              = NA_real_,
     dbz_all          = NA_real_,
-    n                = NA_integer_,
+    n                = density$nEchoesFluxU.allClasses,
     n_dbz            = density$nEchoes,
     n_all            = NA_integer_,
     n_dbz_all        = NA_integer_,
-    rcs              = NA_real_,
+    rcs              = density$weightedRCSMean.allClasses,
     sd_vvp_threshold = NA_real_,
     vcp              = NA_integer_,
     radar_latitude   = siteData$latitude,
     radar_longitude  = siteData$longitude,
     radar_height     = siteData$altitude,
     radar_wavelength = 3.19,
-    source_file      = NA_character_ # This value could later on be filled with the url to the Zenodo repository, if that information is available
+    source_file      = NA_character_
   )
-
-  # Get the values for each time altitude bin
-  # =============================================================================
-  message(paste0(
-    "Computing number of animals (n_dbz,), ",
-    "number of birds with speed and direction values (n)",
-    "mean flux directon (dd, NOTE: not mean circular direction, ",
-    "but  mean flux direction taking into account ",
-    "individuals' flight speeds), ",
-    "mean flux speeds (ff, NOTE: not mean ground speed of the ",
-    "individual birds but speed flux size taking into account ",
-    "individual's directions), ",
-    "mean u and v components",
-    " and mtr-weighted average rcs (rcs)",
-    " of animal movements in each time-altitude bin.."
-  ))
-  for (cRow in 1:nrow(vpts)) {
-    # Check whether there are any density values before getting any
-    # values from the echo table
-    # =========================================================================
-    if ((vpts[cRow, "dens"] != 0) && !(is.na((vpts[cRow, "dens"])))) {
-      # Get the id of all samples that fall withing the timeframe and
-      #  and altitudinal bin
-      # =====================================================================
-      cDay = as.Date(vpts$datetime[cRow], format = "%Y-%m-%dT%H:%M:%SZ")
-      cSampleRows = which((as.Date(echoes$time_stamp_targetTZ) == cDay) &
-        (echoes$feature1.altitude_AGL >= vpts$height[cRow]) &
-        (echoes$feature1.altitude_AGL < (vpts$height[cRow] + altitudeBinSize)))
-      speedsToProcess = echoes[cSampleRows, "feature37.speed"]
-      directionsToProcess = echoes[cSampleRows, "feature2.azimuth"]
-      elementsToKeep = which((!is.na(speedsToProcess)) & !is.na(directionsToProcess))
-      speedsToProcess = speedsToProcess[elementsToKeep]
-      directionsToProcess = directionsToProcess[elementsToKeep]
-      rcsToProcess = echoes[cSampleRows, "RCS2_RCS_max_lowpassed"]
-      rcsToKeep = which(!is.na(rcsToProcess))
-      rcsToProcess = rcsToProcess[rcsToKeep]
-      mtrFactorsToProcess = echoes[cSampleRows, "mtr_factor_rf"]
-      mtrFactorsToProcess = mtrFactorsToProcess[rcsToKeep]
-
-      # Fill the number of birds with speed values
-      # =====================================================================
-      vpts$n[cRow] = length(speedsToProcess)
-
-      # Get the mean value for u, v, dd, and ff if there are any samples
-      #  for this time-altitude bin
-      # =====================================================================
-      if (length(speedsToProcess) >= 1) {
-        # Convert speed and direction to u and v components
-        # =================================================================
-        u = speedsToProcess * sin(directionsToProcess * pi / 180)
-        v = speedsToProcess * cos(directionsToProcess * pi / 180)
-
-        # Get the mean value for the u and v components
-        # =================================================================
-        meanU = mean(u)
-        meanV = mean(v)
-        vpts[cRow, "u"] = meanU
-        vpts[cRow, "v"] = meanV
-
-        # Get the speed and direction for the mean u and v components
-        # (NOTE: we use this and not the mean direction and speed of the birds
-        # because we want the values to represent the direction and speed of the flux
-        # and not the mean speed of the birds - which is behaviour-related
-        # but not flux-related)
-        # =================================================================
-        vpts[cRow, "dd"] = (atan2(meanU, meanV) * 180 / pi) %% 360
-        vpts[cRow, "ff"] = sqrt((meanU^2) + (meanV^2))
-      }
-
-      # Get the weighted mean rcs for this time-altitude bin
-      # =====================================================================
-      if (length(rcsToProcess) >= 1) {
-        # Convert rcs to cm^2
-        # =================================================================
-        rcsToProcessInCM2 = (10^(2 * rcsToProcess)) * 10000
-
-        # Get the weighted average rcs
-        # =================================================================
-        mtrFactorWeights = mtrFactorsToProcess / max(mtrFactorsToProcess)
-        vpts[cRow, "rcs"] = stats::weighted.mean(
-          x = rcsToProcessInCM2,
-          w = mtrFactorWeights
-        )
-      }
-    }
-  }
 
   # Create the output directory
   # =============================================================================
