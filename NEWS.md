@@ -1,5 +1,6 @@
 # birdscanR (development version)
 
+- Breaking change: birdscanR now requires R >= 4.2.0 (was R >= 4.1.0), because current versions of its dependency ggplot2 no longer support R 4.1.
 - New functionality: `filterSpeedFeature37()` was added to filter unreasonable speed values created for animals flying through the radar beam for too short a time (#50).
 - New functionality: `createVPTS()` was added to create vpts csv output files in line with the ALOFT standard (#52).
 - New functionality: the functions `getCollectionTable()` and `extractDbData()` now include an additional optional parameter `timeInterval` for when you want to limit the data being retrieved from the collection table (#49).

@@ -26,10 +26,9 @@ jobs:
           - {os: ubuntu-latest,   r: 'release'}
           - {os: ubuntu-latest,   r: 'oldrel-1'}
           # And minimum supported version in DESCRIPTION. bioRad (Suggests) is
-          # skipped: its Bioconductor dependency rhdf5 is no longer available
-          # for R 4.1.0. ggplot2 is pinned to 3.5.2: newer versions need S7,
-          # which requires R >= 4.2.0.
-          - {os: ubuntu-latest, r: '4.1.0', extra-packages: 'any::rcmdcheck, bioRad=?ignore, ggplot2@3.5.2', force-suggests: 'false'}
+          # skipped: its Bioconductor dependencies are not reliably available
+          # for old R versions.
+          - {os: ubuntu-latest, r: '4.2.0', extra-packages: 'any::rcmdcheck, bioRad=?ignore', force-suggests: 'false'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
