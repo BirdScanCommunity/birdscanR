@@ -28,10 +28,12 @@ This vignette provides an example of the basic workflow for createVPTS:
 
 ***
 # Before we get started
-```{r, eval = hasBioRad}
+```{r}
 library(birdscanR)
-library(bioRad)
 outDir <- tempdir()
+```
+```{r, eval = hasBioRad}
+library(bioRad)
 ```
 
 Read Test BirdScanMR1 data
