@@ -112,6 +112,8 @@ saveMTR(
 \seealso{
 Other write file functions: 
 \code{\link{compileData}()},
+\code{\link{createDataPackage}()},
+\code{\link{createDataPackageMetadataTemplate}()},
 \code{\link{savePlotToFile}()}
 }
 \author{

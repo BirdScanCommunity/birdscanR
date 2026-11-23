@@ -1,19 +1,42 @@
 #' @title Create MR1 Data Package
 #' @author Baptiste Schmid, Fabian Hertner, Birgen Haest
 #' @description [createDataPackage()] compiles data from [extractDbData()] into
-#' a standardized MR1 data package, applying filters on time range, pulse type,
-#' rotation, echo class, altitude, and class probability. The output follows the
-#' MR1 Data Standard (one package per campaign): `echoData`, `protocolData`,
-#' `blindTimesData`, `sunriseSunset`, `siteData`, `filterParameters`,
-#' and `metaData`. Filtering is applied via [filterEchoData()] and
-#' [filterProtocolData()]. When `outputDirPath` is provided, the package is
-#' saved by default as standardized CSV and YAML files suitable for Zenodo
-#' deposit; saving as RDS requires `saveAsRDS = TRUE`.
-#' @param dbExtract named list with the database tables extracted by [extractDbData()].
-#' @param siteData dataframe/vector with the database site table.
-#' @param manualBlindTimesFile path to the csv file containing manual blind times.
-#' @param dbName Name of the database. Used as metadata and as part of the
-#' auto-generated output filename.
+#' a standardised MR1 data package for one radar campaign, following the
+#' [Frictionless Data Package](https://datapackage.org) standard. Time range,
+#' pulse type, rotation, echo class, class probability, altitude and echo
+#' validator filters are applied with [filterProtocolData()] and
+#' [filterEchoData()].
+#'
+#' The package contains five tabular resources: `echo_data`, `protocol_data`,
+#' `blind_times`, `sunrise_sunset` and `site_data`. Each resource has a Table
+#' Schema with field types, descriptions, units, and primary and foreign keys.
+#' `echo_data` contains all echo columns, except those that are obsolete or
+#' redundant: `mtr_factor_old`, `statistical_classification_old`,
+#' `classification_id` and `sphere_dia` (old classification, outdated since
+#' BirdScan v1.6), `feature15.polRatio` and `feature16.absPolarisation`
+#' (outdated since BirdScan v1.6), `feature3.speed` (superseded by
+#' `feature37.speed`), `time_string` (same as `time_stamp_originTZ`), and
+#' `time_bin` and `altitude_bin` (refer to radar database tables that are not
+#' part of the package).
+#' The package-level metadata (title, description, owner, licence, embargo,
+#' contributors with ORCID and DataCite roles, related identifiers, suggested
+#' citation) are read from `metadata`. Spatial and temporal coverage, the
+#' applied filters and the provenance (database, birdscanR and classifier
+#' versions) are added automatically.
+#'
+#' When `outputDirPath` is provided, the package is written to
+#' `outputDirPath/<campaignID>/` as `datapackage.json` plus one compressed CSV
+#' file per resource, ready for a Zenodo deposit.
+#' @param dbExtract named list with the database tables extracted by
+#' [extractDbData()].
+#' @param metadata path to a YAML file, or a named list with the same structure,
+#' with the package-level metadata. Use [createDataPackageMetadataTemplate()]
+#' to get a template.
+#' @param manualBlindTimes data frame with the manual blind times created by
+#' [loadManualBlindTimes()], or `NULL` (default) if there are none. They are
+#' merged with the radar blind times by [mergeVisibilityAndManualBlindTimes()].
+#' @param dbName Name of the database. Stored in the package provenance.
+#' Default is `NULL`.
 #' @param pulseTypeSelection character vector with the pulse types which should
 #' be included in the subset. Options: `S`, `M`, `L`, i.e. short-, medium-,
 #' long-pulse, respectively. Default is `NULL`: no filtering applied based on
@@ -22,8 +45,9 @@
 #' and/or without antenna rotation. Options: 0, 1. (0 = no rotation,
 #' 1 = rotation). Default is `NULL`: no filtering applied based on rotation mode.
 #' @param timeRangeTargetTZ Character vector of length 2, with start and end of
-#' time range, formatted as `"%Y-%m-%d %H:%M"`. Echoes outside the time range
-#' will be excluded.
+#' time range, formatted as `"%Y-%m-%d %H:%M"`, in the target time zone, or a
+#' `POSIXct` vector of length 2. Echoes outside the time range will be
+#' excluded. Default is `NULL`: the full time range of the echo data is used.
 #' @param classSelection character string vector with the classes that should be
 #' included. Default is `NULL`: all classes are included.
 #' @param classProbCutOff numeric cutoff value for class probabilities. Echoes
@@ -35,27 +59,18 @@
 #' @param echoValidator logical. If set to `FALSE` (default), no additional
 #' filter is applied; if set to `TRUE`, echoes labelled by the echo validator as
 #' `"non-bio scatterer"` will be excluded.
-#' @param outputDirPath Directory path where output files are saved. The output
-#' filename is auto-generated from the active filter parameters. If `NULL`
+#' @param outputDirPath Directory where the data package is written, in a
+#' subdirectory named after the `campaignID` in `metadata`. If `NULL`
 #' (default), no files are written.
-# #' @param tagOutputFile Vector of two elements `c(prefix, suffix)` inserted
-# #' around the auto-generated filename. Either element may be `NULL`. Only used
-# #' when `outputDirPath` is not `NULL`.
-#' @param saveAsRDS logical. If `TRUE`, saves the full data list as a single
-#' `.rds` file in `outputDirPath`. Useful as an in-session cache but not
-#' required for the MR1 data standard. Default is `FALSE`.
+#' @param saveAsRDS logical. If `TRUE` and `outputDirPath` is provided, the
+#' returned data package object is also saved as `<campaignID>.rds` in
+#' `outputDirPath`. Default is `FALSE`.
 #'
-#' @return A named list with the following elements:
-#' \describe{
-#'   \item{echoData}{Filtered echo data.}
-#'   \item{protocolData}{Filtered protocol data (columns defined by MR1 standard).}
-#'   \item{visibilityData}{Filtered blind times data.}
-#'   \item{sunriseSunset}{Filtered sunrise/sunset data (columns defined by MR1 standard).}
-#'   \item{siteData}{Radar and site metadata, with `targetTimeZone` added.}
-#'   \item{filterParameters}{Named list of the filter settings applied.}
-#'   \item{metaData}{Named list with per-table column metadata (name, type,
-#'   description), plus `database` name and `birdscanR` package version.}
-#' }
+#' @return A Frictionless Data Package object (class `mr1dp` and
+#' `datapackage`), i.e. a list with the package-level metadata and the
+#' resources `echo_data`, `protocol_data`, `blind_times`, `sunrise_sunset` and
+#' `site_data`. Read a resource as a data frame with
+#' [frictionless::read_resource()].
 #' @family write file functions
 #' @export
 #' @examples
@@ -68,25 +83,35 @@
 #' ))
 #' dbName = "CH_Sempach_2024_SEP24_25"
 #' timeRangeTargetTZ = c("2024-09-24 00:00", "2024-09-25 23:59")
+#' mainOutputDir = tempdir()
 #'
 #' # Set manual blind times to NULL (no manual blind times)
 #' # ===========================================================================
 #' cManualBlindTimes = NULL
 #'
+#' # Write the package metadata template (fill it in for a real campaign)
+#' # ===========================================================================
+#' metadataFile = file.path(mainOutputDir, "CH_Sempach_2024_metadata.yaml")
+#' createDataPackageMetadataTemplate(filePath = metadataFile, overwrite = TRUE)
+#'
 #' # Create MR1 data package
 #' # ===========================================================================
 #' dataPackage = createDataPackage(
-#'   dbExtract            = dbData
-#'   manualBlindTimesFile = cManualBlindTimes,
-#'   dbName               = dbName,
-#'   timeRangeTargetTZ    = timeRangeTargetTZ,
-#'   targetTimeZone       = targetTimeZone,
-#'   pulseTypeSelection   = "S",
-#'   classSelection       = c("passerine_type"),
-#'   outputDirPath        = getwd()
+#'   dbExtract          = dbData,
+#'   metadata           = metadataFile,
+#'   manualBlindTimes   = cManualBlindTimes,
+#'   dbName             = dbName,
+#'   timeRangeTargetTZ  = timeRangeTargetTZ,
+#'   pulseTypeSelection = "S",
+#'   outputDirPath      = mainOutputDir
 #' )
+#'
+#' # Read a resource of the data package
+#' # ===========================================================================
+#' echoData = frictionless::read_resource(dataPackage, "echo_data")
 #' }
 createDataPackage = function(dbExtract,
+                             metadata,
                              manualBlindTimes = NULL,
                              dbName = NULL,
                              pulseTypeSelection = NULL,
@@ -98,70 +123,58 @@ createDataPackage = function(dbExtract,
                              echoValidator = FALSE,
                              outputDirPath = NULL,
                              saveAsRDS = FALSE) {
-
 # Check whether the required data frames are present in the input list
 # ==============================================================================
-  requiredDataFrames <- c(
+  requiredDataFrames = c(
     "echoData", "protocolData", "visibilityData",
     "sunriseSunset", "siteData", "TimeZone"
   )
-  missingDataFrames <- setdiff(requiredDataFrames, names(dbExtract))
+  missingDataFrames = setdiff(requiredDataFrames, names(dbExtract))
   if (length(missingDataFrames) > 0) {
-    stop(paste("The following required data frames are missing in 'dbExtract':",
+    stop(paste(
+      "The following required data frames are missing in 'dbExtract':",
       paste(missingDataFrames, collapse = ", ")
     ))
   }
 
 # Extract the required data frames from the input list
 # ==============================================================================
-  echoData <- dbExtract$echoData
-  protocolData <- dbExtract$protocolData
-  visibilityData <- dbExtract$visibilityData
-  sunriseSunset <- dbExtract$sunriseSunset
-  siteData <- dbExtract$siteData
-  timeZone <- dbExtract$TimeZone
+  echoData = dbExtract$echoData
+  protocolData = dbExtract$protocolData
+  visibilityData = dbExtract$visibilityData
+  sunriseSunset = dbExtract$sunriseSunset
+  siteData = dbExtract$siteData
+  timeZone = dbExtract$TimeZone
 
 # Input validation
 # ==============================================================================
-  if (!is.data.frame(echoData))
-    stop("'echoData' must be a data frame.")
+  for (cName in c("echoData", "protocolData", "visibilityData", "sunriseSunset", "siteData")) {
+    if (!is.data.frame(dbExtract[[cName]])) {
+      stop(paste0("'dbExtract$", cName, "' must be a data frame."))
+    }
   }
-  if (!is.data.frame(protocolData)) {
-    stop("'protocolData' must be a data frame.")
+  if (!is.data.frame(timeZone) || !all(c("radarTimeZone", "targetTimeZone") %in% names(timeZone))) {
+    stop("'dbExtract$TimeZone' must be a data frame with the columns 'radarTimeZone' and 'targetTimeZone'.")
   }
-  if (!is.null(visibilityData) && !is.data.frame(visibilityData)) {
-    stop("'visibilityData' must be a data frame or NULL.")
-  }
-  if (!is.data.frame(sunriseSunset)) {
-    stop("'sunriseSunset' must be a data frame.")
-  if (!is.data.frame(siteData))
-    stop("'siteData' must be a data frame.")
-  if (!is.data.frame(timeZone))
-    stop("'timeZone' must be a data frame.")
-  if (!is.null(manualBlindTimesFile) && !file.exists(manualBlindTimesFile))
-    stop("'manualBlindTimesFile' must be a data frame or NULL.")
+  if (!is.null(manualBlindTimes) &&
+    (!is.data.frame(manualBlindTimes) ||
+      !all(c("start_targetTZ", "stop_targetTZ", "type") %in% names(manualBlindTimes)))) {
+    stop("'manualBlindTimes' must be NULL or a data frame created by loadManualBlindTimes().")
   }
   if (!is.null(dbName) && (!is.character(dbName) || length(dbName) != 1)) {
     stop("'dbName' must be a single character string or NULL.")
   }
-  if (!is.null(pulseTypeSelection)) {
-    if (!is.character(pulseTypeSelection) || !all(pulseTypeSelection %in% c("S", "M", "L"))) {
-      stop("'pulseTypeSelection' must be a character vector with values in c('S', 'M', 'L'), or NULL.")
-    }
+  if (!is.null(pulseTypeSelection) &&
+    (!is.character(pulseTypeSelection) || !all(pulseTypeSelection %in% c("S", "M", "L")))) {
+    stop("'pulseTypeSelection' must be a character vector with values in c('S', 'M', 'L'), or NULL.")
   }
-  if (!is.null(rotationSelection)) {
-    if (!is.numeric(rotationSelection) || !all(rotationSelection %in% c(0, 1))) {
-      stop("'rotationSelection' must be a numeric vector with values in c(0, 1), or NULL.")
-    }
+  if (!is.null(rotationSelection) &&
+    (!is.numeric(rotationSelection) || !all(rotationSelection %in% c(0, 1)))) {
+    stop("'rotationSelection' must be a numeric vector with values in c(0, 1), or NULL.")
   }
-  # if (!inherits(timeRangeTargetTZ, c("Date", "POSIXt")) &&
-  #   (!is.character(timeRangeTargetTZ) || length(timeRangeTargetTZ) != 2)) {
-  #   stop("'timeRangeTargetTZ' must be a character vector of length 2 (format '%Y-%m-%d %H:%M'), or a POSIXct/Date vector of length 2.")
-  # }
-  # if (!is.character(targetTimeZone) || length(targetTimeZone) != 1 ||
-  #   !targetTimeZone %in% OlsonNames()) {
-  #   stop("'targetTimeZone' must be a single valid time zone string (see OlsonNames()).")
-  # }
+  if (!is.null(timeRangeTargetTZ) && length(timeRangeTargetTZ) != 2) {
+    stop("'timeRangeTargetTZ' must be a vector of length 2 (format '%Y-%m-%d %H:%M'), or NULL.")
+  }
   if (!is.null(classSelection) && !is.character(classSelection)) {
     stop("'classSelection' must be a character vector or NULL.")
   }
@@ -189,378 +202,238 @@ createDataPackage = function(dbExtract,
       stop(paste0("'outputDirPath' does not exist: ", outputDirPath))
     }
   }
-  # if (length(tagOutputFile) != 2)
-  #   stop("'tagOutputFile' must be a vector of length 2, e.g. c('prefix', 'suffix') or c(NULL, NULL).")
   if (!is.logical(saveAsRDS) || length(saveAsRDS) != 1) {
     stop("'saveAsRDS' must be a single logical value (TRUE or FALSE).")
   }
 
-# Set the time window to use for the data package
+# Read and check the package metadata
 # ==============================================================================
-  if (is.null(timeRangeTargetTZ)) {
-    startTime = min(echoData$time_stamp_targetTZ, na.rm = TRUE)
-    stopTime  = max(echoData$time_stamp_targetTZ, na.rm = TRUE)
-  } else {
-    if (!inherits(timeRangeTargetTZ, "Date") && !inherits(timeRangeTargetTZ, "POSIXt")) {
-      timeRangeTargetTZ = as.POSIXct(timeRangeTargetTZ, tz = timeZone$targetTimeZone)
-    }
-    startTime = timeRangeTargetTZ[1]
-    stopTime  = timeRangeTargetTZ[2]
+  packageMetadata = .readPackageMetadata(metadata)
+  metadataProblems = .checkPackageMetadata(packageMetadata)
+  if (length(metadataProblems) > 0) {
+    stop(paste0(
+      "The package metadata are not valid:\n",
+      paste0("- ", metadataProblems, collapse = "\n")
+    ))
   }
 
-# Prepare the metadata
+# Set the time window to use for the data package
 # ==============================================================================
-  # Metadata for ProtocolData
-  # ============================================================================
-  metaProtocol <- data.frame(
-    "colname" = c(
-      "protocolID", "siteID",
-      "startTime_originTZ", "startTime_targetTZ", "stopTime_originTZ", "stopTime_targetTZ",
-      "pulseType", "rotate", "stc", "threshold",
-      "softwareVersion"
-    ),
-    "type" = c(
-      "int", "int",
-      "POSIXct", "POSIXct", "POSIXct", "POSIXct",
-      "char", "int", "num", "num",
-      "char"
-    ),
-    "description" = c(
-      "Incremental ID of measurement periods - linked to EchoData and visibilityData.",
-      "Site ID - linked to the site & radar data.",
-      "Timestamp upon the start of the measurement period. TimeZone as given in DB",
-      "Timestamp upon the start of the measurement period. TimeZone defined by the user, since 2020 usually UTC",
-      "Timestamp upon the end of the measurement period. TimeZone as given in DB",
-      "Timestamp upon the end of the measurement period. TimeZone defined by the user, since 2020 usually UTC",
-      'Either "S" for Short-pulse, "M" for Medium pulse, "L" for Long-pulse. See radar table for pulse duration',
-      '"0" when the antenna is static, "1" if the antenna is rotating on its vertical axis. Flight speed and direction available only if the antenna is rotating.',
-      "Sensitivity Time Control in metres. Basically a distance to set the minimal detected object size. Key feature to calculate the MTR-factor of the echo.",
-      "Detection threshold in dBm. Key feature to calculate the MTR-factor of the echo.",
-      "Software version upon detection. Can differ from the classifier version."
-    )
-  )
-
-  # Metadata for SiteData
-  # ============================================================================
-  metasiteData <- data.frame(
-    "colname" = c(
-      "radarID", "siteID", "siteCode", "siteName", "siteDesc",
-      "timeZone_targetTZ", # "timeZone_originTZ",
-      "projectStart_originTZ", "projectStart_targetTZ", "projectEnd_originTZ", "projectEnd_targetTZ",
-      "longitude", "latitude", "altitude",
-      "customer",
-      "type", "serialNo", "northOffset", "delta", "tiltAngle",
-      "transmitPower", "antennaGainInDBi", "waveGuideAttenuation",
-      "xxx0V", "xxxSatLower", "xxxSteepness", "xxxSatUpper", "pulseLengthXxx"
-    ),
-    "type" = c(
-      "int",
-      "int",
-      "char",
-      "char",
-      "char",
-      "char",
-      "POSIXct",
-      "POSIXct",
-      "POSIXct",
-      "POSIXct",
-      "num",
-      "num",
-      "int",
-      "char",
-      "char",
-      "int",
-      "num",
-      "num",
-      "num",
-      "num",
-      "num",
-      "num",
-      "num",
-      "num",
-      "num",
-      "num",
-      "num"
-    ),
-    "description" = c(
-      "Serial number of radar unit - abbreviated.",
-      "Radar location: Site ID (integer) given by radar operator.",
-      "Radar location: Site code (three letters) given by radar operator.",
-      "Radar location: full name.",
-      "Radar location: optional further description",
-      "Time Zone used for analyses, usually UTC",
-      "Beginning of the data collection, using the time zone set on radar.",
-      'Beginning of the data collection, using the time zone set for the analyses - see variable "timeZone_targetTZ".',
-      "End of the data collection, using the time zone set on radar.",
-      'End of the data collection, using the time zone set for the analyses - see variable "timeZone_targetTZ".',
-      "Radar location: Longitude", # toDo: specify format
-      "Radar location: Latitude",
-      "Radar location: altitude above sea level",
-      "Radar operator",
-      'Model of radar unit, e.g. "BirdScan MR1" from Swiss Birdradar Solution.',
-      "Serial number of radar unit - full",
-      "Radar parameter: northOffset",
-      "Radar parameter: delta",
-      "Radar parameter: tiltAngle - a constant for BirdScan MR1.",
-      "Radar parameter: transmitted power [W] - can vary between years because of exchange of the magnetron.",
-      "Radar parameter: Antenna gain [dBi] is given by the antenna - a constant for BirdScan MR1.",
-      "Radar parameter: Wave Guide attenuation [dB] is given by the antenna - a constant for BirdScan MR1.",
-      "Pulse type parameter: xxx0V - Calibration. ",
-      "Pulse type  parameter: xxxSatLower - Calibration.",
-      "Pulse type  parameter: xxxSteepness - Calibration.",
-      "Pulse type  parameter: xxxSatUpper - Calibration.",
-      "Pulse type  parameter: pulseLengthXxx - Calibration - duration of the pulse length. This value ultimately define the range resolution."
-    )
-  )
-
-  # Metadata for visibilityData (blind times)
-  # ============================================================================
-  metaBlindTimes <- data.frame(
-    "colname" = c(
-      "type",
-      "start_targetTZ",
-      "stop_targetTZ",
-      "protocolID"
-    ),
-    "type" = c(
-      "char",
-      "POSIXct",
-      "POSIXct",
-      "char"
-    ),
-    "description" = c(
-      'Type of BlindTime.
-                          Blindtime is used to calculate the effective duration of measurements during a temporal bin of the MTR table.
-                          Common denominations are:
-                          "protocolChange" that include the blindtime subsequent to the start of a new measurement period (protocolID),
-                          "technical" denote periods with technical malfunction of the radar,
-                          "rain" denote periods of precipitation.',
-      "Beginning of the blind period",
-      "End of the blind period",
-      "ID of measurement periods - linked to protocol table"
-    )
-  )
-
-  # Metadata for sunrise and sunset times
-  # ============================================================================
-  metaSunriseSunset <- data.frame(
-    "colname" = c(
-      "is_night", "date",
-      "sunStart", "sunStop",
-      "civilStart", "civilStop",
-      "nauticalStart", "nauticalStop"
-    ),
-    "type" = c(
-      "int", "POSIXct",
-      "POSIXct", "POSIXct",
-      "POSIXct", "POSIXct",
-      "POSIXct", "POSIXct"
-    ),
-    "description" = c(
-      '"0" if daytime, "1" if nighttime,',
-      "Date of event (in UTC)",
-      "Time of sunrise in UTC - see site table for location",
-      "Time of sunset in UTC - see site table for location",
-      "Time of dawn (civil-twilight, 6\u00b0 below horizon) in UTC - see site table for location",
-      "Time of dusk (civil-twilight, 6\u00b0 below horizon) in UTC - see site table for location",
-      "Time of dawn (nautical-twilight, 9\u00b0 below horizon) in UTC - see site table for location",
-      "Time of dusk (nautical-twilight, 9\u00b0 below horizon) in UTC - see site table for location"
-    )
-  )
-
-  # Metadata of the applied filtering to create the data package
-  # ============================================================================
-  metaDataPackageFilters <- data.frame(
-    "colname" = c(
-      "timeRangeTargetTZ",
-      "pulseTypeSelection",
-      "rotationSelection",
-      "classSelection",
-      "classProbCutOff",
-      "altitudeRange",
-      "echoValidator"
-    ),
-    "type" = c(
-      "POSIXct",
-      "char",
-      "integer",
-      "char",
-      "num",
-      "num",
-      "logical"
-    ),
-    "description" = c(
-      "Time range (from beginning to end) of the filter period, in the time zone used for analyses.",
-      'Pulse type is either "S" for Short-pulse, "M" for Medium pulse, or "L" for Long-pulse. See radar table for pulse duration',
-      'Rotation is either "0"when the antenna is static, or "1" if the antena is rotating on its vertical axis. Flight speed and direction available only if the anteanna is rotating',
-      "List of class - can be a subset of all avaialble classes",
-      'PostHoc filter on classification. if "0", all echoes are used, if e.g. 0.4, only echoes with a class probability >= 0.4 are kept.',
-      "Altitude range (agl) from the lowest to the highest.",
-      'If set to FALSE (default), no additional filters is applied; if set to TRUE, echoes labelled by the echo validator as "non-bio scatterer" will be excluded.'
-    )
-  )
-
-# Metadata for echoData
-  # ============================================================================
-  metaEcho = NULL # TODO: implement echo column metadata
-  # metaEcho <- data.frame(
-  #   "colname" = c("dummy"
-  #
-  #   ),
-  #   "type" = c('dummy'
-  #
-  #   ),
-  #   "description" = c('dummy'
-  #
-  #   )
-  # )
-
-  # Metadata for the applied filters to create the data package
-  # ============================================================================
-  ls_filters <- list(
-    timeRangeTargetTZ    = timeRangeTargetTZ,
-    pulseTypeSelection   = pulseTypeSelection,
-    rotationSelection    = rotationSelection,
-    classSelection       = classSelection,
-    classProbCutOff      = classProbCutOff,
-    altitudeRange        = altitudeRange,
-    echoValidator        = echoValidator
-  )
-  echoDataSubset = echoDataSubset[, metaEcho$colname]
-
-  # compile metadata into a list
-  # =============================================================================
-  ls_metaData <- list(
-    echoData          = metaEcho,
-    protocolData      = metaProtocol,
-    visibilityData    = metaBlindTimes,
-    sunriseSunset = metaSunriseSunset,
-    siteData          = metasiteData,
-    filterParameters  = metaDataPackageFilters,
-    database          = dbName, # at the moment, only keep the name of the database, but additional information could be used: version of BirdscanR-package, name of the person who extracted the data, etc.
-    birdscanR         = utils::packageVersion("birdscanR") # classifier version is included in the echo-dataset
-  )
-
+  targetTZ = timeZone$targetTimeZone
+  if (is.null(timeRangeTargetTZ)) {
+    startTime = min(echoData$time_stamp_targetTZ, na.rm = TRUE)
+    stopTime = max(echoData$time_stamp_targetTZ, na.rm = TRUE)
+    # filterEchoData() uses strict inequalities at minute resolution, so widen
+    # the window by one minute to keep the first and last echo
+    echoTimeRange = format(c(startTime - 60, stopTime + 60), "%Y-%m-%d %H:%M", tz = targetTZ)
+  } else {
+    if (inherits(timeRangeTargetTZ, "POSIXt")) {
+      startTime = timeRangeTargetTZ[1]
+      stopTime = timeRangeTargetTZ[2]
+    } else {
+      timeRangePosix = as.POSIXct(as.character(timeRangeTargetTZ),
+        format = "%Y-%m-%d %H:%M", tz = targetTZ
+      )
+      if (any(is.na(timeRangePosix))) {
+        stop("'timeRangeTargetTZ' could not be parsed; use the format '%Y-%m-%d %H:%M'.")
+      }
+      startTime = timeRangePosix[1]
+      stopTime = timeRangePosix[2]
+    }
+    echoTimeRange = format(c(startTime, stopTime), "%Y-%m-%d %H:%M", tz = targetTZ)
+  }
+  if (startTime >= stopTime) {
+    stop("The start of 'timeRangeTargetTZ' must be before its end.")
+  }
 
 # Prepare the data
 # ==============================================================================
   # Filter protocol data
   # ============================================================================
   protocolDataSubset = filterProtocolData(
-    protocolData = protocolData,
+    protocolData       = protocolData,
     pulseTypeSelection = pulseTypeSelection,
-    rotationSelection = rotationSelection
+    rotationSelection  = rotationSelection
   )
   timesInd = (protocolDataSubset$startTime_targetTZ < stopTime) &
     (protocolDataSubset$stopTime_targetTZ > startTime)
   protocolDataSubset = protocolDataSubset[timesInd, ]
-  protocolDataSubset = protocolDataSubset[, metaProtocol$colname]
+  if (nrow(protocolDataSubset) == 0) {
+    stop("No measurement periods (protocols) remain after filtering by time range, pulse type and rotation.")
+  }
+  protocolCols = c(
+    "protocolID", "siteID",
+    "startTime_originTZ", "startTime_targetTZ", "stopTime_originTZ", "stopTime_targetTZ",
+    "pulseType", "rotate", "stc", "threshold", "blockTime", "softwareVersion"
+  )
+  protocolDataOut = protocolDataSubset[, intersect(protocolCols, names(protocolDataSubset))]
 
-  # Filter siteData
+  # Filter echo data
   # ============================================================================
-  siteCols <- c(
-    "radarID", "siteID", "siteCode", "siteName", "siteDesc",
-    "projectStart_originTZ", "projectStart_targetTZ", "projectEnd_originTZ", "projectEnd_targetTZ",
-    "longitude", "latitude", "altitude",
-    "customer"
+  echoDataSubset = filterEchoData(
+    echoData          = echoData,
+    timeRangeTargetTZ = echoTimeRange,
+    targetTimeZone    = targetTZ,
+    protocolData      = protocolDataSubset,
+    classSelection    = classSelection,
+    classProbCutOff   = classProbCutOff,
+    altitudeRange_AGL = altitudeRange,
+    echoValidator     = echoValidator
   )
-  radarCols <- c(
-    "type", "serialNo", "northOffset", "delta", "tiltAngle",
-    "transmitPower", "antennaGainInDBi", "waveGuideAttenuation"
-  )
-  pulse_cols <- list(
-    S = c("short0V", "shortSatLower", "shortSteepness", "shortSatUpper", "pulseLengthShort"),
-    M = c("medium0V", "mediumSatLower", "mediumSteepness", "mediumSatUpper", "pulseLengthMedium"),
-    L = c("long0V", "longSatLower", "longSteepness", "longSatUpper", "pulseLengthLong")
-  )
-  radarCols <- c(radarCols, pulse_cols[[pulseTypeSelection]])
-  siteData <- siteData[, c(siteCols, radarCols)]
 
-  # Filter visibilityData data
+  # Remove echo columns that are obsolete (old classification, outdated since
+  # BirdScan v1.6, superseded), redundant, or refer to radar database tables
+  # that are not part of the data package
   # ============================================================================
-  if (!any(names(visibilityData) == "type")) warning("The 'type' column is missing in the dataset 'visibilityData'. Use the output of the function 'mergeVisibilityAnd ManualBlindTime'.")
-  timesInd = (visibilityData$start_targetTZ < stopTime) &
-    (visibilityData$stop_targetTZ > startTime)
-  blindTimesDataSubset = visibilityData[timesInd, ]
+  excludedEchoCols = c(
+    "mtr_factor_old", "statistical_classification_old",
+    "classification_id", "sphere_dia",
+    "feature15.polRatio", "feature16.absPolarisation", "feature3.speed",
+    "time_string", "time_bin", "altitude_bin"
+  )
+  echoDataSubset = echoDataSubset[, setdiff(names(echoDataSubset), excludedEchoCols)]
 
-  # Pending note from Baptiste:
-  # Need to wait for update of the function mergeVisibilityAndManualBlindTimes
-  # blindTimesDataSubset =  blindTimesDataSubset[, metaBlindTimes$colname]
+  # Merge radar and manual blind times, and link them to the protocols
+  # ============================================================================
+  blindTimes = mergeVisibilityAndManualBlindTimes(
+    visibilityData   = visibilityData,
+    manualBlindTimes = manualBlindTimes,
+    protocolData     = protocolDataSubset
+  )
+  timesInd = (blindTimes$start_targetTZ < stopTime) &
+    (blindTimes$stop_targetTZ > startTime)
+  blindTimes = blindTimes[timesInd, c("type", "start_targetTZ", "stop_targetTZ")]
+  blindTimes$type = as.character(blindTimes$type)
+  blindTimes$protocolID = vapply(seq_len(nrow(blindTimes)), function(i) {
+    overlap = which((protocolDataSubset$startTime_targetTZ < blindTimes$stop_targetTZ[i]) &
+      (protocolDataSubset$stopTime_targetTZ > blindTimes$start_targetTZ[i]))
+    if (length(overlap) == 0) NA_integer_ else as.integer(protocolDataSubset$protocolID[overlap[1]])
+  }, integer(1))
 
   # Filter twilight data
   # ============================================================================
   timesInd = (sunriseSunset$sunStart < stopTime) &
     (sunriseSunset$sunStop > startTime)
-  sunriseSunsetSubset = sunriseSunset[timesInd, ]
-  sunriseSunsetSubset = sunriseSunsetSubset[, metaSunriseSunset$colname]
+  sunriseSunsetCols = c(
+    "is_night", "date", "sunStart", "sunStop",
+    "civilStart", "civilStop", "nauticalStart", "nauticalStop"
+  )
+  sunriseSunsetSubset = sunriseSunset[timesInd, intersect(sunriseSunsetCols, names(sunriseSunset))]
 
-  # Filter echo data
+  # Select site and radar data, incl. the calibration of the used pulse types
   # ============================================================================
-  echoDataSubset = filterEchoData(
-    echoData = echoData,
-    timeRangeTargetTZ = timeRangeTargetTZ,
-    targetTimeZone = timeZone$targetTimeZone,
-    protocolData = protocolDataSubset,
-    classSelection = classSelection,
-    classProbCutOff = classProbCutOff,
-    altitudeRange = altitudeRange,
-    echoValidator = echoValidator
+  siteCols = c(
+    "radarID", "siteID", "siteCode", "siteName", "siteDesc",
+    "timeZone_originTZ", "timeZone_targetTZ",
+    "projectStart_originTZ", "projectStart_targetTZ",
+    "projectEnd_originTZ", "projectEnd_targetTZ",
+    "longitude", "latitude", "altitude", "radarOrientation", "customer"
+  )
+  radarCols = c(
+    "type", "serialNo", "northOffset", "delta", "tiltAngle",
+    "transmitPower", "antennaGainInDBi", "waveGuideAttenuation"
+  )
+  pulseCols = list(
+    S = c("short0V", "shortSatLower", "shortSteepness", "shortSatUpper", "pulseLengthShort"),
+    M = c("medium0V", "mediumSatLower", "mediumSteepness", "mediumSatUpper", "pulseLengthMedium"),
+    L = c("long0V", "longSatLower", "longSteepness", "longSatUpper", "pulseLengthLong")
+  )
+  usedPulseTypes = intersect(names(pulseCols), unique(protocolDataSubset$pulseType))
+  siteData$timeZone_originTZ = timeZone$radarTimeZone
+  siteData$timeZone_targetTZ = targetTZ
+  siteDataOut = siteData[, intersect(
+    c(siteCols, radarCols, unlist(pulseCols[usedPulseTypes], use.names = FALSE)),
+    names(siteData)
+  ), drop = FALSE]
+
+  # Write originTZ times as local clock time of the radar; CSV writing would
+  # otherwise convert them to UTC
+  # ============================================================================
+  originTzToString = function(df) {
+    for (col in grep("_originTZ$", names(df), value = TRUE)) {
+      if (inherits(df[[col]], "POSIXt")) {
+        df[[col]] = format(df[[col]], "%Y-%m-%d %H:%M:%S")
+      }
+    }
+    return(df)
+  }
+  resources = list(
+    site_data      = originTzToString(siteDataOut),
+    protocol_data  = originTzToString(protocolDataOut),
+    echo_data      = originTzToString(echoDataSubset),
+    blind_times    = blindTimes,
+    sunrise_sunset = sunriseSunsetSubset
+  )
+  resources = lapply(resources, function(df) {
+    rownames(df) = NULL
+    df
+  })
+  resourceInfo = list(
+    site_data      = c("Site and radar", "Location of the radar and radar/calibration parameters."),
+    protocol_data  = c("Measurement periods", "Measurement periods (protocols) with their radar settings."),
+    echo_data      = c("Echoes", "Echoes detected by the radar, with their features, classification and MTR factors."),
+    blind_times    = c("Blind times", "Periods during which the radar could not detect echoes (protocol changes, radar-registered and manual blind times)."),
+    sunrise_sunset = c("Sunrise and sunset", "Sunrise, sunset and twilight times at the site.")
   )
 
-  # Create the data package
-  # ============================================================================
-  dataPackage = list(
-    echoData           = echoDataSubset,
-    protocolData       = protocolDataSubset,
-    visibilityData     = blindTimesDataSubset,
-    sunriseSunset  = sunriseSunsetSubset,
-    siteData           = siteData,
-    filterParameters   = ls_filters,
-    metaData           = ls_metaData
-  )
-
-# Create the data package
+# Applied filters
 # ==============================================================================
-  if (!is.null(outputDirPath) && length(outputDirPath) == 1) {
-    # Create package name
+  filterParameters = list(
+    timeRangeTargetTZ  = .jsonArray(format(c(startTime, stopTime), "%Y-%m-%dT%H:%M:%S", tz = targetTZ)),
+    pulseTypeSelection = .jsonArray(pulseTypeSelection),
+    rotationSelection  = .jsonArray(rotationSelection),
+    classSelection     = .jsonArray(classSelection),
+    classProbCutOff    = classProbCutOff,
+    altitudeRange      = .jsonArray(altitudeRange),
+    echoValidator      = echoValidator,
+    manualBlindTimes   = !is.null(manualBlindTimes)
+  )
+
+# Build the frictionless data package
+# ==============================================================================
+  packageProperties = .completePackageMetadata(
+    md               = packageMetadata,
+    siteData         = siteDataOut,
+    echoData         = echoDataSubset,
+    startTime        = startTime,
+    stopTime         = stopTime,
+    timeZone         = timeZone,
+    filterParameters = filterParameters,
+    dbName           = dbName
+  )
+  dataPackage = frictionless::create_package(packageProperties)
+  fieldDefs = .readFieldDefinitions()
+  for (cResource in names(resources)) {
+    dataPackage = frictionless::add_resource(
+      package       = dataPackage,
+      resource_name = cResource,
+      data          = resources[[cResource]],
+      schema        = .buildResourceSchema(resources[[cResource]], cResource, fieldDefs),
+      title         = resourceInfo[[cResource]][1],
+      description   = resourceInfo[[cResource]][2]
+    )
+  }
+  class(dataPackage) = c("mr1dp", class(dataPackage))
+
+# Write the data package
+# ==============================================================================
+  if (!is.null(outputDirPath)) {
+    packageDir = file.path(outputDirPath, packageMetadata$campaignID)
+    writtenPackage = frictionless::write_package(dataPackage, directory = packageDir, compress = TRUE)
+
+    # Rewrite datapackage.json without rounding numbers (write_package() keeps
+    # only 4 decimals, e.g. for the coordinates)
     # ==========================================================================
-    packageName = paste0("dataPackage_", dbName)
+    writtenPackage$directory = NULL
+    packageJson = jsonlite::toJSON(unclass(writtenPackage),
+      pretty = TRUE, null = "null", na = "null", auto_unbox = TRUE, digits = NA
+    )
+    write(packageJson, file.path(packageDir, "datapackage.json"))
 
-    # Default output data package creation¨
-    # ==========================================================================
-    if (!saveAsRDS){
-      dir.create(file.path(outputDirPath, packageName), showWarnings = FALSE)
-      outputPackage = frictionless::create_package()
-      for (cResource in names(dataPackage)) {
-        outputPackage = frictionless::add_resource(outputPackage,
-                                                   data = dataPackage[cResource],
-                                                   resource_name = "echodata")
-      }
-      frictionless::write_package(outputPackage,
-                                  directory = file.path(outputDirPath, packageName),
-                                  compress  = TRUE)
-    }
-
-    # if (name %in% c("filterParameters", "metaData")) {
-    #   # Save as YAML for list elements
-    #   file_path <- file.path(csvDirPath, paste0(name, ".yaml"))
-    #   yaml::write_yaml(dataPackage[[name]], file = file_path)
-    # } else {
-    #   # Save as CSV for table elements
-    #   file_path <- file.path(csvDirPath, paste0(name, ".csv"))
-    #   utils::write.csv(dataPackage[[name]], file = file_path, row.names = FALSE)
-    # }
-
-    # Save RDS (optional)
-    # =========================================================================
     if (saveAsRDS) {
-      if (!is.null(dbName) && length(dbName) == 1) {
-        fileName = paste0(packageName, ".rds")
-        base::saveRDS(dataPackage, file = file.path(outputDirPath, fileName))
-      }
-
+      saveRDS(dataPackage, file = file.path(outputDirPath, paste0(packageMetadata$campaignID, ".rds")))
     }
-  } # end of if (!is.null(outputDirPath) && length(outputDirPath) == 1)
+  }
 
   return(dataPackage)
 }

@@ -90,6 +90,8 @@ e.g. time frame, pulse type.
 }
 \seealso{
 Other write file functions: 
+\code{\link{createDataPackage}()},
+\code{\link{createDataPackageMetadataTemplate}()},
 \code{\link{saveMTR}()},
 \code{\link{savePlotToFile}()}
 }

@@ -1,0 +1,309 @@
+---
+title: "Create and publish an MR1 data package"
+author: Birgen Haest, Baptiste Schmid
+output: rmarkdown::html_vignette
+description: >
+  How do I turn the data of a Birdscan MR1 radar campaign into a standardised,
+  citable data package, and publish it on Zenodo? This vignette describes the
+  workflow, from the database extract to the Zenodo deposit.
+vignette: >
+  %\VignetteIndexEntry{Create and publish an MR1 data package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+``` {r, echo = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+***
+# Summary
+
+An MR1 data package holds the data of one radar campaign (e.g. `CH_Sempach_2024`)
+in a standardised, self-describing format: the
+[Frictionless Data Package](https://datapackage.org). It consists of one CSV
+file per table and a `datapackage.json` file that describes the tables (column
+types, descriptions, units, and how the tables link to each other) and the
+campaign (title, contributors, licence, embargo, location, period, ...).
+
+Each campaign package is published as its own dataset on Zenodo, with its own
+DOI. These campaign datasets are grouped in owner collections (e.g. all
+campaigns of the Swiss Ornithological Institute) and in a community collection
+(all BirdScan MR1 campaigns), so users can cite the level that matches their
+study.
+
+The workflow has 5 steps:
+
+1.    Extract the data from the SQL database.
+
+2.    (optional) Load the manual blind times.
+
+3.    Describe the campaign in a metadata file.
+
+4.    Create the data package.
+
+5.    Upload the data package to Zenodo.
+
+***
+# Before we get started
+
+We first load the birdscanR package and set an output directory.
+```{r}
+library(birdscanR)
+
+# Set main output directory
+# =============================================================================
+mainOutputDir = tempdir()
+```
+
+***
+# Step 1: Extract the data from the SQL database
+
+The data package is created from the output of `extractDbData()`. For a real
+campaign, you extract the data from your database as described in the
+vignette "Introduction to birdscanR". Extract all data of the campaign, with
+all the echo features you want to publish:
+```{r, eval = FALSE}
+# Extract the data from the SQL database
+# =============================================================================
+dbData = extractDbData(
+  dbDriverChar              = "SQL Server",
+  dbServer                  = "MACHINE\\SERVERNAME",
+  dbName                    = "CH_Sempach_2024",
+  saveDbToFile              = TRUE,
+  dbDataDir                 = mainOutputDir,
+  radarTimeZone             = "Etc/GMT0",
+  targetTimeZone            = "Etc/GMT0",
+  listOfRfFeaturesToExtract = c(167, 168),
+  siteLocation              = c(47.12764, 8.192569),
+  sunOrCivil                = "civil",
+  crepuscule                = "nauticalSolar"
+)
+```
+
+In this vignette, we use the sample data extract that ships with the package:
+two days (24-25 September 2024) of data from the radar at Sempach,
+Switzerland.
+```{r}
+# Load example data
+# =============================================================================
+dbData = readRDS(system.file("extdata",
+  "CH_Sempach_2024_SEP24_25_DataExtract.rds",
+  package = "birdscanR"
+))
+dbName = "CH_Sempach_2024_SEP24_25"
+```
+
+***
+# Step 2: (optional) Load the manual blind times
+
+Manual blind times are periods in which the radar data should not be used,
+e.g. because of rain or technical problems, that were noted by the radar
+operator. They are stored in a csv file and loaded with
+`loadManualBlindTimes()`. `createDataPackage()` merges them with the blind
+times registered by the radar, so that the package holds one blind time table.
+
+The csv file has one row per blind time and three columns without header:
+start and stop time (`yyyy-mm-dd hh:mm:ss`) and the type of blind time. The
+package contains an example (`data(manualBlindTimes)`) with three blind times
+during the sample data: rain on the morning of 24 September, a technical
+outage in the night of 24-25 September, and clutter on the afternoon of 25
+September. We write it to a csv file, as you would have it for a real
+campaign, and load it:
+```{r}
+# Write the example manual blind times to a csv file (normally you already
+# have this file)
+# =============================================================================
+data(manualBlindTimes)
+manualBlindTimes
+manualBlindTimesFile = file.path(mainOutputDir, "manualBlindTimes_Sempach.csv")
+write.table(manualBlindTimes,
+  file = manualBlindTimesFile, sep = ",",
+  row.names = FALSE, col.names = FALSE
+)
+
+# Load the manual blind times
+# =============================================================================
+cManualBlindTimes = loadManualBlindTimes(
+  filePath     = manualBlindTimesFile,
+  blindTimesTZ = "Etc/GMT0",
+  targetTZ     = "Etc/GMT0"
+)
+```
+If there are no manual blind times, set `cManualBlindTimes = NULL`.
+
+***
+# Step 3: Describe the campaign in a metadata file
+
+The description of the campaign is stored in a YAML file, one per campaign.
+Write a template with `createDataPackageMetadataTemplate()` and fill it in with
+a text editor:
+```{r}
+# Write the metadata template
+# =============================================================================
+metadataFile = file.path(mainOutputDir, "CH_Sempach_2024_metadata.yaml")
+createDataPackageMetadataTemplate(filePath = metadataFile, overwrite = TRUE)
+```
+
+The template contains the following fields (shown here with the example
+values of the template):
+```{r, echo = FALSE, comment = ""}
+cat(readLines(metadataFile), sep = "\n")
+```
+
+A few points to consider when you fill it in:
+
+- **campaignID**: `<country code>_<site>_<year>`, e.g. `CH_Sempach_2024`. It is
+  used as the name of the package and of the output folder.
+- **licenses**: `CC-BY-4.0` or `CC-BY-NC-4.0`.
+- **embargo**: the date until which the data files stay restricted on Zenodo.
+  The metadata (and thus the existence of the dataset, its contributors and
+  how to contact them) are always public. If you leave it empty, the embargo
+  ends 5 years after the last data in the package.
+- **contributors**: list everyone who should get credit for the dataset. Each
+  contributor needs one or more roles out of `ContactPerson`, `ProjectLeader`,
+  `DataCollector`, `DataCurator`, `Researcher`, `RightsHolder` and
+  `Supervisor`. At least one contributor must be the `ContactPerson`. Give the
+  ORCID of each contributor whenever possible: it is used to merge the
+  contributors of all campaigns into the creators of the collections.
+- **embargoRequestType**: how a contributor wants to be involved when someone
+  requests the data during the embargo: `1` = contact me (potential
+  collaborator), `2` = citation only.
+
+You can also build or adjust the metadata in R, and pass a list instead of a
+file. Here, for example, we add a second contributor:
+```{r}
+# Adjust the metadata in R
+# =============================================================================
+metadata = yaml::read_yaml(metadataFile)
+metadata$contributors[[2]] = list(
+  title              = "Baptiste Schmid",
+  givenName          = "Baptiste",
+  familyName         = "Schmid",
+  path               = "https://orcid.org/0000-0002-7736-7527",
+  organization       = "Swiss Ornithological Institute",
+  roles              = c("ProjectLeader", "DataCollector"),
+  embargoRequestType = 1
+)
+```
+
+The metadata are checked when the data package is created. If something is
+missing or wrong, `createDataPackage()` stops and lists all problems, e.g.:
+```{r, error = TRUE}
+badMetadata = metadata
+badMetadata$title = NULL
+badMetadata$contributors[[2]]$roles = "Author"
+createDataPackage(dbExtract = dbData, metadata = badMetadata)
+```
+
+***
+# Step 4: Create the data package
+
+`createDataPackage()` selects the data of the campaign, applies the filters you
+set, and builds the data package. The filters are the same as in
+`filterProtocolData()` and `filterEchoData()`; they are stored in the package
+metadata, so users know how the data were selected. For a data package, you
+normally keep all data of the campaign and only exclude what should not be
+published (e.g. a test period at the start of the campaign).
+```{r}
+# Create the MR1 data package
+# =============================================================================
+dataPackage = createDataPackage(
+  dbExtract         = dbData,
+  metadata          = metadata,
+  manualBlindTimes  = cManualBlindTimes,
+  dbName            = dbName,
+  timeRangeTargetTZ = c("2024-09-24 00:00", "2024-09-25 23:59"),
+  outputDirPath     = mainOutputDir
+)
+dataPackage
+```
+
+## What is in the data package?
+
+The package holds five tables (resources):
+
+| Resource         | Content                                                                 |
+|------------------|-------------------------------------------------------------------------|
+| `echo_data`      | Echoes, with their features, classification and MTR factors             |
+| `protocol_data`  | Measurement periods (protocols) with their radar settings               |
+| `blind_times`    | Periods in which the radar could not detect echoes                      |
+| `sunrise_sunset` | Sunrise, sunset and twilight times at the site                          |
+| `site_data`      | Location of the radar and radar/calibration parameters                  |
+
+Read a table as a data frame with `frictionless::read_resource()`:
+```{r}
+# Read the blind times
+# =============================================================================
+blindTimes = frictionless::read_resource(dataPackage, "blind_times")
+head(blindTimes)
+table(blindTimes$type)
+```
+
+Each table has a schema that describes its columns, and how it links to the
+other tables: each echo belongs to a measurement period (`protocolID`), and
+each measurement period to a site (`siteID`).
+```{r}
+# Show the schema of the protocol table
+# =============================================================================
+protocolSchema = frictionless::get_schema(dataPackage, "protocol_data")
+data.frame(
+  name        = sapply(protocolSchema$fields, function(x) x$name),
+  type        = sapply(protocolSchema$fields, function(x) x$type),
+  description = sapply(protocolSchema$fields, function(x) x$description)
+)
+str(protocolSchema[c("primaryKey", "foreignKeys")])
+```
+
+Besides the metadata from the YAML file, `createDataPackage()` adds the
+location and period of the campaign, the applied filters, the provenance of
+the data (database, birdscanR and classifier versions), and a suggested
+citation:
+```{r}
+# Show some of the package metadata
+# =============================================================================
+dataPackage$embargo
+dataPackage$temporal
+dataPackage$spatial
+dataPackage$bibliographicCitation
+str(dataPackage$`mr1dp:provenance`)
+```
+
+## The files on disk
+
+Because we set `outputDirPath`, the package was written to a folder named after
+the `campaignID`. This folder is what you upload to Zenodo:
+```{r}
+packageDir = file.path(mainOutputDir, "CH_Sempach_2024")
+list.files(packageDir)
+```
+
+Anyone can read the package back, with R or any other software that supports
+Frictionless Data Packages:
+```{r}
+# Read the data package from disk
+# =============================================================================
+dataPackageFromDisk = frictionless::read_package(file.path(packageDir, "datapackage.json"))
+echoData = frictionless::read_resource(dataPackageFromDisk, "echo_data")
+dim(echoData)
+```
+
+***
+# Step 5: Upload the data package to Zenodo
+
+> **Placeholder.** This step will be described once the Zenodo upload function
+> is available in birdscanR.
+
+<!--
+TODO: describe the Zenodo upload, e.g.:
+- Zenodo account and personal access token (stored as environment variable,
+  never in scripts).
+- Upload the campaign package as a DRAFT record (the function never publishes;
+  the contact person checks the draft on zenodo.org and publishes it).
+- What is taken from datapackage.json: title, description, creators
+  (contributors with ORCID and affiliation), contributor roles, licence,
+  embargo (access right "embargoed" with embargo date), keywords, related
+  identifiers, version.
+- Add the record to the Zenodo community "BirdScan MR1".
+- After publishing: add the DOI to the metadata file (field `id`) and to the
+  owner collection (see the collection functions).
+- Testing with the Zenodo sandbox (sandbox.zenodo.org).
+-->

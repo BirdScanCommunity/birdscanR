@@ -66,7 +66,7 @@ getCollectionTable = function(dbConnection, dbDriverChar, timeInterval = NULL) {
       "altitude_AGL", # Altitude above ground level (m)
       "azimuth", # Azimuth (true north)
       "speed", # Speed (m/s)
-      NA, NA, "rotationFreq", # Rotation frequency in relation to sampling frequency
+      NA, NA, "rotationFreq", # Rotation frequency of the radar antenna (Hz)
       NA, NA, NA, NA, NA, NA,
       "freqRatio", # Frequency Ratio
       "maxLevel", # Maximum level
