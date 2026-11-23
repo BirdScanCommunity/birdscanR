@@ -64,8 +64,9 @@ test_that("createDataPackage() writes a package that can be read back with intac
   )
   pkgRead = frictionless::read_package(file.path(outDir, "CH_Sempach_2024", "datapackage.json"))
   expect_identical(frictionless::resources(pkgRead), resourceNames)
-  expect_identical(pkgRead$contributors[[1]]$roles, c("ContactPerson", "DataCurator"))
-  expect_equal(pkgRead$spatial$coordinates, c(dbData$siteData$longitude, dbData$siteData$latitude))
+  # JSON arrays are read back as vectors or lists, depending on the platform
+  expect_identical(unlist(pkgRead$contributors[[1]]$roles), c("ContactPerson", "DataCurator"))
+  expect_equal(unlist(pkgRead$spatial$coordinates), c(dbData$siteData$longitude, dbData$siteData$latitude))
 
   echo = frictionless::read_resource(pkgRead, "echo_data")
   protocol = frictionless::read_resource(pkgRead, "protocol_data")
