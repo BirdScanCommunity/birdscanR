@@ -254,19 +254,19 @@ createDataPackageMetadataTemplate = function(filePath, overwrite = FALSE) {
   # ============================================================================
   created = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
   out = list(
-    name                  = tolower(md$campaignID),
-    id                    = md$id,
-    title                 = md$title,
-    description           = md$description,
-    version               = md$version,
-    created               = created,
-    campaignID            = md$campaignID,
-    owner                 = md$owner,
-    licenses              = licenses,
-    embargo               = format(embargo, "%Y-%m-%d"),
-    keywords              = .jsonArray(unlist(md$keywords)),
-    contributors          = contributors,
-    relatedIdentifiers    = md$relatedIdentifiers,
+    name = tolower(md$campaignID),
+    id = md$id,
+    title = md$title,
+    description = md$description,
+    version = md$version,
+    created = created,
+    campaignID = md$campaignID,
+    owner = md$owner,
+    licenses = licenses,
+    embargo = format(embargo, "%Y-%m-%d"),
+    keywords = .jsonArray(unlist(md$keywords)),
+    contributors = contributors,
+    relatedIdentifiers = md$relatedIdentifiers,
     bibliographicCitation = md$bibliographicCitation %||%
       .buildCitation(md, format(Sys.Date(), "%Y")),
     spatial = list(

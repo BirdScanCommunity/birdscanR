@@ -22,21 +22,21 @@
 .mr1dpKeys = list(
   site_data = list(primaryKey = "siteID", foreignKeys = NULL),
   protocol_data = list(
-    primaryKey  = "protocolID",
+    primaryKey = "protocolID",
     foreignKeys = list(list(
       fields = "siteID",
       reference = list(resource = "site_data", fields = "siteID")
     ))
   ),
   echo_data = list(
-    primaryKey  = "echo",
+    primaryKey = "echo",
     foreignKeys = list(list(
       fields = "protocolID",
       reference = list(resource = "protocol_data", fields = "protocolID")
     ))
   ),
   blind_times = list(
-    primaryKey  = NULL,
+    primaryKey = NULL,
     foreignKeys = list(list(
       fields = "protocolID",
       reference = list(resource = "protocol_data", fields = "protocolID")

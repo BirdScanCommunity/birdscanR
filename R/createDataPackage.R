@@ -123,8 +123,8 @@ createDataPackage = function(dbExtract,
                              echoValidator = FALSE,
                              outputDirPath = NULL,
                              saveAsRDS = FALSE) {
-# Check whether the required data frames are present in the input list
-# ==============================================================================
+  # Check whether the required data frames are present in the input list
+  # ==============================================================================
   requiredDataFrames = c(
     "echoData", "protocolData", "visibilityData",
     "sunriseSunset", "siteData", "TimeZone"
@@ -137,8 +137,8 @@ createDataPackage = function(dbExtract,
     ))
   }
 
-# Extract the required data frames from the input list
-# ==============================================================================
+  # Extract the required data frames from the input list
+  # ==============================================================================
   echoData = dbExtract$echoData
   protocolData = dbExtract$protocolData
   visibilityData = dbExtract$visibilityData
@@ -146,8 +146,8 @@ createDataPackage = function(dbExtract,
   siteData = dbExtract$siteData
   timeZone = dbExtract$TimeZone
 
-# Input validation
-# ==============================================================================
+  # Input validation
+  # ==============================================================================
   for (cName in c("echoData", "protocolData", "visibilityData", "sunriseSunset", "siteData")) {
     if (!is.data.frame(dbExtract[[cName]])) {
       stop(paste0("'dbExtract$", cName, "' must be a data frame."))
@@ -206,8 +206,8 @@ createDataPackage = function(dbExtract,
     stop("'saveAsRDS' must be a single logical value (TRUE or FALSE).")
   }
 
-# Read and check the package metadata
-# ==============================================================================
+  # Read and check the package metadata
+  # ==============================================================================
   packageMetadata = .readPackageMetadata(metadata)
   metadataProblems = .checkPackageMetadata(packageMetadata)
   if (length(metadataProblems) > 0) {
@@ -217,8 +217,8 @@ createDataPackage = function(dbExtract,
     ))
   }
 
-# Set the time window to use for the data package
-# ==============================================================================
+  # Set the time window to use for the data package
+  # ==============================================================================
   targetTZ = timeZone$targetTimeZone
   if (is.null(timeRangeTargetTZ)) {
     startTime = min(echoData$time_stamp_targetTZ, na.rm = TRUE)
@@ -246,8 +246,8 @@ createDataPackage = function(dbExtract,
     stop("The start of 'timeRangeTargetTZ' must be before its end.")
   }
 
-# Prepare the data
-# ==============================================================================
+  # Prepare the data
+  # ==============================================================================
   # Filter protocol data
   # ============================================================================
   protocolDataSubset = filterProtocolData(
@@ -376,8 +376,8 @@ createDataPackage = function(dbExtract,
     sunrise_sunset = c("Sunrise and sunset", "Sunrise, sunset and twilight times at the site.")
   )
 
-# Applied filters
-# ==============================================================================
+  # Applied filters
+  # ==============================================================================
   filterParameters = list(
     timeRangeTargetTZ  = .jsonArray(format(c(startTime, stopTime), "%Y-%m-%dT%H:%M:%S", tz = targetTZ)),
     pulseTypeSelection = .jsonArray(pulseTypeSelection),
@@ -389,8 +389,8 @@ createDataPackage = function(dbExtract,
     manualBlindTimes   = !is.null(manualBlindTimes)
   )
 
-# Build the frictionless data package
-# ==============================================================================
+  # Build the frictionless data package
+  # ==============================================================================
   packageProperties = .completePackageMetadata(
     md               = packageMetadata,
     siteData         = siteDataOut,
@@ -415,8 +415,8 @@ createDataPackage = function(dbExtract,
   }
   class(dataPackage) = c("mr1dp", class(dataPackage))
 
-# Write the data package
-# ==============================================================================
+  # Write the data package
+  # ==============================================================================
   if (!is.null(outputDirPath)) {
     packageDir = file.path(outputDirPath, packageMetadata$campaignID)
     writtenPackage = frictionless::write_package(dataPackage, directory = packageDir, compress = TRUE)
