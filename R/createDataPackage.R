@@ -35,6 +35,8 @@
 #' @param manualBlindTimes data frame with the manual blind times created by
 #' [loadManualBlindTimes()], or `NULL` (default) if there are none. They are
 #' merged with the radar blind times by [mergeVisibilityAndManualBlindTimes()].
+#' Only blind times that overlap a selected measurement period (protocol) are
+#' included in the package.
 #' @param dbName Name of the database. Stored in the package provenance.
 #' Default is `NULL`.
 #' @param pulseTypeSelection character vector with the pulse types which should
@@ -309,6 +311,9 @@ createDataPackage = function(dbExtract,
       (protocolDataSubset$stopTime_targetTZ > blindTimes$start_targetTZ[i]))
     if (length(overlap) == 0) NA_integer_ else as.integer(protocolDataSubset$protocolID[overlap[1]])
   }, integer(1))
+  # Drop blind times outside the selected protocols (e.g. those of pulse types
+  # that were filtered out); they do not affect the observation time
+  blindTimes = blindTimes[!is.na(blindTimes$protocolID), ]
 
   # Filter twilight data
   # ============================================================================

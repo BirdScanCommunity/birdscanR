@@ -43,6 +43,13 @@ test_that("createDataPackage() builds a package with all resources and schemas",
   expect_false("medium0V" %in% names(site))
   expect_true("radarOrientation" %in% names(site))
   expect_true("blockTime" %in% names(frictionless::read_resource(pkg, "protocol_data")))
+
+  # Only blind times of the selected (short-pulse) protocols
+  blind = frictionless::read_resource(pkg, "blind_times")
+  protocol = frictionless::read_resource(pkg, "protocol_data")
+  expect_gt(nrow(blind), 0)
+  expect_false(anyNA(blind$protocolID))
+  expect_true(all(blind$protocolID %in% protocol$protocolID))
 })
 
 test_that("createDataPackage() works without pulse type selection and with several pulse types", {

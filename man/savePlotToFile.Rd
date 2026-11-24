@@ -106,7 +106,8 @@ Other write file functions:
 \code{\link{compileData}()},
 \code{\link{createDataPackage}()},
 \code{\link{createDataPackageMetadataTemplate}()},
-\code{\link{saveMTR}()}
+\code{\link{saveMTR}()},
+\code{\link{validateDataPackage}()}
 }
 \author{
 Fabian Hertner, Birgen Haest

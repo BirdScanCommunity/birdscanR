@@ -30,7 +30,9 @@ to get a template.}
 
 \item{manualBlindTimes}{data frame with the manual blind times created by
 \code{\link[=loadManualBlindTimes]{loadManualBlindTimes()}}, or \code{NULL} (default) if there are none. They are
-merged with the radar blind times by \code{\link[=mergeVisibilityAndManualBlindTimes]{mergeVisibilityAndManualBlindTimes()}}.}
+merged with the radar blind times by \code{\link[=mergeVisibilityAndManualBlindTimes]{mergeVisibilityAndManualBlindTimes()}}.
+Only blind times that overlap a selected measurement period (protocol) are
+included in the package.}
 
 \item{dbName}{Name of the database. Stored in the package provenance.
 Default is \code{NULL}.}
@@ -151,7 +153,8 @@ Other write file functions:
 \code{\link{compileData}()},
 \code{\link{createDataPackageMetadataTemplate}()},
 \code{\link{saveMTR}()},
-\code{\link{savePlotToFile}()}
+\code{\link{savePlotToFile}()},
+\code{\link{validateDataPackage}()}
 }
 \author{
 Baptiste Schmid, Fabian Hertner, Birgen Haest
