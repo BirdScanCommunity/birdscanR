@@ -35,6 +35,7 @@ Other write file functions:
 \code{\link{createDataPackage}()},
 \code{\link{saveMTR}()},
 \code{\link{savePlotToFile}()},
+\code{\link{uploadDataPackageToZenodo}()},
 \code{\link{validateDataPackage}()}
 }
 \author{

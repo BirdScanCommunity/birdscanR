@@ -1,6 +1,6 @@
 Package: birdscanR
 Title: Migration Traffic Rate Calculation Package for 'Birdscan MR1' Radars
-Version: 0.3.0.9031
+Version: 0.3.0.9032
 Authors@R: c(
     person("Birgen", "Haest", , "birgen.haest@vogelwarte.ch", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-8739-6460")),
@@ -62,6 +62,7 @@ Imports:
   yaml
 Suggests:
   bioRad,
+  httr2,
   knitr,
   rmarkdown,
   testthat (>= 3.0.0),
