@@ -77,6 +77,7 @@ validation$valid
 }
 \seealso{
 Other write file functions: 
+\code{\link{addZenodoRelatedIdentifiers}()},
 \code{\link{compileData}()},
 \code{\link{createDataPackage}()},
 \code{\link{createDataPackageMetadataTemplate}()},

@@ -3,6 +3,7 @@
 S3method(print,mr1dpValidation)
 export(QUERY)
 export(addDayNightInfoPerEcho)
+export(addZenodoRelatedIdentifiers)
 export(compileData)
 export(computeDensity)
 export(computeMTR)

@@ -90,6 +90,7 @@ e.g. time frame, pulse type.
 }
 \seealso{
 Other write file functions: 
+\code{\link{addZenodoRelatedIdentifiers}()},
 \code{\link{createDataPackage}()},
 \code{\link{createDataPackageMetadataTemplate}()},
 \code{\link{saveMTR}()},
