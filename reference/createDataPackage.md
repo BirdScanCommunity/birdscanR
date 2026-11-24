@@ -151,6 +151,7 @@ Other write file functions:
 [`createDataPackageMetadataTemplate()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackageMetadataTemplate.md),
 [`saveMTR()`](https://birdscancommunity.github.io/birdscanR/reference/saveMTR.md),
 [`savePlotToFile()`](https://birdscancommunity.github.io/birdscanR/reference/savePlotToFile.md),
+[`uploadDataPackageToZenodo()`](https://birdscancommunity.github.io/birdscanR/reference/uploadDataPackageToZenodo.md),
 [`validateDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/validateDataPackage.md)
 
 ## Author

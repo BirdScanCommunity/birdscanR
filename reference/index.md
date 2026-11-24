@@ -43,6 +43,8 @@
   : saveMTR
 - [`savePlotToFile()`](https://birdscancommunity.github.io/birdscanR/reference/savePlotToFile.md)
   : savePlotToFile
+- [`uploadDataPackageToZenodo()`](https://birdscancommunity.github.io/birdscanR/reference/uploadDataPackageToZenodo.md)
+  : Upload MR1 Data Package to Zenodo
 - [`validateDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/validateDataPackage.md)
   : Validate MR1 Data Package
 

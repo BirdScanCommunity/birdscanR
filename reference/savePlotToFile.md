@@ -83,6 +83,7 @@ Other write file functions:
 [`createDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackage.md),
 [`createDataPackageMetadataTemplate()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackageMetadataTemplate.md),
 [`saveMTR()`](https://birdscancommunity.github.io/birdscanR/reference/saveMTR.md),
+[`uploadDataPackageToZenodo()`](https://birdscancommunity.github.io/birdscanR/reference/uploadDataPackageToZenodo.md),
 [`validateDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/validateDataPackage.md)
 
 ## Author

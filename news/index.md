@@ -60,6 +60,19 @@
   schema, primary and foreign keys, and plausibility of the content
   (start before stop times, echoes within their measurement period and
   the temporal coverage, site coordinates).
+- New functionality:
+  [`uploadDataPackageToZenodo()`](https://birdscancommunity.github.io/birdscanR/reference/uploadDataPackageToZenodo.md)
+  was added to upload a validated MR1 data package as a draft record to
+  Zenodo (or the Zenodo sandbox), with a reserved DOI that is written
+  into the package, and with the Zenodo metadata (creators, contributor
+  roles, licence, embargo, keywords, related identifiers, location,
+  period, BirdScan MR1 community) taken from `datapackage.json`
+  ([\#59](https://github.com/BirdScanCommunity/birdscanR/issues/59)). It
+  requires the suggested package `httr2`. The record is never published
+  by the function.
+- Improved functionality:
+  [`createDataPackageMetadataTemplate()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackageMetadataTemplate.md)
+  now includes the optional field `id` for the DOI of the dataset.
 - Improved functionality:
   [`createDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackage.md)
   now only includes blind times that overlap a selected measurement

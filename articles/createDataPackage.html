@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">birdscanR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9031</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9032</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -231,6 +231,11 @@ description: &gt;-
 
 # Version of this data package (required). Increase it when the data are corrected.
 version: "1.0.0"
+
+# DOI of the dataset on Zenodo, as URL (optional). Leave empty for the first
+# upload: uploadDataPackageToZenodo() reserves a DOI. Fill it in once the
+# record is published, e.g. https://doi.org/10.5281/zenodo.1234567
+id:
 
 # Owner of the data (required). ror: optional ROR identifier URL.
 owner:
@@ -511,7 +516,7 @@ birdscanR and classifier versions), and a suggested citation:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">dataPackage</span><span class="op">$</span><span class="va">`mr1dp:provenance`</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 8</span></span>
 <span><span class="co">#&gt;  $ database            : chr "CH_Sempach_2024_SEP24_25"</span></span>
-<span><span class="co">#&gt;  $ birdscanR           : chr "0.3.0.9031"</span></span>
+<span><span class="co">#&gt;  $ birdscanR           : chr "0.3.0.9032"</span></span>
 <span><span class="co">#&gt;  $ radarType           : chr "BirdScanMR1"</span></span>
 <span><span class="co">#&gt;  $ radarSerialNo       : int 220</span></span>
 <span><span class="co">#&gt;  $ radarTimeZone       : chr "Etc/GMT0"</span></span>
@@ -576,25 +581,144 @@ not prevent the upload. All issues are also available as a data frame in
 <div class="section level2">
 <h2 id="step-6-upload-the-data-package-to-zenodo">Step 6: Upload the data package to Zenodo<a class="anchor" aria-label="anchor" href="#step-6-upload-the-data-package-to-zenodo"></a>
 </h2>
-<blockquote>
-<p><strong>Placeholder.</strong> This step will be described once the
-Zenodo upload function is available in birdscanR.</p>
-</blockquote>
-<!--
-TODO: describe the Zenodo upload, e.g.:
-- Zenodo account and personal access token (stored as environment variable,
-  never in scripts).
-- Upload the campaign package as a DRAFT record (the function never publishes;
-  the contact person checks the draft on zenodo.org and publishes it).
-- What is taken from datapackage.json: title, description, creators
-  (contributors with ORCID and affiliation), contributor roles, licence,
-  embargo (access right "embargoed" with embargo date), keywords, related
-  identifiers, version.
-- Add the record to the Zenodo community "BirdScan MR1".
-- After publishing: add the DOI to the metadata file (field `id`) and to the
-  owner collection (see the collection functions).
-- Testing with the Zenodo sandbox (sandbox.zenodo.org).
--->
+<p>The last step is to upload the data package to <a href="https://zenodo.org" class="external-link">Zenodo</a>.
+<code><a href="../reference/uploadDataPackageToZenodo.html">uploadDataPackageToZenodo()</a></code> uploads it as a
+<strong>draft</strong> record: it never publishes the record. You check
+the draft on Zenodo, and publish it there yourself.</p>
+<div class="section level3">
+<h3 id="zenodo-account-and-token">Zenodo account and token<a class="anchor" aria-label="anchor" href="#zenodo-account-and-token"></a>
+</h3>
+<p>You need a Zenodo account and a personal access token: on Zenodo, go
+to <em>Account</em> &gt; <em>Applications</em> &gt; <em>Personal access
+tokens</em>, and create a token with the scopes
+<code>deposit:write</code> and <code>deposit:actions</code>. The token
+gives access to your Zenodo account, so never write it in a script.
+Store it as environment variable <code>ZENODO_TOKEN</code> in your
+<code>.Renviron</code> file, which you can open with
+<code>usethis::edit_r_environ()</code>:</p>
+<pre><code>ZENODO_TOKEN=&lt;your token&gt;</code></pre>
+<p>Restart R afterwards. <code><a href="../reference/uploadDataPackageToZenodo.html">uploadDataPackageToZenodo()</a></code> reads
+the token from there.</p>
+</div>
+<div class="section level3">
+<h3 id="test-in-the-zenodo-sandbox-first">Test in the Zenodo sandbox first<a class="anchor" aria-label="anchor" href="#test-in-the-zenodo-sandbox-first"></a>
+</h3>
+<p>The <a href="https://sandbox.zenodo.org" class="external-link">Zenodo sandbox</a> is a copy
+of Zenodo for testing: records there are not real and are removed
+regularly. It needs its own account and token; store that token as
+<code>ZENODO_SANDBOX_TOKEN</code>. The BirdScan MR1 community does not
+exist in the sandbox, so set <code>community = NULL</code>:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Upload the data package as draft to the Zenodo sandbox</span></span>
+<span><span class="co"># =============================================================================</span></span>
+<span><span class="va">draft</span> <span class="op">=</span> <span class="fu"><a href="../reference/uploadDataPackageToZenodo.html">uploadDataPackageToZenodo</a></span><span class="op">(</span></span>
+<span>  packageDir <span class="op">=</span> <span class="va">packageDir</span>,</span>
+<span>  sandbox    <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  community  <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">draft</span><span class="op">$</span><span class="va">url</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="upload-to-zenodo">Upload to Zenodo<a class="anchor" aria-label="anchor" href="#upload-to-zenodo"></a>
+</h3>
+<p>When the sandbox draft looks right, upload the package to Zenodo
+itself:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Upload the data package as draft to Zenodo</span></span>
+<span><span class="co"># =============================================================================</span></span>
+<span><span class="va">draft</span> <span class="op">=</span> <span class="fu"><a href="../reference/uploadDataPackageToZenodo.html">uploadDataPackageToZenodo</a></span><span class="op">(</span>packageDir <span class="op">=</span> <span class="va">packageDir</span><span class="op">)</span></span>
+<span><span class="va">draft</span><span class="op">$</span><span class="va">url</span></span>
+<span><span class="va">draft</span><span class="op">$</span><span class="va">doi</span></span></code></pre></div>
+<p><code><a href="../reference/uploadDataPackageToZenodo.html">uploadDataPackageToZenodo()</a></code>:</p>
+<ol style="list-style-type: decimal">
+<li>validates the package with <code><a href="../reference/validateDataPackage.html">validateDataPackage()</a></code>, and
+stops if it is not valid;</li>
+<li>creates a draft record on Zenodo and reserves a DOI for it;</li>
+<li>writes the DOI as <code>id</code> into the local
+<code>datapackage.json</code> and adds it to the suggested citation, so
+the published package carries its own DOI;</li>
+<li>uploads <code>datapackage.json</code> and the CSV files;</li>
+<li>fills in the metadata of the record from
+<code>datapackage.json</code>:</li>
+</ol>
+<table class="table">
+<colgroup>
+<col width="25%">
+<col width="75%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Zenodo field</th>
+<th align="left">Taken from</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Title, version</td>
+<td align="left">
+<code>title</code>, <code>version</code>
+</td>
+</tr>
+<tr class="even">
+<td align="left">Description</td>
+<td align="left">
+<code>description</code>, site, period and suggested
+citation</td>
+</tr>
+<tr class="odd">
+<td align="left">Creators</td>
+<td align="left">all contributors, with ORCID and affiliation</td>
+</tr>
+<tr class="even">
+<td align="left">Contributors</td>
+<td align="left">each contributor with each of their roles; the owner as
+rights holder</td>
+</tr>
+<tr class="odd">
+<td align="left">Licence</td>
+<td align="left"><code>licenses</code></td>
+</tr>
+<tr class="even">
+<td align="left">Access</td>
+<td align="left">embargoed until <code>embargo</code> (files restricted,
+metadata public), or open if the embargo has passed</td>
+</tr>
+<tr class="odd">
+<td align="left">Additional notes</td>
+<td align="left">the contact person(s) for data requests during the
+embargo</td>
+</tr>
+<tr class="even">
+<td align="left">Keywords</td>
+<td align="left"><code>keywords</code></td>
+</tr>
+<tr class="odd">
+<td align="left">Related works</td>
+<td align="left"><code>relatedIdentifiers</code></td>
+</tr>
+<tr class="even">
+<td align="left">Locations, dates</td>
+<td align="left">site coordinates, and the period of the data
+(<code>Collected</code>)</td>
+</tr>
+<tr class="odd">
+<td align="left">Communities</td>
+<td align="left">the BirdScan MR1 community
+(<code>birdscanmr1community</code>)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level3">
+<h3 id="publish-the-record">Publish the record<a class="anchor" aria-label="anchor" href="#publish-the-record"></a>
+</h3>
+<p>Open the draft (<code>draft$url</code>), check the metadata and
+files, and click <em>Publish</em>. Publishing cannot be undone: the
+files of a published record can no longer be changed, only replaced by a
+new version. On publication, Zenodo registers the DOI, and sends the
+record to the curators of the BirdScan MR1 community for inclusion.</p>
+<p>Finally, add the DOI as <code>id</code> to the metadata file of the
+campaign, so that new versions of the package keep it:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">id</span><span class="kw">:</span><span class="at"> https://doi.org/10.5281/zenodo.&lt;record ID&gt;</span></span></code></pre></div>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
