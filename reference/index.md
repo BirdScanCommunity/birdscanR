@@ -35,6 +35,10 @@
   : Get manual visibility table
 - [`compileData()`](https://birdscancommunity.github.io/birdscanR/reference/compileData.md)
   : compileData
+- [`createDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackage.md)
+  : Create MR1 Data Package
+- [`createDataPackageMetadataTemplate()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackageMetadataTemplate.md)
+  : Create MR1 Data Package Metadata Template
 - [`saveMTR()`](https://birdscancommunity.github.io/birdscanR/reference/saveMTR.md)
   : saveMTR
 - [`savePlotToFile()`](https://birdscancommunity.github.io/birdscanR/reference/savePlotToFile.md)

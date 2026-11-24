@@ -20,9 +20,13 @@ This vignette provides an example of the basic workflow for createVPTS:
 ``` r
 
 library(birdscanR)
+outDir <- tempdir()
+```
+
+``` r
+
 library(bioRad)
 #> Welcome to bioRad version 0.12.0
-outDir <- tempdir()
 ```
 
 Read Test BirdScanMR1 data
@@ -97,7 +101,7 @@ vptsDir = createVPTS(
 #> 35 echoes above the defined altitude range, thus excldued from the VPTS calculation.
 #> Computing densities in each time-altitude bin..
 #> Computing number of animals (n_dbz,), number of birds with speed and direction values (n)mean flux directon (dd, NOTE: not mean circular direction, but  mean flux direction taking into account individuals' flight speeds), mean flux speeds (ff, NOTE: not mean ground speed of the individual birds but speed flux size taking into account individual's directions), mean u and v components and mtr-weighted average rcs (rcs) of animal movements in each time-altitude bin..
-#> Writing daily VPTS csv files to /tmp/RtmpoVGpFL/vpts..
+#> Writing daily VPTS csv files to /tmp/RtmpVr2QEl/vpts..
 ```
 
 ------------------------------------------------------------------------
@@ -107,7 +111,7 @@ vptsDir = createVPTS(
 ``` r
 
 vpts = read.csv(file.path(vptsDir, "200_vpts_20240924.csv"))
-vpts = as.vpts(vpts) 
+vpts = as.vpts(vpts)
 #> Warning in validate_vpts(data): Validation issues found: Type validation failed
 #> for radar; Type validation failed for datetime; Type validation failed for w;
 #> Type validation failed for sd_vvp; Type validation failed for eta; Type

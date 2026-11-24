@@ -96,6 +96,10 @@ devtools::install_github("BirdScanCommunity/birdscanR")
   : Get manual visibility table
 - [`compileData()`](https://birdscancommunity.github.io/birdscanR/reference/compileData.md)
   : compileData
+- [`createDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackage.md)
+  : Create MR1 Data Package
+- [`createDataPackageMetadataTemplate()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackageMetadataTemplate.md)
+  : Create MR1 Data Package Metadata Template
 - [`saveMTR()`](https://birdscancommunity.github.io/birdscanR/reference/saveMTR.md)
   : saveMTR
 - [`savePlotToFile()`](https://birdscancommunity.github.io/birdscanR/reference/savePlotToFile.md)
@@ -161,6 +165,14 @@ devtools::install_github("BirdScanCommunity/birdscanR")
   Which functions do I need to call to calculate migration traffic rates
   from data stored in an SQL Birdscan database? This vignette describes
   the main workflow to do so.
+
+- [Create and publish an MR1 data
+  package](https://birdscancommunity.github.io/birdscanR/articles/createDataPackage.md):
+
+  How do I turn the data of a Birdscan MR1 radar campaign into a
+  standardised, citable data package, and publish it on Zenodo? This
+  vignette describes the workflow, from the database extract to the
+  Zenodo deposit.
 
 - [create and read
   VPTS](https://birdscancommunity.github.io/birdscanR/articles/createVPTS.md):

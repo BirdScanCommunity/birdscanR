@@ -9,6 +9,14 @@
   from data stored in an SQL Birdscan database? This vignette describes
   the main workflow to do so.
 
+- [Create and publish an MR1 data
+  package](https://birdscancommunity.github.io/birdscanR/articles/createDataPackage.md):
+
+  How do I turn the data of a Birdscan MR1 radar campaign into a
+  standardised, citable data package, and publish it on Zenodo? This
+  vignette describes the workflow, from the database extract to the
+  Zenodo deposit.
+
 - [create and read
   VPTS](https://birdscancommunity.github.io/birdscanR/articles/createVPTS.md):
 

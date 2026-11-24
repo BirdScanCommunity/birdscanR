@@ -80,6 +80,8 @@ No return value, used to save plots to file.
 
 Other write file functions:
 [`compileData()`](https://birdscancommunity.github.io/birdscanR/reference/compileData.md),
+[`createDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackage.md),
+[`createDataPackageMetadataTemplate()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackageMetadataTemplate.md),
 [`saveMTR()`](https://birdscancommunity.github.io/birdscanR/reference/saveMTR.md)
 
 ## Author

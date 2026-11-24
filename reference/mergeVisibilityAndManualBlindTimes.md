@@ -93,6 +93,5 @@ blindTimes = mergeVisibilityAndManualBlindTimes(
   manualBlindTimes = cManualBlindTimes,
   protocolData     = dbData$protocolData
 )
-#> Warning: CHECK and correct : some time periods overlapp in manualBlindTimes
 # }
 ```

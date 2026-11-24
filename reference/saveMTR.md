@@ -77,6 +77,8 @@ No return value, used to save MTR to file.
 
 Other write file functions:
 [`compileData()`](https://birdscancommunity.github.io/birdscanR/reference/compileData.md),
+[`createDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackage.md),
+[`createDataPackageMetadataTemplate()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackageMetadataTemplate.md),
 [`savePlotToFile()`](https://birdscancommunity.github.io/birdscanR/reference/savePlotToFile.md)
 
 ## Author

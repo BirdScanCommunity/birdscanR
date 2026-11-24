@@ -4,6 +4,7 @@
 <url><loc>https://birdscancommunity.github.io/birdscanR/CONTRIBUTING.html</loc></url>
 <url><loc>https://birdscancommunity.github.io/birdscanR/LICENSE.html</loc></url>
 <url><loc>https://birdscancommunity.github.io/birdscanR/articles/birdscanR.html</loc></url>
+<url><loc>https://birdscancommunity.github.io/birdscanR/articles/createDataPackage.html</loc></url>
 <url><loc>https://birdscancommunity.github.io/birdscanR/articles/createVPTS.html</loc></url>
 <url><loc>https://birdscancommunity.github.io/birdscanR/articles/extractingSingleTableFromTheSqlDatabase.html</loc></url>
 <url><loc>https://birdscancommunity.github.io/birdscanR/articles/index.html</loc></url>
@@ -19,6 +20,8 @@
 <url><loc>https://birdscancommunity.github.io/birdscanR/reference/computeDensity.html</loc></url>
 <url><loc>https://birdscancommunity.github.io/birdscanR/reference/computeMTR.html</loc></url>
 <url><loc>https://birdscancommunity.github.io/birdscanR/reference/convertTimeZone.html</loc></url>
+<url><loc>https://birdscancommunity.github.io/birdscanR/reference/createDataPackage.html</loc></url>
+<url><loc>https://birdscancommunity.github.io/birdscanR/reference/createDataPackageMetadataTemplate.html</loc></url>
 <url><loc>https://birdscancommunity.github.io/birdscanR/reference/createTimeRangeForPlot.html</loc></url>
 <url><loc>https://birdscancommunity.github.io/birdscanR/reference/createVPTS.html</loc></url>
 <url><loc>https://birdscancommunity.github.io/birdscanR/reference/dbConnectBirdscanSQL.html</loc></url>

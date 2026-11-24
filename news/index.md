@@ -2,11 +2,9 @@
 
 ## birdscanR (development version)
 
-- New functionality:
-  [`compileData()`](https://birdscancommunity.github.io/birdscanR/reference/compileData.md)
-  was added to compile a standardized MR1 dataset for publication to a
-  data repository and allow easier interoperability
-  ([\#44](https://github.com/BirdScanCommunity/birdscanR/issues/44)).
+- Breaking change: birdscanR now requires R \>= 4.2.0 (was R \>= 4.1.0),
+  because current versions of its dependency ggplot2 no longer support R
+  4.1.
 - New functionality:
   [`filterSpeedFeature37()`](https://birdscancommunity.github.io/birdscanR/reference/filterSpeedFeature37.md)
   was added to filter unreasonable speed values created for animals
@@ -37,6 +35,29 @@
 - New functionality: Added a function to create a list of time ranges
   that can then be used for plotting
   ([\#78](https://github.com/BirdScanCommunity/birdscanR/issues/78)).
+- New functionality:
+  [`createDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackage.md)
+  was added to create a standardised MR1 data package of a radar
+  campaign
+  ([\#44](https://github.com/BirdScanCommunity/birdscanR/issues/44)),
+  following the Frictionless Data Package standard, for publication on
+  Zenodo. The package holds the echo, protocol, blind time,
+  sunrise/sunset and site data, with a schema per table (column types,
+  descriptions, units, primary and foreign keys) and package-level
+  metadata (title, owner, licence, embargo, contributors with ORCID and
+  DataCite roles, related identifiers, suggested citation, spatial and
+  temporal coverage, applied filters and provenance).
+- New functionality:
+  [`createDataPackageMetadataTemplate()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackageMetadataTemplate.md)
+  was added to write a YAML template for the package-level metadata used
+  by
+  [`createDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackage.md).
+- Improved documentation: new vignette ‘Create and publish an MR1 data
+  package’.
+- Changed sample data: the example manual blind times
+  (`data(manualBlindTimes)`) now fall within the period of the sample
+  data extract (Sempach, 24-25 September 2024), so they can be used
+  together in examples.
 - Simplification: all `get` functions do not require the `dbDriverChar`
   argument
   ([\#72](https://github.com/BirdScanCommunity/birdscanR/issues/72)).
@@ -70,6 +91,15 @@
   [`dbConnectBirdscanSQL()`](https://birdscancommunity.github.io/birdscanR/reference/dbConnectBirdscanSQL.md)
   and file ([commit
   337a6be](https://github.com/BirdScanCommunity/birdscanR/commit/337a6be473178eb9f35d545e1c7bb164ad951f76)).
+- Bug Fix:
+  [`mergeVisibilityAndManualBlindTimes()`](https://birdscancommunity.github.io/birdscanR/reference/mergeVisibilityAndManualBlindTimes.md)
+  warned about overlapping manual blind times whenever more than one
+  manual blind time was given, also when they did not overlap.
+- Bug Fix: the documentation of
+  [`loadManualBlindTimes()`](https://birdscancommunity.github.io/birdscanR/reference/loadManualBlindTimes.md)
+  suggested writing the example blind times with
+  [`write.csv()`](https://rdrr.io/r/utils/write.table.html), which adds
+  a header row that is then read as a blind time.
 - Some smaller bug fixes:
   ([\#63](https://github.com/BirdScanCommunity/birdscanR/issues/63),
   [commit
