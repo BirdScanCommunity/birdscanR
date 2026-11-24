@@ -34,7 +34,8 @@ Other write file functions:
 \code{\link{compileData}()},
 \code{\link{createDataPackage}()},
 \code{\link{saveMTR}()},
-\code{\link{savePlotToFile}()}
+\code{\link{savePlotToFile}()},
+\code{\link{validateDataPackage}()}
 }
 \author{
 Birgen Haest
