@@ -107,6 +107,7 @@ Other write file functions:
 \code{\link{createDataPackage}()},
 \code{\link{createDataPackageMetadataTemplate}()},
 \code{\link{saveMTR}()},
+\code{\link{uploadDataPackageToZenodo}()},
 \code{\link{validateDataPackage}()}
 }
 \author{

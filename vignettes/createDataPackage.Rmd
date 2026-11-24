@@ -313,21 +313,86 @@ the upload. All issues are also available as a data frame in
 ***
 # Step 6: Upload the data package to Zenodo
 
-> **Placeholder.** This step will be described once the Zenodo upload function
-> is available in birdscanR.
+The last step is to upload the data package to [Zenodo](https://zenodo.org).
+`uploadDataPackageToZenodo()` uploads it as a **draft** record: it never
+publishes the record. You check the draft on Zenodo, and publish it there
+yourself.
 
-<!--
-TODO: describe the Zenodo upload, e.g.:
-- Zenodo account and personal access token (stored as environment variable,
-  never in scripts).
-- Upload the campaign package as a DRAFT record (the function never publishes;
-  the contact person checks the draft on zenodo.org and publishes it).
-- What is taken from datapackage.json: title, description, creators
-  (contributors with ORCID and affiliation), contributor roles, licence,
-  embargo (access right "embargoed" with embargo date), keywords, related
-  identifiers, version.
-- Add the record to the Zenodo community "BirdScan MR1".
-- After publishing: add the DOI to the metadata file (field `id`) and to the
-  owner collection (see the collection functions).
-- Testing with the Zenodo sandbox (sandbox.zenodo.org).
--->
+## Zenodo account and token
+
+You need a Zenodo account and a personal access token: on Zenodo, go to
+*Account* > *Applications* > *Personal access tokens*, and create a token
+with the scopes `deposit:write` and `deposit:actions`. The token gives access
+to your Zenodo account, so never write it in a script. Store it as environment
+variable `ZENODO_TOKEN` in your `.Renviron` file, which you can open with
+`usethis::edit_r_environ()`:
+```
+ZENODO_TOKEN=<your token>
+```
+Restart R afterwards. `uploadDataPackageToZenodo()` reads the token from there.
+
+## Test in the Zenodo sandbox first
+
+The [Zenodo sandbox](https://sandbox.zenodo.org) is a copy of Zenodo for
+testing: records there are not real and are removed regularly. It needs its
+own account and token; store that token as `ZENODO_SANDBOX_TOKEN`. The BirdScan
+MR1 community does not exist in the sandbox, so set `community = NULL`:
+```{r, eval = FALSE}
+# Upload the data package as draft to the Zenodo sandbox
+# =============================================================================
+draft = uploadDataPackageToZenodo(
+  packageDir = packageDir,
+  sandbox    = TRUE,
+  community  = NULL
+)
+draft$url
+```
+
+## Upload to Zenodo
+
+When the sandbox draft looks right, upload the package to Zenodo itself:
+```{r, eval = FALSE}
+# Upload the data package as draft to Zenodo
+# =============================================================================
+draft = uploadDataPackageToZenodo(packageDir = packageDir)
+draft$url
+draft$doi
+```
+
+`uploadDataPackageToZenodo()`:
+
+1. validates the package with `validateDataPackage()`, and stops if it is not
+   valid;
+2. creates a draft record on Zenodo and reserves a DOI for it;
+3. writes the DOI as `id` into the local `datapackage.json` and adds it to the
+   suggested citation, so the published package carries its own DOI;
+4. uploads `datapackage.json` and the CSV files;
+5. fills in the metadata of the record from `datapackage.json`:
+
+| Zenodo field          | Taken from                                                          |
+|:----------------------|:--------------------------------------------------------------------|
+| Title, version        | `title`, `version`                                                  |
+| Description           | `description`, site, period and suggested citation                 |
+| Creators              | all contributors, with ORCID and affiliation                        |
+| Contributors          | each contributor with each of their roles; the owner as rights holder |
+| Licence               | `licenses`                                                          |
+| Access                | embargoed until `embargo` (files restricted, metadata public), or open if the embargo has passed |
+| Additional notes      | the contact person(s) for data requests during the embargo         |
+| Keywords              | `keywords`                                                          |
+| Related works         | `relatedIdentifiers`                                                |
+| Locations, dates      | site coordinates, and the period of the data (`Collected`)         |
+| Communities           | the BirdScan MR1 community (`birdscanmr1community`)                 |
+
+## Publish the record
+
+Open the draft (`draft$url`), check the metadata and files, and click
+*Publish*. Publishing cannot be undone: the files of a published record can
+no longer be changed, only replaced by a new version. On publication, Zenodo
+registers the DOI, and sends the record to the curators of the BirdScan MR1
+community for inclusion.
+
+Finally, add the DOI as `id` to the metadata file of the campaign, so that new
+versions of the package keep it:
+```yaml
+id: https://doi.org/10.5281/zenodo.<record ID>
+```

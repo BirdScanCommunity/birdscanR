@@ -22,6 +22,11 @@ description: >-
 # Version of this data package (required). Increase it when the data are corrected.
 version: "1.0.0"
 
+# DOI of the dataset on Zenodo, as URL (optional). Leave empty for the first
+# upload: uploadDataPackageToZenodo() reserves a DOI. Fill it in once the
+# record is published, e.g. https://doi.org/10.5281/zenodo.1234567
+id:
+
 # Owner of the data (required). ror: optional ROR identifier URL.
 owner:
   name: Swiss Ornithological Institute

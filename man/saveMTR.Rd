@@ -115,6 +115,7 @@ Other write file functions:
 \code{\link{createDataPackage}()},
 \code{\link{createDataPackageMetadataTemplate}()},
 \code{\link{savePlotToFile}()},
+\code{\link{uploadDataPackageToZenodo}()},
 \code{\link{validateDataPackage}()}
 }
 \author{
