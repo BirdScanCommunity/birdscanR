@@ -101,7 +101,7 @@ vptsDir = createVPTS(
 #> 35 echoes above the defined altitude range, thus excldued from the VPTS calculation.
 #> Computing densities in each time-altitude bin..
 #> Computing number of animals (n_dbz,), number of birds with speed and direction values (n)mean flux directon (dd, NOTE: not mean circular direction, but  mean flux direction taking into account individuals' flight speeds), mean flux speeds (ff, NOTE: not mean ground speed of the individual birds but speed flux size taking into account individual's directions), mean u and v components and mtr-weighted average rcs (rcs) of animal movements in each time-altitude bin..
-#> Writing daily VPTS csv files to /tmp/RtmpVr2QEl/vpts..
+#> Writing daily VPTS csv files to /tmp/RtmpENzwte/vpts..
 ```
 
 ------------------------------------------------------------------------

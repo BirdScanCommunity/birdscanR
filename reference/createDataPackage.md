@@ -72,6 +72,8 @@ createDataPackage(
   or `NULL` (default) if there are none. They are merged with the radar
   blind times by
   [`mergeVisibilityAndManualBlindTimes()`](https://birdscancommunity.github.io/birdscanR/reference/mergeVisibilityAndManualBlindTimes.md).
+  Only blind times that overlap a selected measurement period (protocol)
+  are included in the package.
 
 - dbName:
 
@@ -148,7 +150,8 @@ Other write file functions:
 [`compileData()`](https://birdscancommunity.github.io/birdscanR/reference/compileData.md),
 [`createDataPackageMetadataTemplate()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackageMetadataTemplate.md),
 [`saveMTR()`](https://birdscancommunity.github.io/birdscanR/reference/saveMTR.md),
-[`savePlotToFile()`](https://birdscancommunity.github.io/birdscanR/reference/savePlotToFile.md)
+[`savePlotToFile()`](https://birdscancommunity.github.io/birdscanR/reference/savePlotToFile.md),
+[`validateDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/validateDataPackage.md)
 
 ## Author
 

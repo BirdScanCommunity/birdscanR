@@ -52,6 +52,19 @@
   was added to write a YAML template for the package-level metadata used
   by
   [`createDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackage.md).
+- New functionality:
+  [`validateDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/validateDataPackage.md)
+  was added to check an MR1 data package, as object or on disk, before
+  publication: package metadata, presence and readability of the
+  resources, required columns, column names and types against the
+  schema, primary and foreign keys, and plausibility of the content
+  (start before stop times, echoes within their measurement period and
+  the temporal coverage, site coordinates).
+- Improved functionality:
+  [`createDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackage.md)
+  now only includes blind times that overlap a selected measurement
+  period (protocol); before, blind times of protocols that were filtered
+  out (e.g. by `pulseTypeSelection`) were included without `protocolID`.
 - Improved documentation: new vignette ‘Create and publish an MR1 data
   package’.
 - Changed sample data: the example manual blind times

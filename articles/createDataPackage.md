@@ -18,7 +18,7 @@ its own DOI. These campaign datasets are grouped in owner collections
 community collection (all BirdScan MR1 campaigns), so users can cite the
 level that matches their study.
 
-The workflow has 5 steps:
+The workflow has 6 steps:
 
 1.  Extract the data from the SQL database.
 
@@ -28,7 +28,9 @@ The workflow has 5 steps:
 
 4.  Create the data package.
 
-5.  Upload the data package to Zenodo.
+5.  Validate the data package.
+
+6.  Upload the data package to Zenodo.
 
 ------------------------------------------------------------------------
 
@@ -451,7 +453,7 @@ dataPackage$bibliographicCitation
 str(dataPackage$`mr1dp:provenance`)
 #> List of 8
 #>  $ database            : chr "CH_Sempach_2024_SEP24_25"
-#>  $ birdscanR           : chr "0.3.0.9030"
+#>  $ birdscanR           : chr "0.3.0.9031"
 #>  $ radarType           : chr "BirdScanMR1"
 #>  $ radarSerialNo       : int 220
 #>  $ radarTimeZone       : chr "Etc/GMT0"
@@ -488,7 +490,42 @@ dim(echoData)
 
 ------------------------------------------------------------------------
 
-## Step 5: Upload the data package to Zenodo
+## Step 5: Validate the data package
+
+Before you upload the package, check it with
+[`validateDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/validateDataPackage.md).
+It checks the package metadata, that all tables are present and
+readable, that the columns match their schema, that the keys between the
+tables are intact (e.g. every echo belongs to an existing measurement
+period), and that the content is plausible (e.g. start times before stop
+times, echoes within the period of the package). Validate the files on
+disk, as these are what you upload:
+
+``` r
+
+# Validate the data package on disk
+# =============================================================================
+validation = validateDataPackage(packageDir)
+#> Warning: `resources()` was deprecated in frictionless 1.3.0.
+#> ℹ Please use `resource_names()` instead.
+#> ℹ The deprecated feature was likely used in the birdscanR package.
+#>   Please report the issue at
+#>   <https://github.com/BirdScanCommunity/birdscanR/issues>.
+#> This warning is displayed once per session.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+#> generated.
+validation
+#> The MR1 data package is valid.
+```
+
+Errors mean that the package is incomplete or inconsistent: fix them
+before you upload it. Warnings, e.g. a column without description, do
+not prevent the upload. All issues are also available as a data frame in
+`validation$issues`.
+
+------------------------------------------------------------------------
+
+## Step 6: Upload the data package to Zenodo
 
 > **Placeholder.** This step will be described once the Zenodo upload
 > function is available in birdscanR.

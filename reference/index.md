@@ -43,6 +43,8 @@
   : saveMTR
 - [`savePlotToFile()`](https://birdscancommunity.github.io/birdscanR/reference/savePlotToFile.md)
   : savePlotToFile
+- [`validateDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/validateDataPackage.md)
+  : Validate MR1 Data Package
 
 ## Filter and manipulation functions
 
