@@ -113,7 +113,7 @@ mergeVisibilityAndManualBlindTimes = function(visibilityData,
     # =========================================================================
     if (nrow(manualBlindTimesSorted) > 1) {
       overlaps = manualBlindTimesSorted$start_targetTZ[2:(length(manualBlindTimesSorted[, 1]))] < manualBlindTimesSorted$stop_targetTZ[1:(length(manualBlindTimesSorted[, 1]) - 1)]
-      if (length(overlaps) >= 1) warning(paste0("CHECK and correct : some time periods overlapp in manualBlindTimes"))
+      if (any(overlaps)) warning(paste0("CHECK and correct : some time periods overlapp in manualBlindTimes"))
       manualBlindTimesSorted$stop_targetTZ[c(overlaps, FALSE)] = manualBlindTimesSorted$start_targetTZ[c(FALSE, overlaps)]
     }
   }

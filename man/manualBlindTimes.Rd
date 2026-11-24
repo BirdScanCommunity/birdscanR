@@ -6,13 +6,20 @@
 \title{Example file on how to include manual blind times for your 'Birdscan MR1'
 database.}
 \format{
-An object of class \code{data.frame}.
+A \code{data.frame} with one row per blind time and three character
+columns without header names: start and stop of the blind time (format
+\code{"\%Y-\%m-\%d \%H:\%M:\%S"}), and the type of blind time. Write it to a csv file
+without row and column names, and load it with \code{\link[=loadManualBlindTimes]{loadManualBlindTimes()}}.
 }
 \usage{
 data(manualBlindTimes)
 }
 \description{
 To create your own manual blind times file, just copy this file, and adjust.
+The example blind times (rain, a technical outage and clutter) fall within
+the period of the sample data extract
+\code{CH_Sempach_2024_SEP24_25_DataExtract.rds} (24-25 September 2024), so they
+can be used together in examples.
 }
 \examples{
 data(manualBlindTimes)

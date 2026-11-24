@@ -12,15 +12,15 @@
 #' blind times have to be defined in a csv file and are loaded with
 #' [loadManualBlindTimes()]. An example dataset is available by running:
 #'  `data(manualBlindTimes)`
-#'  `write.csv(manualBlindTimes, file = 'the output file destination', row.names = F)`
+#'  `write.table(manualBlindTimes, file = 'the output file destination', sep = ",", row.names = FALSE, col.names = FALSE)`
 #' The file path is defined as a global variable ‘manualBlindTimesFile’. A
 #' custom file and filepath can be used instead. The manual blind times have to
 #' be entered with 3 columns:
 #' start time 'yyyy-mm-dd hh:mm:ss', stop time 'yyyy-MM-dd hh:mm:ss', type.
 #'
 #' Example:
-#' 2021-01-16 04:15:00,2021-01-16 05:42:00,rain
-#' 2021-01-17 16:33:00,2021-01-17 18:04:00,clutter
+#' 2024-09-24 05:00:00,2024-09-24 07:03:30,rain
+#' 2024-09-25 15:20:00,2024-09-25 15:34:00,clutter
 #' Manual blind time types can be chosen freely. When computing observation
 #' times, it can be decided if some of the defined manual blind time types
 #' should be treated as observed time with MTR zero or as blind time

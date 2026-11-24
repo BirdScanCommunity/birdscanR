@@ -1,0 +1,78 @@
+# ==============================================================================
+# MR1 data package metadata (one file per campaign)
+# ==============================================================================
+# Fill in this file and pass its path to createDataPackage(metadata = ...).
+# The values below are an example for the Sempach test dataset; replace them.
+# Fields marked (required) must be present. Fields left empty or removed are
+# derived from the data where possible (see comments).
+# Property names follow the Frictionless Data Package standard
+# (https://datapackage.org) where one exists.
+
+# Campaign identifier (required): <country code>_<site>_<year>
+# Used as package name (in lower case) and as output folder name.
+campaignID: CH_Sempach_2024
+
+# Title and description of the campaign dataset (required)
+title: "BirdScan MR1 radar data, Sempach (Switzerland), 2024"
+description: >-
+  Echo data recorded with a BirdScan MR1 vertical-looking radar at Sempach,
+  Switzerland, with measurement protocols, blind times, sunrise/sunset times
+  and radar/site parameters. Created with the R package birdscanR.
+
+# Version of this data package (required). Increase it when the data are corrected.
+version: "1.0.0"
+
+# Owner of the data (required). ror: optional ROR identifier URL.
+owner:
+  name: Swiss Ornithological Institute
+  ror: https://ror.org/03mcsbr76
+
+# Licence (required). One of: CC-BY-4.0, CC-BY-NC-4.0
+licenses:
+  - name: CC-BY-4.0
+    path: https://creativecommons.org/licenses/by/4.0/
+    title: Creative Commons Attribution 4.0 International
+
+# End of the embargo (YYYY-MM-DD). Data files stay restricted on Zenodo until
+# this date; metadata are always public. Leave empty to use the default:
+# 5 years after the end of the data in the package.
+embargo:
+
+# Keywords (optional)
+keywords:
+  - bird migration
+  - radar aeroecology
+  - BirdScan MR1
+  - vertical-looking radar
+
+# Contributors (required, at least one ContactPerson).
+#   title:        full name as it should appear in citations (required)
+#   givenName / familyName: used for citations and for merging collections
+#   path:         ORCID as URL, e.g. https://orcid.org/0000-0000-0000-0000
+#                 (strongly recommended: used to merge creators across campaigns)
+#   email:        optional
+#   organization: affiliation
+#   roles:        one or more DataCite contributor types:
+#                 ContactPerson, ProjectLeader, DataCollector, DataCurator,
+#                 Researcher, RightsHolder, Supervisor
+#   embargoRequestType: how to handle data requests during the embargo:
+#                 1 = contact me (potential collaborator), 2 = citation only
+contributors:
+  - title: Birgen Haest
+    givenName: Birgen
+    familyName: Haest
+    path: https://orcid.org/0000-0002-8739-6460
+    organization: Swiss Ornithological Institute
+    roles: [ContactPerson, DataCurator]
+    embargoRequestType: 1
+
+# Related identifiers (optional), DataCite relation types, e.g. IsPartOf
+# (owner collection), IsCitedBy, IsDocumentedBy, IsDerivedFrom.
+relatedIdentifiers:
+  - relationType: IsCompiledBy
+    relatedIdentifier: https://github.com/BirdScanCommunity/birdscanR
+    relatedIdentifierType: URL
+
+# Suggested citation (optional). Leave empty to generate it from the
+# contributors, the year of creation and the title.
+bibliographicCitation:
