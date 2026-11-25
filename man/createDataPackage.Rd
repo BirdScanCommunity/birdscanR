@@ -150,6 +150,7 @@ echoData = frictionless::read_resource(dataPackage, "echo_data")
 }
 \seealso{
 Other write file functions: 
+\code{\link{addZenodoRelatedIdentifiers}()},
 \code{\link{compileData}()},
 \code{\link{createDataPackageMetadataTemplate}()},
 \code{\link{saveMTR}()},

@@ -2,8 +2,9 @@
 #' @author Birgen Haest
 #' @description [uploadDataPackageToZenodo()] uploads an MR1 data package,
 #' written to disk by [createDataPackage()], to [Zenodo](https://zenodo.org) as
-#' a **draft** record. The function never publishes the record: check the draft
-#' on Zenodo and publish it there.
+#' a **draft** record: either a new record, or a new version of an existing
+#' record. The function never publishes the record: check the draft on Zenodo
+#' and publish it there.
 #'
 #' The package is first checked with [validateDataPackage()]; an invalid
 #' package is not uploaded. The Zenodo metadata are taken from
@@ -20,10 +21,17 @@
 #'   the embargo, in the description and notes.
 #'
 #' A DOI is reserved for the record. It is written as `id` in the local
-#' `datapackage.json` (and added to the suggested citation) before the files
-#' are uploaded, so the published package carries its own DOI. Also add it as
-#' `id` to the metadata file of the campaign, so new versions of the package
-#' keep it.
+#' `datapackage.json` (and in the suggested citation) before the files are
+#' uploaded, so the published package carries its own DOI.
+#'
+#' **New versions.** When the data of a published campaign are corrected,
+#' create the package again with a higher `version`, and with the DOI of the
+#' published record as `id` in the metadata file. The upload then creates a new
+#' version of that record (with a new DOI) instead of a new record. All versions
+#' share the concept DOI of the record. The files of the previous version are
+#' replaced, and the related identifiers of the previous version that are not
+#' in the package (e.g. `IsPartOf` links to collections, see
+#' [addZenodoRelatedIdentifiers()]) are kept.
 #' @param packageDir Directory of the data package, i.e. the folder with
 #' `datapackage.json` written by [createDataPackage()].
 #' @param token Zenodo personal access token with the scopes `deposit:write`
@@ -39,10 +47,14 @@
 #' this community does not exist.
 #' @param addDoi logical. If `TRUE` (default), the reserved DOI is written into
 #' the local `datapackage.json` before the upload.
+#' @param newVersion logical or `NULL`. If `TRUE`, create a new version of the
+#' Zenodo record given by the `id` (DOI) of the package; if `FALSE`, create a
+#' new record. Default is `NULL`: a new version if the package has a Zenodo DOI
+#' as `id`, otherwise a new record.
 #'
-#' @return A list, invisibly, with `id` (Zenodo record ID), `doi` (reserved
-#' DOI), `url` (link to the draft on Zenodo) and `files` (names of the uploaded
-#' files).
+#' @return A list, invisibly, with `id` (Zenodo record ID of the draft), `doi`
+#' (reserved DOI), `url` (link to the draft on Zenodo), `files` (names of the
+#' uploaded files) and `newVersion` (logical).
 #' @family write file functions
 #' @export
 #' @examples
@@ -77,12 +89,11 @@ uploadDataPackageToZenodo = function(packageDir,
                                      token = NULL,
                                      sandbox = FALSE,
                                      community = "birdscanmr1community",
-                                     addDoi = TRUE) {
+                                     addDoi = TRUE,
+                                     newVersion = NULL) {
   # Input validation
   # ==============================================================================
-  if (!requireNamespace("httr2", quietly = TRUE)) {
-    stop("The package 'httr2' is required to upload to Zenodo. Install it with install.packages(\"httr2\").")
-  }
+  .checkHttr2()
   if (!is.character(packageDir) || length(packageDir) != 1) {
     stop("'packageDir' must be a single character string.")
   }
@@ -99,18 +110,10 @@ uploadDataPackageToZenodo = function(packageDir,
   if (!is.logical(addDoi) || length(addDoi) != 1 || is.na(addDoi)) {
     stop("'addDoi' must be a single logical value (TRUE or FALSE).")
   }
-  if (is.null(token)) {
-    token = Sys.getenv(if (sandbox) "ZENODO_SANDBOX_TOKEN" else "ZENODO_TOKEN")
+  if (!is.null(newVersion) && (!is.logical(newVersion) || length(newVersion) != 1 || is.na(newVersion))) {
+    stop("'newVersion' must be TRUE, FALSE or NULL.")
   }
-  if (!is.character(token) || length(token) != 1 || !nzchar(token)) {
-    stop(paste0(
-      "No Zenodo token found. Create a personal access token on ",
-      if (sandbox) "sandbox.zenodo.org" else "zenodo.org",
-      " and store it in the environment variable ",
-      if (sandbox) "ZENODO_SANDBOX_TOKEN" else "ZENODO_TOKEN",
-      " (e.g. in your .Renviron file)."
-    ))
-  }
+  token = .zenodoToken(token, sandbox)
 
   # Validate the data package
   # ==============================================================================
@@ -120,12 +123,6 @@ uploadDataPackageToZenodo = function(packageDir,
     stop("The data package is not valid and was not uploaded. Fix the errors above first.")
   }
   package = jsonlite::read_json(packageJson, simplifyVector = FALSE)
-  if (!is.null(package$id)) {
-    warning(paste0(
-      "The data package already has an id (", package$id, "). A new Zenodo record ",
-      "is created; new versions of existing records are not supported yet."
-    ))
-  }
   resourcePaths = unlist(lapply(package$resources, function(r) r$path))
   if (any(grepl("^https?://", resourcePaths))) {
     stop("All resources must be local files in 'packageDir'; remote paths cannot be uploaded.")
@@ -135,23 +132,70 @@ uploadDataPackageToZenodo = function(packageDir,
     stop(paste("The following resource files are missing:", paste(missingFiles, collapse = ", ")))
   }
 
-  # Create the draft record, with a reserved DOI
+  # New record or new version?
   # ==============================================================================
-  baseUrl = if (sandbox) "https://sandbox.zenodo.org" else "https://zenodo.org"
-  deposition = .zenodoRequest(
-    paste0(baseUrl, "/api/deposit/depositions"), token,
-    method = "POST", json = list(metadata = list(prereserve_doi = TRUE))
-  )
-  doi = deposition$metadata$prereserve_doi$doi
-  draftUrl = deposition$links$html %||%
-    paste0(baseUrl, "/deposit/", deposition$id)
+  hasZenodoId = .isZenodoId(package$id)
+  if (is.null(newVersion)) newVersion = hasZenodoId
+  if (newVersion && !hasZenodoId) {
+    stop("'newVersion = TRUE' needs the DOI of the published Zenodo record as 'id' of the data package (set 'id' in the metadata file).")
+  }
+  if (!newVersion && !is.null(package$id)) {
+    warning(paste0(
+      "The data package already has an id (", package$id, "), but a new Zenodo record is created. ",
+      "Use 'newVersion = TRUE' to create a new version of that record instead."
+    ))
+  }
+
+  # Create the draft: a new record, or a new version of the latest version
+  # ==============================================================================
+  baseUrl = .zenodoBaseUrl(sandbox)
+  if (newVersion) {
+    previousId = .zenodoLatestRecordId(package$id, baseUrl, token)
+    previous = .zenodoRequest(paste0(baseUrl, "/api/deposit/depositions/", previousId), token)
+    if (!isTRUE(previous$submitted)) {
+      stop(paste0("Zenodo record ", previousId, " is not published yet; a new version can only be made of a published record. Update the draft on Zenodo instead."))
+    }
+    if (identical(previous$metadata$version, package$version)) {
+      warning(paste0("The new version has the same version number as the previous one (", package$version, "). Increase 'version' in the metadata file."))
+    }
+    response = .zenodoRequest(
+      paste0(baseUrl, "/api/deposit/depositions/", previousId, "/actions/newversion"), token,
+      method = "POST"
+    )
+    deposition = .zenodoRequest(response$links$latest_draft, token)
+    previousRelated = previous$metadata$related_identifiers
+  } else {
+    deposition = .zenodoRequest(
+      paste0(baseUrl, "/api/deposit/depositions"), token,
+      method = "POST", json = list(metadata = list(prereserve_doi = TRUE))
+    )
+    previousRelated = NULL
+  }
+  depositionUrl = paste0(baseUrl, "/api/deposit/depositions/", deposition$id)
+  draftUrl = deposition$links$html %||% paste0(baseUrl, "/deposit/", deposition$id)
   cleanupHint = paste0(
     " The draft record ", deposition$id, " was created; continue or delete it on ",
     draftUrl
   )
 
+  files = c("datapackage.json", resourcePaths)
+  doi = deposition$metadata$prereserve_doi$doi
   tryCatch(
     {
+      if (newVersion) {
+        # Remove the files copied from the previous version, and reserve a DOI
+        # for the new version
+        # ======================================================================
+        for (f in deposition$files) {
+          .zenodoRequest(paste0(depositionUrl, "/files/", f$id), token, method = "DELETE")
+        }
+        reserveMetadata = deposition$metadata
+        reserveMetadata$doi = NULL
+        reserveMetadata$prereserve_doi = TRUE
+        deposition = .zenodoRequest(depositionUrl, token, method = "PUT", json = list(metadata = reserveMetadata))
+        doi = deposition$metadata$prereserve_doi$doi
+      }
+
       # Write the DOI into the package
       # ==========================================================================
       if (addDoi && !is.null(doi)) {
@@ -161,7 +205,6 @@ uploadDataPackageToZenodo = function(packageDir,
 
       # Upload the files
       # ==========================================================================
-      files = c("datapackage.json", resourcePaths)
       for (f in files) {
         .zenodoRequest(
           paste0(deposition$links$bucket, "/", utils::URLencode(basename(f))), token,
@@ -169,13 +212,12 @@ uploadDataPackageToZenodo = function(packageDir,
         )
       }
 
-      # Add the metadata
+      # Add the metadata; keep the related identifiers of the previous version
       # ==========================================================================
-      .zenodoRequest(
-        paste0(baseUrl, "/api/deposit/depositions/", deposition$id), token,
-        method = "PUT",
-        json = list(metadata = .zenodoMetadata(package, community = community))
-      )
+      metadata = .zenodoMetadata(package, community = community)
+      metadata$related_identifiers = .mergeZenodoRelatedIdentifiers(metadata$related_identifiers, previousRelated)
+      if (length(metadata$related_identifiers) == 0) metadata$related_identifiers = NULL
+      .zenodoRequest(depositionUrl, token, method = "PUT", json = list(metadata = metadata))
     },
     error = function(e) {
       stop(paste0(conditionMessage(e), cleanupHint), call. = FALSE)
@@ -183,15 +225,18 @@ uploadDataPackageToZenodo = function(packageDir,
   )
 
   message(paste0(
-    "Draft record created on Zenodo", if (sandbox) " (sandbox)", ": ", draftUrl,
+    if (newVersion) "Draft of a new version created on Zenodo" else "Draft record created on Zenodo",
+    if (sandbox) " (sandbox)", ": ", draftUrl,
     if (!is.null(doi)) paste0("\nReserved DOI: ", doi),
-    "\nCheck the draft and publish it on Zenodo. Add the DOI as 'id' to the metadata file of the campaign."
+    "\nCheck the draft and publish it on Zenodo.",
+    if (!newVersion) " Then add the DOI as 'id' to the metadata file of the campaign."
   ))
   invisible(list(
-    id    = deposition$id,
-    doi   = doi,
-    url   = draftUrl,
-    files = basename(files)
+    id         = deposition$id,
+    doi        = doi,
+    url        = draftUrl,
+    files      = basename(files),
+    newVersion = newVersion
   ))
 }
 
@@ -199,54 +244,25 @@ uploadDataPackageToZenodo = function(packageDir,
 #' @noRd
 .zenodoLicenses = c("CC-BY-4.0" = "cc-by-4.0", "CC-BY-NC-4.0" = "cc-by-nc-4.0")
 
-#' Send a request to the Zenodo REST API
-#' @param url request URL
-#' @param token Zenodo personal access token
-#' @param method HTTP method
-#' @param json list sent as JSON body, or NULL
-#' @param file path of a file sent as body, or NULL
-#' @return parsed JSON response (list)
-#' @noRd
-.zenodoRequest = function(url, token, method = "GET", json = NULL, file = NULL) {
-  req = httr2::request(url)
-  req = httr2::req_auth_bearer_token(req, token)
-  req = httr2::req_method(req, method)
-  req = httr2::req_user_agent(req, paste0("birdscanR/", utils::packageVersion("birdscanR")))
-  if (!is.null(json)) req = httr2::req_body_json(req, json, auto_unbox = TRUE, null = "null", digits = NA)
-  if (!is.null(file)) req = httr2::req_body_file(req, file, type = "application/octet-stream")
-  req = httr2::req_error(req, body = function(resp) .zenodoErrorMessage(resp))
-  resp = httr2::req_perform(req)
-  if (length(httr2::resp_body_raw(resp)) == 0) {
-    return(list())
-  }
-  httr2::resp_body_json(resp)
-}
-
-#' Extract the error message(s) from a Zenodo API response
-#' @noRd
-.zenodoErrorMessage = function(resp) {
-  body = tryCatch(httr2::resp_body_json(resp), error = function(e) NULL)
-  if (is.null(body)) {
-    return(NULL)
-  }
-  details = vapply(body$errors %||% list(), function(e) {
-    paste0(e$field %||% "", if (!is.null(e$field)) ": ", paste(unlist(e$message %||% e$messages), collapse = " "))
-  }, character(1))
-  c(body$message, details)
-}
-
 #' Add a DOI to a data package
-#' @description Sets `id` to the DOI URL and adds the DOI to the suggested
-#' citation if it is not in there yet.
+#' @description Sets `id` to the DOI URL. In the suggested citation, the
+#' previous `id` (e.g. the DOI of the previous version) is replaced by the new
+#' DOI, or the DOI is added if it is not in there yet.
 #' @param package data package (list read from datapackage.json)
 #' @param doi DOI, e.g. "10.5281/zenodo.123"
 #' @return data package
 #' @noRd
 .addDoiToPackage = function(package, doi) {
   doiUrl = paste0("https://doi.org/", doi)
+  previousId = package$id
   package$id = doiUrl
-  if (!is.null(package$bibliographicCitation) && !grepl(doi, package$bibliographicCitation, fixed = TRUE)) {
-    package$bibliographicCitation = paste(package$bibliographicCitation, doiUrl)
+  citation = package$bibliographicCitation
+  if (!is.null(citation) && !grepl(doi, citation, fixed = TRUE)) {
+    if (!is.null(previousId) && nzchar(previousId) && grepl(previousId, citation, fixed = TRUE)) {
+      package$bibliographicCitation = sub(previousId, doiUrl, citation, fixed = TRUE)
+    } else {
+      package$bibliographicCitation = paste(citation, doiUrl)
+    }
   }
   # Keep id after name, as written by createDataPackage()
   others = setdiff(names(package), c("name", "id"))
@@ -347,13 +363,7 @@ uploadDataPackageToZenodo = function(packageDir,
 
   # Related identifiers: DataCite relation types in Zenodo notation
   # ============================================================================
-  relatedIdentifiers = lapply(package$relatedIdentifiers, function(ri) {
-    relation = ri$relationType
-    list(
-      identifier = ri$relatedIdentifier,
-      relation = paste0(tolower(substr(relation, 1, 1)), substring(relation, 2))
-    )
-  })
+  relatedIdentifiers = .zenodoRelatedIdentifiers(package$relatedIdentifiers)
 
   # Assemble
   # ============================================================================

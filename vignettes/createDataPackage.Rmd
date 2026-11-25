@@ -396,3 +396,52 @@ versions of the package keep it:
 ```yaml
 id: https://doi.org/10.5281/zenodo.<record ID>
 ```
+
+## Correct the data: upload a new version
+
+Files of a published record cannot be changed. When the data of a campaign
+are corrected, publish a **new version** instead. It gets its own DOI, and all
+versions share the *concept DOI* of the record, which always points to the
+latest version. Create the package again with:
+
+- the DOI of the published record as `id` in the metadata file, and
+- a higher `version`, e.g. `"1.0.1"` for a correction or `"2.0.0"` for a large
+  change.
+
+`uploadDataPackageToZenodo()` then sees the DOI and creates a draft of a new
+version of that record, instead of a new record:
+```{r, eval = FALSE}
+# Upload a corrected data package as new version
+# =============================================================================
+draft = uploadDataPackageToZenodo(packageDir = packageDir)
+draft$newVersion
+draft$doi
+```
+
+The files of the previous version are replaced by the new ones. Links that
+were added to the previous version on Zenodo, e.g. to the collection the
+campaign belongs to (see below), are kept. Again, check the draft on Zenodo
+and publish it there.
+
+## Link records: add related identifiers
+
+Metadata of a published record can be changed without a new version. To add
+links to other records, such as an `IsPartOf` link from a campaign to the
+owner collection it belongs to, use `addZenodoRelatedIdentifiers()`. It opens
+an edit of the record and adds the links; existing links are kept, and links
+the record already has are not added twice:
+```{r, eval = FALSE}
+# Link a campaign to its owner collection
+# =============================================================================
+addZenodoRelatedIdentifiers(
+  doi = "https://doi.org/10.5281/zenodo.<record ID>",
+  relatedIdentifiers = list(list(
+    relationType      = "IsPartOf",
+    relatedIdentifier = "https://doi.org/10.5281/zenodo.<collection record ID>"
+  ))
+)
+```
+
+By default, the edit is not published: check it on Zenodo and publish it
+there. Use `publish = TRUE` to publish the edit directly; the DOI and version
+of the record stay the same.

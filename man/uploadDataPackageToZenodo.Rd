@@ -9,7 +9,8 @@ uploadDataPackageToZenodo(
   token = NULL,
   sandbox = FALSE,
   community = "birdscanmr1community",
-  addDoi = TRUE
+  addDoi = TRUE,
+  newVersion = NULL
 )
 }
 \arguments{
@@ -32,17 +33,23 @@ this community does not exist.}
 
 \item{addDoi}{logical. If \code{TRUE} (default), the reserved DOI is written into
 the local \code{datapackage.json} before the upload.}
+
+\item{newVersion}{logical or \code{NULL}. If \code{TRUE}, create a new version of the
+Zenodo record given by the \code{id} (DOI) of the package; if \code{FALSE}, create a
+new record. Default is \code{NULL}: a new version if the package has a Zenodo DOI
+as \code{id}, otherwise a new record.}
 }
 \value{
-A list, invisibly, with \code{id} (Zenodo record ID), \code{doi} (reserved
-DOI), \code{url} (link to the draft on Zenodo) and \code{files} (names of the uploaded
-files).
+A list, invisibly, with \code{id} (Zenodo record ID of the draft), \code{doi}
+(reserved DOI), \code{url} (link to the draft on Zenodo), \code{files} (names of the
+uploaded files) and \code{newVersion} (logical).
 }
 \description{
 \code{\link[=uploadDataPackageToZenodo]{uploadDataPackageToZenodo()}} uploads an MR1 data package,
 written to disk by \code{\link[=createDataPackage]{createDataPackage()}}, to \href{https://zenodo.org}{Zenodo} as
-a \strong{draft} record. The function never publishes the record: check the draft
-on Zenodo and publish it there.
+a \strong{draft} record: either a new record, or a new version of an existing
+record. The function never publishes the record: check the draft on Zenodo
+and publish it there.
 
 The package is first checked with \code{\link[=validateDataPackage]{validateDataPackage()}}; an invalid
 package is not uploaded. The Zenodo metadata are taken from
@@ -61,10 +68,17 @@ the embargo, in the description and notes.
 }
 
 A DOI is reserved for the record. It is written as \code{id} in the local
-\code{datapackage.json} (and added to the suggested citation) before the files
-are uploaded, so the published package carries its own DOI. Also add it as
-\code{id} to the metadata file of the campaign, so new versions of the package
-keep it.
+\code{datapackage.json} (and in the suggested citation) before the files are
+uploaded, so the published package carries its own DOI.
+
+\strong{New versions.} When the data of a published campaign are corrected,
+create the package again with a higher \code{version}, and with the DOI of the
+published record as \code{id} in the metadata file. The upload then creates a new
+version of that record (with a new DOI) instead of a new record. All versions
+share the concept DOI of the record. The files of the previous version are
+replaced, and the related identifiers of the previous version that are not
+in the package (e.g. \code{IsPartOf} links to collections, see
+\code{\link[=addZenodoRelatedIdentifiers]{addZenodoRelatedIdentifiers()}}) are kept.
 }
 \examples{
 \dontrun{
@@ -97,6 +111,7 @@ draft$url
 }
 \seealso{
 Other write file functions: 
+\code{\link{addZenodoRelatedIdentifiers}()},
 \code{\link{compileData}()},
 \code{\link{createDataPackage}()},
 \code{\link{createDataPackageMetadataTemplate}()},
