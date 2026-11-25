@@ -133,6 +133,7 @@ radarSite - and necessary parameters as input for
 ## See also
 
 Other write file functions:
+[`addZenodoRelatedIdentifiers()`](https://birdscancommunity.github.io/birdscanR/reference/addZenodoRelatedIdentifiers.md),
 [`createDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackage.md),
 [`createDataPackageMetadataTemplate()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackageMetadataTemplate.md),
 [`saveMTR()`](https://birdscancommunity.github.io/birdscanR/reference/saveMTR.md),

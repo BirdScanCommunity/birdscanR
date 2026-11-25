@@ -32,6 +32,7 @@ The path of the written file, invisibly.
 ## See also
 
 Other write file functions:
+[`addZenodoRelatedIdentifiers()`](https://birdscancommunity.github.io/birdscanR/reference/addZenodoRelatedIdentifiers.md),
 [`compileData()`](https://birdscancommunity.github.io/birdscanR/reference/compileData.md),
 [`createDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackage.md),
 [`saveMTR()`](https://birdscancommunity.github.io/birdscanR/reference/saveMTR.md),

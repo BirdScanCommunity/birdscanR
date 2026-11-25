@@ -33,6 +33,8 @@
 
 - [`getManualVisibilityTable()`](https://birdscancommunity.github.io/birdscanR/reference/getManualVisibilityTable.md)
   : Get manual visibility table
+- [`addZenodoRelatedIdentifiers()`](https://birdscancommunity.github.io/birdscanR/reference/addZenodoRelatedIdentifiers.md)
+  : Add Related Identifiers to a Zenodo Record
 - [`compileData()`](https://birdscancommunity.github.io/birdscanR/reference/compileData.md)
   : compileData
 - [`createDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackage.md)

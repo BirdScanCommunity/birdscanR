@@ -186,6 +186,8 @@ values of the template):
     # DOI of the dataset on Zenodo, as URL (optional). Leave empty for the first
     # upload: uploadDataPackageToZenodo() reserves a DOI. Fill it in once the
     # record is published, e.g. https://doi.org/10.5281/zenodo.1234567
+    # With a DOI here, uploadDataPackageToZenodo() creates a new version of that
+    # record instead of a new record (increase 'version' as well).
     id:
 
     # Owner of the data (required). ror: optional ROR identifier URL.
@@ -458,7 +460,7 @@ dataPackage$bibliographicCitation
 str(dataPackage$`mr1dp:provenance`)
 #> List of 8
 #>  $ database            : chr "CH_Sempach_2024_SEP24_25"
-#>  $ birdscanR           : chr "0.3.0.9032"
+#>  $ birdscanR           : chr "0.3.0.9033"
 #>  $ radarType           : chr "BirdScanMR1"
 #>  $ radarSerialNo       : int 220
 #>  $ radarTimeZone       : chr "Etc/GMT0"
@@ -626,3 +628,58 @@ that new versions of the package keep it:
 ``` yaml
 id: https://doi.org/10.5281/zenodo.<record ID>
 ```
+
+### Correct the data: upload a new version
+
+Files of a published record cannot be changed. When the data of a
+campaign are corrected, publish a **new version** instead. It gets its
+own DOI, and all versions share the *concept DOI* of the record, which
+always points to the latest version. Create the package again with:
+
+- the DOI of the published record as `id` in the metadata file, and
+- a higher `version`, e.g. `"1.0.1"` for a correction or `"2.0.0"` for a
+  large change.
+
+[`uploadDataPackageToZenodo()`](https://birdscancommunity.github.io/birdscanR/reference/uploadDataPackageToZenodo.md)
+then sees the DOI and creates a draft of a new version of that record,
+instead of a new record:
+
+``` r
+
+# Upload a corrected data package as new version
+# =============================================================================
+draft = uploadDataPackageToZenodo(packageDir = packageDir)
+draft$newVersion
+draft$doi
+```
+
+The files of the previous version are replaced by the new ones. Links
+that were added to the previous version on Zenodo, e.g. to the
+collection the campaign belongs to (see below), are kept. Again, check
+the draft on Zenodo and publish it there.
+
+### Link records: add related identifiers
+
+Metadata of a published record can be changed without a new version. To
+add links to other records, such as an `IsPartOf` link from a campaign
+to the owner collection it belongs to, use
+[`addZenodoRelatedIdentifiers()`](https://birdscancommunity.github.io/birdscanR/reference/addZenodoRelatedIdentifiers.md).
+It opens an edit of the record and adds the links; existing links are
+kept, and links the record already has are not added twice:
+
+``` r
+
+# Link a campaign to its owner collection
+# =============================================================================
+addZenodoRelatedIdentifiers(
+  doi = "https://doi.org/10.5281/zenodo.<record ID>",
+  relatedIdentifiers = list(list(
+    relationType      = "IsPartOf",
+    relatedIdentifier = "https://doi.org/10.5281/zenodo.<collection record ID>"
+  ))
+)
+```
+
+By default, the edit is not published: check it on Zenodo and publish it
+there. Use `publish = TRUE` to publish the edit directly; the DOI and
+version of the record stay the same.

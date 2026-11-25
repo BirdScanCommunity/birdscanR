@@ -57,6 +57,7 @@ columns `level` (`"error"` or `"warning"`), `resource`, `field` and
 ## See also
 
 Other write file functions:
+[`addZenodoRelatedIdentifiers()`](https://birdscancommunity.github.io/birdscanR/reference/addZenodoRelatedIdentifiers.md),
 [`compileData()`](https://birdscancommunity.github.io/birdscanR/reference/compileData.md),
 [`createDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackage.md),
 [`createDataPackageMetadataTemplate()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackageMetadataTemplate.md),

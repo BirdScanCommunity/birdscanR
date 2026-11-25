@@ -73,6 +73,17 @@
 - Improved functionality:
   [`createDataPackageMetadataTemplate()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackageMetadataTemplate.md)
   now includes the optional field `id` for the DOI of the dataset.
+- New functionality:
+  [`uploadDataPackageToZenodo()`](https://birdscancommunity.github.io/birdscanR/reference/uploadDataPackageToZenodo.md)
+  now creates a draft of a new version of an existing Zenodo record when
+  the data package has the DOI of that record as `id` (new argument
+  `newVersion`). The files of the previous version are replaced, and its
+  related identifiers (e.g. links to collections) are kept.
+- New functionality:
+  [`addZenodoRelatedIdentifiers()`](https://birdscancommunity.github.io/birdscanR/reference/addZenodoRelatedIdentifiers.md)
+  was added to add related identifiers (e.g. `IsPartOf` links to
+  collections) to the metadata of a Zenodo record without creating a new
+  version. The edit is published only with `publish = TRUE`.
 - Improved functionality:
   [`createDataPackage()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackage.md)
   now only includes blind times that overlap a selected measurement

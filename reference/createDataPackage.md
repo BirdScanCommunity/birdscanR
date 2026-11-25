@@ -147,6 +147,7 @@ i.e. a list with the package-level metadata and the resources
 ## See also
 
 Other write file functions:
+[`addZenodoRelatedIdentifiers()`](https://birdscancommunity.github.io/birdscanR/reference/addZenodoRelatedIdentifiers.md),
 [`compileData()`](https://birdscancommunity.github.io/birdscanR/reference/compileData.md),
 [`createDataPackageMetadataTemplate()`](https://birdscancommunity.github.io/birdscanR/reference/createDataPackageMetadataTemplate.md),
 [`saveMTR()`](https://birdscancommunity.github.io/birdscanR/reference/saveMTR.md),
