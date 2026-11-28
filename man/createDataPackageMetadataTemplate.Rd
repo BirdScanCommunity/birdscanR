@@ -33,9 +33,12 @@ createDataPackageMetadataTemplate(filePath = metadataFile, overwrite = TRUE)
 Other write file functions: 
 \code{\link{addZenodoRelatedIdentifiers}()},
 \code{\link{compileData}()},
+\code{\link{createCollectionMetadataTemplate}()},
 \code{\link{createDataPackage}()},
+\code{\link{linkCollectionMembers}()},
 \code{\link{saveMTR}()},
 \code{\link{savePlotToFile}()},
+\code{\link{uploadCollectionToZenodo}()},
 \code{\link{uploadDataPackageToZenodo}()},
 \code{\link{validateDataPackage}()}
 }

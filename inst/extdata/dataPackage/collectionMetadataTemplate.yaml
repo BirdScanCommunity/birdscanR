@@ -1,0 +1,92 @@
+# ==============================================================================
+# MR1 collection metadata (one file per collection)
+# ==============================================================================
+# Fill in this file and pass its path to uploadCollectionToZenodo(metadata = ...).
+# A collection groups published Zenodo records under one citable DOI:
+#   - an owner collection groups the MR1 data packages (campaigns) of one owner;
+#   - the community collection groups the owner collections of the BirdScan MR1
+#     community.
+# The values below are an example; replace them. Fields marked (required) must
+# be present. Keep this file: a new version of the collection (e.g. with new
+# campaigns) is made from it.
+
+# Collection identifier (required). Letters, digits, '.', '-' and '_'.
+collectionID: SOI_BirdScanMR1
+
+# Level of the collection (required): owner or community
+#   owner:     members are MR1 data packages (campaign records)
+#   community: members are owner collections
+level: owner
+
+# Title and description of the collection (required)
+title: "BirdScan MR1 radar data of the Swiss Ornithological Institute"
+description: >-
+  Collection of the BirdScan MR1 vertical-looking radar data packages
+  (campaigns) of the Swiss Ornithological Institute. Each campaign is a
+  separate Zenodo record; this record lists them.
+
+# Version of the collection (required). Increase it when members are added or
+# removed.
+version: "1.0.0"
+
+# DOI of the collection on Zenodo, as URL (optional). Leave empty for the first
+# upload: uploadCollectionToZenodo() reserves a DOI. Fill it in once the record
+# is published, e.g. https://doi.org/10.5281/zenodo.1234567
+# With a DOI here, uploadCollectionToZenodo() creates a new version of that
+# record instead of a new record (increase 'version' as well).
+id:
+
+# Owner of the collection (required). ror: optional ROR identifier URL.
+owner:
+  name: Swiss Ornithological Institute
+  ror: https://ror.org/03mcsbr76
+
+# Licence of the collection record (required). One of: CC-BY-4.0, CC-BY-NC-4.0
+licenses:
+  - name: CC-BY-4.0
+    path: https://creativecommons.org/licenses/by/4.0/
+    title: Creative Commons Attribution 4.0 International
+
+# Keywords (optional)
+keywords:
+  - bird migration
+  - radar aeroecology
+  - BirdScan MR1
+  - vertical-looking radar
+
+# Contributors (required, at least one ContactPerson). These are the creators
+# of the collection record, e.g. the curator(s) of the collection.
+#   title:        full name as it should appear in citations (required)
+#   givenName / familyName: used for citations
+#   path:         ORCID as URL, e.g. https://orcid.org/0000-0000-0000-0000
+#   email:        optional
+#   organization: affiliation
+#   roles:        one or more DataCite contributor types:
+#                 ContactPerson, ProjectLeader, DataCollector, DataCurator,
+#                 Researcher, RightsHolder, Supervisor
+contributors:
+  - title: Birgen Haest
+    givenName: Birgen
+    familyName: Haest
+    path: https://orcid.org/0000-0002-8739-6460
+    organization: Swiss Ornithological Institute
+    roles: [ContactPerson, DataCurator]
+
+# Members of the collection (required): DOIs (as URL) or record IDs of the
+# published Zenodo records in the collection. Any version DOI or the concept DOI
+# of a record can be used; the collection always links to the concept DOI, so
+# new versions of a member need no new version of the collection.
+members:
+  - https://doi.org/10.5281/zenodo.1234567
+  - https://doi.org/10.5281/zenodo.2345678
+
+# Related identifiers (optional), DataCite relation types, e.g. IsDocumentedBy.
+# The HasPart links to the members are added automatically.
+relatedIdentifiers:
+  - relationType: IsCompiledBy
+    relatedIdentifier: https://github.com/BirdScanCommunity/birdscanR
+    relatedIdentifierType: URL
+
+# Suggested citation (optional). Leave empty to generate it from the
+# contributors, the year of creation, the title and the DOI.
+bibliographicCitation:

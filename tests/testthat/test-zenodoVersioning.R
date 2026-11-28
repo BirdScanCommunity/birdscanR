@@ -6,35 +6,6 @@ metadataFile = system.file("extdata", "dataPackage", "metadataTemplate.yaml",
   package = "birdscanR"
 )
 metadataList = yaml::read_yaml(metadataFile)
-base = "https://sandbox.zenodo.org"
-
-# Mock of the Zenodo API: `routes` is a list of handlers named
-# "<METHOD> <url regex>", each a function(req) returning a list (JSON body) or
-# an httr2 response. All requests are recorded in `log`.
-mockRouter = function(log, routes) {
-  function(req) {
-    log$requests[[length(log$requests) + 1]] = list(method = req$method, url = req$url, body = req$body$data)
-    for (route in names(routes)) {
-      parts = strsplit(route, " ", fixed = TRUE)[[1]]
-      if (req$method == parts[1] && grepl(parts[2], req$url)) {
-        out = routes[[route]](req)
-        if (inherits(out, "httr2_response")) {
-          return(out)
-        }
-        return(httr2::response_json(status_code = 200, body = out))
-      }
-    }
-    stop(paste("Unexpected request:", req$method, req$url))
-  }
-}
-newLog = function() {
-  log = new.env()
-  log$requests = list()
-  log
-}
-requestSummary = function(log) {
-  vapply(log$requests, function(r) paste(r$method, sub(base, "", r$url, fixed = TRUE)), character(1))
-}
 
 test_that("Zenodo identifiers and related identifiers are parsed and merged", {
   expect_identical(birdscanR:::.zenodoRecordId("https://doi.org/10.5281/zenodo.648124"), 648124L)
@@ -83,7 +54,7 @@ test_that("uploadDataPackageToZenodo() creates a new version of a published reco
     id = 102, files = list(list(id = "f1"), list(id = "f2")),
     metadata = list(
       title = "old title", doi = "10.5281/zenodo.101",
-      prereserve_doi = list(doi = "10.5281/zenodo.102", recid = 102)
+      prereserve_doi = list(doi = "10.5281/zenodo.102", recid = 102) # the sandbox reports the Zenodo prefix
     ),
     links = list(bucket = paste0(base, "/api/files/bucket-102"), html = paste0(base, "/deposit/102"))
   )
@@ -110,7 +81,7 @@ test_that("uploadDataPackageToZenodo() creates a new version of a published reco
   )
   expect_true(draft$newVersion)
   expect_identical(draft$id, 102L)
-  expect_identical(draft$doi, "10.5281/zenodo.102")
+  expect_identical(draft$doi, "10.5072/zenodo.102")
 
   calls = requestSummary(log)
   expect_identical(calls[1:6], c(
@@ -139,7 +110,7 @@ test_that("uploadDataPackageToZenodo() creates a new version of a published reco
 
   # The package now carries the DOI of the new version, also in the citation
   package = jsonlite::read_json(file.path(packageDir, "datapackage.json"))
-  expect_identical(package$id, "https://doi.org/10.5281/zenodo.102")
+  expect_identical(package$id, "https://doi.org/10.5072/zenodo.102")
   expect_match(package$bibliographicCitation, "zenodo.102$")
   expect_false(grepl("zenodo.100", package$bibliographicCitation))
 })

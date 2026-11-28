@@ -51,7 +51,9 @@ record is updated, whichever version's DOI (or the concept DOI) is given.
 \item For a \strong{published} record, the function opens an edit of the record and
 updates its metadata. With \code{publish = FALSE} (default), the edit stays
 open: check it on Zenodo and publish it there (or discard it). With
-\code{publish = TRUE}, the edit is published directly.
+\code{publish = TRUE}, the edit is published directly. If the record already
+has the related identifiers in an open edit (e.g. added earlier with
+\code{publish = FALSE}), \code{publish = TRUE} publishes that edit.
 \item For an \strong{unpublished draft}, the metadata of the draft are updated. The
 draft is never published, also not with \code{publish = TRUE}.
 }
@@ -73,10 +75,13 @@ addZenodoRelatedIdentifiers(
 \seealso{
 Other write file functions: 
 \code{\link{compileData}()},
+\code{\link{createCollectionMetadataTemplate}()},
 \code{\link{createDataPackage}()},
 \code{\link{createDataPackageMetadataTemplate}()},
+\code{\link{linkCollectionMembers}()},
 \code{\link{saveMTR}()},
 \code{\link{savePlotToFile}()},
+\code{\link{uploadCollectionToZenodo}()},
 \code{\link{uploadDataPackageToZenodo}()},
 \code{\link{validateDataPackage}()}
 }

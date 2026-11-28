@@ -179,7 +179,7 @@ uploadDataPackageToZenodo = function(packageDir,
   )
 
   files = c("datapackage.json", resourcePaths)
-  doi = deposition$metadata$prereserve_doi$doi
+  doi = .zenodoReservedDoi(deposition$metadata$prereserve_doi$doi, sandbox)
   tryCatch(
     {
       if (newVersion) {
@@ -193,7 +193,7 @@ uploadDataPackageToZenodo = function(packageDir,
         reserveMetadata$doi = NULL
         reserveMetadata$prereserve_doi = TRUE
         deposition = .zenodoRequest(depositionUrl, token, method = "PUT", json = list(metadata = reserveMetadata))
-        doi = deposition$metadata$prereserve_doi$doi
+        doi = .zenodoReservedDoi(deposition$metadata$prereserve_doi$doi, sandbox)
       }
 
       # Write the DOI into the package
@@ -286,6 +286,36 @@ uploadDataPackageToZenodo = function(packageDir,
   gsub(">", "&gt;", x, fixed = TRUE)
 }
 
+#' Zenodo creators and contributors from the contributors of the metadata
+#' @param contributors list of contributors (title, givenName, familyName,
+#' path (ORCID), organization, roles)
+#' @param ownerName name of the owner, added as rights holder; or NULL
+#' @return list with `creators` and `contributors` (one entry per role)
+#' @noRd
+.zenodoPeople = function(contributors, ownerName = NULL) {
+  person = function(ctb) {
+    name = if (!is.null(ctb$familyName) && !is.null(ctb$givenName)) {
+      paste0(ctb$familyName, ", ", ctb$givenName)
+    } else {
+      ctb$title
+    }
+    out = list(name = name, affiliation = ctb$organization)
+    if (!is.null(ctb$path)) out$orcid = sub("^https?://orcid.org/", "", ctb$path)
+    out[!vapply(out, is.null, logical(1))]
+  }
+  creators = lapply(contributors, person)
+  zenodoContributors = list()
+  for (ctb in contributors) {
+    for (role in unlist(ctb$roles)) {
+      zenodoContributors[[length(zenodoContributors) + 1]] = c(person(ctb), type = role)
+    }
+  }
+  if (!is.null(ownerName)) {
+    zenodoContributors[[length(zenodoContributors) + 1]] = list(name = ownerName, type = "RightsHolder")
+  }
+  list(creators = creators, contributors = zenodoContributors)
+}
+
 #' Build the Zenodo deposit metadata of an MR1 data package
 #' @param package data package (list read from datapackage.json)
 #' @param community Zenodo community identifier, or NULL
@@ -294,31 +324,10 @@ uploadDataPackageToZenodo = function(packageDir,
 #' @noRd
 .zenodoMetadata = function(package, community = NULL, today = Sys.Date()) {
   contributors = package$contributors
-  personName = function(ctb) {
-    if (!is.null(ctb$familyName) && !is.null(ctb$givenName)) {
-      paste0(ctb$familyName, ", ", ctb$givenName)
-    } else {
-      ctb$title
-    }
-  }
-  person = function(ctb) {
-    out = list(name = personName(ctb), affiliation = ctb$organization)
-    if (!is.null(ctb$path)) out$orcid = sub("^https?://orcid.org/", "", ctb$path)
-    out[!vapply(out, is.null, logical(1))]
-  }
 
   # Creators and contributors (one entry per role)
   # ============================================================================
-  creators = lapply(contributors, person)
-  zenodoContributors = list()
-  for (ctb in contributors) {
-    for (role in unlist(ctb$roles)) {
-      zenodoContributors[[length(zenodoContributors) + 1]] = c(person(ctb), type = role)
-    }
-  }
-  if (!is.null(package$owner$name)) {
-    zenodoContributors[[length(zenodoContributors) + 1]] = list(name = package$owner$name, type = "RightsHolder")
-  }
+  people = .zenodoPeople(contributors, package$owner$name)
 
   # Access: embargoed until the embargo date, open afterwards
   # ============================================================================
@@ -373,8 +382,8 @@ uploadDataPackageToZenodo = function(packageDir,
     title = package$title,
     description = paste(descriptionParts, collapse = "\n"),
     version = package$version,
-    creators = creators,
-    contributors = zenodoContributors,
+    creators = people$creators,
+    contributors = people$contributors,
     access_right = if (embargoed) "embargoed" else "open",
     embargo_date = if (embargoed) format(embargo, "%Y-%m-%d"),
     license = unname(.zenodoLicenses[licenseName]) %||% tolower(licenseName),
