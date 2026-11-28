@@ -111,6 +111,33 @@ createDataPackageMetadataTemplate = function(filePath, overwrite = FALSE) {
     problems = c(problems, "'owner' is required and must have a 'name'.")
   }
 
+  # Embargo
+  # ============================================================================
+  if (!is.null(md$embargo)) {
+    embargoDate = tryCatch(as.Date(md$embargo), error = function(e) NA)
+    if (length(embargoDate) != 1 || is.na(embargoDate)) {
+      problems = c(problems, "'embargo' must be a date formatted as YYYY-MM-DD, or empty.")
+    }
+  }
+
+  # Licence, contributors and related identifiers
+  # ============================================================================
+  problems = c(problems, .checkSharedMetadata(md))
+
+  return(unique(problems))
+}
+
+#' Check the licence, contributors and related identifiers of metadata
+#' @description Shared by the metadata checks of data packages and collections.
+#' @param md named list with metadata
+#' @param embargoRequestType logical. Must each contributor have an
+#' `embargoRequestType`?
+#' @return character vector with problems; empty if none
+#' @noRd
+.checkSharedMetadata = function(md, embargoRequestType = TRUE) {
+  problems = character(0)
+  isString = function(x) is.character(x) && length(x) == 1 && !is.na(x) && nzchar(x)
+
   # Licence
   # ============================================================================
   if (!is.list(md$licenses) || length(md$licenses) == 0) {
@@ -123,15 +150,6 @@ createDataPackageMetadataTemplate = function(filePath, overwrite = FALSE) {
           paste(names(.mr1dpLicenses), collapse = ", "), "."
         ))
       }
-    }
-  }
-
-  # Embargo
-  # ============================================================================
-  if (!is.null(md$embargo)) {
-    embargoDate = tryCatch(as.Date(md$embargo), error = function(e) NA)
-    if (length(embargoDate) != 1 || is.na(embargoDate)) {
-      problems = c(problems, "'embargo' must be a date formatted as YYYY-MM-DD, or empty.")
     }
   }
 
@@ -162,7 +180,7 @@ createDataPackageMetadataTemplate = function(filePath, overwrite = FALSE) {
       if (!is.null(ctb$path) && !.isValidOrcid(ctb$path)) {
         problems = c(problems, paste0(label, ": 'path' must be a valid ORCID URL (https://orcid.org/0000-0000-0000-0000)."))
       }
-      if (is.null(ctb$embargoRequestType) || !ctb$embargoRequestType %in% c(1, 2)) {
+      if (embargoRequestType && (is.null(ctb$embargoRequestType) || !ctb$embargoRequestType %in% c(1, 2))) {
         problems = c(problems, paste0(label, ": 'embargoRequestType' must be 1 (contact me) or 2 (citation only)."))
       }
     }

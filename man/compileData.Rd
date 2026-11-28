@@ -91,10 +91,13 @@ e.g. time frame, pulse type.
 \seealso{
 Other write file functions: 
 \code{\link{addZenodoRelatedIdentifiers}()},
+\code{\link{createCollectionMetadataTemplate}()},
 \code{\link{createDataPackage}()},
 \code{\link{createDataPackageMetadataTemplate}()},
+\code{\link{linkCollectionMembers}()},
 \code{\link{saveMTR}()},
 \code{\link{savePlotToFile}()},
+\code{\link{uploadCollectionToZenodo}()},
 \code{\link{uploadDataPackageToZenodo}()},
 \code{\link{validateDataPackage}()}
 }

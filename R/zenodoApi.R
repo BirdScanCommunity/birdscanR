@@ -16,6 +16,20 @@
   if (sandbox) "https://sandbox.zenodo.org" else "https://zenodo.org"
 }
 
+#' Correct a DOI reserved on the Zenodo sandbox
+#' @description The Zenodo sandbox reports reserved DOIs with the prefix of
+#' Zenodo (10.5281), but registers them with its test prefix (10.5072).
+#' @param doi reserved DOI, or NULL
+#' @param sandbox logical
+#' @return DOI, or NULL
+#' @noRd
+.zenodoReservedDoi = function(doi, sandbox) {
+  if (is.null(doi) || !sandbox) {
+    return(doi)
+  }
+  sub("^10\\.5281/", "10.5072/", doi)
+}
+
 #' Get the Zenodo token from the argument or the environment
 #' @noRd
 .zenodoToken = function(token, sandbox) {

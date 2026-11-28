@@ -13,7 +13,9 @@
 #' * For a **published** record, the function opens an edit of the record and
 #'   updates its metadata. With `publish = FALSE` (default), the edit stays
 #'   open: check it on Zenodo and publish it there (or discard it). With
-#'   `publish = TRUE`, the edit is published directly.
+#'   `publish = TRUE`, the edit is published directly. If the record already
+#'   has the related identifiers in an open edit (e.g. added earlier with
+#'   `publish = FALSE`), `publish = TRUE` publishes that edit.
 #' * For an **unpublished draft**, the metadata of the draft are updated. The
 #'   draft is never published, also not with `publish = TRUE`.
 #' @param doi DOI (e.g. `"https://doi.org/10.5281/zenodo.1234567"` or
@@ -90,6 +92,13 @@ addZenodoRelatedIdentifiers = function(doi,
   merged = .mergeZenodoRelatedIdentifiers(current, newRelated)
   nAdded = length(merged) - length(current)
   if (nAdded == 0) {
+    # An open edit that already has the links (e.g. added earlier with
+    # publish = FALSE) is published on request
+    if (published && publish && identical(deposition$state, "inprogress")) {
+      .zenodoRequest(paste0(depositionUrl, "/actions/publish"), token, method = "POST")
+      message(paste0("Zenodo record ", recordId, " already has these related identifiers; its open edit was published."))
+      return(invisible(list(id = recordId, url = recordUrl, added = 0L, published = TRUE)))
+    }
     message(paste0("Zenodo record ", recordId, " already has all these related identifiers; nothing changed."))
     return(invisible(list(id = recordId, url = recordUrl, added = 0L, published = FALSE)))
   }

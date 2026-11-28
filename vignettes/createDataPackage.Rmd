@@ -30,7 +30,7 @@ campaigns of the Swiss Ornithological Institute) and in a community collection
 (all BirdScan MR1 campaigns), so users can cite the level that matches their
 study.
 
-The workflow has 6 steps:
+The workflow has 7 steps:
 
 1.    Extract the data from the SQL database.
 
@@ -43,6 +43,8 @@ The workflow has 6 steps:
 5.    Validate the data package.
 
 6.    Upload the data package to Zenodo.
+
+7.    Group the published campaigns in collections.
 
 ***
 # Before we get started
@@ -445,3 +447,87 @@ addZenodoRelatedIdentifiers(
 By default, the edit is not published: check it on Zenodo and publish it
 there. Use `publish = TRUE` to publish the edit directly; the DOI and version
 of the record stay the same.
+
+***
+# Step 7: Group the campaigns in collections
+
+A study that uses many campaigns should not have to cite each of them.
+Campaigns are therefore grouped in **collections**, which are Zenodo records
+with their own DOI:
+
+- an **owner collection** groups the campaigns of one owner, e.g. all
+  campaigns of the Swiss Ornithological Institute;
+- the **community collection** groups the owner collections of the BirdScan
+  MR1 community.
+
+So, a study that uses up to 3 campaigns cites each campaign; with more than 3
+campaigns, it cites their owner collections; with more than 3 owner
+collections, it cites the community collection.
+
+A collection record links to each member with a `HasPart` link, and each
+member links back to the collection with `IsPartOf`. Both links use the
+*concept DOI* (see above), so they stay valid when a campaign or collection gets
+a new version. The record also holds the file `members.csv`, which lists the
+members with the DOI, title and version of their latest version at the time of
+the upload.
+
+## Describe the collection
+
+Like a campaign, a collection is described in a YAML file. Write the template,
+and fill in the title, description, contributors (e.g. the curator of the
+collection), the level (`owner` or `community`), and the DOIs of the published
+member records:
+```{r, eval = FALSE}
+# Write the collection metadata template
+# =============================================================================
+collectionFile = file.path(mainOutputDir, "SOI_BirdScanMR1_collection.yaml")
+createCollectionMetadataTemplate(filePath = collectionFile)
+```
+
+```yaml
+collectionID: SOI_BirdScanMR1
+level: owner
+members:
+  - https://doi.org/10.5281/zenodo.<campaign record ID>
+  - https://doi.org/10.5281/zenodo.<campaign record ID>
+```
+
+## Upload the collection
+
+`uploadCollectionToZenodo()` reads the latest version of each member from
+Zenodo, and creates a draft of the collection record. It also adds an
+`IsPartOf` link to the collection to each member, as an edit that is not
+published yet:
+```{r, eval = FALSE}
+# Upload the collection as draft to Zenodo
+# =============================================================================
+draft = uploadCollectionToZenodo(metadata = collectionFile)
+draft$members
+draft$conceptDoi
+```
+
+Links can only be added to records of your own Zenodo account. Members of
+other accounts (e.g. owner collections in the community collection) are listed
+in a warning; their owners can add the link with
+`addZenodoRelatedIdentifiers()`.
+
+## Publish the collection, then the links
+
+Check the draft on Zenodo and publish it. Then publish the `IsPartOf` links of
+the members:
+```{r, eval = FALSE}
+# Publish the IsPartOf links of the members
+# =============================================================================
+linkCollectionMembers(doi = draft$doi, publish = TRUE)
+```
+
+Finally, add the DOI as `id` to the collection metadata file.
+
+## Add campaigns: a new version of the collection
+
+To add (or remove) campaigns, update `members` in the collection metadata
+file and increase `version`. With the DOI of the collection as `id`,
+`uploadCollectionToZenodo()` creates a new version of the collection, whose
+`HasPart` links follow the new list of members. New members get their
+`IsPartOf` link; publish these with `linkCollectionMembers()` after publishing
+the new version.

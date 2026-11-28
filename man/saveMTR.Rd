@@ -113,9 +113,12 @@ saveMTR(
 Other write file functions: 
 \code{\link{addZenodoRelatedIdentifiers}()},
 \code{\link{compileData}()},
+\code{\link{createCollectionMetadataTemplate}()},
 \code{\link{createDataPackage}()},
 \code{\link{createDataPackageMetadataTemplate}()},
+\code{\link{linkCollectionMembers}()},
 \code{\link{savePlotToFile}()},
+\code{\link{uploadCollectionToZenodo}()},
 \code{\link{uploadDataPackageToZenodo}()},
 \code{\link{validateDataPackage}()}
 }
