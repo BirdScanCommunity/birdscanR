@@ -440,15 +440,15 @@ linkCollectionMembers = function(doi,
     starts = unlist(lapply(collected, function(d) d$start))
     ends = unlist(lapply(collected, function(d) d$end))
     data.frame(
-      conceptDoi      = doiUrl(rec$conceptdoi %||% rec$doi),
-      doi             = doiUrl(rec$doi),
-      recordId        = as.integer(rec$id),
-      title           = value(rec$metadata$title),
-      version         = value(rec$metadata$version),
+      conceptDoi = doiUrl(rec$conceptdoi %||% rec$doi),
+      doi = doiUrl(rec$doi),
+      recordId = as.integer(rec$id),
+      title = value(rec$metadata$title),
+      version = value(rec$metadata$version),
       publicationDate = value(rec$metadata$publication_date),
-      start           = if (length(starts) > 0) min(starts) else NA_character_,
-      end             = if (length(ends) > 0) max(ends) else NA_character_,
-      url             = value(rec$links$self_html %||% rec$links$html),
+      start = if (length(starts) > 0) min(starts) else NA_character_,
+      end = if (length(ends) > 0) max(ends) else NA_character_,
+      url = value(rec$links$self_html %||% rec$links$html),
       stringsAsFactors = FALSE
     )
   })
